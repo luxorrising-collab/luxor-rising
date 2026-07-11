@@ -1,0 +1,92 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: 0.4s;
+  padding: 1.05rem 0;
+  background: transparent;
+}
+.nav.solid {
+  background: rgba(250, 243, 228, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(58, 40, 24, 0.08);
+  padding: 0.8rem 0;
+}
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(1.4rem, 5vw, 3.5rem);
+}
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.46rem;
+  transition: 0.4s;
+}
+.nav.solid .brand {
+  color: var(--color-gold-deep);
+}
+.brandMark {
+  height: 32px;
+  width: auto;
+  flex: none;
+  border-radius: 4px;
+}
+.links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+.links a {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0.92;
+  transition: 0.3s;
+}
+.links a:hover {
+  color: var(--color-gold-soft);
+  opacity: 1;
+}
+.nav.solid .links a {
+  color: var(--color-espresso);
+}
+.nav.solid .links a:hover {
+  color: var(--color-gold);
+}
+.cta {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #fff !important;
+  padding: 0.6rem 1.35rem;
+  border-radius: 2px;
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+.cta:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink) !important;
+}
+.nav.solid .cta {
+  border-color: var(--color-gold-deep);
+  color: var(--color-gold-deep) !important;
+}
+
+@media (max-width: 920px) {
+  .links {
+    display: none;
+  }
+}

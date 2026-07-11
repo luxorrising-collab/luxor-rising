@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
+/* ===== Design tokens (Luxor Rising) ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-cream: #FAF3E4;
+  --color-cream-deep: #F0E5C9;
+  --color-paper: #FDFAF3;
+  --color-gold: #C9A063;
+  --color-gold-deep: #A07E45;
+  --color-gold-soft: #E5D4AA;
+  --color-espresso: #3A2818;
+  --color-ink: #2A1C10;
+  --color-nile: #1A3A5C;
+  --color-sand: #E8D9BC;
+
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
+
+  --maxw: 1240px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-cream: var(--color-cream);
+  --color-cream-deep: var(--color-cream-deep);
+  --color-paper: var(--color-paper);
+  --color-gold: var(--color-gold);
+  --color-gold-deep: var(--color-gold-deep);
+  --color-gold-soft: var(--color-gold-soft);
+  --color-espresso: var(--color-espresso);
+  --color-ink: var(--color-ink);
+  --color-nile: var(--color-nile);
+  --color-sand: var(--color-sand);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ===== Reset & base ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--color-espresso);background:var(--color-cream);font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ===== Shared typography & layout primitives ===== */
+.eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--color-gold-deep)}
+.display{font-family:var(--font-display);font-weight:500;line-height:1.08;letter-spacing:-.01em}
+h1.display{font-size:clamp(2.6rem,5.4vw,4.4rem)}
+h2.display{font-size:clamp(1.9rem,3.8vw,3rem)}
+h3.display{font-size:clamp(1.3rem,2.2vw,1.7rem)}
+.lead{font-size:clamp(1.05rem,1.5vw,1.25rem);opacity:.85;font-weight:300}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(1.4rem,5vw,3.5rem)}
+.wrap-narrow{max-width:880px;margin:0 auto;padding:0 clamp(1.4rem,5vw,3.5rem)}
+section{padding:clamp(3.4rem,6vw,5.8rem) 0}
+.muted{opacity:.72}
+.center{text-align:center}
+.divider-line{height:1px;background:linear-gradient(90deg,transparent,var(--color-gold) 30%,var(--color-gold) 70%,transparent);max-width:120px;margin:1.3rem auto}
+.photo{background-size:cover;background-position:center;background-repeat:no-repeat}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;font-size:.82rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:1.05rem 2.2rem;border-radius:2px;transition:.35s cubic-bezier(.2,.7,.3,1);cursor:pointer;border:1px solid transparent;font-family:var(--font-body)}
+.btn-primary{background:var(--color-gold);color:var(--color-ink)}
+.btn-primary:hover{background:var(--color-gold-deep);color:var(--color-paper);transform:translateY(-2px)}
+.btn-ghost{border-color:rgba(255,255,255,.55);color:#fff}
+.btn-ghost:hover{border-color:var(--color-gold);background:rgba(201,160,99,.16)}
+.btn-line{border-color:var(--color-gold-deep);color:var(--color-gold-deep)}
+.btn-line:hover{background:var(--color-gold-deep);color:var(--color-paper)}
+.btn-lg{padding:1.2rem 2.8rem;font-size:.86rem}
+
+/* ===== Shared "how it works" 3-step block ===== */
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2rem}
+.s3{text-align:center}
+.s3 .num{font-family:var(--font-display);font-size:2.2rem;color:var(--color-gold);font-weight:600}
+.s3 h4{font-size:1rem;margin:.3rem 0 .4rem;color:var(--color-ink)}
+.s3 p{font-size:.88rem;opacity:.78}
+.disclosure{font-size:.84rem;opacity:.8;margin-top:1.8rem;padding:1rem 1.2rem;border-left:2px solid var(--color-gold);background:rgba(201,160,99,.07);font-style:italic;max-width:760px;margin-left:auto;margin-right:auto}
+
+/* ===== Shared testimonials block ===== */
+.tposts{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.2rem}
+.tp{background:#fff;border-radius:8px;padding:1.6rem;box-shadow:0 16px 34px -26px rgba(42,28,16,.5)}
+.tp .st{color:var(--color-gold);letter-spacing:.1em;font-size:.85rem}
+.tp blockquote{font-family:var(--font-display);font-size:1.12rem;line-height:1.5;color:var(--color-ink);margin:.6rem 0 .9rem;font-style:italic}
+.tp .who{font-size:.82rem;opacity:.7}
+
+/* ===== Shared FAQ accordion (used by <Faq>) ===== */
+.faq{max-width:840px;margin:2rem auto 0}
+.qa{border-bottom:1px solid var(--color-cream-deep);padding:1.1rem 0;cursor:pointer}
+.qa-q{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:1rem;font-weight:500;color:var(--color-ink)}
+.qa-q .pl{color:var(--color-gold);font-size:1.3rem;transition:.3s;flex:none}
+.qa.open .pl{transform:rotate(45deg)}
+.qa-a{max-height:0;overflow:hidden;transition:.4s;opacity:.8;font-size:.92rem}
+.qa.open .qa-a{max-height:280px;padding-top:.7rem}
+
+/* ===== Scroll reveal (used by <Reveal>) ===== */
+.reveal{opacity:0;transform:translateY(22px)}
+.reveal.in{opacity:1;transform:none;transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+
+@media(max-width:920px){
+  .steps3,.tposts{grid-template-columns:1fr}
 }

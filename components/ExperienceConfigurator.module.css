@@ -1,0 +1,283 @@
+.cfgGrid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: clamp(1.6rem, 4vw, 3rem);
+  margin-top: 2.2rem;
+  align-items: start;
+}
+.step {
+  margin-bottom: 1.7rem;
+}
+.stepH {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+.stepN {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.stepH h3 {
+  font-size: 1.05rem;
+  color: var(--color-ink);
+}
+.dateInput {
+  width: 100%;
+  border: 1.5px solid var(--color-cream-deep);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-espresso);
+  background: #fff;
+}
+.optGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.tile {
+  border: 1.5px solid var(--color-cream-deep);
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+}
+.tile:hover {
+  border-color: var(--color-gold);
+}
+.tile.sel {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 1px var(--color-gold);
+}
+.tt {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.ts {
+  font-size: 0.78rem;
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+.grpOpts {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.grp {
+  border: 1.5px solid var(--color-cream-deep);
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.84rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  color: var(--color-espresso);
+  transition: 0.2s;
+}
+.grp:hover {
+  border-color: var(--color-gold);
+}
+.grp.sel {
+  border-color: var(--color-gold);
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.grpNote {
+  font-size: 0.78rem;
+  color: var(--color-gold-deep);
+  margin-top: 0.6rem;
+  min-height: 1rem;
+}
+.addon {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1.5px solid var(--color-cream-deep);
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-bottom: 0.5rem;
+}
+.addon:hover {
+  border-color: var(--color-gold);
+}
+.addon.sel {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 1px var(--color-gold);
+}
+.ck {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-gold-deep);
+  border-radius: 4px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
+}
+.addon.sel .ck {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+.an {
+  font-size: 0.9rem;
+  color: var(--color-ink);
+}
+.ad {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+.ax {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--color-gold-deep);
+  font-weight: 500;
+}
+
+.summary {
+  background: var(--color-cream);
+  border: 1px solid var(--color-cream-deep);
+  border-radius: 12px;
+  padding: 1.6rem;
+  position: sticky;
+  top: 5.5rem;
+}
+.sumH {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.35rem;
+}
+.sumProof {
+  font-size: 0.74rem;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.6rem;
+}
+.sumPrice {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1;
+}
+.sumPer {
+  font-size: 0.84rem;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  margin: 0.3rem 0 0.2rem;
+}
+.sumMeta {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-bottom: 1rem;
+}
+.sumSub {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-gold-deep);
+  margin: 1rem 0 0.6rem;
+}
+.sumList {
+  list-style: none;
+}
+.sumList li {
+  font-size: 0.88rem;
+  padding: 0.28rem 0 0.28rem 1.4rem;
+  position: relative;
+}
+.sumList li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-gold-deep);
+}
+.payOpts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.pay {
+  border: 1.5px solid var(--color-cream-deep);
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.7rem;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.pay.sel {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 1px var(--color-gold);
+}
+.pay b {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+.pay span {
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+.sumBtn {
+  width: 100%;
+  margin-top: 0.2rem;
+}
+.sumReassure {
+  font-size: 0.74rem;
+  color: var(--color-gold-deep);
+  text-align: center;
+  margin-top: 0.7rem;
+}
+.sumFine {
+  font-size: 0.72rem;
+  opacity: 0.6;
+  margin-top: 0.8rem;
+  line-height: 1.4;
+}
+.upsell {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(201, 160, 99, 0.1);
+  border-radius: 8px;
+  font-size: 0.84rem;
+}
+.upsell a {
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-gold-soft);
+}
+
+@media (max-width: 880px) {
+  .cfgGrid {
+    grid-template-columns: 1fr;
+  }
+  .summary {
+    position: static;
+  }
+  .optGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

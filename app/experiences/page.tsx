@@ -1,0 +1,217 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import Nav from "@/components/Nav";
+import { MinimalFooter } from "@/components/Footer";
+import Reveal from "@/components/Reveal";
+import JsonLd from "@/components/JsonLd";
+import StickyBar from "@/components/StickyBar";
+import ExperiencesClient from "./ExperiencesClient";
+import styles from "./ExperiencesPage.module.css";
+
+export const metadata: Metadata = {
+  title: "Experiences in Luxor — Private, Curated, One Day at a Time",
+  description:
+    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your consigliere, delivered by licensed local specialists. From €640 a day.",
+  alternates: { canonical: "/experiences" },
+  openGraph: {
+    type: "website",
+    siteName: "Luxor Rising",
+    title: "Experiences in Luxor — Private, Curated, One Day at a Time",
+    description:
+      "Private temples, tombs, sunrise balloon, desert and Nile. Curated by your consigliere in Luxor.",
+    url: "/experiences",
+  },
+};
+
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Luxor Rising Experiences",
+  description: "Private, single-day curated experiences in Luxor, Egypt.",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      item: {
+        "@type": "Product",
+        name: "Medinet Habu, before anyone else",
+        description: "Private sunrise access to the temple of Ramesses III.",
+        brand: { "@type": "Brand", name: "Luxor Rising" },
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+      },
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      item: {
+        "@type": "Product",
+        name: "Karnak, in the quiet hour",
+        description: "Early private access to the Karnak temple complex.",
+        brand: { "@type": "Brand", name: "Luxor Rising" },
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+      },
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      item: {
+        "@type": "Product",
+        name: "Valley of the Kings, tombs chosen for you",
+        description: "Private full day in the Valley of the Kings with a licensed Egyptologist.",
+        brand: { "@type": "Brand", name: "Luxor Rising" },
+        offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+      },
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      item: {
+        "@type": "Product",
+        name: "The crossing — Hurghada to Luxor",
+        description: "Private door-to-door day from Hurghada to Luxor.",
+        brand: { "@type": "Brand", name: "Luxor Rising" },
+        offers: { "@type": "Offer", price: "890", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+      },
+    },
+    {
+      "@type": "ListItem",
+      position: 5,
+      item: {
+        "@type": "Product",
+        name: "Reality Hunting",
+        description: "A private day beyond the monuments, with a local consigliere.",
+        brand: { "@type": "Brand", name: "Luxor Rising" },
+        offers: { "@type": "Offer", price: "980", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+      },
+    },
+  ],
+};
+
+export default function ExperiencesPage() {
+  return (
+    <>
+      <JsonLd data={JSON_LD} />
+      <Nav
+        scrollAware={false}
+        links={[
+          { href: "/", label: "Home" },
+          { href: "/concierge-day", label: "Concierge Days" },
+          { href: "/experiences", label: "Experiences" },
+          { href: "/insiders-guide", label: "Insider's Guide" },
+        ]}
+        ctaHref="/concierge-day"
+        ctaLabel="Design your day"
+      />
+
+      {/* HERO */}
+      <header className={styles.hero}>
+        <Reveal className={`wrap ${styles.heroIn}`}>
+          <span className="eyebrow">The Collection</span>
+          <h1 className="display" style={{ margin: ".3rem 0 1.3rem" }}>
+            Everything we can open
+            <br />
+            for you in <em>Luxor</em>
+          </h1>
+          <p>
+            Not a catalogue of tours. A collection of days — private, timed against the crowds,
+            and delivered by the people who actually hold the keys.
+          </p>
+          <div className="divider-line" />
+        </Reveal>
+      </header>
+
+      {/* TRUST STRIP */}
+      <div className={styles.trust}>
+        <div className={`wrap ${styles.trustIn}`}>
+          <div className={styles.trustItem}>
+            <span className={styles.dot} />
+            <b>Private only</b> — never a group bus
+          </div>
+          <div className={styles.trustItem}>
+            <span className={styles.dot} />
+            <b>Licensed</b> Egyptologists &amp; drivers
+          </div>
+          <div className={styles.trustItem}>
+            <span className={styles.dot} />
+            <b>Free cancellation</b> up to 7 days before
+          </div>
+          <div className={styles.trustItem}>
+            <span className={styles.dot} />
+            <b>4.9/5</b> from early guests
+          </div>
+        </div>
+      </div>
+
+      <main className="wrap">
+        <ExperiencesClient />
+      </main>
+
+      {/* HOW IT WORKS */}
+      <section style={{ background: "var(--color-paper)", borderTop: "1px solid var(--color-line)", borderBottom: "1px solid var(--color-line)" }}>
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">How a day is built</span>
+          <div className="steps3">
+            <div className="s3">
+              <div className="num">01</div>
+              <h4>Tell us the shape</h4>
+              <p>How many days, how many of you, roughly when. Sixty seconds in the configurator — no account, no phone call.</p>
+            </div>
+            <div className="s3">
+              <div className="num">02</div>
+              <h4>We write the day</h4>
+              <p>Your consigliere builds the order and the timing so you land at each site in its best hour and miss the coaches entirely.</p>
+            </div>
+            <div className="s3">
+              <div className="num">03</div>
+              <h4>You just arrive</h4>
+              <p>Tickets, transfers, the Egyptologist, the water in the car — handled. You walk in and look at things.</p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* CLOSER */}
+      <section className={styles.closer}>
+        <Reveal className="wrap-narrow">
+          <h2 className="display">Not sure which day is yours?</h2>
+          <p className="lead" style={{ marginTop: ".8rem" }}>
+            Most people aren&apos;t, at first. Tell us who&apos;s coming and roughly when — we&apos;ll
+            send back a day we&apos;d actually want to be on ourselves.
+          </p>
+          <div className={styles.closerActions}>
+            <Link href="/concierge-day" className="btn btn-primary btn-lg">
+              Design your day →
+            </Link>
+            <Link href="/concierge-day" className="btn btn-line btn-lg">
+              Let us propose one
+            </Link>
+          </div>
+          <p className={styles.fine}>
+            Free cancellation up to 7 days before · Secure payment · A licensed Egyptologist on
+            every day
+          </p>
+        </Reveal>
+      </section>
+
+      <div style={{ paddingBottom: "64px" }}>
+        <MinimalFooter
+          links={[
+            { href: "/", label: "Home" },
+            { href: "/concierge-day", label: "Concierge Days" },
+            { href: "/experiences", label: "Experiences" },
+            { href: "/insiders-guide", label: "Insider's Guide" },
+          ]}
+        />
+      </div>
+
+      <StickyBar
+        name="From €640"
+        meta="a private day · free cancellation up to 7 days before"
+        ctaHref="/concierge-day"
+        ctaLabel="Design your day →"
+        revealOnScroll
+        revealAfter={620}
+      />
+    </>
+  );
+}

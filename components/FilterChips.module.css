@@ -1,0 +1,27 @@
+.row {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.chip {
+  border: 1.5px solid var(--color-cream-deep);
+  background: var(--color-paper);
+  border-radius: 100px;
+  padding: 0.5rem 1.05rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.chip:hover {
+  border-color: var(--color-gold-soft);
+  color: var(--color-espresso);
+}
+.chip.on {
+  background: var(--color-espresso);
+  border-color: var(--color-espresso);
+  color: var(--color-cream);
+  font-weight: 500;
+}

@@ -59,11 +59,19 @@
   color: var(--color-gold-soft);
   opacity: 1;
 }
+.links a.active {
+  color: var(--color-gold-soft);
+  opacity: 1;
+}
 .nav.solid .links a {
   color: var(--color-espresso);
 }
 .nav.solid .links a:hover {
   color: var(--color-gold);
+}
+.nav.solid .links a.active {
+  color: var(--color-gold-deep);
+  font-weight: 500;
 }
 .cta {
   border: 1px solid rgba(255, 255, 255, 0.6);

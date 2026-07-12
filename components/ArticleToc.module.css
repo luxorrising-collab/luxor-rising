@@ -1,0 +1,37 @@
+.toc {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 1.4rem 1.5rem;
+}
+.toc h5 {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.9rem;
+  font-weight: 600;
+}
+.toc ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.toc a {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  transition: 0.2s;
+  display: block;
+  border-left: 2px solid transparent;
+  padding-left: 0.7rem;
+  line-height: 1.4;
+}
+.toc a:hover {
+  color: var(--color-espresso);
+}
+.toc a.on {
+  color: var(--color-espresso);
+  border-color: var(--color-gold);
+  font-weight: 500;
+}

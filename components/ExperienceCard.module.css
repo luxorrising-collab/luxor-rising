@@ -1,0 +1,189 @@
+.card {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.4s;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-card-lift);
+}
+.card:hover .im :global(img) {
+  transform: scale(1.06);
+}
+.im {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--color-cream-deep);
+}
+.im :global(img) {
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.3, 1);
+  object-fit: cover;
+}
+.badge {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  background: rgba(26, 20, 16, 0.86);
+  backdrop-filter: blur(6px);
+  color: var(--color-cream);
+  font-size: 0.63rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  padding: 0.34rem 0.66rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+.badge.sig {
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.scarce {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  background: rgba(250, 243, 228, 0.94);
+  backdrop-filter: blur(6px);
+  font-size: 0.68rem;
+  color: var(--color-espresso);
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.pulse {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c0392b;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}
+.body {
+  padding: 1.35rem 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.meta {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.5rem;
+}
+.body h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  color: var(--color-ink);
+}
+.hook {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+.facts {
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.76rem;
+  color: var(--color-muted);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-line);
+  flex-wrap: wrap;
+}
+.facts b {
+  color: var(--color-espresso);
+  font-weight: 600;
+}
+.foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+}
+.price small {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.1rem;
+}
+.price b {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 500;
+  color: var(--color-espresso);
+}
+.price i {
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+/* compact (related-experience) variant */
+.compact .im {
+  aspect-ratio: 16 / 10;
+}
+.compact .body {
+  padding: 1.3rem 1.4rem 1.5rem;
+}
+.compact h3 {
+  font-size: 1.38rem;
+  margin-bottom: 0.45rem;
+}
+.compact .hook {
+  font-size: 0.86rem;
+  margin-bottom: 1rem;
+}
+.compactFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line);
+  margin-top: auto;
+}
+.compactFoot b {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-espresso);
+}
+.compactFoot small {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+.compactGo {
+  font-size: 0.79rem;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}

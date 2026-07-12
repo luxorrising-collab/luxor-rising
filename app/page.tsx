@@ -20,8 +20,8 @@ export default function HomePage() {
         links={[
           { href: "/concierge-day", label: "Concierge Days" },
           { href: "#villas", label: "Private Villas" },
-          { href: "#experiences", label: "Experiences" },
-          { href: "#guide", label: "Insider's Guide" },
+          { href: "/experiences", label: "Experiences" },
+          { href: "/insiders-guide", label: "Insider's Guide" },
           { href: "#about", label: "About" },
         ]}
         ctaHref="/concierge-day"
@@ -407,14 +407,14 @@ export default function HomePage() {
               { href: "/concierge-day", label: "Concierge Days" },
               { href: "/concierge-day", label: "Bespoke & multi-day" },
               { href: "#villas", label: "Private villas" },
-              { href: "#experiences", label: "Experiences" },
+              { href: "/experiences", label: "Experiences" },
             ],
           },
           {
             title: "Company",
             links: [
               { href: "#about", label: "About us" },
-              { href: "#guide", label: "Insider's Guide" },
+              { href: "/insiders-guide", label: "Insider's Guide" },
               { href: "#how", label: "How it works" },
             ],
           },

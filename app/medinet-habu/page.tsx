@@ -679,7 +679,7 @@ export default function MedinetHabuPage() {
         links={[
           { href: "/", label: "Home" },
           { href: "/concierge-day", label: "Concierge Days" },
-          { href: "/#experiences", label: "Experiences" },
+          { href: "/experiences", label: "Experiences" },
           { href: "/#villas", label: "Private Villas" },
         ]}
         bottomText="© 2026 Luxor Rising — private concierge in Egypt · Luxor & Hurghada"

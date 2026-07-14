@@ -224,8 +224,9 @@
   color: var(--color-gold);
 }
 
-/* pull quote */
-.pull {
+/* pull quote — rendered from a markdoc blockquote, so targeted by tag,
+   not a class; the citation is simply the blockquote's last paragraph. */
+.body blockquote {
   margin: 2.6rem 0;
   padding: 1.6rem 0 1.6rem 2rem;
   border-left: 2px solid var(--color-gold);
@@ -235,8 +236,10 @@
   font-style: italic;
   color: var(--color-ink);
 }
-.pull cite {
-  display: block;
+.body blockquote p {
+  margin-bottom: 0;
+}
+.body blockquote p:last-child {
   font-family: var(--font-body);
   font-size: 0.8rem;
   font-style: normal;

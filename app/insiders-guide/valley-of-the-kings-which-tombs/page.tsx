@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import * as React from "react";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Markdoc, { Tag, type RenderableTreeNode } from "@markdoc/markdoc";
 import Nav from "@/components/Nav";
 import { MinimalFooter } from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -12,22 +15,16 @@ import ArticleToc from "@/components/ArticleToc";
 import InlineCta from "@/components/InlineCta";
 import AuthorBox from "@/components/AuthorBox";
 import ExperienceCard from "@/components/ExperienceCard";
+import { reader } from "@/lib/keystatic-reader";
+import { ARTICLE_CATEGORY_LABELS, ARTICLE_AUTHORS } from "@/lib/article-labels";
 import styles from "./ArticlePage.module.css";
 
-export const metadata: Metadata = {
-  title: "Which Tombs in the Valley of the Kings Are Actually Worth It (2026)",
-  description:
-    "Your ticket covers three tombs out of around eight that are open. Here's which ones we choose for guests, which are overrated, and why the right answer changes month to month.",
-  alternates: { canonical: "/insiders-guide/valley-of-the-kings-which-tombs" },
-  openGraph: {
-    type: "article",
-    siteName: "Luxor Rising",
-    title: "Which Tombs in the Valley of the Kings Are Actually Worth It",
-    description: "Your ticket gets you three. Two of the three most people pick are the wrong ones.",
-    url: "/insiders-guide/valley-of-the-kings-which-tombs",
-    images: ["/images/tomb-corridor-dark-chamber_IMG_20251009_111103.jpg"],
-  },
-};
+const SLUG = "valley-of-the-kings-which-tombs";
+
+// Structural page furniture below (takeaways, verdict table, both inline
+// CTAs, FAQ, bookcard, related experiences) is specific to this article and
+// isn't part of the CMS schema, so it stays hardcoded here — only the prose
+// body and the fields above come from the articles collection.
 
 const TOC_ITEMS = [
   { id: "mistake", label: "The mistake everyone makes" },
@@ -60,47 +57,112 @@ const FAQ_ITEMS = [
   },
 ];
 
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Article",
-      headline: "Which tombs in the Valley of the Kings are actually worth it",
-      description:
-        "Your ticket gets you into three of around eight open tombs. Which ones are worth it, which are overrated, and why the answer changes month to month.",
-      image: ["https://luxorrising.com/images/tomb-corridor-dark-chamber_IMG_20251009_111103.jpg"],
-      author: {
-        "@type": "Person",
-        name: "Ahmed",
-        jobTitle: "Consigliere, Luxor Rising",
-        knowsAbout: ["Valley of the Kings", "Luxor", "Ancient Egypt"],
-      },
-      reviewedBy: { "@type": "Person", name: "Dr. Nour", jobTitle: "Licensed Egyptologist" },
-      publisher: { "@type": "Organization", name: "Luxor Rising" },
-      datePublished: "2026-07-01",
-      dateModified: "2026-07-01",
-      mainEntityOfPage: "https://luxorrising.com/insiders-guide/valley-of-the-kings-which-tombs",
-    },
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://luxorrising.com/" },
-        { "@type": "ListItem", position: 2, name: "Insider's Guide", item: "https://luxorrising.com/insiders-guide" },
-        { "@type": "ListItem", position: 3, name: "Valley of the Kings" },
-      ],
-    },
-    {
-      "@type": "FAQPage",
-      mainEntity: FAQ_ITEMS.map((f) => ({
-        "@type": "Question",
-        name: f.q,
-        acceptedAnswer: { "@type": "Answer", text: f.a },
-      })),
-    },
-  ],
-};
+async function getEntry() {
+  const entry = await reader.collections.articles.read(SLUG, { resolveLinkedFiles: true });
+  if (!entry) return null;
+  return entry;
+}
 
-export default function ValleyOfTheKingsArticle() {
+/** Splits the transformed markdoc body into segments, cutting right before
+ * each heading whose `{% #id %}` matches one of `splitIds`, in order. */
+function splitAtHeadingIds(children: RenderableTreeNode[], splitIds: string[]) {
+  const segments: RenderableTreeNode[][] = [];
+  let current: RenderableTreeNode[] = [];
+  for (const child of children) {
+    const id = Tag.isTag(child) ? child.attributes?.id : undefined;
+    if (typeof id === "string" && splitIds.includes(id)) {
+      segments.push(current);
+      current = [child];
+    } else {
+      current.push(child);
+    }
+  }
+  segments.push(current);
+  return segments;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const entry = await getEntry();
+  if (!entry) return {};
+  const title = entry.metaTitle || entry.title;
+  const description = entry.metaDescription || entry.excerpt;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/insiders-guide/${SLUG}` },
+    openGraph: {
+      type: "article",
+      siteName: "Luxor Rising",
+      title,
+      description,
+      url: `/insiders-guide/${SLUG}`,
+      images: entry.heroImage ? [entry.heroImage] : undefined,
+    },
+  };
+}
+
+export default async function ValleyOfTheKingsArticle() {
+  const entry = await getEntry();
+  if (!entry) notFound();
+
+  const author = ARTICLE_AUTHORS[entry.author] ?? { name: entry.author, bio: "" };
+  const categoryLabel = ARTICLE_CATEGORY_LABELS[entry.category] ?? entry.category;
+  const updatedDate = entry.publishedAt
+    ? new Date(entry.publishedAt).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
+
+  const { node } = entry.content;
+  const transformed = Markdoc.transform(node);
+  const rootChildren = Tag.isTag(transformed) ? transformed.children : [transformed];
+  const [introAndMistake, setiSection, whenSection, beyondSection, faqHeading] = splitAtHeadingIds(
+    rootChildren,
+    ["seti", "when", "beyond", "faq"]
+  );
+  const renderMd = (nodes: RenderableTreeNode[]) => Markdoc.renderers.react(nodes, React, {});
+
+  const JSON_LD = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        headline: entry.title,
+        description: entry.excerpt,
+        image: entry.heroImage ? [`https://luxorrising.com${entry.heroImage}`] : undefined,
+        author: {
+          "@type": "Person",
+          name: author.name,
+          jobTitle: "Consigliere, Luxor Rising",
+          knowsAbout: ["Valley of the Kings", "Luxor", "Ancient Egypt"],
+        },
+        reviewedBy: { "@type": "Person", name: "Dr. Nour", jobTitle: "Licensed Egyptologist" },
+        publisher: { "@type": "Organization", name: "Luxor Rising" },
+        datePublished: entry.publishedAt,
+        dateModified: entry.publishedAt,
+        mainEntityOfPage: `https://luxorrising.com/insiders-guide/${SLUG}`,
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://luxorrising.com/" },
+          { "@type": "ListItem", position: 2, name: "Insider's Guide", item: "https://luxorrising.com/insiders-guide" },
+          { "@type": "ListItem", position: 3, name: entry.title },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: FAQ_ITEMS.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+
   return (
     <>
       <JsonLd data={JSON_LD} />
@@ -123,43 +185,38 @@ export default function ValleyOfTheKingsArticle() {
           <span>/</span>
           <Link href="/insiders-guide">Insider&apos;s Guide</Link>
           <span>/</span>
-          Valley of the Kings
+          {entry.title}
         </nav>
 
         <header className={styles.head}>
-          <div className={styles.kicker}>Temples &amp; tombs · 9 min read</div>
-          <h1 className="display">Which tombs in the Valley of the Kings are actually worth it</h1>
-          <p className={styles.standfirst}>
-            Your ticket gets you into three. Around eight are usually open. And two of the three
-            most people pick are, on most days, the wrong ones.
-          </p>
+          <div className={styles.kicker}>
+            {categoryLabel} · {entry.readingTime}
+          </div>
+          <h1 className="display">{entry.title}</h1>
+          <p className={styles.standfirst}>{entry.excerpt}</p>
         </header>
 
         <div className={styles.byline}>
           <div className={styles.bylineAvatar} aria-hidden="true">
-            A
+            {author.name.charAt(0)}
           </div>
           <div className={styles.bylineT}>
-            <b>Ahmed</b>
-            <span>Our consigliere in Luxor. Born on the west bank, twenty minutes from the Valley gate.</span>
+            <b>{author.name}</b>
+            <span>{author.bio}</span>
           </div>
           <div className={styles.bylineMeta}>
             <span className={styles.verified}>
               <span className={styles.check}>✓</span>Fact-checked by Dr. Nour, licensed Egyptologist
             </span>
-            <span>Updated 1 July 2026</span>
+            {updatedDate && <span>Updated {updatedDate}</span>}
           </div>
         </div>
 
-        <figure className={styles.heroImg}>
-          <Image
-            src="/images/tomb-corridor-dark-chamber_IMG_20251009_111103.jpg"
-            alt="Painted corridor descending into a royal tomb in the Valley of the Kings"
-            fill
-            priority
-            sizes="(max-width: 780px) 100vw, 780px"
-          />
-        </figure>
+        {entry.heroImage && (
+          <figure className={styles.heroImg}>
+            <Image src={entry.heroImage} alt={entry.title} fill priority sizes="(max-width: 780px) 100vw, 780px" />
+          </figure>
+        )}
         <figcaption className={styles.cap}>
           A descending corridor in the Valley of the Kings. Most visitors photograph it for
           ninety seconds and leave.
@@ -198,64 +255,7 @@ export default function ValleyOfTheKingsArticle() {
               </ul>
             </div>
 
-            <p>
-              Here is the thing nobody explains at the ticket booth: the Valley of the Kings is
-              not one attraction. It is sixty-odd tombs, of which roughly eight are open on any
-              given day, on a rotation that changes for conservation reasons without much
-              announcement. Your standard ticket admits you to <strong>three of them</strong>.
-              Which three is entirely your choice — and almost everybody chooses badly, because
-              they choose at the gate, in the heat, with no information.
-            </p>
-
-            <p>
-              Ahmed grew up twenty minutes from that gate, and has been inside all of them. So
-              let this save you the mistake people make every morning.
-            </p>
-
-            <h2 id="mistake">The mistake almost everyone makes</h2>
-
-            <p>
-              Most visitors arrive between 9 and 11am, having taken a coach from Hurghada that
-              left at three in the morning. They are tired. It is thirty-eight degrees in the
-              ravine. Someone points at the two tombs nearest the entrance — usually{" "}
-              <strong>Ramesses IX (KV6)</strong> and <strong>Ramesses IV (KV2)</strong>, because
-              they are the closest and the queues move — and that is two of your three gone,
-              chosen by proximity rather than merit.
-            </p>
-
-            <p>
-              Then they pay extra for <strong>Tutankhamun (KV62)</strong>, because it is the name
-              they know.
-            </p>
-
-            <p>
-              And this is the honest part that costs us money to say:{" "}
-              <em>Tutankhamun&apos;s tomb is, architecturally, one of the least impressive in the
-              Valley.</em> It is small. It was not built for him — he died young and they buried
-              him in a hurry, in what was probably meant to be a courtier&apos;s tomb. The
-              treasure that made it famous is not in it; it is in Cairo. What remains is a mummy
-              in a case, one decorated chamber, and a lot of people shuffling in a small space.
-            </p>
-
-            <div className={styles.pull}>
-              People come out of Tutankhamun&apos;s tomb slightly embarrassed, as though they
-              were supposed to feel something and did not.
-              <cite>— Ahmed, on the west bank</cite>
-            </div>
-
-            <p>
-              It is not that you shouldn&apos;t go. If standing two metres from the boy king
-              matters to you — and for many people it genuinely does, and that is a perfectly
-              good reason — go. Just go <em>knowing</em> what it is, and do not let it be the
-              thing you spent your money and your energy on.
-            </p>
-
-            <h2 id="worth">The tombs actually worth your three</h2>
-
-            <p>
-              These are the ones we take guests into, when they are open. The Valley rotates, so
-              treat this as a ranking rather than a fixed list.
-            </p>
+            {renderMd(introAndMistake)}
 
             <div className={styles.verdict}>
               <div className={styles.vrow}>
@@ -302,21 +302,7 @@ export default function ValleyOfTheKingsArticle() {
               </div>
             </div>
 
-            <h3>The one we&apos;d actually pay extra for</h3>
-
-            <p>
-              <strong>Seti I</strong> is not a tomb. It is a cathedral cut downwards into rock,
-              over a hundred metres of it, every surface carved and painted, the astronomical
-              ceiling still holding its blue. It was closed for decades and reopened with a
-              separate, expensive ticket precisely because they want to limit how many bodies
-              breathe in it.
-            </p>
-
-            <p>
-              If you are choosing between the extra ticket for Tutankhamun and the extra ticket
-              for Seti I, and you can only justify one: <strong>it is Seti I, and it is not
-              close.</strong>
-            </p>
+            {renderMd(setiSection)}
 
             <InlineCta
               eyebrow="We handle this for you"
@@ -326,71 +312,8 @@ export default function ValleyOfTheKingsArticle() {
               ctaHref="/concierge-day?start=valley"
             />
 
-            <h2 id="when">When you go matters more than which you pick</h2>
-
-            <p>
-              You can choose the three best tombs in the Valley and still have a mediocre
-              morning, because you arrived at ten with four coaches. The tombs are narrow. Forty
-              people in a corridor built for a burial procession is not an experience, it is a
-              queue with paintings.
-            </p>
-
-            <p>
-              The Valley opens at six. Between <strong>six and half past seven</strong>, you can
-              stand alone in KV11. By nine, you cannot. That gap — an hour and a half — is worth
-              more than any ticket upgrade you can buy.
-            </p>
-
-            <ul>
-              <li>
-                <strong>Arrive at opening.</strong> Not &quot;early.&quot; At opening. The
-                difference between 6:00 and 7:30 is the difference between solitude and
-                shuffling.
-              </li>
-              <li>
-                <strong>Do the deepest tomb first</strong>, while it is still cool and your legs
-                are fresh. The descents are steeper than people expect.
-              </li>
-              <li>
-                <strong>Skip the middle of the day entirely.</strong> Between eleven and three the
-                ravine holds heat like an oven, and the light for photographs is flat and cruel.
-              </li>
-              <li>
-                <strong>Come back in the late afternoon</strong> for the west bank temples, when
-                the stone goes orange.
-              </li>
-            </ul>
-
-            <p>
-              This is the single reason we build days the way we do. It is not that our guests
-              get better tombs — anyone can buy the same ticket. It is that they get them{" "}
-              <em>empty</em>.
-            </p>
-
-            <h2 id="beyond">What most people miss entirely</h2>
-
-            <p>
-              Fifteen minutes from the Valley gate is <strong>Medinet Habu</strong> — the
-              mortuary temple of Ramesses III, still holding its original paint, and on most
-              mornings almost deserted. It is, to our mind, the most beautiful thing on the west
-              bank, and the majority of visitors never see it, because it is not on the coach
-              itinerary.
-            </p>
-
-            <p>
-              Ten minutes the other way is the tomb of <strong>Nefertari</strong>, which is not
-              in the Valley of the Kings at all but the Valley of the Queens, and which is the
-              most beautiful painted surface most guests have ever stood in front of. Entry is
-              capped and expensive. People come out silent. It is one of the only times we&apos;ve
-              seen tourists cry.
-            </p>
-
-            <p>
-              If you have a day here — a real day, not a stop on a bus route — you can do the
-              Valley properly at dawn, Medinet Habu at nine while it is still cool, and be
-              drinking tea somewhere shaded before the heat arrives. That is not a luxury
-              itinerary. It is just the correct order, which nobody tells you.
-            </p>
+            {renderMd(whenSection)}
+            {renderMd(beyondSection)}
 
             <InlineCta
               eyebrow="The day this article describes"
@@ -400,7 +323,7 @@ export default function ValleyOfTheKingsArticle() {
               ctaHref="/experiences"
             />
 
-            <h2 id="faq">Questions we get asked</h2>
+            {renderMd(faqHeading)}
           </article>
 
           {/* SIDEBAR */}
@@ -444,7 +367,7 @@ export default function ValleyOfTheKingsArticle() {
 
         {/* AUTHOR */}
         <AuthorBox
-          name="Ahmed"
+          name={author.name}
           bio="Born on the west bank of Luxor, twenty minutes from the Valley gate. He has spent twenty years opening doors in this city — for archaeologists, film crews, and people who simply wanted to see it properly. He is our consigliere: he does not carry the flag, he decides the order of the day."
           href="/insiders-guide"
           ctaLabel="More from the guide →"

@@ -6,6 +6,8 @@ import Reveal from "@/components/Reveal";
 import JsonLd from "@/components/JsonLd";
 import ArticleCard from "@/components/ArticleCard";
 import NewsletterForm from "@/components/NewsletterForm";
+import { reader } from "@/lib/keystatic-reader";
+import { ARTICLE_CATEGORY_LABELS, ARTICLE_AUTHORS } from "@/lib/article-labels";
 import GuideClient from "./GuideClient";
 import styles from "./InsidersGuidePage.module.css";
 
@@ -23,36 +25,56 @@ export const metadata: Metadata = {
   },
 };
 
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "Blog",
-  name: "The Insider's Guide to Luxor",
-  description: "Honest, specific guidance on Luxor from local experts and licensed Egyptologists.",
-  publisher: { "@type": "Organization", name: "Luxor Rising" },
-  blogPost: [
-    {
-      "@type": "BlogPosting",
-      headline: "Which tombs in the Valley of the Kings are actually worth it",
-      author: { "@type": "Person", name: "Ahmed" },
-      datePublished: "2026-07-01",
-      url: "https://luxorrising.com/insiders-guide/valley-of-the-kings-which-tombs",
-    },
-    {
-      "@type": "BlogPosting",
-      headline: "The best month to come — and the one everyone gets wrong",
-      author: { "@type": "Person", name: "Ahmed" },
-      datePublished: "2026-06-18",
-    },
-    {
-      "@type": "BlogPosting",
-      headline: "Why Medinet Habu is the temple nobody tells you about",
-      author: { "@type": "Person", name: "Dr. Nour" },
-      datePublished: "2026-06-04",
-    },
-  ],
-};
+// The other two entries here are placeholder posts with no page behind them
+// yet (same as before this migration) — only the first, CMS-backed article
+// is built dynamically below.
+const PLACEHOLDER_BLOG_POSTS = [
+  {
+    "@type": "BlogPosting",
+    headline: "The best month to come — and the one everyone gets wrong",
+    author: { "@type": "Person", name: "Ahmed" },
+    datePublished: "2026-06-18",
+  },
+  {
+    "@type": "BlogPosting",
+    headline: "Why Medinet Habu is the temple nobody tells you about",
+    author: { "@type": "Person", name: "Dr. Nour" },
+    datePublished: "2026-06-04",
+  },
+];
 
-export default function InsidersGuidePage() {
+export default async function InsidersGuidePage() {
+  const allArticles = await reader.collections.articles.all();
+  const featured = [...allArticles].sort((a, b) =>
+    (b.entry.publishedAt ?? "").localeCompare(a.entry.publishedAt ?? "")
+  )[0];
+  const featuredAuthor = featured ? ARTICLE_AUTHORS[featured.entry.author]?.name ?? featured.entry.author : "Ahmed";
+  const featuredCategoryLabel = featured
+    ? ARTICLE_CATEGORY_LABELS[featured.entry.category] ?? featured.entry.category
+    : undefined;
+
+  const JSON_LD = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "The Insider's Guide to Luxor",
+    description: "Honest, specific guidance on Luxor from local experts and licensed Egyptologists.",
+    publisher: { "@type": "Organization", name: "Luxor Rising" },
+    blogPost: [
+      ...(featured
+        ? [
+            {
+              "@type": "BlogPosting",
+              headline: featured.entry.title,
+              author: { "@type": "Person", name: featuredAuthor },
+              datePublished: featured.entry.publishedAt,
+              url: `https://luxorrising.com/insiders-guide/${featured.slug}`,
+            },
+          ]
+        : []),
+      ...PLACEHOLDER_BLOG_POSTS,
+    ],
+  };
+
   return (
     <>
       <JsonLd data={JSON_LD} />
@@ -111,20 +133,29 @@ export default function InsidersGuidePage() {
 
       <main className="wrap">
         {/* FEATURED */}
-        <Reveal className={styles.feat}>
-          <ArticleCard
-            featured
-            href="/insiders-guide/valley-of-the-kings-which-tombs"
-            src="/images/tomb-corridor-dark-chamber_IMG_20251009_111103.jpg"
-            alt="Painted corridor descending into a royal tomb in the Valley of the Kings"
-            category="Temples & tombs"
-            readTime="9 min read"
-            updated="Updated July 2026"
-            title="Which tombs in the Valley of the Kings are actually worth it"
-            excerpt="Your ticket gets you into three. There are sixty-odd, eight are usually open, and two of the three most people pick are the wrong ones. Here's how we choose — and why the answer changes month to month."
-            authorName="Ahmed"
-          />
-        </Reveal>
+        {featured && (
+          <Reveal className={styles.feat}>
+            <ArticleCard
+              featured
+              href={`/insiders-guide/${featured.slug}`}
+              src={featured.entry.heroImage ?? ""}
+              alt={featured.entry.title}
+              category={featuredCategoryLabel}
+              readTime={featured.entry.readingTime ?? ""}
+              updated={
+                featured.entry.publishedAt
+                  ? `Updated ${new Date(featured.entry.publishedAt).toLocaleDateString("en-GB", {
+                      month: "long",
+                      year: "numeric",
+                    })}`
+                  : undefined
+              }
+              title={featured.entry.title}
+              excerpt={featured.entry.excerpt ?? ""}
+              authorName={featuredAuthor}
+            />
+          </Reveal>
+        )}
 
         <GuideClient />
       </main>

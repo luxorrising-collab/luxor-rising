@@ -484,6 +484,14 @@
   text-align: center;
 }
 
+/* mobile-only sticky CTA bar */
+.mobileOnlyBar {
+  display: none;
+}
+.mobileBarSpacer {
+  padding-bottom: 0;
+}
+
 @media (max-width: 920px) {
   .offerGrid,
   .whyGrid {
@@ -491,5 +499,11 @@
   }
   .blogGrid {
     grid-template-columns: 1fr;
+  }
+  .mobileOnlyBar {
+    display: block;
+  }
+  .mobileBarSpacer {
+    padding-bottom: 64px;
   }
 }

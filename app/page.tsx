@@ -3,6 +3,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import { FullFooter } from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import StickyBar from "@/components/StickyBar";
 import styles from "./HomePage.module.css";
 
 const TRUST_ITEMS = [
@@ -399,34 +400,47 @@ export default function HomePage() {
         </Reveal>
       </section>
 
-      <FullFooter
-        columns={[
-          {
-            title: "Concierge",
-            links: [
-              { href: "/concierge-day", label: "Concierge Days" },
-              { href: "/concierge-day", label: "Bespoke & multi-day" },
-              { href: "#villas", label: "Private villas" },
-              { href: "/experiences", label: "Experiences" },
-            ],
-          },
-          {
-            title: "Company",
-            links: [
-              { href: "#about", label: "About us" },
-              { href: "/insiders-guide", label: "Insider's Guide" },
-              { href: "#how", label: "How it works" },
-            ],
-          },
-          {
-            title: "Plan with us",
-            links: [
-              { href: "#", label: "WhatsApp" },
-              { href: "#", label: "hello@luxorrising.com" },
-              { href: "#", label: "Luxor & Hurghada, Egypt" },
-            ],
-          },
-        ]}
+      <div className={styles.mobileBarSpacer}>
+        <FullFooter
+          columns={[
+            {
+              title: "Concierge",
+              links: [
+                { href: "/concierge-day", label: "Concierge Days" },
+                { href: "/concierge-day", label: "Bespoke & multi-day" },
+                { href: "#villas", label: "Private villas" },
+                { href: "/experiences", label: "Experiences" },
+              ],
+            },
+            {
+              title: "Company",
+              links: [
+                { href: "#about", label: "About us" },
+                { href: "/insiders-guide", label: "Insider's Guide" },
+                { href: "#how", label: "How it works" },
+              ],
+            },
+            {
+              title: "Plan with us",
+              links: [
+                { href: "#", label: "WhatsApp" },
+                { href: "#", label: "hello@luxorrising.com" },
+                { href: "#", label: "Luxor & Hurghada, Egypt" },
+              ],
+            },
+          ]}
+        />
+      </div>
+
+      {/* Mobile-only sticky action bar — thumb-reachable CTA for small screens */}
+      <StickyBar
+        name="From €450"
+        meta="a private day · free cancellation up to 7 days before"
+        ctaHref="/concierge-day"
+        ctaLabel="Design your day →"
+        revealOnScroll
+        revealAfter={480}
+        className={styles.mobileOnlyBar}
       />
     </>
   );

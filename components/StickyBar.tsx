@@ -10,6 +10,7 @@ export default function StickyBar({
   ctaLabel,
   revealOnScroll = false,
   revealAfter = 640,
+  className = "",
 }: {
   name: string;
   meta: string;
@@ -17,6 +18,7 @@ export default function StickyBar({
   ctaLabel: string;
   revealOnScroll?: boolean;
   revealAfter?: number;
+  className?: string;
 }) {
   const [shown, setShown] = useState(!revealOnScroll);
 
@@ -31,7 +33,7 @@ export default function StickyBar({
   }, [revealOnScroll, revealAfter]);
 
   return (
-    <div className={`${styles.bar} ${shown ? "" : styles.hidden}`}>
+    <div className={`${styles.bar} ${shown ? "" : styles.hidden} ${className}`}>
       <div className={styles.inner}>
         <div>
           <span className={styles.name}>{name}</span>

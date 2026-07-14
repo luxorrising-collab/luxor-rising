@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,7 +28,17 @@ export default function Nav({
   brandHref?: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuId = useId();
+
+  // Close the mobile menu whenever the route changes (e.g. back/forward
+  // navigation that doesn't go through a link's own onClick handler).
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
+    setMenuOpen(false);
+  }
 
   useEffect(() => {
     if (!scrollAware) return;
@@ -40,7 +50,22 @@ export default function Nav({
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollAware]);
 
-  const solid = !scrollAware || scrolled;
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  const solid = !scrollAware || scrolled || menuOpen;
+  const hasLinks = Boolean(links && links.length > 0);
 
   return (
     <header className={`${styles.nav} ${solid ? styles.solid : ""}`}>
@@ -55,9 +80,9 @@ export default function Nav({
           />
           Luxor<span> Rising</span>
         </Link>
-        {links && links.length > 0 && (
+        {hasLinks && (
           <nav className={styles.links}>
-            {links.map((l) => {
+            {links!.map((l) => {
               const active = isActiveLink(l.href, pathname);
               return (
                 <Link
@@ -72,10 +97,54 @@ export default function Nav({
             })}
           </nav>
         )}
-        <Link href={ctaHref} className={styles.cta}>
+        <Link href={ctaHref} className={`${styles.cta} ${hasLinks ? styles.ctaCollapsible : ""}`}>
           {ctaLabel}
         </Link>
+        {hasLinks && (
+          <button
+            type="button"
+            className={styles.burger}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span className={`${styles.burgerBar} ${menuOpen ? styles.burgerBarOpen : ""}`} />
+          </button>
+        )}
       </div>
+
+      {hasLinks && (
+        <div
+          id={menuId}
+          className={styles.mobileMenu}
+          style={{ maxHeight: menuOpen ? 520 : 0, opacity: menuOpen ? 1 : 0 }}
+        >
+          <nav className={styles.mobileLinks}>
+            {links!.map((l) => {
+              const active = isActiveLink(l.href, pathname);
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={active ? styles.active : undefined}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <Link
+            href={ctaHref}
+            className={`btn btn-primary ${styles.mobileCta}`}
+            onClick={() => setMenuOpen(false)}
+          >
+            {ctaLabel}
+          </Link>
+        </div>
+      )}
     </header>
   );
 }

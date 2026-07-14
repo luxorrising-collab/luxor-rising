@@ -93,8 +93,110 @@
   color: var(--color-gold-deep) !important;
 }
 
+/* burger toggle (mobile only) */
+.burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+}
+.burgerBar,
+.burgerBar::before,
+.burgerBar::after {
+  content: "";
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  height: 2px;
+  background: #fff;
+  transition: 0.3s;
+}
+.nav.solid .burgerBar,
+.nav.solid .burgerBar::before,
+.nav.solid .burgerBar::after {
+  background: var(--color-espresso);
+}
+.burgerBar {
+  top: 21px;
+}
+.burgerBar::before {
+  top: -7px;
+}
+.burgerBar::after {
+  top: 7px;
+}
+.burgerBarOpen {
+  background: transparent !important;
+}
+.burgerBarOpen::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+.burgerBarOpen::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* mobile dropdown menu */
+.mobileMenu {
+  display: none;
+}
+
 @media (max-width: 920px) {
   .links {
     display: none;
+  }
+  .ctaCollapsible {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+  .mobileMenu {
+    display: block;
+    overflow: hidden;
+    background: rgba(250, 243, 228, 0.98);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(58, 40, 24, 0.08);
+    transition: max-height 0.4s cubic-bezier(0.2, 0.7, 0.3, 1), opacity 0.3s;
+  }
+  .mobileLinks {
+    display: flex;
+    flex-direction: column;
+    padding: 1.1rem clamp(1.4rem, 5vw, 3.5rem) 0.4rem;
+  }
+  .mobileLinks a {
+    padding: 0.85rem 0;
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-espresso);
+    border-bottom: 1px solid rgba(58, 40, 24, 0.08);
+  }
+  .mobileLinks a.active {
+    color: var(--color-gold-deep) !important;
+    font-weight: 500;
+  }
+  .mobileCta {
+    display: block;
+    margin: 1rem clamp(1.4rem, 5vw, 3.5rem) 1.3rem;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileMenu {
+    transition: none;
+  }
+  .burgerBar,
+  .burgerBar::before,
+  .burgerBar::after {
+    transition: none;
   }
 }

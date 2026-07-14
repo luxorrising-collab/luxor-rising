@@ -63,8 +63,36 @@ async function getEntry() {
   return entry;
 }
 
+// Keystatic's markdoc editor rejects the `{% #id %}` attribute shorthand on
+// headings (schema validation error), so ids can't live in the source file.
+// Instead, headings are matched by their exact text and given an id here,
+// at render time, after the content comes back from the CMS.
+const HEADING_IDS: Record<string, string> = {
+  "The mistake almost everyone makes": "mistake",
+  "The tombs actually worth your three": "worth",
+  "The one we'd actually pay extra for": "seti",
+  "When you go matters more than which you pick": "when",
+  "What most people miss entirely": "beyond",
+  "Questions we get asked": "faq",
+};
+
+function getTagText(node: RenderableTreeNode): string {
+  if (typeof node === "string") return node;
+  if (Tag.isTag(node)) return node.children.map(getTagText).join("");
+  return "";
+}
+
+function assignHeadingIds(children: RenderableTreeNode[]) {
+  for (const child of children) {
+    if (Tag.isTag(child) && /^h[1-6]$/.test(child.name)) {
+      const id = HEADING_IDS[getTagText(child).trim()];
+      if (id) child.attributes = { ...child.attributes, id };
+    }
+  }
+}
+
 /** Splits the transformed markdoc body into segments, cutting right before
- * each heading whose `{% #id %}` matches one of `splitIds`, in order. */
+ * each heading whose id (assigned above) matches one of `splitIds`. */
 function splitAtHeadingIds(children: RenderableTreeNode[], splitIds: string[]) {
   const segments: RenderableTreeNode[][] = [];
   let current: RenderableTreeNode[] = [];
@@ -118,6 +146,7 @@ export default async function ValleyOfTheKingsArticle() {
   const { node } = entry.content;
   const transformed = Markdoc.transform(node);
   const rootChildren = Tag.isTag(transformed) ? transformed.children : [transformed];
+  assignHeadingIds(rootChildren);
   const [introAndMistake, setiSection, whenSection, beyondSection, faqHeading] = splitAtHeadingIds(
     rootChildren,
     ["seti", "when", "beyond", "faq"]

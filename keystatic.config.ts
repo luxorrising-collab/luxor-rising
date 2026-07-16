@@ -33,11 +33,13 @@ const seoFields = {
 };
 
 export default config({
-  // `next build` always sets NODE_ENV=production, even on a local machine —
-  // so we key off Vercel's own env var instead, which is only set when
-  // actually running on Vercel (locally this always falls through to local
-  // storage, which is why `npm run build` works without GitHub credentials).
-  storage: process.env.VERCEL
+  // This config is bundled for both the server AND the browser (the admin
+  // page is a Client Component that imports it directly), so the switch has
+  // to be a NEXT_PUBLIC_ var — anything else resolves to `undefined` in the
+  // browser bundle even when it's correctly set on the server, which made
+  // the admin UI think it was in local mode while the server used GitHub
+  // mode. Reusing the app-slug var means no extra env var is needed.
+  storage: process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
     ? { kind: "github", repo: "luxorrising-collab/luxor-rising" }
     : { kind: "local" },
 

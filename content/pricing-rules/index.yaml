@@ -1,0 +1,16 @@
+dayRate: 450
+volumeDiscount:
+  - minDays: 2
+    discountPercent: 5.56
+  - minDays: 3
+    discountPercent: 11.11
+  - minDays: 4
+    discountPercent: 12.22
+groupSupplement:
+  - minGuests: 2
+    extraPerDay: 85
+  - minGuests: 3
+    extraPerDay: 70
+  - minGuests: 4
+    extraPerDay: 55
+depositPercent: 30

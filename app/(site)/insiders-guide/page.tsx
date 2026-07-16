@@ -44,7 +44,10 @@ const PLACEHOLDER_BLOG_POSTS = [
 ];
 
 export default async function InsidersGuidePage() {
-  const allArticles = await reader.collections.articles.all();
+  const [allArticles, page] = await Promise.all([
+    reader.collections.articles.all(),
+    reader.singletons.insidersGuidePage.read(),
+  ]);
   const featured = [...allArticles].sort((a, b) =>
     (b.entry.publishedAt ?? "").localeCompare(a.entry.publishedAt ?? "")
   )[0];
@@ -93,41 +96,30 @@ export default async function InsidersGuidePage() {
       {/* HERO */}
       <header className={styles.hero}>
         <Reveal className="wrap">
-          <span className="eyebrow">The Insider&apos;s Guide</span>
+          <span className="eyebrow">{page?.heroEyebrow}</span>
           <h1 className="display" style={{ margin: ".3rem 0 1.2rem" }}>
-            What we&apos;d tell you
+            {page?.heroTitleLine1}
             <br />
-            over <em>coffee</em>
+            over <em>{page?.heroTitleEmphasis}</em>
           </h1>
-          <p>
-            No listicles, no affiliate padding, no &quot;top 10 things to do.&quot; Just what&apos;s
-            actually worth your morning in Luxor — and what isn&apos;t — from the people who wake
-            up there.
-          </p>
+          <p>{page?.heroLead}</p>
         </Reveal>
       </header>
 
       {/* AUTHORITY */}
       <div className={styles.auth}>
         <div className={`wrap ${styles.authIn}`}>
-          <div className={styles.who}>
-            <div className={styles.av} aria-hidden="true">
-              A
+          {(page?.authors ?? []).map((author) => (
+            <div className={styles.who} key={author.name}>
+              <div className={styles.av} aria-hidden="true">
+                {author.initial}
+              </div>
+              <div className={styles.whoT}>
+                <b>{author.name}</b>
+                <span>{author.role}</span>
+              </div>
             </div>
-            <div className={styles.whoT}>
-              <b>Ahmed</b>
-              <span>Our consigliere in Luxor · born on the west bank</span>
-            </div>
-          </div>
-          <div className={styles.who}>
-            <div className={styles.av} aria-hidden="true">
-              N
-            </div>
-            <div className={styles.whoT}>
-              <b>Dr. Nour</b>
-              <span>Licensed Egyptologist · every article fact-checked</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -163,40 +155,36 @@ export default async function InsidersGuidePage() {
       {/* NEWSLETTER */}
       <section className={styles.news}>
         <div className={styles.newsIn}>
-          <span className="eyebrow">The letter</span>
+          <span className="eyebrow">{page?.newsletterEyebrow}</span>
           <h2 className="display">
-            One letter a month.
+            {page?.newsletterTitleLine1}
             <br />
-            Nothing you could have Googled.
+            {page?.newsletterTitleLine2}
           </h2>
-          <p>
-            What&apos;s just reopened, which tomb is worth the detour this season, and the
-            occasional thing our team sends us that we probably shouldn&apos;t publish.
-          </p>
+          <p>{page?.newsletterLead}</p>
           <NewsletterForm />
-          <p className={styles.newsFine}>No spam, no selling your address. Unsubscribe in one click.</p>
+          <p className={styles.newsFine}>{page?.newsletterFinePrint}</p>
         </div>
       </section>
 
       {/* CLOSER */}
       <section className={styles.closer}>
         <Reveal className="wrap-narrow">
-          <span className="eyebrow">Ready when you are</span>
+          <span className="eyebrow">{page?.closerEyebrow}</span>
           <h2 className="display" style={{ marginTop: ".3rem" }}>
-            Reading is one thing.
+            {page?.closerTitleLine1}
             <br />
-            Standing in it is another.
+            {page?.closerTitleLine2}
           </h2>
           <p className="lead" style={{ marginTop: ".8rem" }}>
-            Everything in this guide, we can put in front of you — timed properly, entries
-            handled, with someone who can read the walls.
+            {page?.closerLead}
           </p>
           <div className={styles.closerActions}>
-            <Link href="/concierge-day" className="btn btn-primary btn-lg">
-              Design your day →
+            <Link href={page?.closerPrimaryCtaHref ?? "/concierge-day"} className="btn btn-primary btn-lg">
+              {page?.closerPrimaryCtaLabel}
             </Link>
-            <Link href="/experiences" className="btn btn-line btn-lg">
-              See all experiences
+            <Link href={page?.closerSecondaryCtaHref ?? "/experiences"} className="btn btn-line btn-lg">
+              {page?.closerSecondaryCtaLabel}
             </Link>
           </div>
         </Reveal>

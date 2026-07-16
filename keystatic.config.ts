@@ -33,9 +33,13 @@ const seoFields = {
 };
 
 export default config({
-  storage: {
-    kind: "local",
-  },
+  // `next build` always sets NODE_ENV=production, even on a local machine —
+  // so we key off Vercel's own env var instead, which is only set when
+  // actually running on Vercel (locally this always falls through to local
+  // storage, which is why `npm run build` works without GitHub credentials).
+  storage: process.env.VERCEL
+    ? { kind: "github", repo: "luxorrising-collab/luxor-rising" }
+    : { kind: "local" },
 
   collections: {
     articles: collection({
@@ -95,24 +99,112 @@ export default config({
         hook: fields.text({
           label: "Hook",
           multiline: true,
-          description: "Short, punchy line shown on experience cards.",
+          description: "Short, punchy line shown on experience cards and as the hero subtitle.",
+        }),
+
+        // Hero
+        heroEyebrow: fields.text({
+          label: "Hero eyebrow",
+          description: 'e.g. "A single experience · Medinet Habu · Luxor West Bank"',
         }),
         heroImage: fields.image({
           label: "Hero image",
           directory: "public/images/experiences",
           publicPath: "/images/experiences/",
         }),
+
+        // At a glance
+        glanceLead: fields.text({
+          label: "At-a-glance summary",
+          multiline: true,
+          description: "One or two sentences under the hero, above the fact strip.",
+        }),
+        bestTime: fields.text({
+          label: "Best time",
+          description: 'e.g. "Dawn, before the crowds"',
+        }),
+        glanceIncludes: fields.text({
+          label: "\"Includes\" line",
+          description: 'e.g. "Includes private transfer · a certified Egyptologist on site..."',
+        }),
+
+        // Body
+        highlights: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          {
+            label: "Highlights (\"What you'll see\")",
+            itemLabel: (props) => props.fields.title.value || "Highlight",
+          }
+        ),
+        content: fields.markdoc({
+          label: "Content",
+          description: "The flowing story/narrative sections of the page.",
+          options: {
+            image: {
+              directory: "public/images/experiences",
+              publicPath: "/images/experiences/",
+            },
+          },
+        }),
+        momentQuote: fields.text({
+          label: "Full-bleed moment quote",
+          multiline: true,
+          description: "Optional short, dramatic line shown over the hero image between sections. Leave blank to skip.",
+        }),
         gallery: fields.array(
-          fields.image({
-            label: "Image",
-            directory: "public/images/experiences",
-            publicPath: "/images/experiences/",
+          fields.object({
+            image: fields.image({
+              label: "Image",
+              directory: "public/images/experiences",
+              publicPath: "/images/experiences/",
+            }),
+            caption: fields.text({ label: "Caption" }),
           }),
           {
             label: "Gallery",
-            itemLabel: (props) => props.value?.filename ?? "Image",
+            itemLabel: (props) => props.fields.caption.value || "Image",
           }
         ),
+
+        // Book section copy (the interactive configurator itself is not CMS-driven)
+        bookEyebrow: fields.text({ label: "Booking section eyebrow" }),
+        bookTitle: fields.text({ label: "Booking section title" }),
+        bookLead: fields.text({ label: "Booking section lead", multiline: true }),
+        bookNote: fields.text({
+          label: "Booking section note",
+          description: 'e.g. "Each dawn we host only one private group — slots are limited."',
+        }),
+
+        // Value stack
+        valueStackRows: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            price: fields.text({ label: "Price", description: 'e.g. "€90"' }),
+          }),
+          {
+            label: "Value stack rows",
+            itemLabel: (props) => props.fields.label.value || "Row",
+          }
+        ),
+        valueStackTotal: fields.text({
+          label: "Value stack total",
+          description: 'e.g. "€220+"',
+        }),
+
+        faq: fields.array(
+          fields.object({
+            question: fields.text({ label: "Question" }),
+            answer: fields.text({ label: "Answer", multiline: true }),
+          }),
+          {
+            label: "FAQ",
+            itemLabel: (props) => props.fields.question.value || "Question",
+          }
+        ),
+
         category: fields.select({
           label: "Category",
           options: EXPERIENCE_CATEGORIES,
@@ -134,25 +226,7 @@ export default config({
           label: "Scarcity note",
           description: 'Optional urgency line, e.g. "Books out 5–7 days ahead in winter"',
         }),
-        faq: fields.array(
-          fields.object({
-            question: fields.text({ label: "Question" }),
-            answer: fields.text({ label: "Answer", multiline: true }),
-          }),
-          {
-            label: "FAQ",
-            itemLabel: (props) => props.fields.question.value || "Question",
-          }
-        ),
-        content: fields.markdoc({
-          label: "Content",
-          options: {
-            image: {
-              directory: "public/images/experiences",
-              publicPath: "/images/experiences/",
-            },
-          },
-        }),
+
         ...seoFields,
 
         // Pricing
@@ -172,10 +246,35 @@ export default config({
           ],
           defaultValue: "perDay",
         }),
+        pricePerPerson: fields.text({
+          label: "Per-person price note",
+          description: 'Optional, e.g. "per person from €78"',
+        }),
         priceNote: fields.text({
           label: "Price note",
           description: 'Free text shown next to the price, e.g. "/ day, private"',
         }),
+        groupSupplement: fields.array(
+          fields.object({
+            minGuests: fields.integer({
+              label: "Guest number",
+              description: "e.g. 2 means \"the 2nd guest\"",
+              validation: { min: 2 },
+            }),
+            extraPerGuest: fields.number({
+              label: "Extra (EUR) for this guest",
+              validation: { min: 0 },
+            }),
+          }),
+          {
+            label: "Group surcharge (incremental, per guest)",
+            description: "How much extra this experience costs as each additional guest joins.",
+            itemLabel: (props) =>
+              props.fields.minGuests.value
+                ? `Guest ${props.fields.minGuests.value} — +€${props.fields.extraPerGuest.value ?? 0}`
+                : "Tier",
+          }
+        ),
         bookingType: fields.select({
           label: "Booking type",
           options: [
@@ -228,16 +327,16 @@ export default config({
               label: "From this many guests",
               validation: { min: 1 },
             }),
-            supplementPercent: fields.number({
-              label: "Supplement (%)",
-              validation: { min: 0, max: 100 },
+            extraPerDay: fields.number({
+              label: "Extra (EUR) per guest, per day",
+              validation: { min: 0 },
             }),
           }),
           {
             label: "Group supplement (by group size)",
             itemLabel: (props) =>
               props.fields.minGuests.value
-                ? `${props.fields.minGuests.value}+ guests — +${props.fields.supplementPercent.value ?? 0}%`
+                ? `${props.fields.minGuests.value}+ guests — +€${props.fields.extraPerDay.value ?? 0}/day`
                 : "Tier",
           }
         ),
@@ -246,6 +345,326 @@ export default config({
           description: "Percentage of the total price guests may pay as a deposit to hold a date.",
           validation: { min: 0, max: 100 },
         }),
+      },
+    }),
+
+    productPageSettings: singleton({
+      label: "Product page settings (global template)",
+      path: "content/product-page-settings/",
+      schema: {
+        howItWorksEyebrow: fields.text({ label: "\"How it works\" eyebrow" }),
+        howItWorksTitle: fields.text({ label: "\"How it works\" title" }),
+        howItWorksSteps: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          {
+            label: "Steps",
+            itemLabel: (props) => props.fields.title.value || "Step",
+          }
+        ),
+        disclosureText: fields.text({
+          label: "Disclosure text",
+          multiline: true,
+          description: "Legal/positioning line shown under \"How it works\" on every product page.",
+        }),
+        guaranteeEyebrow: fields.text({ label: "Guarantee eyebrow" }),
+        guaranteeTitle: fields.text({ label: "Guarantee title" }),
+        guaranteeItems: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          {
+            label: "Guarantee items",
+            itemLabel: (props) => props.fields.title.value || "Item",
+          }
+        ),
+        testimonialsEyebrow: fields.text({ label: "Testimonials eyebrow" }),
+        testimonialsTitle: fields.text({ label: "Testimonials title" }),
+        testimonials: fields.array(
+          fields.object({
+            quote: fields.text({ label: "Quote", multiline: true }),
+            author: fields.text({ label: "Author", description: 'e.g. "Lena & Tomáš, Vienna"' }),
+          }),
+          {
+            label: "Testimonials",
+            itemLabel: (props) => props.fields.author.value || "Testimonial",
+          }
+        ),
+      },
+    }),
+
+    conciergeDayPage: singleton({
+      label: "Concierge Day page",
+      path: "content/concierge-day-page/",
+      schema: {
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitle: fields.text({ label: "Hero title" }),
+        heroSubtitle: fields.text({ label: "Hero subtitle", multiline: true }),
+        heroTrustLine: fields.text({ label: "Hero trust line" }),
+        startingPrice: fields.number({
+          label: "Starting price (EUR)",
+          validation: { min: 0, max: 5000 },
+        }),
+        priceNote: fields.text({
+          label: "Price note",
+          description: 'e.g. "/ day · ≤4 guests, private"',
+        }),
+
+        contrastEyebrow: fields.text({ label: "Contrast section eyebrow" }),
+        contrastTitle: fields.text({ label: "Contrast section title" }),
+        contrastLead: fields.text({ label: "Contrast section lead", multiline: true }),
+        badWayItems: fields.array(fields.text({ label: "Item" }), {
+          label: "\"The usual way\" items",
+        }),
+        goodWayItems: fields.array(fields.text({ label: "Item" }), {
+          label: "\"A Luxor Rising day\" items",
+        }),
+
+        dreamText: fields.text({
+          label: "\"What your day feels like\" text",
+          multiline: true,
+        }),
+
+        valueStackRows: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            price: fields.text({ label: "Price" }),
+          }),
+          {
+            label: "Value stack rows",
+            itemLabel: (props) => props.fields.label.value || "Row",
+          }
+        ),
+        valueStackTotal: fields.text({ label: "Value stack total" }),
+
+        scarcityBadge: fields.text({ label: "Scarcity badge" }),
+        scarcityTitle: fields.text({ label: "Scarcity title" }),
+        scarcityText: fields.text({ label: "Scarcity text", multiline: true }),
+
+        faq: fields.array(
+          fields.object({
+            question: fields.text({ label: "Question" }),
+            answer: fields.text({ label: "Answer", multiline: true }),
+          }),
+          {
+            label: "FAQ",
+            itemLabel: (props) => props.fields.question.value || "Question",
+          }
+        ),
+
+        finalEyebrow: fields.text({ label: "Final CTA eyebrow" }),
+        finalTitle: fields.text({ label: "Final CTA title" }),
+        finalText: fields.text({ label: "Final CTA text", multiline: true }),
+      },
+    }),
+
+    homePage: singleton({
+      label: "Homepage",
+      path: "content/home-page/",
+      schema: {
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitle: fields.text({ label: "Hero title", multiline: true }),
+        heroSubtitle: fields.text({ label: "Hero subtitle", multiline: true }),
+        heroImage: fields.image({
+          label: "Hero background image",
+          directory: "public/images",
+          publicPath: "/images/",
+        }),
+        heroCtaLabel: fields.text({ label: "Hero primary CTA label" }),
+        heroCtaHref: fields.text({ label: "Hero primary CTA link" }),
+        heroSecondaryCtaLabel: fields.text({ label: "Hero secondary CTA label" }),
+        heroSecondaryCtaHref: fields.text({ label: "Hero secondary CTA link" }),
+        heroTrustLine: fields.text({ label: "Hero trust line" }),
+
+        trustItems: fields.array(fields.text({ label: "Item" }), {
+          label: "Trust strip items",
+        }),
+
+        positioningEyebrow: fields.text({ label: "Positioning eyebrow" }),
+        positioningTitle: fields.text({ label: "Positioning title", multiline: true }),
+        positioningLead: fields.text({ label: "Positioning lead", multiline: true }),
+        positioningImage: fields.image({
+          label: "Positioning image",
+          directory: "public/images",
+          publicPath: "/images/",
+        }),
+        positioningBadge: fields.text({ label: "Positioning image badge" }),
+        positioningLinkLabel: fields.text({ label: "Positioning link label" }),
+        positioningLinkHref: fields.text({ label: "Positioning link href" }),
+
+        offeringEyebrow: fields.text({ label: "Offering eyebrow" }),
+        offeringTitle: fields.text({ label: "Offering title" }),
+        offeringLead: fields.text({ label: "Offering lead", multiline: true }),
+        offeringCards: fields.array(
+          fields.object({
+            tag: fields.text({ label: "Tag (optional badge, e.g. \"Start here\")" }),
+            image: fields.image({
+              label: "Image",
+              directory: "public/images",
+              publicPath: "/images/",
+            }),
+            kicker: fields.text({ label: "Kicker" }),
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+            priceLabel: fields.text({ label: "Price label (optional)", description: 'e.g. "From €450"' }),
+            ctaLabel: fields.text({ label: "CTA label" }),
+            href: fields.text({ label: "Link", description: "Internal path or #anchor" }),
+          }),
+          {
+            label: "Offering cards",
+            itemLabel: (props) => props.fields.title.value || "Card",
+          }
+        ),
+
+        momentImage: fields.image({
+          label: "Moment section image",
+          directory: "public/images",
+          publicPath: "/images/",
+        }),
+        momentQuote: fields.text({ label: "Moment quote", multiline: true }),
+
+        galleryEyebrow: fields.text({ label: "Gallery eyebrow" }),
+        galleryTitle: fields.text({ label: "Gallery title" }),
+        galleryLead: fields.text({ label: "Gallery lead", multiline: true }),
+        gallery: fields.array(
+          fields.object({
+            image: fields.image({
+              label: "Image",
+              directory: "public/images",
+              publicPath: "/images/",
+            }),
+            caption: fields.text({ label: "Caption" }),
+          }),
+          {
+            label: "Gallery",
+            itemLabel: (props) => props.fields.caption.value || "Image",
+          }
+        ),
+
+        howItWorksEyebrow: fields.text({ label: "\"How it works\" eyebrow" }),
+        howItWorksTitle: fields.text({ label: "\"How it works\" title" }),
+        howItWorksSteps: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          {
+            label: "Steps",
+            itemLabel: (props) => props.fields.title.value || "Step",
+          }
+        ),
+        disclosureText: fields.text({ label: "Disclosure text", multiline: true }),
+
+        whyEyebrow: fields.text({ label: "\"Why us\" eyebrow" }),
+        whyTitle: fields.text({ label: "\"Why us\" title" }),
+        whyItems: fields.array(
+          fields.object({
+            icon: fields.text({ label: "Icon glyph", description: "e.g. ✦ ❖ ◆ ✧" }),
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          {
+            label: "Why-us items",
+            itemLabel: (props) => props.fields.title.value || "Item",
+          }
+        ),
+
+        testimonialsEyebrow: fields.text({ label: "Testimonials eyebrow" }),
+        testimonialsTitle: fields.text({ label: "Testimonials title" }),
+        testimonials: fields.array(
+          fields.object({
+            quote: fields.text({ label: "Quote", multiline: true }),
+            author: fields.text({ label: "Author" }),
+          }),
+          {
+            label: "Testimonials",
+            itemLabel: (props) => props.fields.author.value || "Testimonial",
+          }
+        ),
+
+        villasEyebrow: fields.text({ label: "Villas eyebrow" }),
+        villasTitle: fields.text({ label: "Villas title" }),
+        villasLead: fields.text({ label: "Villas lead", multiline: true }),
+        villasImage: fields.image({
+          label: "Villas image",
+          directory: "public/images",
+          publicPath: "/images/",
+        }),
+        villasCtaLabel: fields.text({ label: "Villas CTA label" }),
+        villasCtaHref: fields.text({ label: "Villas CTA href" }),
+
+        guideEyebrow: fields.text({ label: "Guide teaser eyebrow" }),
+        guideTitle: fields.text({ label: "Guide teaser title" }),
+        guidePosts: fields.array(
+          fields.object({
+            image: fields.image({
+              label: "Image",
+              directory: "public/images",
+              publicPath: "/images/",
+            }),
+            kicker: fields.text({ label: "Kicker" }),
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+            href: fields.text({ label: "Link" }),
+          }),
+          {
+            label: "Guide teaser posts",
+            itemLabel: (props) => props.fields.title.value || "Post",
+          }
+        ),
+
+        finalEyebrow: fields.text({ label: "Final CTA eyebrow" }),
+        finalTitle: fields.text({ label: "Final CTA title" }),
+        finalLead: fields.text({ label: "Final CTA lead", multiline: true }),
+        finalCtaLabel: fields.text({ label: "Final CTA label" }),
+        finalCtaHref: fields.text({ label: "Final CTA href" }),
+
+        stickyBarPrice: fields.text({ label: "Mobile sticky bar price text" }),
+        stickyBarMeta: fields.text({ label: "Mobile sticky bar meta text" }),
+      },
+    }),
+
+    insidersGuidePage: singleton({
+      label: "Insider's Guide homepage",
+      path: "content/insiders-guide-page/",
+      schema: {
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitleLine1: fields.text({ label: "Hero title, line 1" }),
+        heroTitleEmphasis: fields.text({
+          label: "Hero title, emphasised word(s)",
+          description: 'Rendered as "over <em>this</em>" on the second line.',
+        }),
+        heroLead: fields.text({ label: "Hero lead paragraph", multiline: true }),
+
+        authors: fields.array(
+          fields.object({
+            initial: fields.text({ label: "Avatar initial", description: "Single letter, e.g. \"A\"" }),
+            name: fields.text({ label: "Name" }),
+            role: fields.text({ label: "Role line" }),
+          }),
+          {
+            label: "Authority strip authors",
+            itemLabel: (props) => props.fields.name.value || "Author",
+          }
+        ),
+
+        newsletterEyebrow: fields.text({ label: "Newsletter eyebrow" }),
+        newsletterTitleLine1: fields.text({ label: "Newsletter title, line 1" }),
+        newsletterTitleLine2: fields.text({ label: "Newsletter title, line 2" }),
+        newsletterLead: fields.text({ label: "Newsletter lead", multiline: true }),
+        newsletterFinePrint: fields.text({ label: "Newsletter fine print" }),
+
+        closerEyebrow: fields.text({ label: "Closer eyebrow" }),
+        closerTitleLine1: fields.text({ label: "Closer title, line 1" }),
+        closerTitleLine2: fields.text({ label: "Closer title, line 2" }),
+        closerLead: fields.text({ label: "Closer lead", multiline: true }),
+        closerPrimaryCtaLabel: fields.text({ label: "Closer primary CTA label" }),
+        closerPrimaryCtaHref: fields.text({ label: "Closer primary CTA href" }),
+        closerSecondaryCtaLabel: fields.text({ label: "Closer secondary CTA label" }),
+        closerSecondaryCtaHref: fields.text({ label: "Closer secondary CTA href" }),
       },
     }),
 

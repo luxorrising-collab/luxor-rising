@@ -7,20 +7,39 @@ import StickyBar from "./StickyBar";
 type TimeOfDay = "dawn" | "golden";
 type Pay = "full" | "deposit";
 
-const BASE = 140;
-const PPX: Record<number, number> = { 2: 70, 3: 55, 4: 45 };
+export type GroupSupplementTier = { minGuests: number; extraPerGuest: number };
+
 const ADD = { felucca: 60, photo: 90 };
 
-function extra(g: number) {
+function extra(g: number, groupSupplement: GroupSupplementTier[]) {
   let s = 0;
-  for (let i = 2; i <= g; i++) s += PPX[i] || 0;
+  for (let i = 2; i <= g; i++) {
+    const tier = groupSupplement.find((t) => t.minGuests === i);
+    if (tier) s += tier.extraPerGuest;
+  }
   return s;
 }
 function euro(n: number) {
   return "€" + n.toLocaleString("en-US");
 }
 
-export default function ExperienceConfigurator() {
+type ExperienceConfiguratorProps = {
+  name?: string;
+  basePrice?: number;
+  groupSupplement?: GroupSupplementTier[];
+  depositPercent?: number;
+};
+
+export default function ExperienceConfigurator({
+  name = "Medinet Habu",
+  basePrice = 140,
+  groupSupplement = [
+    { minGuests: 2, extraPerGuest: 70 },
+    { minGuests: 3, extraPerGuest: 55 },
+    { minGuests: 4, extraPerGuest: 45 },
+  ],
+  depositPercent = 30,
+}: ExperienceConfiguratorProps) {
   const [group, setGroup] = useState(2);
   const [time, setTime] = useState<TimeOfDay>("dawn");
   const [felucca, setFelucca] = useState(false);
@@ -29,8 +48,9 @@ export default function ExperienceConfigurator() {
   const [tripDate, setTripDate] = useState("");
   const dateInputRef = useRef<HTMLInputElement>(null);
 
-  const total = BASE + extra(group) + (felucca ? ADD.felucca : 0) + (photo ? ADD.photo : 0);
+  const total = basePrice + extra(group, groupSupplement) + (felucca ? ADD.felucca : 0) + (photo ? ADD.photo : 0);
   const perPerson = Math.round(total / group);
+  const deposit = Math.round((total * depositPercent) / 100);
 
   const includes = useMemo(() => {
     const b = [
@@ -62,9 +82,9 @@ export default function ExperienceConfigurator() {
     const msg =
       pay === "full"
         ? "Pay " + euro(total) + " in full"
-        : "Pay " + euro(Math.round(total * 0.3)) + " deposit now, rest on the day";
+        : "Pay " + euro(deposit) + " deposit now, rest on the day";
     alert(
-      "Prototype — this is where Stripe checkout opens.\n\nMedinet Habu · " +
+      "Prototype — this is where Stripe checkout opens.\n\n" + name + " · " +
         group +
         " guest(s) · " +
         time +
@@ -175,7 +195,7 @@ export default function ExperienceConfigurator() {
         <div className={styles.summary}>
           <div className={styles.sumH}>Your experience</div>
           <div className={styles.sumProof}>
-            <span style={{ letterSpacing: ".05em" }}>★★★★★</span> Medinet Habu · private &amp; certified-guided
+            <span style={{ letterSpacing: ".05em" }}>★★★★★</span> {name} · private &amp; certified-guided
           </div>
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>
@@ -204,7 +224,7 @@ export default function ExperienceConfigurator() {
               className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
               onClick={() => setPay("deposit")}
             >
-              <b>{euro(Math.round(total * 0.3))}</b>
+              <b>{euro(deposit)}</b>
               <span>Deposit · rest on the day</span>
             </div>
           </div>
@@ -223,8 +243,8 @@ export default function ExperienceConfigurator() {
       </div>
 
       <StickyBar
-        name="Medinet Habu"
-        meta="· from €140 · private & certified-guided"
+        name={name}
+        meta={`· from ${euro(basePrice)} · private & certified-guided`}
         ctaHref="#book"
         ctaLabel="Reserve"
         revealOnScroll

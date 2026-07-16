@@ -1,0 +1,182 @@
+heroEyebrow: Private concierge · Luxor · The Nile · The West Bank
+heroTitle: Arrive somewhere your future self will return to.
+heroSubtitle: >-
+  Private, unhurried days in ancient Egypt — arranged one experience at a
+  time, for no more than four guests, by people who live here.
+heroImage: /images/hero-desert-night.jpg
+heroCtaLabel: Design your day →
+heroCtaHref: /concierge-day
+heroSecondaryCtaLabel: Explore experiences
+heroSecondaryCtaHref: '#experiences'
+heroTrustLine: 4.9 from recent guests · 60+ private days arranged · Fully bespoke
+trustItems:
+  - ≤4 guests per day
+  - Private licensed Egyptologist
+  - Empty temples at dawn
+  - Zero logistics for you
+  - 7-day free cancellation
+positioningEyebrow: The promise
+positioningTitle: |-
+  You won't follow a schedule.
+  You'll follow the light.
+positioningLead: >-
+  Most of Egypt is sold by the busload — three temples before lunch, a
+  boat shared with eighty strangers. We do the opposite: one experience
+  at a time, paced to the hour the light is most beautiful, with every
+  detail arranged so you never lift a finger.
+positioningImage: /images/desert-sunset-silhouette.jpg
+positioningBadge: Paced to the light
+positioningLinkLabel: See how a day unfolds →
+positioningLinkHref: '#how'
+offeringEyebrow: How we look after you
+offeringTitle: Three ways into Egypt
+offeringLead: >-
+  Start with a single perfect day — then let it become a villa, a longer
+  stay, or a place you keep returning to.
+offeringCards:
+  - tag: Start here
+    image: /images/valley-kings-tomb-pillar.jpg
+    kicker: The signature
+    title: The Concierge Day
+    description: >-
+      A private day, timed before the crowds — your own Egyptologist, the
+      Nile or the desert, and not one decision to make.
+    priceLabel: From €450
+    ctaLabel: Design your day →
+    href: /concierge-day
+  - tag: ''
+    image: /images/private-villa-pool.jpg
+    kicker: Stay
+    title: Private Villas
+    description: >-
+      Off-market villas in Luxor you won't find on any booking site —
+      found, vetted and arranged for you.
+    priceLabel: ''
+    ctaLabel: Enquire →
+    href: '#villas'
+  - tag: ''
+    image: /images/desert-stargazing-dune.jpg
+    kicker: Go deeper
+    title: Bespoke & Multi-day
+    description: >-
+      Several days, fully tailored — signatures unlock, the per-day value
+      climbs, and the trip is built around you.
+    priceLabel: ''
+    ctaLabel: Build yours →
+    href: /concierge-day
+momentImage: /images/karnak-columns-detail.jpg
+momentQuote: >-
+  Three thousand years of wonder — arranged entirely around one
+  unforgettable day.
+galleryEyebrow: A glimpse of Egypt
+galleryTitle: Moments we arrange
+galleryLead: >-
+  Temples before the crowds, the Nile at golden hour, the desert under
+  stars — delivered by our licensed local partners, curated by us.
+gallery:
+  - image: /images/desert-stargazing-dune.jpg
+    caption: The desert sky, far from everything
+  - image: /images/nile-felucca-table.jpg
+    caption: The Nile from your table
+  - image: /images/temple-stone-relief.jpg
+    caption: Stone that has waited millennia
+  - image: /images/nile-river-solo.jpg
+    caption: The river to yourself
+  - image: /images/desert-dinner-table.jpg
+    caption: A private table in the dunes
+  - image: /images/west-bank-dawn.jpg
+    caption: Dawn over the West Bank
+howItWorksEyebrow: How it works
+howItWorksTitle: You design it. We arrange everything.
+howItWorksSteps:
+  - title: You design your day
+    description: Pick your date and preferences in a minute on our day page.
+  - title: We arrange every detail
+    description: >-
+      Entries, transfers, your own licensed Egyptologist, the Nile or the
+      desert — all booked for you.
+  - title: You simply arrive
+    description: >-
+      Your consigliere is reachable all day. You experience Egypt; we
+      handle the rest.
+disclosureText: >-
+  Luxor Rising is your private concierge & advisor. We arrange and
+  coordinate; experiences, guiding and transfers are delivered by our
+  licensed local partners. Each concierge day is a single day with no
+  overnight stay.
+whyEyebrow: Why Luxor Rising
+whyTitle: The difference is everything you don't have to do
+whyItems:
+  - icon: ✦
+    title: Truly private
+    description: Just you and up to three guests — never a coach of strangers.
+  - icon: ❖
+    title: Insider access
+    description: >-
+      The right places at the right hour, and a few almost nobody sees.
+  - icon: ◆
+    title: Licensed locals
+    description: >-
+      Your own licensed Egyptologist and vetted local hosts deliver every
+      moment.
+  - icon: ✧
+    title: Effortless
+    description: 'No planning, no queues, no decisions — and a promise it''s right.'
+testimonialsEyebrow: From recent guests
+testimonialsTitle: The day they remember most
+testimonials:
+  - quote: >-
+      We've travelled a lot. This was the first time we felt like
+      guests, not tourists. Karnak at sunrise, alone, is something I'll
+      never forget.
+    author: Lena & Tomáš, Vienna
+  - quote: >-
+      I planned nothing and missed nothing. Our Egyptologist was
+      extraordinary, and the felucca at sunset was pure magic.
+    author: Marcus, London
+  - quote: >-
+      Worth every euro. They handled a last-minute change without us
+      even noticing. We're already planning to come back through them.
+    author: Sophie, Munich
+villasEyebrow: Private villas
+villasTitle: Stay somewhere you won't find online
+villasLead: >-
+  We curate off-market private villas in and around Luxor — the kind that
+  never reach booking sites. Tell us what you're dreaming of; we present
+  the options, arrange the details, and you contract directly with the
+  owner.
+villasImage: /images/private-villa-pool.jpg
+villasCtaLabel: Ask about villas →
+villasCtaHref: /concierge-day
+guideEyebrow: Insider's Guide
+guideTitle: Read before you go
+guidePosts:
+  - image: /images/valley-kings-tomb-pillar.jpg
+    kicker: Luxor
+    title: How to see the Valley of the Kings without the crowds
+    description: >-
+      The hours, the tombs worth your time, and what most visitors get
+      wrong.
+    href: /insiders-guide/valley-of-the-kings-which-tombs
+  - image: /images/nile-river-solo.jpg
+    kicker: Day trips
+    title: 'Hurghada to Luxor: the perfect day trip'
+    description: >-
+      Is it worth it, how long it really takes, and how to do it in
+      comfort.
+    href: /insiders-guide
+  - image: /images/temple-stone-relief.jpg
+    kicker: Planning
+    title: The best time of year to visit Luxor
+    description: >-
+      Heat, crowds and light — month by month, from people who live it.
+    href: /insiders-guide
+finalEyebrow: Your date is waiting
+finalTitle: Give us one day. We'll give you the one you remember.
+finalLead: >-
+  Private, effortless, and guaranteed — from €450. Design your day in a
+  minute.
+finalCtaLabel: Design your day →
+finalCtaHref: /concierge-day
+stickyBarPrice: From €450
+stickyBarMeta: a private day · free cancellation up to 7 days before

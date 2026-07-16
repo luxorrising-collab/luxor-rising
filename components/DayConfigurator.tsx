@@ -10,8 +10,9 @@ type Journey = "medinet" | "karnak";
 type Water = "nile" | "picnic";
 type Pay = "full" | "deposit";
 
-const DAYBASE: Record<DayCount, number> = { 1: 450, 2: 850, 3: 1200, 4: 1580 };
-const PPD: Record<number, number> = { 2: 85, 3: 70, 4: 55 };
+export type VolumeDiscountTier = { minDays: number; discountPercent: number };
+export type GroupSupplementTier = { minGuests: number; extraPerDay: number };
+
 const WATER: Record<Water, string> = {
   nile: "Sunset sail on the Nile",
   picnic: "Desert sunset picnic",
@@ -105,13 +106,30 @@ function priceOf(nm: string) {
 function euro(n: number) {
   return "€" + n.toLocaleString("en-US");
 }
-function extraPerDay(g: number) {
+function extraPerDay(g: number, groupSupplement: GroupSupplementTier[]) {
   let s = 0;
-  for (let i = 2; i <= g; i++) s += PPD[i] || 0;
+  for (let i = 2; i <= g; i++) {
+    const tier = groupSupplement.find((t) => t.minGuests === i);
+    if (tier) s += tier.extraPerDay;
+  }
   return s;
 }
-function dayTotal(d: DayCount, g: number) {
-  return DAYBASE[d] + d * extraPerDay(g);
+function discountForDays(d: number, volumeDiscount: VolumeDiscountTier[]) {
+  let best: VolumeDiscountTier | null = null;
+  for (const t of volumeDiscount) {
+    if (d >= t.minDays && (!best || t.minDays > best.minDays)) best = t;
+  }
+  return best ? best.discountPercent : 0;
+}
+function dayTotal(
+  d: DayCount,
+  g: number,
+  dayRate: number,
+  volumeDiscount: VolumeDiscountTier[],
+  groupSupplement: GroupSupplementTier[]
+) {
+  const discount = discountForDays(d, volumeDiscount);
+  return Math.round(dayRate * d * (1 - discount / 100)) + d * extraPerDay(g, groupSupplement);
 }
 function fmtDate(iso: string) {
   if (!iso) return "";
@@ -157,7 +175,27 @@ function itemClasses(it: PlanItem) {
   return c.join(" ");
 }
 
-export default function DayConfigurator() {
+type DayConfiguratorProps = {
+  dayRate?: number;
+  volumeDiscount?: VolumeDiscountTier[];
+  groupSupplement?: GroupSupplementTier[];
+  depositPercent?: number;
+};
+
+export default function DayConfigurator({
+  dayRate = 450,
+  volumeDiscount = [
+    { minDays: 2, discountPercent: 5.56 },
+    { minDays: 3, discountPercent: 11.11 },
+    { minDays: 4, discountPercent: 12.22 },
+  ],
+  groupSupplement = [
+    { minGuests: 2, extraPerDay: 85 },
+    { minGuests: 3, extraPerDay: 70 },
+    { minGuests: 4, extraPerDay: 55 },
+  ],
+  depositPercent = 30,
+}: DayConfiguratorProps) {
   const [days, setDays] = useState<DayCount>(1);
   const [group, setGroup] = useState(2);
   const [water, setWater] = useState<Water>("nile");
@@ -181,8 +219,9 @@ export default function DayConfigurator() {
     if (hurg) c += 150;
     return c;
   }
-  const total = dayTotal(days, group) + addonsCost();
+  const total = dayTotal(days, group, dayRate, volumeDiscount, groupSupplement) + addonsCost();
   const perPerson = Math.round(total / group);
+  const deposit = Math.round((total * depositPercent) / 100);
 
   const plan = useMemo(() => {
     const j = JOURNEY[journey];
@@ -300,9 +339,9 @@ export default function DayConfigurator() {
       pay === "full"
         ? "Pay " + euro(total) + " in full"
         : "Pay " +
-          euro(Math.round(total * 0.3)) +
+          euro(deposit) +
           " deposit now, " +
-          euro(total - Math.round(total * 0.3)) +
+          euro(total - deposit) +
           " on the day";
     alert(
       "Prototype — this is where Stripe checkout opens.\n\n" +
@@ -326,8 +365,8 @@ export default function DayConfigurator() {
             </div>
             <div className={styles.daysGrid}>
               {([1, 2, 3, 4] as DayCount[]).map((d) => {
-                const tot = dayTotal(d, group);
-                const sv = dayTotal(1, group) * d - tot;
+                const tot = dayTotal(d, group, dayRate, volumeDiscount, groupSupplement);
+                const sv = dayTotal(1, group, dayRate, volumeDiscount, groupSupplement) * d - tot;
                 return (
                   <div
                     key={d}
@@ -706,14 +745,14 @@ export default function DayConfigurator() {
                 className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
                 onClick={() => setPay("deposit")}
               >
-                <b>{euro(Math.round(total * 0.3))}</b>
+                <b>{euro(deposit)}</b>
                 <span>Deposit now · rest on the day</span>
               </div>
             </div>
             <a href="#" className={`btn btn-primary ${styles.sumBtn}`} onClick={handleReserve}>
               {pay === "full"
                 ? `Reserve your journey · ${euro(total)} →`
-                : `Secure your date · ${euro(Math.round(total * 0.3))} today →`}
+                : `Secure your date · ${euro(deposit)} today →`}
             </a>
             <div className={styles.sumCancel}>{cancelText}</div>
 

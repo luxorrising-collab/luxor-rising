@@ -10,7 +10,13 @@ import type { Config } from "@keystatic/core";
 import keystaticConfig from "../../../keystatic.config";
 
 export default function KeystaticPage() {
-  // appSlug is only relevant to GitHub-mode storage's OAuth app flow — no
-  // need for it while storage.kind is "local".
-  return <Keystatic config={keystaticConfig as Config} />;
+  return (
+    <Keystatic
+      config={keystaticConfig as Config}
+      appSlug={{
+        envName: "NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG",
+        value: process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG,
+      }}
+    />
+  );
 }

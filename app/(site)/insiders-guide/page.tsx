@@ -8,7 +8,7 @@ import ArticleCard from "@/components/ArticleCard";
 import NewsletterForm from "@/components/NewsletterForm";
 import { reader } from "@/lib/keystatic-reader";
 import { ARTICLE_CATEGORY_LABELS, ARTICLE_AUTHORS } from "@/lib/article-labels";
-import GuideClient from "./GuideClient";
+import GuideClient, { type CmsArticlePost } from "./GuideClient";
 import styles from "./InsidersGuidePage.module.css";
 
 export const metadata: Metadata = {
@@ -55,6 +55,23 @@ export default async function InsidersGuidePage() {
   const featuredCategoryLabel = featured
     ? ARTICLE_CATEGORY_LABELS[featured.entry.category] ?? featured.entry.category
     : undefined;
+
+  // Every other CMS article (i.e. everything besides the one shown as
+  // "Featured" above) is shown alongside the curated placeholder posts in
+  // the grid below — new articles created in Keystatic land here
+  // automatically.
+  const cmsPosts: CmsArticlePost[] = allArticles
+    .filter((a) => a.slug !== featured?.slug && a.entry.title)
+    .map(({ slug, entry }) => ({
+      cat: entry.category,
+      href: `/insiders-guide/${slug}`,
+      src: entry.heroImage || "/images/valley-kings-tomb-pillar.jpg",
+      alt: entry.title,
+      title: entry.title,
+      excerpt: entry.excerpt,
+      authorName: ARTICLE_AUTHORS[entry.author]?.name ?? entry.author,
+      readTime: entry.readingTime,
+    }));
 
   const JSON_LD = {
     "@context": "https://schema.org",
@@ -149,7 +166,7 @@ export default async function InsidersGuidePage() {
           </Reveal>
         )}
 
-        <GuideClient />
+        <GuideClient cmsPosts={cmsPosts} />
       </main>
 
       {/* NEWSLETTER */}

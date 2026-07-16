@@ -8,6 +8,11 @@ import styles from "./ExperiencesClient.module.css";
 
 type Item = ExperienceCardProps & { cat: string[] };
 
+export type CmsExperienceItem = Pick<
+  ExperienceCardProps,
+  "href" | "src" | "alt" | "title" | "hook" | "priceValue" | "priceLabel" | "priceNote" | "ctaLabel"
+>;
+
 const SIGNATURE: Item[] = [
   {
     cat: ["temple", "signature"],
@@ -265,11 +270,22 @@ function matches(item: Item, filter: string) {
   return filter === "all" || item.cat.includes(filter);
 }
 
-export default function ExperiencesClient() {
+export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExperienceItem[] }) {
   const [filter, setFilter] = useState("all");
 
+  // Real, CMS-managed experiences are shown alongside the curated single-day
+  // lineup — new entries created in Keystatic land here automatically,
+  // without touching the hand-written cards above.
+  const singleDayWithCms = useMemo<Item[]>(
+    () => [...cmsItems.map((item) => ({ ...item, cat: ["temple"] })), ...SINGLE_DAY],
+    [cmsItems]
+  );
+
   const visibleSignature = useMemo(() => SIGNATURE.filter((i) => matches(i, filter)), [filter]);
-  const visibleSingleDay = useMemo(() => SINGLE_DAY.filter((i) => matches(i, filter)), [filter]);
+  const visibleSingleDay = useMemo(
+    () => singleDayWithCms.filter((i) => matches(i, filter)),
+    [singleDayWithCms, filter]
+  );
   const visibleEnquiry = useMemo(() => ENQUIRY.filter((i) => matches(i, filter)), [filter]);
   const totalShown = visibleSignature.length + visibleSingleDay.length + visibleEnquiry.length;
 
@@ -280,7 +296,7 @@ export default function ExperiencesClient() {
       </div>
       <div className={styles.count}>
         {filter === "all"
-          ? `Showing all ${SINGLE_DAY.length} single-day experiences`
+          ? `Showing all ${singleDayWithCms.length} single-day experiences`
           : `Showing ${totalShown} experience${totalShown === 1 ? "" : "s"}`}
       </div>
 

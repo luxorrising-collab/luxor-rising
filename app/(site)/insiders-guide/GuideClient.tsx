@@ -10,7 +10,7 @@ type Post = ArticleCardProps & { cat: string };
 
 const POSTS: Post[] = [
   {
-    cat: "plan",
+    cat: "planning-timing",
     href: "/insiders-guide/best-time-to-visit-luxor",
     src: "/images/karnak-columns-upward-view-sunlight_pexels-axp-photography-500641970-18934707.jpg",
     alt: "Temple columns in winter sunlight",
@@ -21,7 +21,7 @@ const POSTS: Post[] = [
     readTime: "7 min",
   },
   {
-    cat: "temple",
+    cat: "temples-tombs",
     href: "/insiders-guide/medinet-habu-why",
     src: "/images/medinet-habu-painted-column-corridor_IMG_20251009_095617.jpg",
     alt: "Painted reliefs at Medinet Habu",
@@ -32,7 +32,7 @@ const POSTS: Post[] = [
     readTime: "6 min",
   },
   {
-    cat: "plan",
+    cat: "planning-timing",
     href: "/insiders-guide/hurghada-to-luxor-day-trip",
     src: "/images/desert-highway-mountains-dashboard_IMG_20251008_094256.jpg",
     alt: "Desert road between Hurghada and Luxor",
@@ -43,7 +43,7 @@ const POSTS: Post[] = [
     readTime: "8 min",
   },
   {
-    cat: "myth",
+    cat: "myths-mistakes",
     href: "/insiders-guide/balloon-worth-it",
     src: "/images/hot-air-balloons-luxor-town-aerial_pexels-girlvsglobe86-300284270-30404378.jpg",
     alt: "Balloons over the west bank at dawn",
@@ -54,7 +54,7 @@ const POSTS: Post[] = [
     readTime: "5 min",
   },
   {
-    cat: "temple",
+    cat: "temples-tombs",
     href: "/insiders-guide/nefertari-tomb",
     src: "/images/tomb-painted-relief-doorway_IMG_20251009_111002.jpg",
     alt: "Painted ceiling detail in a royal tomb",
@@ -65,7 +65,7 @@ const POSTS: Post[] = [
     readTime: "6 min",
   },
   {
-    cat: "life",
+    cat: "life-in-luxor",
     href: "/insiders-guide/tipping-baksheesh",
     src: "/images/town-street-sunset-shops_IMG_20250924_181404.jpg",
     alt: "Street life in Luxor at sunset",
@@ -76,7 +76,7 @@ const POSTS: Post[] = [
     readTime: "5 min",
   },
   {
-    cat: "temple",
+    cat: "temples-tombs",
     href: "/insiders-guide/karnak-in-one-hour",
     src: "/images/karnak-hypostyle-hall-columns_pexels-alyana-galyana-997347-34533510 – kópia.jpg",
     alt: "Columns of the Karnak hypostyle hall",
@@ -87,7 +87,7 @@ const POSTS: Post[] = [
     readTime: "7 min",
   },
   {
-    cat: "life",
+    cat: "life-in-luxor",
     href: "/insiders-guide/food-in-luxor",
     src: "/images/unpaved-street-midday-sun_IMG_20250923_170416.jpg",
     alt: "A quiet unpaved street in Luxor at midday",
@@ -98,7 +98,7 @@ const POSTS: Post[] = [
     readTime: "6 min",
   },
   {
-    cat: "myth",
+    cat: "myths-mistakes",
     href: "/insiders-guide/scams-and-hassle",
     src: "/images/horse-carriage-street-luxor-riders_pexels-toulouse-19820541 – kópia.jpg",
     alt: "A horse-drawn carriage on a Luxor street",
@@ -112,18 +112,24 @@ const POSTS: Post[] = [
 
 const FILTERS = [
   { value: "all", label: "Everything" },
-  { value: "temple", label: "Temples & tombs" },
-  { value: "plan", label: "Planning & timing" },
-  { value: "life", label: "Life in Luxor" },
-  { value: "myth", label: "Myths & mistakes" },
+  { value: "temples-tombs", label: "Temples & tombs" },
+  { value: "planning-timing", label: "Planning & timing" },
+  { value: "life-in-luxor", label: "Life in Luxor" },
+  { value: "myths-mistakes", label: "Myths & mistakes" },
 ];
 
-export default function GuideClient() {
+export type CmsArticlePost = Post;
+
+export default function GuideClient({ cmsPosts = [] }: { cmsPosts?: CmsArticlePost[] }) {
   const [filter, setFilter] = useState("all");
 
+  // Real, CMS-managed articles are shown alongside the curated placeholder
+  // posts — new articles created in Keystatic land here automatically.
+  const allPosts = useMemo(() => [...cmsPosts, ...POSTS], [cmsPosts]);
+
   const visible = useMemo(
-    () => POSTS.filter((p) => filter === "all" || p.cat === filter),
-    [filter]
+    () => allPosts.filter((p) => filter === "all" || p.cat === filter),
+    [allPosts, filter]
   );
 
   return (

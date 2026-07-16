@@ -5,7 +5,8 @@ import { MinimalFooter } from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import JsonLd from "@/components/JsonLd";
 import StickyBar from "@/components/StickyBar";
-import ExperiencesClient from "./ExperiencesClient";
+import ExperiencesClient, { type CmsExperienceItem } from "./ExperiencesClient";
+import { reader } from "@/lib/keystatic-reader";
 import styles from "./ExperiencesPage.module.css";
 
 export const metadata: Metadata = {
@@ -87,7 +88,24 @@ const JSON_LD = {
   ],
 };
 
-export default function ExperiencesPage() {
+export default async function ExperiencesPage() {
+  const allExperiences = await reader.collections.experiences.all();
+  const cmsItems: CmsExperienceItem[] = allExperiences
+    // Medinet Habu already has its own hand-curated "Signature" card below —
+    // skip it here so it isn't shown twice.
+    .filter(({ slug, entry }) => entry.isActive && entry.title && slug !== "medinet-habu")
+    .map(({ slug, entry }) => ({
+      href: `/experiences/${slug}`,
+      src: entry.heroImage || "/images/medinet-habu-facade.jpg",
+      alt: entry.title,
+      title: entry.title,
+      hook: entry.hook,
+      priceValue: entry.priceType === "included" ? "Included" : `€${entry.basePrice ?? 0}`,
+      priceLabel: entry.priceType === "included" ? "Included" : "From",
+      priceNote: entry.priceType === "included" ? "with any day" : entry.priceNote || undefined,
+      ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
+    }));
+
   return (
     <>
       <JsonLd data={JSON_LD} />
@@ -143,7 +161,7 @@ export default function ExperiencesPage() {
       </div>
 
       <main className="wrap">
-        <ExperiencesClient />
+        <ExperiencesClient cmsItems={cmsItems} />
       </main>
 
       {/* HOW IT WORKS */}

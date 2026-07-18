@@ -20,36 +20,33 @@ export const MAIN_NAV: NavLink[] = [
 
 export type FooterColumn = { title: string; links: { href: string; label: string }[] };
 
+// Three balanced link groups plus the brand block — a single clean row on
+// desktop. Destinations and services live together under "Explore".
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    title: "Destinations",
+    title: "Explore",
     links: [
       { href: "/luxor", label: "Luxor" },
       { href: "/hurghada", label: "Hurghada" },
-    ],
-  },
-  {
-    title: "Experiences & services",
-    links: [
       { href: "/experiences", label: "Experiences" },
       { href: "/private-tours", label: "Private Tours" },
-      { href: "/private-guide", label: "Private Guide" },
       { href: "/concierge-day", label: "Design Your Day" },
-      { href: "/#villas", label: "Private Villas" },
     ],
   },
   {
     title: "Company",
     links: [
       { href: "/#about", label: "About us" },
+      { href: "/private-guide", label: "Private Guide" },
       { href: "/concierge-day#how", label: "How it works" },
       { href: "/insiders-guide", label: "Insider's Guide" },
-      { href: "/#about", label: "Contact" },
+      { href: "/#villas", label: "Private Villas" },
     ],
   },
   {
     title: "Help & legal",
     links: [
+      { href: "/#about", label: "Contact" },
       { href: "/legal", label: "Safety" },
       { href: "/legal", label: "Payments & refunds" },
       { href: "/legal", label: "FAQ" },

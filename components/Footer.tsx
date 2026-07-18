@@ -10,7 +10,7 @@ export function FullFooter({ columns }: { columns: FooterColumn[] }) {
     <footer className={styles.footer}>
       <div className="wrap">
         <div className={styles.grid}>
-          <div>
+          <div className={styles.brandCol}>
             <Link href="/" className={styles.logo}>
               <Image
                 src="/images/logo-footer.png"

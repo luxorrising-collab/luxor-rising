@@ -11,8 +11,9 @@
 /* full (homepage) */
 .grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 1.6fr repeat(3, 1fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  align-items: start;
 }
 .logo img {
   width: 140px;
@@ -35,18 +36,20 @@
   margin: 1rem auto 0;
 }
 .col h4 {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   color: var(--color-gold);
-  margin-bottom: 0.9rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
 .col a {
   display: block;
   font-size: 0.88rem;
-  opacity: 0.78;
-  padding: 0.25rem 0;
-  transition: 0.2s;
+  opacity: 0.75;
+  padding: 0.32rem 0;
+  transition: color 0.2s, opacity 0.2s;
+  width: fit-content;
 }
 .col a:hover {
   opacity: 1;
@@ -92,5 +95,14 @@
 @media (max-width: 920px) {
   .grid {
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .brandCol {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -26,43 +26,43 @@ positioningLead: >-
   detail arranged so you never lift a finger.
 positioningImage: /images/desert-sunset-silhouette.jpg
 positioningBadge: Paced to the light
-positioningLinkLabel: See how a day unfolds →
-positioningLinkHref: '#how'
-offeringEyebrow: How we look after you
-offeringTitle: Three ways into Egypt
+positioningLinkLabel: Meet the local host who plans it →
+positioningLinkHref: /private-guide
+offeringEyebrow: Where your trip begins
+offeringTitle: Two places. One unforgettable day.
 offeringLead: >-
-  Start with a single perfect day — then let it become a villa, a longer
-  stay, or a place you keep returning to.
+  In Luxor itself, or on the Red Sea in Hurghada — we build the private
+  day around you, timed against the crowds and handled end to end.
 offeringCards:
   - tag: Start here
+    image: /images/destinations/luxor-hero.jpg
+    kicker: Destination
+    title: Luxor
+    description: >-
+      The Valley of the Kings, Karnak, Medinet Habu and the Nile —
+      private, certified-guided, and timed before the crowds.
+    priceLabel: From €135
+    ctaLabel: Explore Luxor →
+    href: /luxor
+  - tag: ''
+    image: /images/destinations/hurghada-hero.jpg
+    kicker: From the Red Sea
+    title: Hurghada
+    description: >-
+      Staying on the coast? The best day of your holiday is a private trip
+      inland to Luxor — door to door, back by evening.
+    priceLabel: Day trips from €640
+    ctaLabel: See day trips →
+    href: /hurghada
+  - tag: ''
     image: /images/valley-kings-tomb-pillar.jpg
     kicker: The signature
-    title: The Concierge Day
+    title: Design your day
     description: >-
-      A private day, timed before the crowds — your own Egyptologist, the
-      Nile or the desert, and not one decision to make.
+      Know what you want? Build a private day, see the price, and reserve —
+      your own Egyptologist, and not one decision to make.
     priceLabel: From €450
     ctaLabel: Design your day →
-    href: /concierge-day
-  - tag: ''
-    image: /images/private-villa-pool.jpg
-    kicker: Stay
-    title: Private Villas
-    description: >-
-      Off-market villas in Luxor you won't find on any booking site —
-      found, vetted and arranged for you.
-    priceLabel: ''
-    ctaLabel: Enquire →
-    href: '#villas'
-  - tag: ''
-    image: /images/desert-stargazing-dune.jpg
-    kicker: Go deeper
-    title: Bespoke & Multi-day
-    description: >-
-      Several days, fully tailored — signatures unlock, the per-day value
-      climbs, and the trip is built around you.
-    priceLabel: ''
-    ctaLabel: Build yours →
     href: /concierge-day
 momentImage: /images/karnak-columns-detail.jpg
 momentQuote: >-

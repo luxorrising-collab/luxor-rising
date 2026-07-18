@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import styles from "./ExperienceConfigurator.module.css";
 import StickyBar from "./StickyBar";
 
@@ -237,7 +238,7 @@ export default function ExperienceConfigurator({
             included · No overnight
           </div>
           <div className={styles.upsell}>
-            Want the whole day arranged around it? <a href="/concierge-day">Build a Concierge Day →</a>
+            Want the whole day arranged around it? <Link href="/concierge-day">Build a Concierge Day →</Link>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import StickyBar from "@/components/StickyBar";
 import { reader } from "@/lib/keystatic-reader";
@@ -15,17 +16,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Nav
-        links={[
-          { href: "/concierge-day", label: "Concierge Days" },
-          { href: "#villas", label: "Private Villas" },
-          { href: "/experiences", label: "Experiences" },
-          { href: "/insiders-guide", label: "Insider's Guide" },
-          { href: "#about", label: "About" },
-        ]}
-        ctaHref="/concierge-day"
-        ctaLabel="Design your day"
-      />
+      <Nav ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO */}
       <section className={styles.hero}>
@@ -294,35 +285,7 @@ export default async function HomePage() {
       </section>
 
       <div className={styles.mobileBarSpacer}>
-        <FullFooter
-          columns={[
-            {
-              title: "Concierge",
-              links: [
-                { href: "/concierge-day", label: "Concierge Days" },
-                { href: "/concierge-day", label: "Bespoke & multi-day" },
-                { href: "#villas", label: "Private villas" },
-                { href: "/experiences", label: "Experiences" },
-              ],
-            },
-            {
-              title: "Company",
-              links: [
-                { href: "#about", label: "About us" },
-                { href: "/insiders-guide", label: "Insider's Guide" },
-                { href: "#how", label: "How it works" },
-              ],
-            },
-            {
-              title: "Plan with us",
-              links: [
-                { href: "#", label: "WhatsApp" },
-                { href: "#", label: "hello@luxorrising.com" },
-                { href: "#", label: "Luxor & Hurghada, Egypt" },
-              ],
-            },
-          ]}
-        />
+        <FullFooter columns={FOOTER_COLUMNS} />
       </div>
 
       {/* Mobile-only sticky action bar — thumb-reachable CTA for small screens */}

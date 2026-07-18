@@ -292,6 +292,110 @@ export default config({
         }),
       },
     }),
+
+    destinations: collection({
+      label: "Destination hubs (Luxor, Hurghada)",
+      slugField: "title",
+      path: "content/destinations/*/",
+      format: { contentField: "content" },
+      columns: ["title", "isActive"],
+      schema: {
+        title: fields.slug({
+          name: { label: "Title (used in the URL, e.g. \"Luxor\" → /luxor)" },
+        }),
+        navLabel: fields.text({ label: "Menu label", description: 'Short label for the Destinations dropdown, e.g. "Luxor"' }),
+        navBlurb: fields.text({ label: "Menu blurb", description: 'One line under the label in the dropdown' }),
+
+        // Hero (full-bleed image)
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitle: fields.text({ label: "Hero title", multiline: true }),
+        heroSubtitle: fields.text({ label: "Hero subtitle", multiline: true }),
+        heroImage: fields.image({ label: "Hero image", directory: "public/images/destinations", publicPath: "/images/destinations/" }),
+        heroTrustLine: fields.text({ label: "Hero trust line" }),
+        primaryCtaLabel: fields.text({ label: "Primary CTA label" }),
+        primaryCtaHref: fields.text({ label: "Primary CTA link", description: "e.g. /concierge-day?start=luxor" }),
+        secondaryCtaLabel: fields.text({ label: "Secondary CTA label" }),
+        secondaryCtaHref: fields.text({ label: "Secondary CTA link (anchor or path)" }),
+
+        // Trust strip
+        trustItems: fields.array(fields.text({ label: "Item" }), { label: "Trust strip items" }),
+
+        // Optional feature block (e.g. Hurghada's Luxor day trip)
+        showFeature: fields.checkbox({ label: "Show feature block", defaultValue: false }),
+        featureEyebrow: fields.text({ label: "Feature eyebrow" }),
+        featureTitle: fields.text({ label: "Feature title" }),
+        featureBody: fields.text({ label: "Feature body", multiline: true }),
+        featureImage: fields.image({ label: "Feature image", directory: "public/images/destinations", publicPath: "/images/destinations/" }),
+        featurePriceValue: fields.text({ label: "Feature price", description: 'e.g. "€640"' }),
+        featurePriceNote: fields.text({ label: "Feature price note" }),
+        featureCtaLabel: fields.text({ label: "Feature CTA label" }),
+        featureCtaHref: fields.text({ label: "Feature CTA link" }),
+
+        // Experience cards
+        experiencesEyebrow: fields.text({ label: "Experiences eyebrow" }),
+        experiencesTitle: fields.text({ label: "Experiences title" }),
+        experiencesLead: fields.text({ label: "Experiences lead", multiline: true }),
+        experiences: fields.array(
+          fields.object({
+            image: fields.image({ label: "Image", directory: "public/images/destinations", publicPath: "/images/destinations/" }),
+            meta: fields.text({ label: "Meta (small label above title)" }),
+            title: fields.text({ label: "Title" }),
+            hook: fields.text({ label: "Hook", multiline: true }),
+            badge: fields.text({ label: "Badge (optional)" }),
+            priceLabel: fields.text({ label: "Price label", description: 'e.g. "From"' }),
+            priceValue: fields.text({ label: "Price value", description: 'e.g. "€640"' }),
+            priceNote: fields.text({ label: "Price note" }),
+            ctaLabel: fields.text({ label: "CTA label" }),
+            href: fields.text({ label: "Link" }),
+          }),
+          { label: "Experience cards", itemLabel: (p) => p.fields.title.value || "Card" }
+        ),
+
+        // "Things to do" guide layer (SEO H2 sections)
+        guideEyebrow: fields.text({ label: "Guide eyebrow" }),
+        guideTitle: fields.text({ label: "Guide title" }),
+        guideIntro: fields.text({ label: "Guide intro", multiline: true }),
+        guideSections: fields.array(
+          fields.object({
+            heading: fields.text({ label: "Heading (H3)" }),
+            body: fields.text({ label: "Body", multiline: true }),
+          }),
+          { label: "Guide sections (H2/H3 for SEO)", itemLabel: (p) => p.fields.heading.value || "Section" }
+        ),
+        guideLinkLabel: fields.text({ label: "Guide link label" }),
+        guideLinkHref: fields.text({ label: "Guide link href" }),
+
+        // Flowing narrative (optional)
+        content: fields.markdoc({
+          label: "Extra content (optional)",
+          description: "Optional flowing content section.",
+          options: { image: { directory: "public/images/destinations", publicPath: "/images/destinations/" } },
+        }),
+
+        // FAQ
+        faqTitle: fields.text({ label: "FAQ title" }),
+        faq: fields.array(
+          fields.object({
+            question: fields.text({ label: "Question" }),
+            answer: fields.text({ label: "Answer", multiline: true }),
+          }),
+          { label: "FAQ", itemLabel: (p) => p.fields.question.value || "Question" }
+        ),
+
+        // Closer
+        closerEyebrow: fields.text({ label: "Closer eyebrow" }),
+        closerTitle: fields.text({ label: "Closer title" }),
+        closerText: fields.text({ label: "Closer text", multiline: true }),
+        closerCtaLabel: fields.text({ label: "Closer CTA label" }),
+        closerCtaHref: fields.text({ label: "Closer CTA link" }),
+        closerSecondaryLabel: fields.text({ label: "Closer secondary CTA label" }),
+        closerSecondaryHref: fields.text({ label: "Closer secondary CTA link" }),
+
+        ...seoFields,
+        navOrder: fields.integer({ label: "Menu order", defaultValue: 0, description: "Lower shows first in the Destinations dropdown." }),
+        isActive: fields.checkbox({ label: "Active (visible)", defaultValue: true }),
+      },
+    }),
   },
 
   singletons: {
@@ -667,6 +771,106 @@ export default config({
         closerPrimaryCtaHref: fields.text({ label: "Closer primary CTA href" }),
         closerSecondaryCtaLabel: fields.text({ label: "Closer secondary CTA label" }),
         closerSecondaryCtaHref: fields.text({ label: "Closer secondary CTA href" }),
+      },
+    }),
+
+    privateGuidePage: singleton({
+      label: "Private Guide page",
+      path: "content/private-guide-page/",
+      schema: {
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitle: fields.text({ label: "Hero title", multiline: true }),
+        heroLead: fields.text({ label: "Hero lead", multiline: true }),
+        heroCtaLabel: fields.text({ label: "Hero CTA label" }),
+        trustItems: fields.array(fields.text({ label: "Item" }), { label: "Trust strip items" }),
+
+        contrastEyebrow: fields.text({ label: "Contrast eyebrow" }),
+        contrastTitle: fields.text({ label: "Contrast title" }),
+        contrastLead: fields.text({ label: "Contrast lead", multiline: true }),
+        agencyTitle: fields.text({ label: "\"Agency\" column title" }),
+        agencyItems: fields.array(fields.text({ label: "Item" }), { label: "\"A tour company\" items" }),
+        hostTitle: fields.text({ label: "\"Local host\" column title" }),
+        hostItems: fields.array(fields.text({ label: "Item" }), { label: "\"Your own local host\" items" }),
+
+        hostsEyebrow: fields.text({ label: "Hosts eyebrow" }),
+        hostsTitle: fields.text({ label: "Hosts title" }),
+        hostsLead: fields.text({ label: "Hosts lead", multiline: true }),
+        hosts: fields.array(
+          fields.object({
+            image: fields.image({ label: "Photo", directory: "public/images/hosts", publicPath: "/images/hosts/" }),
+            name: fields.text({ label: "Name" }),
+            role: fields.text({ label: "Role" }),
+            bio: fields.text({ label: "Bio", multiline: true }),
+          }),
+          { label: "Hosts", itemLabel: (p) => p.fields.name.value || "Host" }
+        ),
+
+        formEyebrow: fields.text({ label: "Form eyebrow" }),
+        formTitle: fields.text({ label: "Form title" }),
+        formLead: fields.text({ label: "Form lead", multiline: true }),
+        formNote: fields.text({ label: "Form fine print", multiline: true }),
+
+        closerEyebrow: fields.text({ label: "Closer eyebrow" }),
+        closerTitle: fields.text({ label: "Closer title" }),
+        closerText: fields.text({ label: "Closer text", multiline: true }),
+        ...seoFields,
+      },
+    }),
+
+    privateToursPage: singleton({
+      label: "Private Tours page",
+      path: "content/private-tours-page/",
+      schema: {
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitle: fields.text({ label: "Hero title", multiline: true }),
+        heroLead: fields.text({ label: "Hero lead", multiline: true }),
+        heroCtaLabel: fields.text({ label: "Hero CTA label" }),
+        heroCtaHref: fields.text({ label: "Hero CTA link" }),
+        trustItems: fields.array(fields.text({ label: "Item" }), { label: "Trust strip items" }),
+
+        contrastEyebrow: fields.text({ label: "Contrast eyebrow" }),
+        contrastTitle: fields.text({ label: "Contrast title" }),
+        contrastLead: fields.text({ label: "Contrast lead", multiline: true }),
+        badTitle: fields.text({ label: "\"Group tour\" column title" }),
+        badItems: fields.array(fields.text({ label: "Item" }), { label: "\"Group tour\" items" }),
+        goodTitle: fields.text({ label: "\"Private day\" column title" }),
+        goodItems: fields.array(fields.text({ label: "Item" }), { label: "\"Private day\" items" }),
+
+        toursEyebrow: fields.text({ label: "Example tours eyebrow" }),
+        toursTitle: fields.text({ label: "Example tours title" }),
+        toursLead: fields.text({ label: "Example tours lead", multiline: true }),
+        tours: fields.array(
+          fields.object({
+            image: fields.image({ label: "Image", directory: "public/images/tours", publicPath: "/images/tours/" }),
+            eyebrow: fields.text({ label: "Eyebrow" }),
+            title: fields.text({ label: "Title" }),
+            body: fields.text({ label: "Body", multiline: true }),
+            priceValue: fields.text({ label: "Price" }),
+            priceNote: fields.text({ label: "Price note" }),
+            ctaLabel: fields.text({ label: "CTA label" }),
+            ctaHref: fields.text({ label: "CTA link (deep-link into the builder)" }),
+          }),
+          { label: "Example tours", itemLabel: (p) => p.fields.title.value || "Tour" }
+        ),
+
+        valueEyebrow: fields.text({ label: "Value eyebrow" }),
+        valueTitle: fields.text({ label: "Value title" }),
+        valueRows: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            price: fields.text({ label: "Price" }),
+          }),
+          { label: "Value stack rows", itemLabel: (p) => p.fields.label.value || "Row" }
+        ),
+        valueFinalLabel: fields.text({ label: "Value final label" }),
+        valueFinalPrice: fields.text({ label: "Value final price" }),
+
+        closerEyebrow: fields.text({ label: "Closer eyebrow" }),
+        closerTitle: fields.text({ label: "Closer title" }),
+        closerText: fields.text({ label: "Closer text", multiline: true }),
+        closerCtaLabel: fields.text({ label: "Closer CTA label" }),
+        closerCtaHref: fields.text({ label: "Closer CTA link" }),
+        ...seoFields,
       },
     }),
 

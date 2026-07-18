@@ -4,19 +4,25 @@ import { useEffect, useId, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MAIN_NAV } from "./mainNav";
 import styles from "./Nav.module.css";
 
-export type NavLink = { href: string; label: string };
+export type NavLink = { href: string; label: string; blurb?: string; children?: NavLink[] };
 
 function isActiveLink(href: string, pathname: string) {
-  if (href.startsWith("#")) return false;
+  if (href.startsWith("#") || href.includes("#")) return false;
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function isGroupActive(link: NavLink, pathname: string) {
+  if (isActiveLink(link.href, pathname)) return true;
+  return (link.children ?? []).some((c) => isActiveLink(c.href, pathname));
+}
+
 export default function Nav({
   scrollAware = true,
-  links,
+  links = MAIN_NAV,
   ctaHref,
   ctaLabel,
   brandHref = "/",
@@ -29,15 +35,15 @@ export default function Nav({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
   const menuId = useId();
 
-  // Close the mobile menu whenever the route changes (e.g. back/forward
-  // navigation that doesn't go through a link's own onClick handler).
   const [lastPathname, setLastPathname] = useState(pathname);
   if (pathname !== lastPathname) {
     setLastPathname(pathname);
     setMenuOpen(false);
+    setOpenDropdown(null);
   }
 
   useEffect(() => {
@@ -83,7 +89,35 @@ export default function Nav({
         {hasLinks && (
           <nav className={styles.links}>
             {links!.map((l) => {
-              const active = isActiveLink(l.href, pathname);
+              const active = isGroupActive(l, pathname);
+              if (l.children && l.children.length > 0) {
+                return (
+                  <div className={styles.dd} key={l.label}>
+                    <button
+                      type="button"
+                      className={`${styles.ddToggle} ${active ? styles.active : ""}`}
+                      aria-haspopup="true"
+                      aria-expanded={openDropdown === l.label}
+                      onClick={() => setOpenDropdown((v) => (v === l.label ? null : l.label))}
+                      onBlur={(e) => {
+                        if (!e.currentTarget.parentElement?.contains(e.relatedTarget as Node)) {
+                          setOpenDropdown(null);
+                        }
+                      }}
+                    >
+                      {l.label} <span className={styles.caret}>▾</span>
+                    </button>
+                    <div className={`${styles.ddMenu} ${openDropdown === l.label ? styles.ddOpen : ""}`}>
+                      {l.children.map((c) => (
+                        <Link key={c.href} href={c.href} onClick={() => setOpenDropdown(null)}>
+                          {c.label}
+                          {c.blurb && <small>{c.blurb}</small>}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={l.href}
@@ -118,10 +152,27 @@ export default function Nav({
         <div
           id={menuId}
           className={styles.mobileMenu}
-          style={{ maxHeight: menuOpen ? 520 : 0, opacity: menuOpen ? 1 : 0 }}
+          style={{ maxHeight: menuOpen ? 640 : 0, opacity: menuOpen ? 1 : 0 }}
         >
           <nav className={styles.mobileLinks}>
             {links!.map((l) => {
+              if (l.children && l.children.length > 0) {
+                return (
+                  <div key={l.label} className={styles.mobileGroup}>
+                    <span className={styles.mobileGroupLabel}>{l.label}</span>
+                    {l.children.map((c) => (
+                      <Link
+                        key={c.href}
+                        href={c.href}
+                        className={`${styles.mobileSub} ${isActiveLink(c.href, pathname) ? styles.active : ""}`}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              }
               const active = isActiveLink(l.href, pathname);
               return (
                 <Link

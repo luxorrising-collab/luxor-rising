@@ -98,17 +98,7 @@ export default async function InsidersGuidePage() {
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav
-        scrollAware={false}
-        links={[
-          { href: "/", label: "Home" },
-          { href: "/concierge-day", label: "Concierge Days" },
-          { href: "/experiences", label: "Experiences" },
-          { href: "/insiders-guide", label: "Insider's Guide" },
-        ]}
-        ctaHref="/concierge-day"
-        ctaLabel="Design your day"
-      />
+      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO */}
       <header className={styles.hero}>

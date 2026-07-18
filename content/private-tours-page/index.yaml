@@ -1,0 +1,86 @@
+heroEyebrow: Private tours of Egypt
+heroTitle: |-
+  Your own guide.
+  Your own pace.
+heroLead: >-
+  Not a coach with forty strangers on someone else's clock. A private
+  day, built around you, delivered by a licensed local — and priced in
+  front of you, before you commit.
+heroCtaLabel: Build your private day →
+heroCtaHref: /concierge-day
+trustItems:
+  - Private — just your group
+  - Licensed Egyptologist
+  - Transparent pricing
+  - Free cancellation up to 7 days
+contrastEyebrow: What "private" actually buys you
+contrastTitle: The difference isn't the price. It's the day.
+contrastLead: The difference isn't the price. It's the day.
+badTitle: The group tour
+badItems:
+  - A coach, on a fixed timetable
+  - Midday at the sites, shoulder to shoulder
+  - One script for forty people
+  - No room to linger, or to skip
+goodTitle: A private day with us
+goodItems:
+  - Your own car, your own hours
+  - The sites at dawn, before the crowds
+  - Your Egyptologist, telling you what you care about
+  - Stay longer where it moves you; skip what doesn't
+toursEyebrow: A few private days to start from
+toursTitle: Examples, not a fixed menu
+toursLead: >-
+  Each one opens the builder, pre-set, so you can shape it and see the
+  price.
+tours:
+  - image: /images/tours/luxor-day.jpg
+    eyebrow: Luxor · full day
+    title: East & west bank, in one private day
+    body: >-
+      Karnak and Luxor Temple on the east; the Valley of the Kings and a
+      memorial temple on the west. The classic, done without the coach —
+      timed so you're always a step ahead of the crowds.
+    priceValue: €640
+    priceNote: / day, up to 4
+    ctaLabel: Build this day →
+    ctaHref: /concierge-day?start=luxor
+  - image: /images/tours/hurghada-luxor.jpg
+    eyebrow: From Hurghada · full day
+    title: Hurghada → Luxor, door to door
+    body: >-
+      Staying on the Red Sea? A private car from your hotel, the great
+      sites of Luxor with your own guide, and back by evening. The single
+      best day of a beach holiday.
+    priceValue: €640
+    priceNote: / day, door to door
+    ctaLabel: Build this day →
+    ctaHref: /concierge-day?start=hurghada
+valueEyebrow: What's handled for you
+valueTitle: A day that would cost more to assemble — if you even could
+valueRows:
+  - label: Your own licensed Egyptologist, all day
+    price: €180
+  - label: Private car & driver
+    price: €90
+  - label: Monument entries, timed before the crowds
+    price: €60
+  - label: Trip design & every reservation made
+    price: €120
+  - label: A consigliere on call, dawn to dusk
+    price: €90
+valueFinalLabel: Your private day, from
+valueFinalPrice: €640
+closerEyebrow: One builder, your whole trip
+closerTitle: Shape it, see the price, reserve.
+closerText: >-
+  Every private tour we run is built in one place — pick your day, watch
+  the price update, pay a deposit or in full. No forms, no waiting for a
+  quote.
+closerCtaLabel: Build your private day →
+closerCtaHref: /concierge-day
+metaTitle: Private Tours of Egypt — Your Own Guide, Your Own Pace
+metaDescription: >-
+  Private tours of Egypt built around you — Luxor's temples and tombs, day
+  trips from Hurghada, your own licensed Egyptologist. No group coach, no
+  fixed script. Design your day and see the price.

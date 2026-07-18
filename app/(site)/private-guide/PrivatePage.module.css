@@ -1,0 +1,236 @@
+/* hero (centered) */
+.hero {
+  padding: 8rem 0 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--color-cream), var(--color-paper));
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 160, 99, 0.13), transparent 62%);
+  pointer-events: none;
+}
+.heroIn {
+  position: relative;
+}
+.rule {
+  width: 56px;
+  height: 1px;
+  background: var(--color-gold);
+  margin: 1.8rem auto;
+}
+
+/* trust strip */
+.trust {
+  background: var(--color-paper);
+  border-top: 1px solid var(--color-cream-deep);
+  border-bottom: 1px solid var(--color-cream-deep);
+}
+.trustIn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.4rem;
+  padding: 1rem 1.5rem;
+  flex-wrap: wrap;
+}
+.trustItem {
+  font-size: 0.8rem;
+  color: var(--color-espresso);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tdot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+
+/* contrast */
+.cmp {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  margin-top: 2rem;
+}
+.col {
+  border: 1px solid var(--color-cream-deep);
+  border-radius: 6px;
+  padding: 1.6rem 1.7rem;
+  background: var(--color-paper);
+}
+.col.good {
+  border-color: var(--color-gold-soft);
+  background: linear-gradient(180deg, rgba(201, 160, 99, 0.06), transparent);
+}
+.col h4 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.col ul {
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+}
+.col li {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  padding-left: 1.5rem;
+  position: relative;
+}
+.col.bad li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  color: #b5675a;
+}
+.col.good li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-gold-deep);
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .cmp {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* host cards */
+.hosts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.6rem;
+  margin-top: 2.4rem;
+}
+.host {
+  background: var(--color-paper);
+  border: 1px solid var(--color-cream-deep);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow, 0 8px 28px rgba(46, 34, 22, 0.07));
+}
+.hostImg {
+  aspect-ratio: 1 / 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-cream-deep);
+}
+.hostBody {
+  padding: 1.3rem 1.4rem;
+}
+.hostBody h4 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+.hostRole {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  margin: 0.2rem 0 0.7rem;
+}
+.hostBody p {
+  font-size: 0.88rem;
+  color: var(--color-muted);
+}
+
+/* form split */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.6rem, 4vw, 3.2rem);
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* example tours (private tours page) */
+.tourSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.6rem, 4vw, 3.2rem);
+  align-items: center;
+  margin-bottom: 2.6rem;
+}
+.tourSplit.rev .tourMedia {
+  order: 2;
+}
+.tourMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lift, 0 22px 50px rgba(46, 34, 22, 0.13));
+}
+.tourPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+.tourPrice b {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--color-ink);
+}
+.tourPrice small {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+@media (max-width: 820px) {
+  .tourSplit {
+    grid-template-columns: 1fr;
+  }
+  .tourSplit.rev .tourMedia {
+    order: 0;
+  }
+}
+
+/* value stack */
+.stack {
+  max-width: 640px;
+  margin: 2rem auto 0;
+  background: var(--color-paper);
+  border: 1px solid var(--color-cream-deep);
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+}
+.stackRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.85rem 1.4rem;
+  border-bottom: 1px solid var(--color-cream-deep);
+  font-size: 0.92rem;
+}
+.stackRow .v {
+  color: var(--color-gold-deep);
+}
+.stackRow.fin {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* closer */
+.closer {
+  background: linear-gradient(180deg, var(--color-cream), var(--color-paper));
+  text-align: center;
+}

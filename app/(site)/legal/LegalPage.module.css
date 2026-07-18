@@ -1,0 +1,41 @@
+.crumb {
+  padding: 6.5rem 0 0;
+  font-size: 0.76rem;
+  color: var(--color-muted);
+  letter-spacing: 0.03em;
+}
+.crumb a:hover {
+  color: var(--color-gold-deep);
+}
+.crumb span {
+  margin: 0 0.4rem;
+  color: var(--color-gold-soft);
+}
+.legal {
+  padding: 2rem 0 4rem;
+}
+.ph {
+  background: rgba(201, 160, 99, 0.1);
+  border: 1px solid var(--color-gold-soft);
+  border-left: 3px solid var(--color-gold);
+  border-radius: 3px;
+  padding: 1rem 1.2rem;
+  font-size: 0.86rem;
+  color: var(--color-muted);
+  margin-bottom: 2.4rem;
+}
+.ph b {
+  color: var(--color-espresso);
+}
+.legal h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin: 2rem 0 0.6rem;
+  color: var(--color-ink);
+}
+.legal p {
+  color: var(--color-muted);
+  margin-bottom: 1rem;
+  font-size: 0.94rem;
+}

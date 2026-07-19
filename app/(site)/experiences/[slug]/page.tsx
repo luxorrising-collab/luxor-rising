@@ -13,7 +13,8 @@ async function getData(slug: string) {
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
   ]);
-  if (!entry) return null;
+  // Inactive experiences 404 rather than render at their direct URL.
+  if (!entry || !entry.isActive) return null;
   return { entry, globals, pricingRules };
 }
 

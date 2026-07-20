@@ -10,7 +10,7 @@ type Item = ExperienceCardProps & { cat: string[] };
 
 export type CmsExperienceItem = Pick<
   ExperienceCardProps,
-  "href" | "src" | "alt" | "title" | "hook" | "priceValue" | "priceLabel" | "priceNote" | "ctaLabel"
+  "href" | "src" | "alt" | "title" | "place" | "hook" | "priceValue" | "priceLabel" | "priceNote" | "ctaLabel"
 >;
 
 const SIGNATURE: Item[] = [

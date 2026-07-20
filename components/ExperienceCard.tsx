@@ -7,6 +7,7 @@ export type ExperienceCardProps = {
   src: string;
   alt: string;
   title: string;
+  place?: string;
   hook: string;
   meta?: string;
   facts?: React.ReactNode[];
@@ -26,6 +27,7 @@ export default function ExperienceCard({
   src,
   alt,
   title,
+  place,
   hook,
   meta,
   facts,
@@ -49,6 +51,7 @@ export default function ExperienceCard({
         </div>
         <div className={styles.body}>
           <h3>{title}</h3>
+          {place && <div className={styles.place}>{place}</div>}
           <p className={styles.hook}>{hook}</p>
           <div className={styles.compactFoot}>
             <span>
@@ -82,6 +85,7 @@ export default function ExperienceCard({
       <div className={styles.body}>
         {meta && <div className={styles.meta}>{meta}</div>}
         <h3>{title}</h3>
+        {place && <div className={styles.place}>{place}</div>}
         <p className={styles.hook}>{hook}</p>
         {facts && facts.length > 0 && (
           <div className={styles.facts}>

@@ -97,8 +97,8 @@ export default async function ExperiencesPage() {
     .map(({ slug, entry }) => ({
       href: `/experiences/${slug}`,
       src: entry.heroImage || "/images/medinet-habu-facade.jpg",
-      alt: entry.title,
-      title: entry.title,
+      alt: entry.name || entry.title,
+      title: entry.name || entry.title,
       hook: entry.hook,
       priceValue: entry.priceType === "included" ? "Included" : `€${entry.basePrice ?? 0}`,
       priceLabel: entry.priceType === "included" ? "Included" : "From",

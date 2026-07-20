@@ -98,6 +98,11 @@ export default config({
       columns: ["title", "category", "basePrice", "isActive"],
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
+        name: fields.text({
+          label: "Card name",
+          description:
+            'Short, recognisable name shown on cards, in menus and search — the name people actually look for, e.g. "Karnak at Dawn", "Luxor Temple at Dusk". The poetic Title stays as the page headline. If left blank, the Title is used.',
+        }),
         hook: fields.text({
           label: "Hook",
           multiline: true,

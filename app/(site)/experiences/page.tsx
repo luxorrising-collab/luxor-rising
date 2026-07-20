@@ -24,92 +24,113 @@ export const metadata: Metadata = {
   },
 };
 
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: "Luxor Rising Experiences",
-  description: "Private, single-day curated experiences in Luxor, Egypt.",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      item: {
-        "@type": "Product",
-        name: "Medinet Habu, before anyone else",
-        description: "Private sunrise access to the temple of Ramesses III.",
-        brand: { "@type": "Brand", name: "Luxor Rising" },
-        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      item: {
-        "@type": "Product",
-        name: "Karnak, in the quiet hour",
-        description: "Early private access to the Karnak temple complex.",
-        brand: { "@type": "Brand", name: "Luxor Rising" },
-        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      item: {
-        "@type": "Product",
-        name: "Valley of the Kings, tombs chosen for you",
-        description: "Private full day in the Valley of the Kings with a licensed Egyptologist.",
-        brand: { "@type": "Brand", name: "Luxor Rising" },
-        offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 4,
-      item: {
-        "@type": "Product",
-        name: "The crossing — Hurghada to Luxor",
-        description: "Private door-to-door day from Hurghada to Luxor.",
-        brand: { "@type": "Brand", name: "Luxor Rising" },
-        offers: { "@type": "Offer", price: "890", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 5,
-      item: {
-        "@type": "Product",
-        name: "Reality Hunting",
-        description: "A private day beyond the monuments, with a local consigliere.",
-        brand: { "@type": "Brand", name: "Luxor Rising" },
-        offers: { "@type": "Offer", price: "980", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-      },
-    },
-  ],
-};
+const BRAND = { "@type": "Brand", name: "Luxor Rising" };
+
+// The hand-curated signature / concierge-day products. CMS experiences are
+// appended to these at render time so the ItemList structured data always
+// reflects the full, live catalogue (better SEO + answer-engine coverage).
+const CURATED_PRODUCTS = [
+  {
+    "@type": "Product",
+    name: "Medinet Habu, before anyone else",
+    description: "Private sunrise access to the temple of Ramesses III.",
+    brand: BRAND,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+  },
+  {
+    "@type": "Product",
+    name: "Karnak, in the quiet hour",
+    description: "Early private access to the Karnak temple complex.",
+    brand: BRAND,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+  },
+  {
+    "@type": "Product",
+    name: "Valley of the Kings, tombs chosen for you",
+    description: "Private full day in the Valley of the Kings with a licensed Egyptologist.",
+    brand: BRAND,
+    offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+  },
+  {
+    "@type": "Product",
+    name: "The crossing — Hurghada to Luxor",
+    description: "Private door-to-door day from Hurghada to Luxor.",
+    brand: BRAND,
+    offers: { "@type": "Offer", price: "890", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+  },
+  {
+    "@type": "Product",
+    name: "Reality Hunting",
+    description: "A private day beyond the monuments, with a local consigliere.",
+    brand: BRAND,
+    offers: { "@type": "Offer", price: "980", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+  },
+];
 
 export default async function ExperiencesPage() {
   const allExperiences = await reader.collections.experiences.all();
-  const cmsItems: CmsExperienceItem[] = allExperiences
-    // Medinet Habu already has its own hand-curated "Signature" card below —
-    // skip it here so it isn't shown twice.
-    .filter(({ slug, entry }) => entry.isActive && entry.title && slug !== "medinet-habu")
-    .map(({ slug, entry }) => ({
-      href: `/experiences/${slug}`,
-      src: entry.heroImage || "/images/medinet-habu-facade.jpg",
-      alt: entry.name || entry.title,
-      title: entry.title,
-      place: entry.heroEyebrow,
-      hook: entry.hook,
-      priceValue: entry.priceType === "included" ? "Included" : `€${entry.basePrice ?? 0}`,
-      priceLabel: entry.priceType === "included" ? "Included" : "From",
-      priceNote: entry.priceType === "included" ? "with any day" : entry.priceNote || undefined,
-      ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
-    }));
+  // Medinet Habu already has its own hand-curated "Signature" card below —
+  // skip it here so it isn't shown twice.
+  const activeExperiences = allExperiences.filter(
+    ({ slug, entry }) => entry.isActive && entry.title && slug !== "medinet-habu"
+  );
+
+  const cmsItems: CmsExperienceItem[] = activeExperiences.map(({ slug, entry }) => ({
+    href: `/experiences/${slug}`,
+    src: entry.heroImage || "/images/medinet-habu-facade.jpg",
+    alt: entry.name || entry.title,
+    title: entry.title,
+    // Drop the trailing "· A single experience" — redundant on the listing page.
+    place: entry.heroEyebrow.replace(/\s*·\s*A single experience\s*$/i, ""),
+    hook: entry.hook,
+    badge: entry.badge || undefined,
+    scarcity: entry.scarcityNote || undefined,
+    // At-a-glance facts reduce uncertainty (duration + group size are the two
+    // questions every buyer has) — a small, proven conversion lift.
+    facts: [entry.duration, entry.groupSize].filter((f): f is string => Boolean(f)),
+    priceValue: entry.priceType === "included" ? "Included" : `€${entry.basePrice ?? 0}`,
+    priceLabel: entry.priceType === "included" ? "Included" : "From",
+    priceNote:
+      entry.priceType === "included"
+        ? "with any day"
+        : entry.pricePerPerson || entry.priceNote || undefined,
+    ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
+  }));
+
+  // Structured data: the full live catalogue (curated + every CMS product),
+  // with names, prices and canonical URLs for search and answer engines.
+  const cmsProducts = activeExperiences.map(({ slug, entry }) => ({
+    "@type": "Product",
+    name: entry.name || entry.title,
+    description: entry.hook,
+    brand: BRAND,
+    category: entry.category,
+    url: `https://luxorrising.com/experiences/${slug}`,
+    image: entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined,
+    offers: {
+      "@type": "Offer",
+      price: String(entry.basePrice ?? 0),
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      url: `https://luxorrising.com/experiences/${slug}#book`,
+    },
+  }));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Luxor Rising Experiences",
+    description: "Private, single-day curated experiences in Luxor, Egypt.",
+    itemListElement: [...CURATED_PRODUCTS, ...cmsProducts].map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item,
+    })),
+  };
 
   return (
     <>
-      <JsonLd data={JSON_LD} />
+      <JsonLd data={jsonLd} />
       <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO */}

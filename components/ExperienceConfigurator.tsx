@@ -5,12 +5,9 @@ import Link from "next/link";
 import styles from "./ExperienceConfigurator.module.css";
 import StickyBar from "./StickyBar";
 
-type TimeOfDay = "dawn" | "golden";
 type Pay = "full" | "deposit";
 
 export type GroupSupplementTier = { minGuests: number; extraPerGuest: number };
-
-const ADD = { felucca: 60, photo: 90 };
 
 function extra(g: number, groupSupplement: GroupSupplementTier[]) {
   let s = 0;
@@ -24,15 +21,36 @@ function euro(n: number) {
   return "€" + n.toLocaleString("en-US");
 }
 
+// "What we arrange" comes from the product's own glanceIncludes line, so it is
+// always accurate for THIS experience (no temple-only assumptions).
+function parseIncludes(s?: string): string[] {
+  if (!s) return [];
+  return s
+    .replace(/^\s*includes\s+/i, "")
+    .split("·")
+    .map((x) => x.trim())
+    .filter(Boolean)
+    .map((x) => x.charAt(0).toUpperCase() + x.slice(1));
+}
+const FALLBACK_INCLUDES = [
+  "Your consigliere, with you start to finish",
+  "Private transfer, door to door",
+  "Every reservation and all the timing",
+  "Timed against the crowds",
+];
+
 type ExperienceConfiguratorProps = {
   name?: string;
+  slug?: string;
   basePrice?: number;
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
+  glanceIncludes?: string;
 };
 
 export default function ExperienceConfigurator({
-  name = "Medinet Habu",
+  name = "this experience",
+  slug = "",
   basePrice = 140,
   groupSupplement = [
     { minGuests: 2, extraPerGuest: 70 },
@@ -40,32 +58,23 @@ export default function ExperienceConfigurator({
     { minGuests: 4, extraPerGuest: 45 },
   ],
   depositPercent = 30,
+  glanceIncludes,
 }: ExperienceConfiguratorProps) {
   const [group, setGroup] = useState(2);
-  const [time, setTime] = useState<TimeOfDay>("dawn");
-  const [felucca, setFelucca] = useState(false);
-  const [photo, setPhoto] = useState(false);
   const [pay, setPay] = useState<Pay>("full");
   const [tripDate, setTripDate] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const dateInputRef = useRef<HTMLInputElement>(null);
 
-  const total = basePrice + extra(group, groupSupplement) + (felucca ? ADD.felucca : 0) + (photo ? ADD.photo : 0);
+  const total = basePrice + extra(group, groupSupplement);
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
 
   const includes = useMemo(() => {
-    const b = [
-      "Your consigliere, with you start to finish",
-      "A certified Egyptologist on site",
-      "Private return transfer",
-      time === "dawn" ? "Entry at dawn, before the crowds" : "Entry at golden hour",
-      "Monument entry for your group",
-      "Every reservation & all timing",
-    ];
-    if (felucca) b.push("A private felucca afterwards");
-    if (photo) b.push("A private photoshoot");
-    return b;
-  }, [time, felucca, photo]);
+    const parsed = parseIncludes(glanceIncludes);
+    return parsed.length ? parsed : FALLBACK_INCLUDES;
+  }, [glanceIncludes]);
 
   useEffect(() => {
     if (dateInputRef.current) {
@@ -73,27 +82,40 @@ export default function ExperienceConfigurator({
     }
   }, []);
 
-  function handleReserve(e: React.MouseEvent) {
+  async function handleReserve(e: React.MouseEvent) {
     e.preventDefault();
+    if (loading) return;
     if (!tripDate) {
       dateInputRef.current?.focus();
-      alert("Please pick your date first.");
+      setError("Please pick your date first.");
       return;
     }
-    const msg =
-      pay === "full"
-        ? "Pay " + euro(total) + " in full"
-        : "Pay " + euro(deposit) + " deposit now, rest on the day";
-    alert(
-      "Prototype — this is where Stripe checkout opens.\n\n" + name + " · " +
-        group +
-        " guest(s) · " +
-        time +
-        " · " +
-        tripDate +
-        "\n" +
-        msg
-    );
+    setError("");
+    setLoading(true);
+    const amount = pay === "full" ? total : deposit;
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          slug,
+          amountCents: amount * 100,
+          mode: pay,
+          guests: group,
+          date: tripDate,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url as string;
+        return;
+      }
+      setError(data.error || "We couldn't open secure checkout just now. Please try again.");
+    } catch {
+      setError("We couldn't reach checkout. Please check your connection and try again.");
+    }
+    setLoading(false);
   }
 
   return (
@@ -110,7 +132,10 @@ export default function ExperienceConfigurator({
               type="date"
               className={styles.dateInput}
               value={tripDate}
-              onChange={(e) => setTripDate(e.target.value)}
+              onChange={(e) => {
+                setTripDate(e.target.value);
+                if (error) setError("");
+              }}
             />
           </div>
 
@@ -126,6 +151,7 @@ export default function ExperienceConfigurator({
                   type="button"
                   className={`${styles.grp} ${group === g ? styles.sel : ""}`}
                   onClick={() => setGroup(g)}
+                  aria-pressed={group === g}
                 >
                   {g === 1 ? "Just me" : g === 2 ? "Two of us" : `${g} of us`}
                 </button>
@@ -134,61 +160,19 @@ export default function ExperienceConfigurator({
             <div className={styles.grpNote}>
               {group > 1
                 ? euro(perPerson) + " per person — adding guests lowers the per-person rate."
-                : "Travelling with your partner or friends? Add them — the per-person price drops."}
+                : "Travelling with your partner or friends? Add them — the per-person price drops. Private, up to 4 guests."}
             </div>
           </div>
 
           <div className={styles.step}>
             <div className={styles.stepH}>
               <div className={styles.stepN}>3</div>
-              <h3>When?</h3>
+              <h3>The timing</h3>
             </div>
-            <div className={styles.optGrid}>
-              <div
-                className={`${styles.tile} ${time === "dawn" ? styles.sel : ""}`}
-                onClick={() => setTime("dawn")}
-              >
-                <div className={styles.tt}>Dawn — before the crowds</div>
-                <div className={styles.ts}>The temple almost to yourself, in the cool of first light.</div>
-              </div>
-              <div
-                className={`${styles.tile} ${time === "golden" ? styles.sel : ""}`}
-                onClick={() => setTime("golden")}
-              >
-                <div className={styles.tt}>Golden hour</div>
-                <div className={styles.ts}>Late-afternoon light, warm on the reliefs.</div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.step}>
-            <div className={styles.stepH}>
-              <div className={styles.stepN}>4</div>
-              <h3>
-                Add to it <span style={{ fontWeight: 300, opacity: 0.6, fontSize: ".85rem" }}>(optional)</span>
-              </h3>
-            </div>
-            <div
-              className={`${styles.addon} ${felucca ? styles.sel : ""}`}
-              onClick={() => setFelucca((f) => !f)}
-            >
-              <span className={styles.ck}>✓</span>
-              <div>
-                <div className={styles.an}>A private felucca afterwards</div>
-                <div className={styles.ad}>Sail the Nile as the day cools.</div>
-              </div>
-              <span className={styles.ax}>+€60</span>
-            </div>
-            <div
-              className={`${styles.addon} ${photo ? styles.sel : ""}`}
-              onClick={() => setPhoto((p) => !p)}
-            >
-              <span className={styles.ck}>✓</span>
-              <div>
-                <div className={styles.an}>A private photoshoot</div>
-                <div className={styles.ad}>A photographer captures your visit.</div>
-              </div>
-              <span className={styles.ax}>+€90</span>
+            <div className={styles.timingCard}>
+              <b>Timed against the crowds.</b> We don&apos;t hand you a fixed slot on a coach
+              clock — your consigliere arranges the hour so you have it as close to yours alone as
+              it gets, and confirms the exact timing with you within 24 hours of booking.
             </div>
           </div>
         </div>
@@ -196,7 +180,8 @@ export default function ExperienceConfigurator({
         <div className={styles.summary}>
           <div className={styles.sumH}>Your experience</div>
           <div className={styles.sumProof}>
-            <span style={{ letterSpacing: ".05em" }}>★★★★★</span> {name} · private &amp; certified-guided
+            <span style={{ letterSpacing: ".05em" }}>★★★★★</span> {name} · private &amp; fully
+            arranged
           </div>
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>
@@ -214,28 +199,44 @@ export default function ExperienceConfigurator({
           </ul>
           <div className={styles.sumSub}>How you&apos;d like to pay</div>
           <div className={styles.payOpts}>
-            <div
+            <button
+              type="button"
               className={`${styles.pay} ${pay === "full" ? styles.sel : ""}`}
               onClick={() => setPay("full")}
+              aria-pressed={pay === "full"}
             >
               <b>{euro(total)}</b>
               <span>Pay in full</span>
-            </div>
-            <div
+            </button>
+            <button
+              type="button"
               className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
               onClick={() => setPay("deposit")}
+              aria-pressed={pay === "deposit"}
             >
               <b>{euro(deposit)}</b>
               <span>Deposit · rest on the day</span>
-            </div>
+            </button>
           </div>
-          <a href="#" className={`btn btn-primary ${styles.sumBtn}`} onClick={handleReserve}>
-            Reserve &amp; pay
+          <a
+            href="#"
+            className={`btn btn-primary ${styles.sumBtn}`}
+            onClick={handleReserve}
+            aria-disabled={loading}
+          >
+            {loading ? "Opening secure checkout…" : "Reserve & pay"}
           </a>
-          <div className={styles.sumReassure}>Secure checkout · No account needed · We confirm within 24 hours</div>
+          {error && (
+            <div role="alert" className={styles.sumError}>
+              {error}
+            </div>
+          )}
+          <div className={styles.sumReassure}>
+            Secure checkout by Stripe · No account needed · Free cancellation up to 7 days before
+          </div>
           <div className={styles.sumFine}>
-            Free cancellation up to 7 days before · Guiding by a certified Egyptologist · Entry &amp; transfer
-            included · No overnight
+            Private, just your group · Everything arranged end to end · Your consigliere confirms the
+            exact timing within 24 hours
           </div>
           <div className={styles.upsell}>
             Want the whole day arranged around it? <Link href="/concierge-day">Build a Concierge Day →</Link>
@@ -245,7 +246,7 @@ export default function ExperienceConfigurator({
 
       <StickyBar
         name={name}
-        meta={`· from ${euro(basePrice)} · private & certified-guided`}
+        meta={`· from ${euro(basePrice)} · private, timed against the crowds`}
         ctaHref="#book"
         ctaLabel="Reserve"
         revealOnScroll

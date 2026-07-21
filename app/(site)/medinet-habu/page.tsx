@@ -138,12 +138,14 @@ export default async function MedinetHabuPage() {
         configurator={
           <ExperienceConfigurator
             name="Medinet Habu"
+            slug={SLUG}
             basePrice={entry.basePrice ?? 0}
             groupSupplement={entry.groupSupplement.map((t) => ({
               minGuests: t.minGuests ?? 0,
               extraPerGuest: t.extraPerGuest ?? 0,
             }))}
             depositPercent={pricingRules?.depositPercent ?? 30}
+            glanceIncludes={entry.glanceIncludes}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

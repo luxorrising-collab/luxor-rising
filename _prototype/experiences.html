@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Experiences in Luxor — Private, Curated, One Day at a Time | Luxor Rising</title>
+<meta name="description" content="Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your consigliere, delivered by licensed local specialists. From €640 a day.">
+<link rel="canonical" href="https://luxor-rising.com/experiences">
+<meta property="og:title" content="Experiences in Luxor — Private, Curated, One Day at a Time">
+<meta property="og:description" content="Private temples, tombs, sunrise balloon, desert and Nile. Curated by your consigliere in Luxor.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A063; --gold-deep:#A67F45; --gold-soft:#E4CFA8;
+  --cream:#FAF3E4; --cream-deep:#EFE3CC; --paper:#FFFDF8;
+  --espresso:#2E2216; --ink:#1A1410; --muted:#7A6A56;
+  --line:rgba(46,34,22,.12);
+  --display:'Cormorant Garamond',Georgia,serif;
+  --body:'Inter',system-ui,-apple-system,sans-serif;
+  --shadow:0 1px 2px rgba(46,34,22,.04),0 8px 28px rgba(46,34,22,.07);
+  --shadow-lift:0 2px 6px rgba(46,34,22,.06),0 22px 50px rgba(46,34,22,.13);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--cream);color:var(--espresso);line-height:1.65;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 1.5rem}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:60;background:rgba(250,243,228,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1180px;margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{font-family:var(--display);font-size:1.35rem;letter-spacing:.06em;font-weight:500;white-space:nowrap}
+.logo span{color:var(--gold-deep)}
+.nav-links{display:flex;gap:1.9rem;align-items:center}
+.nav-links a{font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav-links a:hover,.nav-links a[aria-current]{color:var(--espresso)}
+.nav-links a[aria-current]{color:var(--gold-deep)}
+.nav-cta{border:1.5px solid var(--espresso);padding:.55rem 1.1rem;border-radius:2px;font-size:.78rem!important;letter-spacing:.09em!important;color:var(--espresso)!important;transition:.25s}
+.nav-cta:hover{background:var(--espresso);color:var(--cream)!important}
+.burger{display:none;background:none;border:0;font-size:1.5rem;color:var(--espresso);cursor:pointer;line-height:1}
+@media(max-width:860px){
+  .nav-links{position:fixed;inset:64px 0 auto 0;background:var(--cream);flex-direction:column;padding:1.6rem;gap:1.3rem;border-bottom:1px solid var(--line);transform:translateY(-120%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+  .nav-links.open{transform:translateY(0)}
+  .burger{display:block}
+}
+
+/* HERO */
+.hero{padding:5.5rem 0 3.2rem;text-align:center;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,160,99,.13),transparent 62%);pointer-events:none}
+.eyebrow{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:1.3rem;font-weight:500}
+.hero h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.1rem);font-weight:400;line-height:1.08;letter-spacing:-.01em;margin-bottom:1.3rem}
+.hero h1 em{font-style:italic;color:var(--gold-deep)}
+.hero p{max-width:620px;margin:0 auto;color:var(--muted);font-size:1.06rem}
+.rule{width:56px;height:1px;background:var(--gold);margin:2rem auto}
+
+/* TRUST STRIP */
+.trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper)}
+.trust-in{display:flex;justify-content:center;align-items:center;gap:2.6rem;padding:1rem 1.5rem;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+.trust-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.trust-item b{color:var(--espresso);font-weight:600}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+
+/* FILTERS */
+.filters{padding:2.6rem 0 1.2rem;display:flex;gap:.55rem;flex-wrap:wrap;justify-content:center}
+.chip{border:1.5px solid var(--cream-deep);background:var(--paper);border-radius:100px;padding:.5rem 1.05rem;font-family:var(--body);font-size:.82rem;color:var(--muted);cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--gold-soft);color:var(--espresso)}
+.chip.on{background:var(--espresso);border-color:var(--espresso);color:var(--cream);font-weight:500}
+.count{text-align:center;font-size:.8rem;color:var(--muted);padding-bottom:2.4rem}
+
+/* SECTION HEADS */
+.sec{padding:1rem 0 3.5rem}
+.sec-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:.5rem;flex-wrap:wrap}
+.sec-head h2{font-family:var(--display);font-size:2rem;font-weight:400}
+.sec-head .tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);border:1px solid var(--gold-soft);padding:.24rem .6rem;border-radius:2px}
+.sec-sub{color:var(--muted);font-size:.94rem;max-width:620px;margin-bottom:2.2rem}
+
+/* GRID + CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.6rem}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lift)}
+.card:hover .card-img img{transform:scale(1.06)}
+.card-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--cream-deep)}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.4,0,.2,1)}
+.badge{position:absolute;top:.8rem;left:.8rem;background:rgba(26,20,16,.86);backdrop-filter:blur(6px);color:var(--cream);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;padding:.34rem .66rem;border-radius:2px;font-weight:500}
+.badge.sig{background:var(--gold);color:var(--ink);font-weight:600}
+.badge.incl{background:rgba(250,243,228,.94);color:var(--gold-deep);border:1px solid var(--gold-soft)}
+.scarce{position:absolute;bottom:.8rem;left:.8rem;background:rgba(250,243,228,.94);backdrop-filter:blur(6px);font-size:.68rem;color:var(--espresso);padding:.3rem .6rem;border-radius:2px;display:flex;align-items:center;gap:.35rem}
+.pulse{width:5px;height:5px;border-radius:50%;background:#C0392B;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.card-body{padding:1.35rem 1.4rem 1.5rem;display:flex;flex-direction:column;flex:1}
+.card-meta{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem;display:flex;gap:.55rem;align-items:center}
+.card h3{font-family:var(--display);font-size:1.5rem;font-weight:500;line-height:1.2;margin-bottom:.5rem}
+.card-hook{color:var(--muted);font-size:.9rem;margin-bottom:1rem;flex:1}
+.facts{display:flex;gap:1.1rem;font-size:.76rem;color:var(--muted);padding-bottom:1rem;margin-bottom:1rem;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.facts b{color:var(--espresso);font-weight:600}
+.card-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem}
+.price small{display:block;font-size:.68rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.1rem}
+.price b{font-family:var(--display);font-size:1.65rem;font-weight:500;color:var(--espresso)}
+.price i{font-style:normal;font-size:.75rem;color:var(--muted)}
+.btn{border:0;border-radius:2px;font-family:var(--body);font-size:.79rem;letter-spacing:.07em;padding:.68rem 1.15rem;cursor:pointer;transition:.25s;white-space:nowrap;font-weight:500;display:inline-block}
+.btn-p{background:var(--espresso);color:var(--cream)}
+.btn-p:hover{background:var(--gold-deep)}
+.btn-s{background:transparent;color:var(--espresso);border:1.5px solid var(--espresso)}
+.btn-s:hover{background:var(--espresso);color:var(--cream)}
+.btn-lg{padding:.95rem 2.1rem;font-size:.86rem}
+
+/* ENQUIRY (multi-day) CARDS */
+.enq .card-img{aspect-ratio:16/9}
+.enq-note{background:var(--cream);border:1px solid var(--gold-soft);border-left:3px solid var(--gold);padding:.9rem 1.1rem;border-radius:2px;font-size:.84rem;color:var(--muted);margin-bottom:2.2rem;max-width:760px}
+.enq-note b{color:var(--espresso)}
+
+/* HOW IT WORKS */
+.how{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:4.5rem 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2.4rem;margin-top:2.6rem}
+.step-n{font-family:var(--display);font-size:2.4rem;color:var(--gold-soft);line-height:1;margin-bottom:.6rem}
+.step h4{font-family:var(--display);font-size:1.25rem;font-weight:500;margin-bottom:.45rem}
+.step p{font-size:.88rem;color:var(--muted)}
+
+/* CLOSER */
+.closer{padding:5rem 0;text-align:center}
+.closer h2{font-family:var(--display);font-size:clamp(2rem,4.4vw,2.9rem);font-weight:400;margin-bottom:1rem}
+.closer p{color:var(--muted);max-width:560px;margin:0 auto 2rem}
+.closer-actions{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
+.fine{font-size:.78rem;color:var(--muted);margin-top:1.4rem}
+
+/* FOOTER */
+.foot{background:var(--ink);color:var(--cream-deep);padding:3.6rem 0 2rem;margin-bottom:64px}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:2.6rem;padding-bottom:2.4rem;border-bottom:1px solid rgba(250,243,228,.13)}
+.foot .logo{color:var(--cream);margin-bottom:.8rem}
+.foot p{font-size:.86rem;color:rgba(250,243,228,.6);max-width:300px}
+.foot h5{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem}
+.foot ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.foot a{font-size:.87rem;color:rgba(250,243,228,.72);transition:color .2s}
+.foot a:hover{color:var(--gold)}
+.foot-b{padding-top:1.6rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.76rem;color:rgba(250,243,228,.45)}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:2rem}}
+
+/* STICKY BAR */
+.bar{position:fixed;bottom:0;left:0;right:0;z-index:70;background:rgba(255,253,248,.97);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.bar.show{transform:translateY(0)}
+.bar-in{max-width:1180px;margin:0 auto;padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.bar-t{font-size:.86rem;color:var(--espresso)}
+.bar-t b{font-family:var(--display);font-size:1.2rem;font-weight:600}
+.bar-t small{display:block;font-size:.73rem;color:var(--muted)}
+@media(max-width:640px){.bar-t small{display:none}}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1)}
+.rv.in{opacity:1;transform:none}
+.hide{display:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="logo">Luxor <span>Rising</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="/experiences" aria-current="page">Experiences</a>
+      <a href="/concierge-day">Design your day</a>
+      <a href="/insiders-guide">Insider's Guide</a>
+      <a href="/about">Ahmed</a>
+      <a href="/concierge-day" class="nav-cta">Design your day</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">The Collection</div>
+    <h1>Everything we can open<br>for you in <em>Luxor</em></h1>
+    <p>Not a catalogue of tours. A collection of days — private, timed against the crowds, and delivered by the people who actually hold the keys.</p>
+    <div class="rule"></div>
+  </div>
+</header>
+
+<div class="trust">
+  <div class="trust-in">
+    <div class="trust-item"><span class="dot"></span><b>Private only</b> — never a group bus</div>
+    <div class="trust-item"><span class="dot"></span><b>Licensed</b> Egyptologists &amp; drivers</div>
+    <div class="trust-item"><span class="dot"></span><b>Free cancellation</b> up to 7 days before</div>
+    <div class="trust-item"><span class="dot"></span><b>4.9/5</b> from early guests</div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <div class="filters" role="group" aria-label="Filter experiences">
+    <button class="chip on" data-f="all">All</button>
+    <button class="chip" data-f="temple">Temples &amp; tombs</button>
+    <button class="chip" data-f="sky">Sky &amp; river</button>
+    <button class="chip" data-f="desert">Desert &amp; wild</button>
+    <button class="chip" data-f="signature">Signature</button>
+  </div>
+  <div class="count" id="count">Showing all 10 single-day experiences</div>
+
+  <!-- SIGNATURE -->
+  <section class="sec rv">
+    <div class="sec-head">
+      <h2>Signature days</h2>
+      <span class="tag">Included in every journey</span>
+    </div>
+    <p class="sec-sub">The two experiences we built the brand on. If you book a concierge day, at least one of these is already yours — no upsell, no asterisk.</p>
+
+    <div class="grid">
+      <article class="card" data-cat="temple signature">
+        <div class="card-img">
+          <img src="/images/medinet-habu.jpg" alt="Medinet Habu temple, painted reliefs at golden hour" loading="lazy">
+          <span class="badge sig">★ Signature</span>
+          <span class="scarce"><span class="pulse"></span>Empty at 6:30am — we time it that way</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>Medinet Habu, before anyone else</h3>
+          <p class="card-hook">The last great temple, with its colour still on the walls — and almost nobody in it. We open your day here while the coaches are still queuing at Karnak.</p>
+          <div class="facts"><span><b>Half day</b></span><span><b>1–8</b> guests</span><span><b>Sunrise</b> start</span></div>
+          <div class="card-foot">
+            <div class="price"><small>Included</small><b>€0</b> <i>with any day</i></div>
+            <a href="/medinet-habu" class="btn btn-s">See the day</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="temple signature">
+        <div class="card-img">
+          <img src="/images/karnak.jpg" alt="Hypostyle hall columns at Karnak" loading="lazy">
+          <span class="badge sig">★ Signature</span>
+          <span class="scarce"><span class="pulse"></span>Private access before general opening</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>Karnak, in the quiet hour</h3>
+          <p class="card-hook">134 columns, and for the first hour, only your footsteps. Ahmed knows which gate opens first and which guard remembers his name.</p>
+          <div class="facts"><span><b>Half day</b></span><span><b>1–8</b> guests</span><span><b>Early</b> access</span></div>
+          <div class="card-foot">
+            <div class="price"><small>Included</small><b>€0</b> <i>with any day</i></div>
+            <a href="/karnak" class="btn btn-s">See the day</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- SINGLE DAY -->
+  <section class="sec rv">
+    <div class="sec-head">
+      <h2>Book a single day</h2>
+      <span class="tag">Instant reservation</span>
+    </div>
+    <p class="sec-sub">One day, one consigliere, everything handled — entries, transfers, timing, and a licensed Egyptologist who actually reads the walls. Reserve online in two minutes.</p>
+
+    <div class="grid" id="grid">
+
+      <article class="card" data-cat="temple">
+        <div class="card-img">
+          <img src="/images/valley-kings.jpg" alt="Entrance to a royal tomb in the Valley of the Kings" loading="lazy">
+          <span class="badge">Most booked</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>Valley of the Kings, tombs chosen for you</h3>
+          <p class="card-hook">Not the three everyone shuffles through. We pick the tombs by what's just been cleaned, what's just reopened, and what's empty at that hour — including Tutankhamun if you want him.</p>
+          <div class="facts"><span><b>Full day</b></span><span><b>1–8</b> guests</span><span>Tutankhamun <b>optional</b></span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€640</b> <i>/ day, private</i></div>
+            <a href="/concierge-day?start=valley" class="btn btn-p">Reserve →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="temple">
+        <div class="card-img">
+          <img src="/images/hatshepsut.jpg" alt="Terraces of the Hatshepsut temple against the cliffs" loading="lazy">
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>Hatshepsut &amp; the cliffs of Deir el-Bahari</h3>
+          <p class="card-hook">The woman who called herself king, and the terraces she cut into the mountain. Best at first light, when the rock still holds the cold.</p>
+          <div class="facts"><span><b>Half day</b></span><span><b>1–8</b> guests</span><span><b>Sunrise</b> start</span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€640</b> <i>/ day, private</i></div>
+            <a href="/concierge-day?start=hatshepsut" class="btn btn-p">Reserve →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="temple">
+        <div class="card-img">
+          <img src="/images/nefertari.jpg" alt="Painted wall in the tomb of Nefertari" loading="lazy">
+          <span class="badge">Limited entry</span>
+          <span class="scarce"><span class="pulse"></span>150 visitors a day, worldwide</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>Nefertari — the finest painted tomb on earth</h3>
+          <p class="card-hook">Ten minutes inside, and people come out quiet. Entry is capped and expensive, and it is worth every euro. We hold the slot, you just arrive.</p>
+          <div class="facts"><span><b>Add to any day</b></span><span><b>1–8</b> guests</span><span>Ticket <b>secured</b></span></div>
+          <div class="card-foot">
+            <div class="price"><small>Add-on</small><b>+€180</b> <i>/ person</i></div>
+            <a href="/concierge-day?add=nefertari" class="btn btn-p">Add to a day →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="sky">
+        <div class="card-img">
+          <img src="/images/balloon.jpg" alt="Hot air balloons over the west bank at sunrise" loading="lazy">
+          <span class="badge">Sunrise only</span>
+          <span class="scarce"><span class="pulse"></span>Books out 5–7 days ahead in winter</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Sky &amp; river</div>
+          <h3>Balloon over the west bank</h3>
+          <p class="card-hook">Lift off in the dark, and watch the Valley, the Ramesseum and the green edge of the Nile come up out of the shadow beneath you. The one photograph you will actually print.</p>
+          <div class="facts"><span><b>~3 hrs</b></span><span><b>Licensed</b> operator</span><span><b>Hotel</b> pickup</span></div>
+          <div class="card-foot">
+            <div class="price"><small>Add-on</small><b>+€130</b> <i>/ person</i></div>
+            <a href="/concierge-day?add=balloon" class="btn btn-p">Add to a day →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="sky">
+        <div class="card-img">
+          <img src="/images/felucca.jpg" alt="Felucca sail on the Nile at sunset" loading="lazy">
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Sky &amp; river</div>
+          <h3>Felucca, the hour the river turns gold</h3>
+          <p class="card-hook">No engine, no schedule, no other guests. Just the sail, the current, and Luxor going soft on both banks. We bring the karkade and the silence.</p>
+          <div class="facts"><span><b>~2 hrs</b></span><span><b>Private</b> boat</span><span><b>Sunset</b></span></div>
+          <div class="card-foot">
+            <div class="price"><small>Add-on</small><b>+€60</b> <i>/ boat</i></div>
+            <a href="/concierge-day?add=felucca" class="btn btn-p">Add to a day →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="sky">
+        <div class="card-img">
+          <img src="/images/speedboat.jpg" alt="Speedboat crossing the Nile" loading="lazy">
+          <span class="badge">Hurghada crossing</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Sky &amp; river</div>
+          <h3>The crossing — Hurghada to Luxor, our way</h3>
+          <p class="card-hook">Staying on the Red Sea? Skip the 4am coach and the roadside stops. We move you door to door, and your day in Luxor starts the moment you arrive, not three hours later.</p>
+          <div class="facts"><span><b>Full day</b></span><span><b>Door to door</b></span><span>From <b>Hurghada</b></span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€890</b> <i>/ day, private</i></div>
+            <a href="/concierge-day?start=crossing" class="btn btn-p">Reserve →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="desert">
+        <div class="card-img">
+          <img src="/images/reality-hunting.jpg" alt="Desert track at dusk beyond the cultivation" loading="lazy">
+          <span class="badge">Ahmed's own</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Desert &amp; wild</div>
+          <h3>Reality Hunting — the Egypt behind the ticket booth</h3>
+          <p class="card-hook">The day Ahmed takes people he likes. Workshops, kitchens, a village that has never seen a tour bus, and the desert at the hour it stops being hot. Nothing here is on a map.</p>
+          <div class="facts"><span><b>Full day</b></span><span><b>1–6</b> guests</span><span><b>No itinerary</b></span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€980</b> <i>/ day, private</i></div>
+            <a href="/concierge-day?start=reality" class="btn btn-p">Reserve →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="temple">
+        <div class="card-img">
+          <img src="/images/dendera.jpg" alt="Ceiling of the Dendera temple with the zodiac" loading="lazy">
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>Dendera &amp; Abydos, the long drive worth taking</h3>
+          <p class="card-hook">Two hours north, and almost nobody makes the trip. Ceilings still blue, a zodiac carved in stone, and the temple where Egypt buried its god. You will have both nearly to yourselves.</p>
+          <div class="facts"><span><b>Full day</b></span><span><b>1–8</b> guests</span><span><b>Early</b> departure</span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€740</b> <i>/ day, private</i></div>
+            <a href="/concierge-day?start=dendera" class="btn btn-p">Reserve →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="temple">
+        <div class="card-img">
+          <img src="/images/sphinxes.jpg" alt="Avenue of the Sphinxes lit at night" loading="lazy">
+          <span class="badge">After dark</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Temples &amp; tombs</div>
+          <h3>The Avenue of the Sphinxes, lit and empty</h3>
+          <p class="card-hook">Three kilometres of rams, dug out after seventy years and lit at night. Walk it slowly, from Luxor Temple toward Karnak, the way the processions did.</p>
+          <div class="facts"><span><b>Evening</b></span><span><b>1–8</b> guests</span><span><b>Free</b> with 2+ days</span></div>
+          <div class="card-foot">
+            <div class="price"><small>Add-on</small><b>+€40</b> <i>/ group</i></div>
+            <a href="/concierge-day?add=sphinxes" class="btn btn-p">Add to a day →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="desert">
+        <div class="card-img">
+          <img src="/images/photoshoot.jpg" alt="Guest photographed in front of a temple colonnade" loading="lazy">
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Desert &amp; wild</div>
+          <h3>A photographer, quietly, all day</h3>
+          <p class="card-hook">Not posed. He stays behind you and comes back with the pictures you would never have thought to take — including the calèche along the Corniche, which is worth doing purely for this.</p>
+          <div class="facts"><span><b>Add to any day</b></span><span><b>60+</b> edited shots</span><span><b>48hr</b> delivery</span></div>
+          <div class="card-foot">
+            <div class="price"><small>Add-on</small><b>+€220</b> <i>/ day</i></div>
+            <a href="/concierge-day?add=photo" class="btn btn-p">Add to a day →</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- MULTI-DAY / ENQUIRY -->
+  <section class="sec enq rv">
+    <div class="sec-head">
+      <h2>The long journeys</h2>
+      <span class="tag">By arrangement</span>
+    </div>
+    <p class="sec-sub">Journeys with nights in them — a boat, a house, a week. These aren't sold from a cart. We speak first, then we build it around you.</p>
+
+    <div class="enq-note">
+      <b>Why these aren't a "buy now" button.</b> Anything with accommodation is arranged personally, with a written proposal and a contract — so you know exactly who is responsible for what, and so are we. Tell us what you have in mind and we'll come back within 24 hours.
+    </div>
+
+    <div class="grid">
+      <article class="card" data-cat="sky">
+        <div class="card-img">
+          <img src="/images/dahabiya.jpg" alt="Dahabiya sailing boat moored on the Nile" loading="lazy">
+          <span class="badge">2 nights aboard</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Sky &amp; river</div>
+          <h3>Dahabiya — two nights under sail</h3>
+          <p class="card-hook">A wooden sailing boat, six cabins, no engine noise and no buffet queue. You moor where the cruise ships cannot, and eat dinner on deck with the bank ten metres away.</p>
+          <div class="facts"><span><b>3 days</b>, 2 nights</span><span><b>Up to 8</b> guests</span><span><b>Full board</b></span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€1,480</b> <i>/ person</i></div>
+            <a href="/enquiry?journey=dahabiya" class="btn btn-s">Request a proposal</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="desert">
+        <div class="card-img">
+          <img src="/images/founders-journey.jpg" alt="Desert camp at night beneath stars" loading="lazy">
+          <span class="badge sig">★ Hero journey</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Desert &amp; wild</div>
+          <h3>The Founder's Journey</h3>
+          <p class="card-hook">Four days built for someone at a turning point. Temples in the morning, desert at night, and long conversations with a man who has spent his life listening to people decide things.</p>
+          <div class="facts"><span><b>4 days</b></span><span><b>1–4</b> guests</span><span><b>Ahmed</b> throughout</span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€1,850</b> <i>/ person</i></div>
+            <a href="/enquiry?journey=founders" class="btn btn-s">Request a proposal</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="desert signature">
+        <div class="card-img">
+          <img src="/images/the-return.jpg" alt="Lone figure walking toward the Theban hills at dawn" loading="lazy">
+          <span class="badge sig">★ By invitation</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">Desert &amp; wild</div>
+          <h3>The Return</h3>
+          <p class="card-hook">A week. No itinerary published, because it is written for one person. If you already know why you want to come back to Egypt, you will understand what this is.</p>
+          <div class="facts"><span><b>7 days</b></span><span><b>1–2</b> guests</span><span><b>Written</b> for you</span></div>
+          <div class="card-foot">
+            <div class="price"><small>From</small><b>€2,450</b> <i>/ person</i></div>
+            <a href="/enquiry?journey=return" class="btn btn-s">Begin a conversation</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<!-- HOW IT WORKS -->
+<section class="how rv">
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:center">How a day is built</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <h4>Tell us the shape</h4>
+        <p>How many days, how many of you, roughly when. Sixty seconds in the configurator — no account, no phone call.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <h4>We write the day</h4>
+        <p>Ahmed builds the order and the timing so you land at each site in its best hour and miss the coaches entirely.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <h4>You just arrive</h4>
+        <p>Tickets, transfers, the Egyptologist, the water in the car — handled. You walk in and look at things.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSER -->
+<section class="closer rv">
+  <div class="wrap">
+    <h2>Not sure which day is yours?</h2>
+    <p>Most people aren't, at first. Tell us who's coming and roughly when — we'll send back a day we'd actually want to be on ourselves.</p>
+    <div class="closer-actions">
+      <a href="/concierge-day" class="btn btn-p btn-lg">Design your day →</a>
+      <a href="/enquiry" class="btn btn-s btn-lg">Let us propose one</a>
+    </div>
+    <p class="fine">Free cancellation up to 7 days before · Secure payment · A licensed Egyptologist on every day</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo">Luxor <span>Rising</span></div>
+        <p>A concierge in Luxor, not a travel agency. We plan and coordinate; licensed local specialists deliver.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/experiences">All experiences</a></li>
+          <li><a href="/concierge-day">Design your day</a></li>
+          <li><a href="/insiders-guide">Insider's Guide</a></li>
+          <li><a href="/about">Ahmed</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Practical</h5>
+        <ul>
+          <li><a href="/enquiry">Ask a question</a></li>
+          <li><a href="/terms">Terms &amp; cancellation</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-b">
+      <span>© 2026 Luxor Rising · Operated by Evam trade s.r.o.</span>
+      <span>Single-day experiences, delivered by licensed local partners.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div class="bar-t"><b>From €640</b> a private day <small>Free cancellation up to 7 days before</small></div>
+    <a href="/concierge-day" class="btn btn-p">Design your day →</a>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"ItemList",
+  "name":"Luxor Rising Experiences",
+  "description":"Private, single-day curated experiences in Luxor, Egypt.",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"item":{"@type":"Product","name":"Medinet Habu, before anyone else","description":"Private sunrise access to the temple of Ramesses III.","brand":{"@type":"Brand","name":"Luxor Rising"},"offers":{"@type":"Offer","price":"640","priceCurrency":"EUR","availability":"https://schema.org/InStock"}}},
+    {"@type":"ListItem","position":2,"item":{"@type":"Product","name":"Karnak, in the quiet hour","description":"Early private access to the Karnak temple complex.","brand":{"@type":"Brand","name":"Luxor Rising"},"offers":{"@type":"Offer","price":"640","priceCurrency":"EUR","availability":"https://schema.org/InStock"}}},
+    {"@type":"ListItem","position":3,"item":{"@type":"Product","name":"Valley of the Kings, tombs chosen for you","description":"Private full day in the Valley of the Kings with a licensed Egyptologist.","brand":{"@type":"Brand","name":"Luxor Rising"},"offers":{"@type":"Offer","price":"640","priceCurrency":"EUR","availability":"https://schema.org/InStock"}}},
+    {"@type":"ListItem","position":4,"item":{"@type":"Product","name":"The crossing — Hurghada to Luxor","description":"Private door-to-door day from Hurghada to Luxor.","brand":{"@type":"Brand","name":"Luxor Rising"},"offers":{"@type":"Offer","price":"890","priceCurrency":"EUR","availability":"https://schema.org/InStock"}}},
+    {"@type":"ListItem","position":5,"item":{"@type":"Product","name":"Reality Hunting","description":"A private day beyond the monuments, with Ahmed.","brand":{"@type":"Brand","name":"Luxor Rising"},"offers":{"@type":"Offer","price":"980","priceCurrency":"EUR","availability":"https://schema.org/InStock"}}}
+  ]
+}
+</script>
+
+<script>
+(function(){
+  // nav
+  var b=document.getElementById('burger'),n=document.getElementById('navLinks');
+  b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o);});
+
+  // reveal
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -40px'});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  // sticky bar
+  var bar=document.getElementById('bar');
+  window.addEventListener('scroll',function(){bar.classList.toggle('show',window.scrollY>620);},{passive:true});
+
+  // filters
+  var chips=document.querySelectorAll('.chip'),cards=document.querySelectorAll('.card[data-cat]'),count=document.getElementById('count');
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      chips.forEach(function(x){x.classList.remove('on');});
+      c.classList.add('on');
+      var f=c.dataset.f,shown=0;
+      cards.forEach(function(card){
+        var ok = f==='all' || card.dataset.cat.indexOf(f)>-1;
+        card.classList.toggle('hide',!ok);
+        if(ok)shown++;
+      });
+      // hide empty sections
+      document.querySelectorAll('.sec').forEach(function(s){
+        var vis=s.querySelectorAll('.card[data-cat]:not(.hide)').length;
+        s.classList.toggle('hide',vis===0);
+      });
+      count.textContent = f==='all' ? 'Showing all 10 single-day experiences' : 'Showing '+shown+' experience'+(shown===1?'':'s');
+    });
+  });
+})();
+</script>
+</body>
+</html>

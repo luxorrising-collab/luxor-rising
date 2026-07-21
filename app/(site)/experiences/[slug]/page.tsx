@@ -123,13 +123,15 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         bookNote={entry.bookNote || undefined}
         configurator={
           <ExperienceConfigurator
-            name={entry.title}
+            name={entry.name || entry.title}
+            slug={slug}
             basePrice={entry.basePrice ?? 0}
             groupSupplement={entry.groupSupplement.map((t) => ({
               minGuests: t.minGuests ?? 0,
               extraPerGuest: t.extraPerGuest ?? 0,
             }))}
             depositPercent={pricingRules?.depositPercent ?? 30}
+            glanceIncludes={entry.glanceIncludes}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

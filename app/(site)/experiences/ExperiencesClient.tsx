@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import FilterChips from "@/components/FilterChips";
 import ExperienceCard, { ExperienceCardProps } from "@/components/ExperienceCard";
@@ -177,22 +178,43 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
       {/* The concierge day is the flagship: a full private day of several
           experiences, clearly priced — not a €0 "included" card. */}
       <Reveal className={styles.concierge}>
-        <span className="eyebrow">Start here</span>
-        <h2>The Concierge Day</h2>
-        <p>
-          The heart of Luxor Rising — one private day with <b>several experiences</b> woven into it.
-          A signature temple at dawn like <b>Medinet Habu</b> or <b>Karnak</b> while the coaches are
-          still queuing, then the tombs, the river or the desert. One consigliere handles every
-          ticket, transfer and timing.
-        </p>
-        <div className={styles.conciergeMeta}>
-          <span><b>From €640</b> / day</span>
-          <span>Private · 1–8 guests</span>
-          <span>Several experiences, one day</span>
+        <div className={styles.conciergeText}>
+          <span className="eyebrow">Start here</span>
+          <h2>The Concierge Day</h2>
+          <p>
+            The heart of Luxor Rising — one private day with <b>several experiences</b> woven into
+            it. A signature temple at dawn like <b>Medinet Habu</b> or <b>Karnak</b> while the
+            coaches still queue, then the tombs, the river or the desert. One consigliere handles
+            every ticket, transfer and timing.
+          </p>
+          <div className={styles.conciergeMeta}>
+            <span>
+              <b>From €640</b> / day
+            </span>
+            <span>Private · 1–8 guests</span>
+            <span>Several experiences, one day</span>
+          </div>
+          <Link href="/concierge-day" className="btn btn-primary">
+            Design your day →
+          </Link>
         </div>
-        <Link href="/concierge-day" className="btn btn-primary">
-          Design your day →
-        </Link>
+        <div className={styles.conciergeGrid} aria-hidden="true">
+          {[
+            "karnak-at-dawn-hero",
+            "valley-of-the-kings-hero",
+            "felucca-sunset-sail-hero",
+            "private-desert-safari-hero",
+          ].map((n) => (
+            <div key={n} className={styles.conciergeTile}>
+              <Image
+                src={`/images/experiences/${n}.jpg`}
+                alt=""
+                fill
+                sizes="(max-width: 720px) 45vw, 22vw"
+              />
+            </div>
+          ))}
+        </div>
       </Reveal>
 
       <div className={styles.filtersWrap}>

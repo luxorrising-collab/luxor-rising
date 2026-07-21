@@ -13,6 +13,13 @@
   z-index: 0;
   animation: heroZoom 30s ease-in-out infinite alternate;
 }
+/* Fill images default to object-fit: fill (stretch). Force cover so hero
+   photos of any aspect ratio crop cleanly instead of deforming. */
+.heroBg :global(img),
+.moment :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
 @keyframes heroZoom {
   from {
     transform: scale(1.02);

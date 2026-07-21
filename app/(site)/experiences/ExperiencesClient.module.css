@@ -60,3 +60,39 @@
 .hide {
   display: none !important;
 }
+
+/* Concierge Day callout — the flagship multi-experience day, clearly priced */
+.concierge {
+  margin: 2.6rem 0 0.5rem;
+  padding: 2.1rem 2.2rem 2.3rem;
+  border: 1px solid var(--color-gold-soft);
+  border-radius: 6px;
+  background: var(--color-cream);
+  text-align: center;
+}
+.concierge h2 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  margin: 0.35rem 0 0.7rem;
+}
+.concierge p {
+  color: var(--color-espresso);
+  max-width: 680px;
+  margin: 0 auto 1.3rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.conciergeMeta {
+  display: flex;
+  gap: 0.5rem 1.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 0.86rem;
+  color: var(--color-muted);
+  margin-bottom: 1.6rem;
+}
+.conciergeMeta b {
+  color: var(--color-gold-deep);
+}

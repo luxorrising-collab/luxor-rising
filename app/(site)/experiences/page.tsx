@@ -32,22 +32,9 @@ const BRAND = { "@type": "Brand", name: "Luxor Rising" };
 const CURATED_PRODUCTS = [
   {
     "@type": "Product",
-    name: "Medinet Habu, before anyone else",
-    description: "Private sunrise access to the temple of Ramesses III.",
-    brand: BRAND,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-  },
-  {
-    "@type": "Product",
-    name: "Karnak, in the quiet hour",
-    description: "Early private access to the Karnak temple complex.",
-    brand: BRAND,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-  },
-  {
-    "@type": "Product",
-    name: "Valley of the Kings, tombs chosen for you",
-    description: "Private full day in the Valley of the Kings with a licensed Egyptologist.",
+    name: "The Concierge Day",
+    description:
+      "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one consigliere handling everything.",
     brand: BRAND,
     offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
   },

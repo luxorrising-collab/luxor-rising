@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FilterChips from "@/components/FilterChips";
 import ExperienceCard, { ExperienceCardProps } from "@/components/ExperienceCard";
@@ -25,121 +26,7 @@ export type CmsExperienceItem = Pick<
   | "ctaLabel"
 >;
 
-const SIGNATURE: Item[] = [
-  {
-    cat: ["temple", "signature"],
-    href: "/medinet-habu",
-    src: "/images/medinet-habu-facade.jpg",
-    alt: "Medinet Habu temple facade at golden hour",
-    meta: "Temples & tombs",
-    title: "Medinet Habu, before anyone else",
-    hook: "The last great temple, with its colour still on the walls — and almost nobody in it. We open your day here while the coaches are still queuing at Karnak.",
-    facts: [<><b>Half day</b></>, <><b>1–8</b> guests</>, <><b>Sunrise</b> start</>],
-    badge: "Signature",
-    badgeVariant: "signature",
-    scarcity: "Empty at 6:30am — we time it that way",
-    priceLabel: "Included",
-    priceValue: "€0",
-    priceNote: "with any day",
-    ctaLabel: "See the day",
-    ctaVariant: "secondary",
-  },
-  {
-    cat: ["temple", "signature"],
-    href: "/concierge-day",
-    src: "/images/karnak-columns-detail.jpg",
-    alt: "Hypostyle hall columns at Karnak temple",
-    meta: "Temples & tombs",
-    title: "Karnak, in the quiet hour",
-    hook: "134 columns, and for the first hour, only your footsteps. Your consigliere knows which gate opens first and which guard remembers his name.",
-    facts: [<><b>Half day</b></>, <><b>1–8</b> guests</>, <><b>Early</b> access</>],
-    badge: "Signature",
-    badgeVariant: "signature",
-    scarcity: "Private access before general opening",
-    priceLabel: "Included",
-    priceValue: "€0",
-    priceNote: "with any day",
-    ctaLabel: "See the day",
-    ctaVariant: "secondary",
-  },
-];
-
 const SINGLE_DAY: Item[] = [
-  {
-    cat: ["temple"],
-    href: "/concierge-day?start=valley",
-    src: "/images/valley-kings-tomb-pillar.jpg",
-    alt: "Entrance to a royal tomb in the Valley of the Kings",
-    meta: "Temples & tombs",
-    title: "Valley of the Kings, tombs chosen for you",
-    hook: "Not the three everyone shuffles through. We pick the tombs by what's just been cleaned, what's just reopened, and what's empty at that hour — including Tutankhamun if you want him.",
-    facts: [<><b>Full day</b></>, <><b>1–8</b> guests</>, <>Tutankhamun <b>optional</b></>],
-    badge: "Most booked",
-    priceLabel: "From",
-    priceValue: "€640",
-    priceNote: "/ day, private",
-    ctaLabel: "Reserve →",
-  },
-  {
-    cat: ["temple"],
-    href: "/concierge-day?start=hatshepsut",
-    src: "/images/hatshepsut-temple-cliffs-wide-view_IMG_20251009_110231.jpg",
-    alt: "Terraces of the Hatshepsut temple against the cliffs of Deir el-Bahari",
-    meta: "Temples & tombs",
-    title: "Hatshepsut & the cliffs of Deir el-Bahari",
-    hook: "The woman who called herself king, and the terraces she cut into the mountain. Best at first light, when the rock still holds the cold.",
-    facts: [<><b>Half day</b></>, <><b>1–8</b> guests</>, <><b>Sunrise</b> start</>],
-    priceLabel: "From",
-    priceValue: "€640",
-    priceNote: "/ day, private",
-    ctaLabel: "Reserve →",
-  },
-  {
-    cat: ["temple"],
-    href: "/concierge-day?add=nefertari",
-    src: "/images/tomb-painted-relief-doorway_IMG_20251009_111002.jpg",
-    alt: "Painted wall relief in a royal tomb doorway",
-    meta: "Temples & tombs",
-    title: "Nefertari — the finest painted tomb on earth",
-    hook: "Ten minutes inside, and people come out quiet. Entry is capped and expensive, and it is worth every euro. We hold the slot, you just arrive.",
-    facts: [<>Add to <b>any day</b></>, <><b>1–8</b> guests</>, <>Ticket <b>secured</b></>],
-    badge: "Limited entry",
-    scarcity: "150 visitors a day, worldwide",
-    priceLabel: "Add-on",
-    priceValue: "+€180",
-    priceNote: "/ person",
-    ctaLabel: "Add to a day →",
-  },
-  {
-    cat: ["sky"],
-    href: "/concierge-day?add=balloon",
-    src: "/images/hot-air-balloons-valley-kings-dawn_pexels-diego-f-parra-33199-15188096 – kópia.jpg",
-    alt: "Hot air balloons over the West Bank at sunrise",
-    meta: "Sky & river",
-    title: "Balloon over the west bank",
-    hook: "Lift off in the dark, and watch the Valley, the Ramesseum and the green edge of the Nile come up out of the shadow beneath you. The one photograph you will actually print.",
-    facts: [<><b>~3 hrs</b></>, <><b>Licensed</b> operator</>, <><b>Hotel</b> pickup</>],
-    badge: "Sunrise only",
-    scarcity: "Books out 5–7 days ahead in winter",
-    priceLabel: "Add-on",
-    priceValue: "+€130",
-    priceNote: "/ person",
-    ctaLabel: "Add to a day →",
-  },
-  {
-    cat: ["sky"],
-    href: "/concierge-day?add=felucca",
-    src: "/images/nile-sunset-feluccas-boat-bow_IMG_20251009_182209.jpg",
-    alt: "Felucca sail on the Nile at sunset",
-    meta: "Sky & river",
-    title: "Felucca, the hour the river turns gold",
-    hook: "No engine, no schedule, no other guests. Just the sail, the current, and Luxor going soft on both banks. We bring the karkade and the silence.",
-    facts: [<><b>~2 hrs</b></>, <><b>Private</b> boat</>, <><b>Sunset</b></>],
-    priceLabel: "Add-on",
-    priceValue: "+€60",
-    priceNote: "/ boat",
-    ctaLabel: "Add to a day →",
-  },
   {
     cat: ["sky"],
     href: "/concierge-day?start=crossing",
@@ -167,20 +54,6 @@ const SINGLE_DAY: Item[] = [
     badge: "A local's own",
     priceLabel: "From",
     priceValue: "€980",
-    priceNote: "/ day, private",
-    ctaLabel: "Reserve →",
-  },
-  {
-    cat: ["temple"],
-    href: "/concierge-day?start=dendera",
-    src: "/images/dendera-hathor-column-painted-ceiling_pexels-diego-f-parra-33199-15187798 – kópia.jpg",
-    alt: "Painted column and ceiling inside the Dendera temple",
-    meta: "Temples & tombs",
-    title: "Dendera & Abydos, the long drive worth taking",
-    hook: "Two hours north, and almost nobody makes the trip. Ceilings still blue, a zodiac carved in stone, and the temple where Egypt buried its god. You will have both nearly to yourselves.",
-    facts: [<><b>Full day</b></>, <><b>1–8</b> guests</>, <><b>Early</b> departure</>],
-    priceLabel: "From",
-    priceValue: "€740",
     priceNote: "/ day, private",
     ctaLabel: "Reserve →",
   },
@@ -268,14 +141,13 @@ const ENQUIRY: Item[] = [
   },
 ];
 
-export const ALL_ITEMS = [...SIGNATURE, ...SINGLE_DAY, ...ENQUIRY];
+export const ALL_ITEMS = [...SINGLE_DAY, ...ENQUIRY];
 
 const FILTERS = [
   { value: "all", label: "All" },
   { value: "temple", label: "Temples & tombs" },
   { value: "sky", label: "Sky & river" },
   { value: "desert", label: "Desert & wild" },
-  { value: "signature", label: "Signature" },
 ];
 
 function matches(item: Item, filter: string) {
@@ -293,52 +165,55 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
     [cmsItems]
   );
 
-  const visibleSignature = useMemo(() => SIGNATURE.filter((i) => matches(i, filter)), [filter]);
   const visibleSingleDay = useMemo(
     () => singleDayWithCms.filter((i) => matches(i, filter)),
     [singleDayWithCms, filter]
   );
   const visibleEnquiry = useMemo(() => ENQUIRY.filter((i) => matches(i, filter)), [filter]);
-  const totalShown = visibleSignature.length + visibleSingleDay.length + visibleEnquiry.length;
+  const totalShown = visibleSingleDay.length + visibleEnquiry.length;
 
   return (
     <>
+      {/* The concierge day is the flagship: a full private day of several
+          experiences, clearly priced — not a €0 "included" card. */}
+      <Reveal className={styles.concierge}>
+        <span className="eyebrow">Start here</span>
+        <h2>The Concierge Day</h2>
+        <p>
+          The heart of Luxor Rising — one private day with <b>several experiences</b> woven into it.
+          A signature temple at dawn like <b>Medinet Habu</b> or <b>Karnak</b> while the coaches are
+          still queuing, then the tombs, the river or the desert. One consigliere handles every
+          ticket, transfer and timing.
+        </p>
+        <div className={styles.conciergeMeta}>
+          <span><b>From €640</b> / day</span>
+          <span>Private · 1–8 guests</span>
+          <span>Several experiences, one day</span>
+        </div>
+        <Link href="/concierge-day" className="btn btn-primary">
+          Design your day →
+        </Link>
+      </Reveal>
+
       <div className={styles.filtersWrap}>
         <FilterChips options={FILTERS} active={filter} onChange={setFilter} ariaLabel="Filter experiences" />
       </div>
       <div className={styles.count}>
         {filter === "all"
-          ? `Showing all ${singleDayWithCms.length} single-day experiences`
+          ? `Showing all ${singleDayWithCms.length} single experiences`
           : `Showing ${totalShown} experience${totalShown === 1 ? "" : "s"}`}
       </div>
-
-      {visibleSignature.length > 0 && (
-        <Reveal className={styles.sec}>
-          <div className={styles.secHead}>
-            <h2>Signature days</h2>
-            <span className={styles.tag}>Included in every journey</span>
-          </div>
-          <p className={styles.secSub}>
-            The two experiences we built the brand on. If you book a concierge day, at least one
-            of these is already yours — no upsell, no asterisk.
-          </p>
-          <div className={styles.grid}>
-            {visibleSignature.map((item) => (
-              <ExperienceCard key={item.title} {...item} />
-            ))}
-          </div>
-        </Reveal>
-      )}
 
       {visibleSingleDay.length > 0 && (
         <Reveal className={styles.sec}>
           <div className={styles.secHead}>
-            <h2>Book a single day</h2>
+            <h2>Book a single experience</h2>
             <span className={styles.tag}>Instant reservation</span>
           </div>
           <p className={styles.secSub}>
-            One day, one consigliere, everything handled — entries, transfers, timing, and a
-            licensed Egyptologist who actually reads the walls. Reserve online in two minutes.
+            One experience, one consigliere, everything handled — entry, transfer, timing, and a
+            licensed Egyptologist who actually reads the walls. Reserve online in two minutes. Or
+            weave several into a <Link href="/concierge-day">concierge day</Link>.
           </p>
           <div className={styles.grid}>
             {visibleSingleDay.map((item) => (

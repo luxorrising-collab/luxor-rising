@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local staging / scratch (keep on disk, not in repo)
+/public/luxor new images/
+/_prototype/
+/obsah-stranok.xlsx

@@ -38,20 +38,6 @@ const CURATED_PRODUCTS = [
     brand: BRAND,
     offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
   },
-  {
-    "@type": "Product",
-    name: "The crossing — Hurghada to Luxor",
-    description: "Private door-to-door day from Hurghada to Luxor.",
-    brand: BRAND,
-    offers: { "@type": "Offer", price: "890", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-  },
-  {
-    "@type": "Product",
-    name: "Reality Hunting",
-    description: "A private day beyond the monuments, with a local consigliere.",
-    brand: BRAND,
-    offers: { "@type": "Offer", price: "980", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-  },
 ];
 
 export default async function ExperiencesPage() {

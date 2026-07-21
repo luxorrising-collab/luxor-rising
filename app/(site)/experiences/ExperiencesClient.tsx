@@ -27,67 +27,10 @@ export type CmsExperienceItem = Pick<
   | "ctaLabel"
 >;
 
-const SINGLE_DAY: Item[] = [
-  {
-    cat: ["sky"],
-    href: "/concierge-day?start=crossing",
-    src: "/images/desert-highway-van-dashboard-view_IMG_20251008_092628.jpg",
-    alt: "Desert highway seen from a private car dashboard",
-    meta: "Sky & river",
-    title: "The crossing — Hurghada to Luxor, our way",
-    hook: "Staying on the Red Sea? Skip the 4am coach and the roadside stops. We move you door to door, and your day in Luxor starts the moment you arrive, not three hours later.",
-    facts: [<><b>Full day</b></>, <><b>Door to door</b></>, <>From <b>Hurghada</b></>],
-    badge: "Hurghada crossing",
-    priceLabel: "From",
-    priceValue: "€890",
-    priceNote: "/ day, private",
-    ctaLabel: "Reserve →",
-  },
-  {
-    cat: ["desert"],
-    href: "/concierge-day?start=reality",
-    src: "/images/village-road-pickup-taxi-schoolkids_pexels-toulouse-19820449 – kópia.jpg",
-    alt: "Village road with a pickup truck taxi and children walking to school",
-    meta: "Desert & wild",
-    title: "Reality Hunting — the Egypt behind the ticket booth",
-    hook: "The day for people who want more than the monuments. Workshops, kitchens, a village that has never seen a tour bus, and the desert at the hour it stops being hot. Nothing here is on a map.",
-    facts: [<><b>Full day</b></>, <><b>1–6</b> guests</>, <><b>No itinerary</b></>],
-    badge: "A local's own",
-    priceLabel: "From",
-    priceValue: "€980",
-    priceNote: "/ day, private",
-    ctaLabel: "Reserve →",
-  },
-  {
-    cat: ["temple"],
-    href: "/concierge-day?add=sphinxes",
-    src: "/images/karnak-obelisk-colonnade-walker_pexels-alexazabache-3214972.jpg",
-    alt: "Colonnade and obelisk at Karnak in the evening",
-    meta: "Temples & tombs",
-    title: "The Avenue of the Sphinxes, lit and empty",
-    hook: "Three kilometres of rams, dug out after seventy years and lit at night. Walk it slowly, from Luxor Temple toward Karnak, the way the processions did.",
-    facts: [<><b>Evening</b></>, <><b>1–8</b> guests</>, <><b>Free</b> with 2+ days</>],
-    badge: "After dark",
-    priceLabel: "Add-on",
-    priceValue: "+€40",
-    priceNote: "/ group",
-    ctaLabel: "Add to a day →",
-  },
-  {
-    cat: ["desert"],
-    href: "/concierge-day?add=photo",
-    src: "/images/woman-red-dress-karnak-columns_pexels-elifinatlasi-66733727-17490855.jpg",
-    alt: "Guest photographed in a red dress among temple columns",
-    meta: "Desert & wild",
-    title: "A photographer, quietly, all day",
-    hook: "Not posed. They stay behind you and come back with the pictures you would never have thought to take — including the calèche along the Corniche, which is worth doing purely for this.",
-    facts: [<>Add to <b>any day</b></>, <><b>60+</b> edited shots</>, <><b>48hr</b> delivery</>],
-    priceLabel: "Add-on",
-    priceValue: "+€220",
-    priceNote: "/ day",
-    ctaLabel: "Add to a day →",
-  },
-];
+// Single experiences are now fully managed in Keystatic and injected via
+// `cmsItems` — including The Crossing and Reality Hunting. Nothing is
+// hard-coded here any more.
+const SINGLE_DAY: Item[] = [];
 
 const ENQUIRY: Item[] = [
   {

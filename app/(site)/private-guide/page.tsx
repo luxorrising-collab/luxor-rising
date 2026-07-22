@@ -70,6 +70,36 @@ export default async function PrivateGuidePage() {
         </div>
       )}
 
+      {/* WHAT IS A CONSIGLIERE */}
+      {page.consigliereTitle && (
+        <section style={{ background: "var(--color-cream)", borderTop: "1px solid var(--color-cream-deep)", borderBottom: "1px solid var(--color-cream-deep)" }}>
+          <div className="wrap">
+            <div className="center">
+              <span className="eyebrow">{page.consigliereEyebrow}</span>
+              <h2 className="display">{page.consigliereTitle}</h2>
+              {page.consigliereLead && (
+                <p
+                  className="lead"
+                  style={{ marginTop: ".7rem", maxWidth: "64ch", marginLeft: "auto", marginRight: "auto" }}
+                >
+                  {page.consigliereLead}
+                </p>
+              )}
+            </div>
+            {page.consiglierePoints.length > 0 && (
+              <Reveal className={styles.pillars}>
+                {page.consiglierePoints.map((p, i) => (
+                  <div className={styles.pillar} key={p.title || i}>
+                    <h4>{p.title}</h4>
+                    <p>{p.description}</p>
+                  </div>
+                ))}
+              </Reveal>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* CONTRAST */}
       <section>
         <div className="wrap">

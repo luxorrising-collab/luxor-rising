@@ -789,6 +789,17 @@ export default config({
         heroCtaLabel: fields.text({ label: "Hero CTA label" }),
         trustItems: fields.array(fields.text({ label: "Item" }), { label: "Trust strip items" }),
 
+        consigliereEyebrow: fields.text({ label: "Consigliere section eyebrow" }),
+        consigliereTitle: fields.text({ label: "Consigliere section title" }),
+        consigliereLead: fields.text({ label: "Consigliere section lead", multiline: true }),
+        consiglierePoints: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          { label: "What a consigliere is (points)", itemLabel: (p) => p.fields.title.value || "Point" }
+        ),
+
         contrastEyebrow: fields.text({ label: "Contrast eyebrow" }),
         contrastTitle: fields.text({ label: "Contrast title" }),
         contrastLead: fields.text({ label: "Contrast lead", multiline: true }),

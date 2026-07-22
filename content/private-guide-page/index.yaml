@@ -9,9 +9,31 @@ heroLead: >-
 heroCtaLabel: Request your host →
 trustItems:
   - A person, not a call centre
-  - Licensed Egyptologist
+  - Certified Egyptologist on site
   - On WhatsApp before & during
   - 60+ private days arranged
+consigliereEyebrow: The person at the heart of it
+consigliereTitle: What is a Luxor Rising consigliere?
+consigliereLead: >-
+  Not a guide with a flag and a script. A consigliere is one trusted person who
+  understands where you are in your own journey, shares the road with you, and
+  quietly arranges every last detail — the car, the tickets, the right hour, the
+  doors — so all you have to do is be present. You manage nothing. You just flow.
+consiglierePoints:
+  - title: A guide who understands your journey
+    description: >-
+      Someone who listens first — who grasps what this trip really means to you —
+      and then reads three thousand years in a way that speaks to it. Never a
+      memorised tour repeated to everyone.
+  - title: A companion who shares the road
+    description: >-
+      A real person who knows your name, is on WhatsApp before you arrive and
+      beside you through every day. Someone — never a call centre or a voucher.
+  - title: Everything arranged, so you just flow
+    description: >-
+      Cars, tickets, timing, translation, the quiet hour ahead of the crowds, and
+      the doors that never open for a coach — all handled invisibly. You never
+      touch a single logistic.
 contrastEyebrow: The difference is who you're actually dealing with
 contrastTitle: Most "private tours" are a booking and a stranger. This is the opposite.
 contrastLead: >-
@@ -31,25 +53,36 @@ hostItems:
   - A consigliere on WhatsApp, before you arrive and all day
   - Doors that don't open for a coach — hosts, artisans, kitchens
   - Your days, built around you, in your order
-hostsEyebrow: Meet your hosts
-hostsTitle: Real people, on the ground in Luxor
-hostsLead: The reason this works.
+hostsEyebrow: The people on your side
+hostsTitle: One name to call — and a whole city behind it
+hostsLead: >-
+  A consigliere is never alone. Behind your single point of contact stands a
+  network Luxor has trusted for generations.
 hosts:
   - image: /images/hosts/ahmed.jpg
     name: Ahmed
-    role: Your consigliere · born on the west bank
+    role: Head of Egyptian operations
     bio: >-
-      Twenty minutes from the Valley gate, twenty years opening doors in
-      this city — for archaeologists, film crews, and people who simply
-      wanted to see it properly. He doesn't carry a flag; he decides the
-      order of the day.
+      Born twenty minutes from the Valley gate, twenty years opening doors in
+      this city — for archaeologists, film crews, and travellers who simply
+      wanted to see it properly. He doesn't carry a flag; he decides the shape
+      of your day and makes sure every promise is kept on the ground.
+  - image: /images/hosts/temple-guards.jpg
+    name: The temple guards
+    role: Keepers of the mysteries, on your side
+    bio: >-
+      The men whose families have watched over these temples and tombs for
+      generations — who know which chamber the light reaches first, which gate
+      opens before the crowds, and the quiet corners no guidebook lists. Once
+      they guarded the mysteries. Now they open them for you.
   - image: /images/hosts/dr-nour.jpg
-    name: Dr. Nour
-    role: Licensed Egyptologist
+    name: A certified Egyptologist, on site
+    role: Licensed to make the walls speak
     bio: >-
-      On staff to guide inside the monuments — which by Egyptian law only
-      a licensed local may do — and to fact-check every word we publish.
-      The one who makes the carvings speak.
+      Guiding inside Egypt's monuments is, by law, reserved for licensed
+      Egyptian Egyptologists — so one is always on site with you, turning
+      carvings and cartouches into the story you'll remember. The scholar who
+      makes three thousand years legible.
 formEyebrow: Request your host
 formTitle: Tell us about your trip
 formLead: >-

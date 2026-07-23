@@ -184,6 +184,10 @@
   gap: clamp(1.6rem, 4vw, 3.2rem);
   align-items: start;
 }
+/* let grid children shrink below their content width (no overflow on very narrow screens) */
+.split > * {
+  min-width: 0;
+}
 @media (max-width: 820px) {
   .split {
     grid-template-columns: 1fr;

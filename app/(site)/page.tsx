@@ -6,7 +6,7 @@ import { FullFooter } from "@/components/Footer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import StickyBar from "@/components/StickyBar";
-import GalleryCarousel from "@/components/GalleryCarousel";
+import GalleryMosaic from "@/components/GalleryMosaic";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./HomePage.module.css";
 
@@ -151,9 +151,11 @@ export default async function HomePage() {
             {page?.galleryLead}
           </p>
         </div>
-        <GalleryCarousel
-          items={(page?.gallery ?? []).map((g) => ({ image: g.image ?? "", caption: g.caption }))}
-        />
+        <div className="wrap">
+          <GalleryMosaic
+            items={(page?.gallery ?? []).map((g) => ({ image: g.image ?? "", caption: g.caption }))}
+          />
+        </div>
       </section>
 
       {/* HOW IT WORKS */}

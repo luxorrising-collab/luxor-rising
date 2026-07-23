@@ -66,14 +66,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* POSITIONING */}
+      {/* POSITIONING — text-only promise */}
       <section className={styles.posn}>
         <Reveal className={`wrap ${styles.posnGrid}`}>
-          <div className={styles.posnMedia}>
-            <Image src={page?.positioningImage ?? ""} alt="" fill sizes="50vw" />
-            <span className={styles.posnBadge}>{page?.positioningBadge}</span>
-          </div>
-          <div className={styles.posnCopy}>
+          <div className={styles.posnHead}>
             <span className="eyebrow">{page?.positioningEyebrow}</span>
             <h2 className="display">
               {positioningTitleLines.map((line, i) => (
@@ -83,6 +79,9 @@ export default async function HomePage() {
                 </React.Fragment>
               ))}
             </h2>
+          </div>
+          <div className={styles.posnCopy}>
+            {page?.positioningBadge && <span className={styles.posnKicker}>{page.positioningBadge}</span>}
             <p className="lead">{page?.positioningLead}</p>
             <Link href={page?.positioningLinkHref ?? "#how"} className={styles.linkArrow}>
               {page?.positioningLinkLabel}
@@ -217,17 +216,9 @@ export default async function HomePage() {
 
       {/* VILLAS */}
       <section id="villas">
-        <Reveal
-          className="wrap"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "clamp(1.6rem,4vw,3.2rem)",
-            alignItems: "center",
-          }}
-        >
+        <Reveal className={`wrap ${styles.villasGrid}`}>
           <div className={styles.villasMedia}>
-            <Image src={page?.villasImage ?? ""} alt="" fill sizes="50vw" />
+            <Image src={page?.villasImage ?? ""} alt="" fill sizes="(max-width: 920px) 100vw, 55vw" />
           </div>
           <div>
             <span className="eyebrow">{page?.villasEyebrow}</span>

@@ -151,44 +151,37 @@
   }
 }
 
-/* positioning / promise */
+/* positioning / promise — text-only, spread across the page */
 .posn {
   text-align: left;
 }
 .posnGrid {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: clamp(2rem, 5vw, 4.2rem);
-  align-items: center;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(2rem, 5vw, 4.8rem);
+  align-items: start;
 }
-.posnMedia {
-  position: relative;
-  height: min(58vh, 440px);
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 28px 56px -30px rgba(42, 28, 16, 0.5);
-}
-.posnBadge {
-  position: absolute;
-  left: 1rem;
-  bottom: 1rem;
-  z-index: 2;
-  background: rgba(20, 12, 6, 0.55);
-  backdrop-filter: blur(6px);
-  color: #fff;
-  font-size: 0.66rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-}
-.posnCopy h2 {
+.posnHead h2 {
   max-width: none;
-  margin: 0.5rem 0 0;
-  line-height: 1.12;
+  margin: 0.55rem 0 0;
+  line-height: 1.06;
+  font-size: clamp(2rem, 4.4vw, 3.35rem);
+}
+.posnCopy {
+  padding-left: clamp(1.3rem, 2.6vw, 2.4rem);
+  border-left: 2px solid var(--color-gold-soft);
+}
+.posnKicker {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.85rem;
 }
 .posnCopy .lead {
-  margin-top: 1.1rem;
+  margin-top: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.22rem);
 }
 .linkArrow {
   display: inline-block;
@@ -208,10 +201,10 @@
 @media (max-width: 920px) {
   .posnGrid {
     grid-template-columns: 1fr;
+    gap: 1.4rem;
   }
-  .posnMedia {
-    height: 42vh;
-    order: -1;
+  .posnCopy {
+    padding-left: 1.2rem;
   }
 }
 
@@ -259,6 +252,8 @@
   overflow: hidden;
 }
 .im :global(img) {
+  object-fit: cover;
+  object-position: center;
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 .offer:hover .im :global(img) {
@@ -318,6 +313,10 @@
   position: relative;
   text-align: center;
 }
+.moment :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
 .momentScrim {
   position: absolute;
   inset: 0;
@@ -354,6 +353,10 @@
   border-radius: 4px;
   overflow: hidden;
   transition: 0.4s;
+}
+.gm :global(img) {
+  object-fit: cover;
+  object-position: center;
 }
 .gm::after {
   content: "";
@@ -427,12 +430,30 @@
 }
 
 /* villas */
+.villasGrid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: clamp(1.6rem, 4vw, 3.4rem);
+  align-items: center;
+}
 .villasMedia {
   position: relative;
-  height: min(54vh, 440px);
+  height: min(66vh, 560px);
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 28px 56px -30px rgba(42, 28, 16, 0.5);
+  box-shadow: 0 30px 60px -28px rgba(42, 28, 16, 0.55);
+}
+.villasMedia :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+@media (max-width: 920px) {
+  .villasGrid {
+    grid-template-columns: 1fr;
+  }
+  .villasMedia {
+    height: 52vh;
+  }
 }
 
 /* blog / guide */
@@ -455,6 +476,10 @@
 .postIm {
   position: relative;
   height: 165px;
+}
+.postIm :global(img) {
+  object-fit: cover;
+  object-position: center;
 }
 .postBd {
   padding: 1.2rem 1.3rem 1.4rem;

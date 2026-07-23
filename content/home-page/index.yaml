@@ -86,6 +86,14 @@ gallery:
     caption: A private table in the dunes
   - image: /images/west-bank-dawn.jpg
     caption: Dawn over the West Bank
+  - image: /images/gallery/karnak-hypostyle-hall.jpg
+    caption: The great hall at Karnak, columns like a stone forest
+  - image: /images/gallery/hatshepsut-temple.jpg
+    caption: Hatshepsut's temple against the Theban cliffs
+  - image: /images/gallery/luxor-temple-obelisk-dusk.jpg
+    caption: Luxor Temple's obelisk at dusk
+  - image: /images/gallery/felucca-red-sail-nile.jpg
+    caption: A red sail on the Nile at Luxor
 howItWorksEyebrow: How it works
 howItWorksTitle: You design it. We arrange everything.
 howItWorksSteps:
@@ -145,7 +153,7 @@ villasLead: >-
   never reach booking sites. Tell us what you're dreaming of; we present
   the options, arrange the details, and you contract directly with the
   owner.
-villasImage: /images/private-villa-pool.jpg
+villasImage: /images/private-villa-rooftop.jpg
 villasCtaLabel: Ask about villas →
 villasCtaHref: /concierge-day
 guideEyebrow: Insider's Guide

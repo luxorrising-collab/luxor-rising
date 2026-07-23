@@ -73,7 +73,7 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
             aria-expanded={expanded}
             onClick={() => setExpanded((v) => !v)}
           >
-            {expanded ? "Show less" : `Show all ${items.length} experiences`}
+            {expanded ? "Show less" : `Show all ${items.length} moments`}
           </button>
         </div>
       )}

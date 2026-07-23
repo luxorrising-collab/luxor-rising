@@ -10,35 +10,10 @@ import GalleryMosaic from "@/components/GalleryMosaic";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./HomePage.module.css";
 
-// Balloon rides (and other multi-page SEO variants) are sold under several
-// experiences; the gallery shows each core experience once, so drop the extra
-// variant slugs and keep the primary.
-const GALLERY_VARIANT_SLUGS = new Set(["balloon-valley-of-the-kings", "hot-air-balloon-private-vip"]);
-// Lead with the icons so the big tile and the collapsed view are the strongest.
-const GALLERY_ORDER = [
-  "valley-of-the-kings",
-  "karnak-at-dawn",
-  "hatshepsut-temple",
-  "hot-air-balloon-luxor",
-  "luxor-temple",
-  "nile-dinner-cruise",
-  "medinet-habu",
-  "ramesseum-valley-of-queens",
-];
-
 export default async function HomePage() {
   const page = await reader.singletons.homePage.read();
   const heroTitleLines = (page?.heroTitle ?? "").split("\n");
   const positioningTitleLines = (page?.positioningTitle ?? "").split("\n");
-
-  const galleryItems = (await reader.collections.experiences.all())
-    .filter(({ slug, entry }) => entry.isActive && entry.heroImage && !GALLERY_VARIANT_SLUGS.has(slug))
-    .sort((a, b) => {
-      const ia = GALLERY_ORDER.indexOf(a.slug);
-      const ib = GALLERY_ORDER.indexOf(b.slug);
-      return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-    })
-    .map(({ entry }) => ({ image: entry.heroImage as string, caption: entry.name || entry.title }));
 
   return (
     <>
@@ -177,7 +152,9 @@ export default async function HomePage() {
           </p>
         </div>
         <div className="wrap">
-          <GalleryMosaic items={galleryItems} />
+          <GalleryMosaic
+            items={(page?.gallery ?? []).map((g) => ({ image: g.image ?? "", caption: g.caption }))}
+          />
         </div>
       </section>
 

@@ -1,20 +1,44 @@
-/* hero (centered) */
+/* hero (image + scrim) */
 .hero {
-  padding: 8rem 0 3rem;
-  text-align: center;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--color-cream), var(--color-paper));
+  min-height: 74vh;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  padding: clamp(7rem, 12vh, 10rem) 0 clamp(3.5rem, 8vh, 5.5rem);
+  background: #160d05;
 }
-.hero::before {
-  content: "";
+.heroBg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(201, 160, 99, 0.13), transparent 62%);
-  pointer-events: none;
+  z-index: 0;
+}
+.heroBg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(12, 9, 4, 0.5) 0%, rgba(12, 9, 4, 0.3) 42%, rgba(12, 9, 4, 0.78) 100%),
+    radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(12, 9, 4, 0.4) 100%);
 }
 .heroIn {
   position: relative;
+  z-index: 2;
+  color: #fff;
+}
+.heroIn :global(.eyebrow) {
+  color: var(--color-gold-soft);
+}
+.heroIn :global(h1) {
+  color: #fff;
+}
+.heroIn :global(.lead) {
+  color: rgba(255, 255, 255, 0.92);
 }
 .rule {
   width: 56px;
@@ -271,4 +295,46 @@
     grid-template-columns: 1fr;
     gap: 1.4rem;
   }
+}
+
+/* consigliere pillar icon */
+.pillarIcon {
+  font-size: 1.25rem;
+  color: var(--color-gold);
+  margin-bottom: 0.45rem;
+  line-height: 1;
+}
+
+/* moment band (full-bleed image + statement) */
+.moment {
+  position: relative;
+  min-height: 44vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #160d05;
+}
+.moment :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.momentScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(12, 9, 4, 0.72) 0%, rgba(12, 9, 4, 0.45) 58%, rgba(12, 9, 4, 0.28) 100%);
+}
+.momentIn {
+  position: relative;
+  z-index: 2;
+  padding: clamp(3rem, 8vh, 5.5rem) 0;
+}
+.momentIn p {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4.2vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.22;
+  color: #fff;
+  max-width: 22ch;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
 }

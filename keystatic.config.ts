@@ -787,6 +787,7 @@ export default config({
         heroTitle: fields.text({ label: "Hero title", multiline: true }),
         heroLead: fields.text({ label: "Hero lead", multiline: true }),
         heroCtaLabel: fields.text({ label: "Hero CTA label" }),
+        heroImage: fields.image({ label: "Hero background image", directory: "public/images/private-guide", publicPath: "/images/private-guide/" }),
         trustItems: fields.array(fields.text({ label: "Item" }), { label: "Trust strip items" }),
 
         consigliereEyebrow: fields.text({ label: "Consigliere section eyebrow" }),
@@ -799,6 +800,9 @@ export default config({
           }),
           { label: "What a consigliere is (points)", itemLabel: (p) => p.fields.title.value || "Point" }
         ),
+
+        momentQuote: fields.text({ label: "Moment band quote", multiline: true }),
+        momentImage: fields.image({ label: "Moment band image", directory: "public/images/private-guide", publicPath: "/images/private-guide/" }),
 
         contrastEyebrow: fields.text({ label: "Contrast eyebrow" }),
         contrastTitle: fields.text({ label: "Contrast title" }),

@@ -43,10 +43,16 @@ export default async function PrivateGuidePage() {
 
       {/* HERO */}
       <header className={styles.hero}>
+        {page.heroImage && (
+          <div className={styles.heroBg}>
+            <Image src={page.heroImage} alt="" fill priority sizes="100vw" />
+          </div>
+        )}
+        <div className={styles.heroScrim} />
         <Reveal className={`wrap ${styles.heroIn}`}>
           <span className="eyebrow">{page.heroEyebrow}</span>
           <h1 className="display">{multiline(page.heroTitle)}</h1>
-          <p className="lead" style={{ maxWidth: "60ch", margin: "1rem auto 0" }}>
+          <p className="lead" style={{ maxWidth: "58ch", margin: "1rem auto 0" }}>
             {page.heroLead}
           </p>
           <div className={styles.rule} />
@@ -90,6 +96,9 @@ export default async function PrivateGuidePage() {
               <Reveal className={styles.pillars}>
                 {page.consiglierePoints.map((p, i) => (
                   <div className={styles.pillar} key={p.title || i}>
+                    <div className={styles.pillarIcon} aria-hidden>
+                      {["✦", "❖", "◆"][i % 3]}
+                    </div>
                     <h4>{p.title}</h4>
                     <p>{p.description}</p>
                   </div>
@@ -132,6 +141,17 @@ export default async function PrivateGuidePage() {
           </Reveal>
         </div>
       </section>
+
+      {/* MOMENT */}
+      {page.momentQuote && (
+        <section className={styles.moment}>
+          {page.momentImage && <Image src={page.momentImage} alt="" fill sizes="100vw" />}
+          <div className={styles.momentScrim} />
+          <Reveal className={`wrap ${styles.momentIn}`}>
+            <p>{page.momentQuote}</p>
+          </Reveal>
+        </section>
+      )}
 
       {/* HOSTS */}
       {page.hosts.length > 0 && (

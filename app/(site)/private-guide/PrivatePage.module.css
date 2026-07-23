@@ -127,6 +127,12 @@
   overflow: hidden;
   background: var(--color-cream-deep);
 }
+/* Fill images default to stretch — force cover + centered so portraits
+   crop cleanly into the square, never distorted. */
+.hostImg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
 .hostBody {
   padding: 1.3rem 1.4rem;
 }

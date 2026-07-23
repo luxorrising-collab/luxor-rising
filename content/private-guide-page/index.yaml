@@ -59,7 +59,7 @@ hostsLead: >-
   A consigliere is never alone. Behind your single point of contact stands a
   network Luxor has trusted for generations.
 hosts:
-  - image: /images/hosts/ahmed.jpg
+  - image: /images/hosts/ahmed-2.jpg
     name: Ahmed
     role: Head of Egyptian operations
     bio: >-
@@ -67,7 +67,7 @@ hosts:
       this city — for archaeologists, film crews, and travellers who simply
       wanted to see it properly. He doesn't carry a flag; he decides the shape
       of your day and makes sure every promise is kept on the ground.
-  - image: /images/hosts/temple-guards.jpg
+  - image: /images/hosts/dr-nour.jpg
     name: The temple guards
     role: Keepers of the mysteries, on your side
     bio: >-
@@ -75,7 +75,7 @@ hosts:
       generations — who know which chamber the light reaches first, which gate
       opens before the crowds, and the quiet corners no guidebook lists. Once
       they guarded the mysteries. Now they open them for you.
-  - image: /images/hosts/dr-nour.jpg
+  - image: /images/hosts/temple-guards.jpg
     name: A certified Egyptologist, on site
     role: Licensed to make the walls speak
     bio: >-

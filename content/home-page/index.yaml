@@ -45,7 +45,7 @@ offeringCards:
     ctaLabel: Explore Luxor →
     href: /luxor
   - tag: ''
-    image: /images/destinations/hurghada-hero.jpg
+    image: /images/offering/hurghada-red-sea-coast.jpg
     kicker: From the Red Sea
     title: Hurghada
     description: >-
@@ -55,7 +55,7 @@ offeringCards:
     ctaLabel: See day trips →
     href: /hurghada
   - tag: ''
-    image: /images/valley-kings-tomb-pillar.jpg
+    image: /images/offering/signature-design-your-day.jpg
     kicker: The signature
     title: Design your day
     description: >-

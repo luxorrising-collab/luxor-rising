@@ -208,6 +208,11 @@
   position: relative;
   display: flex;
   align-items: flex-end;
+  overflow: hidden;
+}
+.jcImg :global(img) {
+  object-fit: cover;
+  object-position: center;
 }
 .jcImg::after {
   content: "";
@@ -327,6 +332,10 @@
   flex: none;
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(58, 40, 24, 0.1);
+}
+.thumb :global(img) {
+  object-fit: cover;
+  object-position: center;
 }
 .dot {
   width: 14px;

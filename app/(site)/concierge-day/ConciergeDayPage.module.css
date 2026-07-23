@@ -19,6 +19,10 @@
   animation: heroKB 21s ease-in-out infinite;
   will-change: opacity, transform;
 }
+.pheroBg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
 .pheroBg:nth-child(1) {
   animation-delay: 0s;
 }
@@ -200,6 +204,10 @@
 .dream {
   position: relative;
 }
+.dream :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
 .dreamScrim {
   position: absolute;
   inset: 0;
@@ -247,6 +255,8 @@
   overflow: hidden;
 }
 .expIm :global(img) {
+  object-fit: cover;
+  object-position: center;
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 .exp:hover .expIm :global(img) {
@@ -458,6 +468,10 @@
   border-radius: 4px;
   overflow: hidden;
   transition: 0.4s;
+}
+.gm :global(img) {
+  object-fit: cover;
+  object-position: center;
 }
 .gm::after {
   content: "";

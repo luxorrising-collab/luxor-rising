@@ -109,6 +109,17 @@ export default async function PrivateGuidePage() {
         </section>
       )}
 
+      {/* MOMENT — breaks up the text between the consigliere definition and the comparison */}
+      {page.momentQuote && (
+        <section className={styles.moment}>
+          {page.momentImage && <Image src={page.momentImage} alt="" fill sizes="100vw" />}
+          <div className={styles.momentScrim} />
+          <Reveal className={`wrap ${styles.momentIn}`}>
+            <p>{page.momentQuote}</p>
+          </Reveal>
+        </section>
+      )}
+
       {/* CONTRAST */}
       <section>
         <div className="wrap">
@@ -141,17 +152,6 @@ export default async function PrivateGuidePage() {
           </Reveal>
         </div>
       </section>
-
-      {/* MOMENT */}
-      {page.momentQuote && (
-        <section className={styles.moment}>
-          {page.momentImage && <Image src={page.momentImage} alt="" fill sizes="100vw" />}
-          <div className={styles.momentScrim} />
-          <Reveal className={`wrap ${styles.momentIn}`}>
-            <p>{page.momentQuote}</p>
-          </Reveal>
-        </section>
-      )}
 
       {/* HOSTS */}
       {page.hosts.length > 0 && (

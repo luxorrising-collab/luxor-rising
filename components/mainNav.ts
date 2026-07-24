@@ -13,7 +13,6 @@ export const MAIN_NAV: NavLink[] = [
     ],
   },
   { href: "/experiences", label: "Experiences" },
-  { href: "/private-villas", label: "Private Villas" },
   { href: "/private-guide", label: "Private Guide" },
   { href: "/insiders-guide", label: "Insider's Guide" },
   { href: "/#about", label: "About" },

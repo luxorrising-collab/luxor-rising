@@ -529,7 +529,7 @@ export default config({
             directory: "public/images/concierge-day",
             publicPath: "/images/concierge-day/",
           }),
-          { label: "Hero background images (rotating)", itemLabel: (p) => p.value?.split("/").pop() || "Image" }
+          { label: "Hero background images (rotating)" }
         ),
 
         contrastEyebrow: fields.text({ label: "Contrast section eyebrow" }),

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
+import { useDayCount } from "./DayCount";
 
 type DayCount = 1 | 2 | 3 | 4;
 type Journey = "medinet" | "karnak";
@@ -198,7 +199,7 @@ export default function DayConfigurator({
   ],
   depositPercent = 30,
 }: DayConfiguratorProps) {
-  const [days, setDays] = useState<DayCount>(1);
+  const { days, setDays } = useDayCount();
   const [group, setGroup] = useState(2);
   const [water, setWater] = useState<Water>("nile");
   const [journey, setJourney] = useState<Journey>("medinet");

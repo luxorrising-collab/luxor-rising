@@ -8,6 +8,7 @@ import Faq from "@/components/Faq";
 import DayConfigurator from "@/components/DayConfigurator";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
+import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./ConciergeDayPage.module.css";
 
@@ -107,6 +108,11 @@ export default async function ConciergeDayPage() {
       named("Luxor by night", "luxor-by-night"),
       named("A private Nile dinner cruise", "nile-dinner-cruise"),
       named("Hot-air balloon at dawn", "hot-air-balloon-luxor"),
+    ],
+    [
+      named("Dawn camel ride & Bedouin breakfast", "camel-bedouin-breakfast"),
+      named("Banana Island by felucca", "banana-island-felucca"),
+      named("A night under desert stars", "desert-astronomy-night"),
     ],
   ];
   // Consigliere leads; temple guards are on your side; the Egyptologist is an addition.
@@ -297,6 +303,7 @@ export default async function ConciergeDayPage() {
         </div>
       </section>
 
+      <DayCountProvider>
       {/* CONFIGURATOR */}
       <section id="design" style={{ background: "var(--color-paper)" }}>
         <div className="wrap">
@@ -352,6 +359,7 @@ export default async function ConciergeDayPage() {
           </Link>
         </div>
       </section>
+      </DayCountProvider>
 
       {/* SOCIAL PROOF */}
       <section style={{ background: "var(--color-paper)" }}>

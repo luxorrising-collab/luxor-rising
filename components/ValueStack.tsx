@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import styles from "./ValueStack.module.css";
+import { useDayCount } from "./DayCount";
 
 export type PricedItem = { name: string; price: number };
 export type VolumeTier = { minDays: number; discountPercent: number };
@@ -36,7 +37,7 @@ export default function ValueStack({
   perDayServices: PricedItem[];
   oneOffServices: PricedItem[];
 }) {
-  const [days, setDays] = useState(3);
+  const { days, setDays } = useDayCount();
 
   const { experiences, services, alaCarte, concierge, saving } = useMemo(() => {
     const experiences = experiencePlan.slice(0, days).flat();
@@ -52,9 +53,9 @@ export default function ValueStack({
 
   return (
     <div className={styles.stack}>
-      <div className={styles.dayToggle} role="group" aria-label="Choose number of days">
-        <span className={styles.dayLbl}>Compare</span>
-        {[1, 2, 3].map((d) => (
+      <div className={styles.dayToggle} role="group" aria-label="Number of days">
+        <span className={styles.dayLbl}>Your journey</span>
+        {([1, 2, 3, 4] as const).map((d) => (
           <button
             key={d}
             type="button"

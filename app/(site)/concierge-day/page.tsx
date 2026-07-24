@@ -6,6 +6,8 @@ import { MinimalFooter } from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import Faq from "@/components/Faq";
 import DayConfigurator from "@/components/DayConfigurator";
+import GalleryMosaic from "@/components/GalleryMosaic";
+import ValueStack from "@/components/ValueStack";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./ConciergeDayPage.module.css";
 
@@ -17,32 +19,32 @@ export const metadata: Metadata = {
 
 const EXPERIENCES = [
   {
-    src: "/images/karnak-columns-detail.jpg",
+    src: "/images/experiences/karnak-at-dawn-hero.jpg",
     h: "Karnak at dawn",
     p: "The great hypostyle hall before the crowds arrive — arranged privately.",
   },
   {
-    src: "/images/valley-kings-tomb-pillar.jpg",
-    h: "Valley of the Kings, with your own Egyptologist",
+    src: "/images/experiences/valley-of-the-kings-hero.jpg",
+    h: "Valley of the Kings",
     p: "The royal tombs, read for you by a licensed local guide.",
   },
   {
-    src: "/images/nile-river-solo.jpg",
+    src: "/images/experiences/felucca-sunset-sail-hero.jpg",
     h: "A private felucca at golden hour",
     p: "The river to yourself as the light turns — hosted by our local boatman.",
   },
   {
-    src: "/images/desert-dinner-table.jpg",
+    src: "/images/experiences/private-desert-safari-hero.jpg",
     h: "A sunset picnic in the dunes",
     p: "A quiet table in the sand, set by our local host as the sun drops.",
   },
   {
-    src: "/images/temple-stone-relief.jpg",
+    src: "/images/experiences/medinet-habu-hero.jpg",
     h: "Medinet Habu",
     p: "Our insider temple — colour still on the walls, almost nobody there. Yours from day one.",
   },
   {
-    src: "/images/west-bank-dawn.jpg",
+    src: "/images/experiences/balloon-hero.jpg",
     h: "Hot-air balloon at dawn",
     p: "Float over the West Bank at sunrise — we'll arrange it on request.",
   },
@@ -50,13 +52,13 @@ const EXPERIENCES = [
 
 const BONUS_EXPERIENCES = [
   {
-    src: "/images/temple-stone-relief.jpg",
+    src: "/images/experiences/deir-el-shelwit-hero.jpg",
     k: "Signature bonus ★",
     h: "Deir el-Shelwit — the hidden temple of Isis",
     p: "A near-secret Greco-Roman temple, its ceilings still deep with colour. On us.",
   },
   {
-    src: "/images/karnak-columns-detail.jpg",
+    src: "/images/experiences/luxor-by-night-hero.jpg",
     k: "After dark",
     h: "A night in Luxor city",
     p: "The souk, the lantern-lit Corniche, and hosts who actually know the place.",
@@ -64,21 +66,58 @@ const BONUS_EXPERIENCES = [
 ];
 
 const GALLERY = [
-  { src: "/images/desert-stargazing-dune.jpg", cap: "The desert sky, far from everything", big: true },
-  { src: "/images/nile-felucca-table.jpg", cap: "The Nile from your table" },
-  { src: "/images/temple-stone-relief.jpg", cap: "Stone that has waited millennia" },
-  { src: "/images/private-villa-pool.jpg", cap: "A private villa, found for you" },
-  { src: "/images/desert-dinner-table.jpg", cap: "Golden hour in the dunes" },
-  { src: "/images/west-bank-dawn.jpg", cap: "Dawn over the West Bank" },
+  { image: "/images/experiences/karnak-at-dawn-hero.jpg", caption: "Karnak, before the crowds" },
+  { image: "/images/experiences/valley-of-the-kings-hero.jpg", caption: "Into the royal tombs" },
+  { image: "/images/desert-stargazing-dune.jpg", caption: "The desert sky, far from everything" },
+  { image: "/images/experiences/felucca-sunset-sail-hero.jpg", caption: "The Nile at golden hour" },
+  { image: "/images/desert-dinner-table.jpg", caption: "A private table in the dunes" },
+  { image: "/images/experiences/medinet-habu-hero.jpg", caption: "Colour still on the walls" },
+  { image: "/images/experiences/balloon-hero.jpg", caption: "Dawn over the West Bank" },
+  { image: "/images/experiences/nile-dinner-cruise-hero.jpg", caption: "Dinner on the river" },
+  { image: "/images/experiences/camel-bedouin-breakfast-hero.jpg", caption: "Breakfast at the desert's edge" },
 ];
 
 export default async function ConciergeDayPage() {
-  const [page, pricingRules] = await Promise.all([
+  const [page, pricingRules, experiences] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
     reader.singletons.pricingRules.read(),
+    reader.collections.experiences.all(),
   ]);
 
   const FAQ_ITEMS = (page?.faq ?? []).map((f) => ({ q: f.question, a: f.answer }));
+
+  // Real single-experience prices, pulled from the live catalogue so the
+  // "assemble it yourself" comparison always reflects what these actually cost.
+  const priceBySlug = (slug: string) =>
+    experiences.find((e) => e.slug === slug)?.entry.basePrice ?? 0;
+  const named = (name: string, slug: string) => ({ name, price: priceBySlug(slug) });
+  // [day 1, day-2 additions, day-3 additions]
+  const experiencePlan = [
+    [
+      named("Karnak at dawn", "karnak-at-dawn"),
+      named("Valley of the Kings", "valley-of-the-kings"),
+      named("A private felucca at golden hour", "felucca-sunset-sail"),
+    ],
+    [
+      named("Medinet Habu — your signature", "medinet-habu"),
+      named("Hatshepsut Temple", "hatshepsut-temple"),
+      named("A sunset in the dunes", "private-desert-safari"),
+    ],
+    [
+      named("Luxor by night", "luxor-by-night"),
+      named("A private Nile dinner cruise", "nile-dinner-cruise"),
+      named("Hot-air balloon at dawn", "hot-air-balloon-luxor"),
+    ],
+  ];
+  // Consigliere leads; temple guards are on your side; the Egyptologist is an addition.
+  const perDayServices = [
+    { name: "A consigliere managing every hour of it", price: 90 },
+    { name: "Temple guards opening doors a coach never gets", price: 70 },
+    { name: "Private air-conditioned car & driver", price: 90 },
+    { name: "Monument entries, timed before the crowds", price: 60 },
+    { name: "A licensed Egyptologist too, at the monuments", price: 140 },
+  ];
+  const oneOffServices = [{ name: "Personal trip design & every reservation made", price: 120 }];
 
   return (
     <>
@@ -189,8 +228,9 @@ export default async function ConciergeDayPage() {
               <div className="num">02</div>
               <h4>We arrange every detail</h4>
               <p>
-                Entries timed around the crowds, private transfer, your own licensed
-                Egyptologist, the Nile or the desert — all booked for you.
+                One consigliere handles every hour — entries timed before the crowds, private
+                transfer, and the temple guards who open doors a coach never gets. A licensed
+                Egyptologist joins you at the monuments too.
               </p>
             </div>
             <div className="s3">
@@ -291,32 +331,21 @@ export default async function ConciergeDayPage() {
             A day that would cost you far more to assemble — if you even could.
           </h2>
           <p className="lead" style={{ marginTop: ".7rem" }}>
-            Booked piece by piece, a private day like this runs well over{" "}
-            {page?.valueStackTotal ?? "€660+"} — and that&apos;s before the hours of planning,
-            the language, and knowing who to trust. We do all of it, and price the whole day from
-            €{page?.startingPrice ?? 450}.
+            Booked piece by piece — real prices from our own single experiences — a private
+            journey like this adds up fast, and that&apos;s before the hours of planning, the
+            language, and knowing who to trust. Choose how many days below and see it for yourself.
           </p>
         </Reveal>
-        <Reveal className={styles.stack}>
-          {(page?.valueStackRows ?? []).map((row) => (
-            <div className={styles.stackRow} key={row.label}>
-              <span className="l">{row.label}</span>
-              <span className="v">{row.price}</span>
-            </div>
-          ))}
-          <div className={styles.stackTotal}>
-            <span>Total value of a single day</span>
-            <span className={styles.tv}>{page?.valueStackTotal}</span>
-          </div>
-          <div className={styles.stackYou}>
-            <span className={styles.yl}>Your concierge day, from</span>
-            <span className={styles.yv}>€{page?.startingPrice ?? 450}</span>
-          </div>
-          <div className={styles.stackNote}>
-            Multi-day unlocks the signatures and bonuses above — value climbs well past €1,000
-            while your per-day price falls.
-          </div>
-        </Reveal>
+        <ValueStack
+          dayRate={pricingRules?.dayRate ?? 450}
+          volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
+            minDays: t.minDays ?? 0,
+            discountPercent: t.discountPercent ?? 0,
+          }))}
+          experiencePlan={experiencePlan}
+          perDayServices={perDayServices}
+          oneOffServices={oneOffServices}
+        />
         <div className="center" style={{ marginTop: "2rem" }}>
           <Link href="#design" className="btn btn-primary btn-lg">
             Design your day →
@@ -414,14 +443,7 @@ export default async function ConciergeDayPage() {
           <h2 className="display">Moments from a Luxor Rising day</h2>
         </div>
         <div className="wrap">
-          <Reveal className={styles.galleryMosaic}>
-            {GALLERY.map((g) => (
-              <div key={g.src + g.cap} className={`${styles.gm} ${g.big ? styles.gmBig : ""}`}>
-                <Image src={g.src} alt={g.cap} fill sizes={g.big ? "50vw" : "25vw"} />
-                <div className={styles.gmCap}>{g.cap}</div>
-              </div>
-            ))}
-          </Reveal>
+          <GalleryMosaic items={GALLERY} />
         </div>
       </section>
 

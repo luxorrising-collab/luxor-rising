@@ -7,7 +7,7 @@ import StickyBar from "./StickyBar";
 
 type DayCount = 1 | 2 | 3 | 4;
 type Journey = "medinet" | "karnak";
-type Water = "nile" | "picnic";
+type Water = "nile" | "picnic" | "custom";
 type Pay = "full" | "deposit";
 
 export type VolumeDiscountTier = { minDays: number; discountPercent: number };
@@ -16,6 +16,7 @@ export type GroupSupplementTier = { minGuests: number; extraPerDay: number };
 const WATER: Record<Water, string> = {
   nile: "Sunset sail on the Nile",
   picnic: "Desert sunset picnic",
+  custom: "A sunset of your choosing",
 };
 function otherWater(w: Water): Water {
   return w === "nile" ? "picnic" : "nile";
@@ -78,6 +79,7 @@ const PRICE_TABLE: [string, number][] = [
   ["sail on the Nile", 140],
   ["Sunset sail", 140],
   ["picnic", 150],
+  ["choosing", 150],
   ["Desert rally", 160],
   ["night in Luxor", 130],
   ["photoshoot", 120],
@@ -572,9 +574,21 @@ export default function DayConfigurator({
                   <span>Desert sunset picnic</span>
                   <span className={styles.dot} />
                 </div>
+                <div
+                  className={`${styles.opt} ${water === "custom" ? styles.sel : ""}`}
+                  onClick={() => setWater("custom")}
+                >
+                  <span className={styles.thumb}>
+                    <Image src="/images/desert-stargazing-dune.jpg" alt="" fill sizes="46px" />
+                  </span>
+                  <span>Something else — tell your consigliere</span>
+                  <span className={styles.dot} />
+                </div>
               </div>
               <div className={styles.grpNote}>
-                Whichever you choose first, the other is arranged for you on a later day.
+                {water === "custom"
+                  ? "Have something particular in mind? Your consigliere shapes it around you — just say the word."
+                  : "Whichever you choose first, the other is arranged for you on a later day."}
               </div>
             </div>
 

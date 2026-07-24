@@ -66,10 +66,10 @@
   z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(18, 11, 5, 0.42) 0%,
-    rgba(18, 11, 5, 0.12) 32%,
-    rgba(18, 11, 5, 0.5) 68%,
-    rgba(18, 11, 5, 0.85) 100%
+    rgba(18, 11, 5, 0.55) 0%,
+    rgba(18, 11, 5, 0.28) 32%,
+    rgba(18, 11, 5, 0.6) 68%,
+    rgba(18, 11, 5, 0.9) 100%
   );
 }
 .pheroContent {
@@ -129,25 +129,47 @@
 }
 .heroFacts {
   display: flex;
-  gap: 1.7rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.8rem, 3vw, 2.2rem);
   margin-top: 1.5rem;
   padding-top: 1.4rem;
   border-top: 1px solid rgba(255, 255, 255, 0.28);
 }
+.heroFacts .f {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+/* seamless hairline separators between facts */
+.heroFacts .f + .f::before {
+  content: "";
+  position: absolute;
+  left: calc(-0.5 * clamp(0.8rem, 3vw, 2.2rem));
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.22);
+}
 .heroFacts .f b {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
   color: #fff;
   display: block;
   font-weight: 600;
+  line-height: 1.1;
 }
 .heroFacts .f span {
-  font-size: 0.7rem;
+  display: block;
+  margin-top: 0.15rem;
+  font-size: clamp(0.58rem, 1.5vw, 0.7rem);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: #e9dcc2;
   opacity: 0.85;
+  line-height: 1.25;
 }
 
 /* contrast */

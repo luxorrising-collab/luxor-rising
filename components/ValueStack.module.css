@@ -1,0 +1,131 @@
+.stack {
+  max-width: 680px;
+  margin: 2rem auto 0;
+  background: var(--color-paper);
+  border: 1px solid var(--color-cream-deep);
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: var(--shadow, 0 10px 30px -22px rgba(46, 34, 22, 0.4));
+}
+
+.dayToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.4rem;
+  background: var(--color-cream);
+  border-bottom: 1px solid var(--color-cream-deep);
+}
+.dayLbl {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-right: auto;
+}
+.dayBtn {
+  font-family: inherit;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  border: 1px solid var(--color-cream-deep);
+  background: var(--color-paper);
+  color: var(--color-espresso);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.dayBtn:hover {
+  border-color: var(--color-gold-soft);
+}
+.dayBtn.on {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.group {
+  padding: 0.4rem 0;
+}
+.groupHead {
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  padding: 0.85rem 1.4rem 0.35rem;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 1.4rem;
+  font-size: 0.92rem;
+  color: var(--color-espresso);
+}
+.l {
+  color: var(--color-espresso);
+}
+.per {
+  color: var(--color-muted);
+  font-style: normal;
+  font-size: 0.78rem;
+}
+.v {
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.9rem 1.4rem;
+  border-top: 1px solid var(--color-cream-deep);
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+}
+.tv {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-ink);
+}
+.youRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.9rem 1.4rem;
+  background: linear-gradient(180deg, rgba(201, 160, 99, 0.1), rgba(201, 160, 99, 0.03));
+  border-top: 1px solid var(--color-gold-soft);
+}
+.yl {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+.yv {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--color-gold-deep);
+}
+.saveRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.9rem 1.4rem 1.1rem;
+}
+.savePill {
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.saveNote {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+}

@@ -523,6 +523,14 @@ export default config({
           label: "Price note",
           description: 'e.g. "/ day · ≤4 guests, private"',
         }),
+        heroImages: fields.array(
+          fields.image({
+            label: "Image",
+            directory: "public/images/concierge-day",
+            publicPath: "/images/concierge-day/",
+          }),
+          { label: "Hero background images (rotating)", itemLabel: (p) => p.value?.split("/").pop() || "Image" }
+        ),
 
         contrastEyebrow: fields.text({ label: "Contrast section eyebrow" }),
         contrastTitle: fields.text({ label: "Contrast section title" }),
@@ -537,6 +545,66 @@ export default config({
         dreamText: fields.text({
           label: "\"What your day feels like\" text",
           multiline: true,
+        }),
+        dreamImage: fields.image({
+          label: "\"What your day feels like\" band image",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
+
+        experiences: fields.array(
+          fields.object({
+            image: fields.image({
+              label: "Image",
+              directory: "public/images/concierge-day",
+              publicPath: "/images/concierge-day/",
+            }),
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+            badge: fields.text({ label: "Badge (optional, e.g. Signature bonus ★)" }),
+          }),
+          {
+            label: "\"What your day can hold\" cards",
+            itemLabel: (p) => p.fields.title.value || "Experience",
+          }
+        ),
+
+        gallery: fields.array(
+          fields.object({
+            image: fields.image({
+              label: "Image",
+              directory: "public/images/concierge-day",
+              publicPath: "/images/concierge-day/",
+            }),
+            caption: fields.text({ label: "Caption" }),
+          }),
+          { label: "Gallery images", itemLabel: (p) => p.fields.caption.value || "Image" }
+        ),
+
+        builderJourneyMedinetImage: fields.image({
+          label: "Day builder — Medinet journey image",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
+        builderJourneyKarnakImage: fields.image({
+          label: "Day builder — Karnak journey image",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
+        builderSunsetNileImage: fields.image({
+          label: "Day builder — Nile sunset thumbnail",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
+        builderSunsetPicnicImage: fields.image({
+          label: "Day builder — desert picnic thumbnail",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
+        builderSunsetCustomImage: fields.image({
+          label: "Day builder — custom sunset thumbnail",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
         }),
 
         valueStackRows: fields.array(

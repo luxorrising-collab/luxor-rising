@@ -178,11 +178,20 @@ function itemClasses(it: PlanItem) {
   return c.join(" ");
 }
 
+export type DayConfiguratorImages = {
+  journeyMedinet?: string;
+  journeyKarnak?: string;
+  sunsetNile?: string;
+  sunsetPicnic?: string;
+  sunsetCustom?: string;
+};
+
 type DayConfiguratorProps = {
   dayRate?: number;
   volumeDiscount?: VolumeDiscountTier[];
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
+  images?: DayConfiguratorImages;
 };
 
 export default function DayConfigurator({
@@ -198,7 +207,15 @@ export default function DayConfigurator({
     { minGuests: 4, extraPerDay: 55 },
   ],
   depositPercent = 30,
+  images = {},
 }: DayConfiguratorProps) {
+  const img = {
+    journeyMedinet: images.journeyMedinet || "/images/desert-stargazing-dune.jpg",
+    journeyKarnak: images.journeyKarnak || "/images/nile-felucca-table.jpg",
+    sunsetNile: images.sunsetNile || "/images/nile-river-solo.jpg",
+    sunsetPicnic: images.sunsetPicnic || "/images/desert-dinner-table.jpg",
+    sunsetCustom: images.sunsetCustom || "/images/desert-stargazing-dune.jpg",
+  };
   const { days, setDays } = useDayCount();
   const [group, setGroup] = useState(2);
   const [water, setWater] = useState<Water>("nile");
@@ -510,7 +527,7 @@ export default function DayConfigurator({
                   onClick={() => setJourney("medinet")}
                 >
                   <div className={styles.jcImg}>
-                    <Image src="/images/desert-stargazing-dune.jpg" alt="Medinet Habu" fill sizes="240px" />
+                    <Image src={img.journeyMedinet} alt="Medinet Habu" fill sizes="240px" />
                     <div className={styles.jcCap}>
                       <span className={styles.jcEyebrow}>The Initiation</span>
                       <h4>Medinet Habu</h4>
@@ -532,7 +549,7 @@ export default function DayConfigurator({
                   onClick={() => setJourney("karnak")}
                 >
                   <div className={styles.jcImg}>
-                    <Image src="/images/nile-felucca-table.jpg" alt="Karnak at Dawn" fill sizes="240px" />
+                    <Image src={img.journeyKarnak} alt="Karnak at Dawn" fill sizes="240px" />
                     <div className={styles.jcCap}>
                       <span className={styles.jcEyebrow}>The Ancient Journey</span>
                       <h4>Karnak at Dawn</h4>
@@ -560,7 +577,7 @@ export default function DayConfigurator({
                   onClick={() => setWater("nile")}
                 >
                   <span className={styles.thumb}>
-                    <Image src="/images/nile-river-solo.jpg" alt="" fill sizes="46px" />
+                    <Image src={img.sunsetNile} alt="" fill sizes="46px" />
                   </span>
                   <span>Sunset sail on the Nile</span>
                   <span className={styles.dot} />
@@ -570,7 +587,7 @@ export default function DayConfigurator({
                   onClick={() => setWater("picnic")}
                 >
                   <span className={styles.thumb}>
-                    <Image src="/images/desert-dinner-table.jpg" alt="" fill sizes="46px" />
+                    <Image src={img.sunsetPicnic} alt="" fill sizes="46px" />
                   </span>
                   <span>Desert sunset picnic</span>
                   <span className={styles.dot} />
@@ -580,7 +597,7 @@ export default function DayConfigurator({
                   onClick={() => setWater("custom")}
                 >
                   <span className={styles.thumb}>
-                    <Image src="/images/desert-stargazing-dune.jpg" alt="" fill sizes="46px" />
+                    <Image src={img.sunsetCustom} alt="" fill sizes="46px" />
                   </span>
                   <span>Something else — tell your consigliere</span>
                   <span className={styles.dot} />

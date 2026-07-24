@@ -125,6 +125,30 @@ export default async function ConciergeDayPage() {
   ];
   const oneOffServices = [{ name: "Personal trip design & every reservation made", price: 120 }];
 
+  // Images are CMS-editable via the Concierge Day page singleton, with the
+  // original hardcoded sets kept as fallbacks so nothing breaks if a field is empty.
+  const heroFromCms = (page?.heroImages ?? []).filter((s): s is string => !!s);
+  const heroBgList =
+    heroFromCms.length > 0
+      ? heroFromCms
+      : ["/images/nile-river-solo.jpg", "/images/west-bank-dawn.jpg", "/images/karnak-columns-detail.jpg"];
+  const dreamImg = page?.dreamImage || "/images/karnak-columns-detail.jpg";
+  const expCards =
+    (page?.experiences ?? []).length > 0
+      ? page!.experiences.map((e) => ({ src: e.image ?? "", h: e.title, p: e.description, k: e.badge || undefined }))
+      : [...EXPERIENCES.map((e) => ({ ...e, k: undefined as string | undefined })), ...BONUS_EXPERIENCES];
+  const galleryItems =
+    (page?.gallery ?? []).length > 0
+      ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
+      : GALLERY;
+  const builderImages = {
+    journeyMedinet: page?.builderJourneyMedinetImage || undefined,
+    journeyKarnak: page?.builderJourneyKarnakImage || undefined,
+    sunsetNile: page?.builderSunsetNileImage || undefined,
+    sunsetPicnic: page?.builderSunsetPicnicImage || undefined,
+    sunsetCustom: page?.builderSunsetCustomImage || undefined,
+  };
+
   return (
     <>
       <Nav scrollAware={false} ctaHref="#design" ctaLabel="Design your day" />
@@ -132,13 +156,11 @@ export default async function ConciergeDayPage() {
       {/* HERO */}
       <section className={styles.phero}>
         <div className={styles.pheroBgs}>
-          {["/images/nile-river-solo.jpg", "/images/west-bank-dawn.jpg", "/images/karnak-columns-detail.jpg"].map(
-            (src) => (
-              <div key={src} className={styles.pheroBg}>
-                <Image src={src} alt="" fill priority sizes="100vw" />
-              </div>
-            )
-          )}
+          {heroBgList.map((src) => (
+            <div key={src} className={styles.pheroBg}>
+              <Image src={src} alt="" fill priority sizes="100vw" />
+            </div>
+          ))}
         </div>
         <div className={styles.pheroScrim} />
         <div className={`wrap ${styles.pheroContent}`}>
@@ -210,7 +232,7 @@ export default async function ConciergeDayPage() {
 
       {/* DREAM */}
       <section className={styles.dream}>
-        <Image src="/images/karnak-columns-detail.jpg" alt="" fill sizes="100vw" />
+        <Image src={dreamImg} alt="" fill sizes="100vw" />
         <div className={styles.dreamScrim} />
         <Reveal className={`wrap-narrow center ${styles.dreamContent}`}>
           <span className="eyebrow light">What your day feels like</span>
@@ -265,24 +287,13 @@ export default async function ConciergeDayPage() {
             </p>
           </div>
           <Reveal className={styles.expGrid}>
-            {EXPERIENCES.map((e) => (
+            {expCards.map((e) => (
               <div className={styles.exp} key={e.h}>
                 <div className={styles.expIm}>
                   <Image src={e.src} alt="" fill sizes="33vw" />
                 </div>
                 <div className={styles.expTx}>
-                  <h4>{e.h}</h4>
-                  <p>{e.p}</p>
-                </div>
-              </div>
-            ))}
-            {BONUS_EXPERIENCES.map((e) => (
-              <div className={styles.exp} key={e.h}>
-                <div className={styles.expIm}>
-                  <Image src={e.src} alt="" fill sizes="33vw" />
-                </div>
-                <div className={styles.expTx}>
-                  <div className={styles.expK}>{e.k}</div>
+                  {e.k && <div className={styles.expK}>{e.k}</div>}
                   <h4>{e.h}</h4>
                   <p>{e.p}</p>
                 </div>
@@ -326,6 +337,7 @@ export default async function ConciergeDayPage() {
               extraPerDay: t.extraPerDay ?? 0,
             }))}
             depositPercent={pricingRules?.depositPercent ?? 30}
+            images={builderImages}
           />
         </div>
       </section>
@@ -451,7 +463,7 @@ export default async function ConciergeDayPage() {
           <h2 className="display">Moments from a Luxor Rising day</h2>
         </div>
         <div className="wrap">
-          <GalleryMosaic items={GALLERY} />
+          <GalleryMosaic items={galleryItems} />
         </div>
       </section>
 

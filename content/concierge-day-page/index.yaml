@@ -7,6 +7,10 @@ heroSubtitle: >-
 heroTrustLine: 4.9 · 60+ private days arranged · for travellers already in Hurghada & Luxor
 startingPrice: 450
 priceNote: / day · ≤4 guests, private
+heroImages:
+  - /images/concierge-day/hero-1-nile.jpg
+  - /images/concierge-day/hero-2-westbank.jpg
+  - /images/concierge-day/hero-3-karnak.jpg
 contrastEyebrow: Why most people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a queue.
 contrastLead: >-
@@ -33,6 +37,68 @@ dreamText: >-
   handled. By late afternoon the Nile is yours alone, a felucca tilting
   into the gold. You took no decisions, stood in no queue, missed
   nothing. You simply arrived — and Egypt did the rest.
+dreamImage: /images/concierge-day/dream.jpg
+experiences:
+  - image: /images/concierge-day/exp-1-karnak.jpg
+    title: Karnak at dawn
+    description: The great hypostyle hall before the crowds arrive — arranged privately.
+    badge: ''
+  - image: /images/concierge-day/exp-2-valley.jpg
+    title: Valley of the Kings
+    description: The royal tombs, read for you by a licensed local guide.
+    badge: ''
+  - image: /images/concierge-day/exp-3-felucca.jpg
+    title: A private felucca at golden hour
+    description: The river to yourself as the light turns — hosted by our local boatman.
+    badge: ''
+  - image: /images/concierge-day/exp-4-desert.jpg
+    title: A sunset picnic in the dunes
+    description: A quiet table in the sand, set by our local host as the sun drops.
+    badge: ''
+  - image: /images/concierge-day/exp-5-medinet.jpg
+    title: Medinet Habu
+    description: >-
+      Our insider temple — colour still on the walls, almost nobody there. Yours
+      from day one.
+    badge: ''
+  - image: /images/concierge-day/exp-6-balloon.jpg
+    title: Hot-air balloon at dawn
+    description: Float over the West Bank at sunrise — we'll arrange it on request.
+    badge: ''
+  - image: /images/concierge-day/exp-7-deir-el-shelwit.jpg
+    title: Deir el-Shelwit — the hidden temple of Isis
+    description: >-
+      A near-secret Greco-Roman temple, its ceilings still deep with colour. On
+      us.
+    badge: Signature bonus ★
+  - image: /images/concierge-day/exp-8-luxor-night.jpg
+    title: A night in Luxor city
+    description: The souk, the lantern-lit Corniche, and hosts who actually know the place.
+    badge: After dark
+gallery:
+  - image: /images/concierge-day/gal-1-karnak.jpg
+    caption: Karnak, before the crowds
+  - image: /images/concierge-day/gal-2-valley.jpg
+    caption: Into the royal tombs
+  - image: /images/concierge-day/gal-3-stars.jpg
+    caption: The desert sky, far from everything
+  - image: /images/concierge-day/gal-4-felucca.jpg
+    caption: The Nile at golden hour
+  - image: /images/concierge-day/gal-5-dunes.jpg
+    caption: A private table in the dunes
+  - image: /images/concierge-day/gal-6-medinet.jpg
+    caption: Colour still on the walls
+  - image: /images/concierge-day/gal-7-balloon.jpg
+    caption: Dawn over the West Bank
+  - image: /images/concierge-day/gal-8-cruise.jpg
+    caption: Dinner on the river
+  - image: /images/concierge-day/gal-9-camel.jpg
+    caption: Breakfast at the desert's edge
+builderJourneyMedinetImage: /images/concierge-day/builder-journey-medinet.jpg
+builderJourneyKarnakImage: /images/concierge-day/builder-journey-karnak.jpg
+builderSunsetNileImage: /images/concierge-day/builder-sunset-nile.jpg
+builderSunsetPicnicImage: /images/concierge-day/builder-sunset-picnic.jpg
+builderSunsetCustomImage: /images/concierge-day/builder-sunset-custom.jpg
 valueStackRows:
   - label: Your own licensed Egyptologist, all day
     price: €180

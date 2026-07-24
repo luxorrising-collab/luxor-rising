@@ -1,0 +1,170 @@
+heroEyebrow: Private villas & apartments
+heroTitle: |-
+  Stay somewhere
+  you won't find online.
+heroLead: >-
+  Hand-picked private villas and apartments in Luxor and on the Red Sea —
+  chosen by vibe, kept by hosts we know personally. Huge private terraces,
+  views worth waking up for, and internet fast enough to stay a season.
+heroCtaLabel: Request availability →
+heroImage: /images/villas/hero.jpg
+trustItems:
+  - Hand-picked, never listed in bulk
+  - Verified local hosts
+  - Fast, tested Wi-Fi
+  - Long stays welcome
+introEyebrow: How we choose
+introTitle: We pick by vibe, not by star rating.
+introLead: >-
+  Every place here has been walked through, sat in at sunrise and checked
+  again after dark. We don't offer anything we wouldn't stay in ourselves —
+  no flattering angles, no surprises at the door. If somewhere doesn't have
+  a view worth waking up for, it doesn't make the list.
+vibePoints:
+  - title: A view worth waking up for
+    description: >-
+      The sea at sunrise, the desert at sunset, the Valley of the Kings across
+      the water. The view is the first thing we judge and the last thing we
+      compromise on.
+  - title: Space to actually live
+    description: >-
+      Huge private terraces with room to roll out a mat, lift, skip, stretch or
+      simply eat outside. Modern European interiors, proper kitchens, and beds
+      you'll actually sleep in.
+  - title: A host you can call
+    description: >-
+      Every property is kept by a local host we know by name and have met in
+      person. One message and something gets fixed — no call centre, no lockbox
+      roulette.
+placesEyebrow: Two places
+placesTitle: The Red Sea, or the river.
+places:
+  - eyebrow: Hurghada · The Red Sea
+    title: Sunrise over the sea. Sunset over the desert.
+    description: >-
+      On the coast you get both horizons in a single day — the sun coming up
+      out of the Red Sea from your own terrace, and dropping behind the desert
+      mountains at your back. The apartments here are bright, modern and built
+      for the outdoors, with terraces big enough to become the main room.
+    image: /images/villas/hurghada-sea-dawn.jpg
+    points:
+      - Sunrise over the Red Sea from your own terrace
+      - Sunset over the desert mountains behind you
+      - Terraces sized for yoga, training or skipping rope
+      - Minutes from the water, and quiet at night
+  - eyebrow: Luxor · The Nile
+    title: The Valley of the Kings, from your own roof.
+    description: >-
+      In Luxor the terrace looks out over the Nile and, beyond it, the Theban
+      hills that hide the Valley of the Kings. Balloons drift across them at
+      first light. It is the view people fly across the world to see for an
+      hour — and here it comes with your morning coffee, every day.
+    image: /images/villas/luxor-nile-terrace.jpg
+    points:
+      - The Nile and the Theban hills in one view
+      - Balloons over the Valley of the Kings at dawn
+      - Huge private roof terraces
+      - Walk to the river, temples a short drive away
+featuresEyebrow: What every place has
+featuresTitle: Comfort you can live and work in.
+features:
+  - icon: ◴
+    title: Views first
+    description: >-
+      Sea, desert, Nile or the Theban hills — every place on this list earns it
+      on the view.
+  - icon: ❖
+    title: Huge private terraces
+    description: >-
+      Room for a yoga mat, weights, a skipping rope, a long table — or for
+      nobody at all.
+  - icon: ✦
+    title: Modern European interiors
+    description: >-
+      Clean, contemporary rooms and proper kitchens. Familiar comfort, not a
+      hotel corridor.
+  - icon: ⌁
+    title: Internet you can rely on
+    description: >-
+      Connections we've tested ourselves — fast enough to work, call and upload
+      all day.
+  - icon: ◈
+    title: Built for longer stays
+    description: >-
+      Weekly and monthly rates, laundry, a real kitchen, and space that doesn't
+      close in on you.
+  - icon: ◆
+    title: Verified local hosts
+    description: >-
+      Someone nearby who answers, knows the building, and fixes things the same
+      day.
+retreatEyebrow: A retreat, not a rental
+retreatTitle: Somewhere to slow all the way down.
+retreatLead: >-
+  Most people arrive for a week and start asking about a month. Wake with the
+  light, train on the terrace, work through the heat of the day, and watch the
+  sun go down behind the mountains. When you want the temples, the desert or
+  the water, your consigliere arranges it around you.
+retreatImage: /images/villas/retreat-terrace-sunset.jpg
+galleryEyebrow: Inside and out
+galleryTitle: A look around
+gallery:
+  - image: /images/villas/pool-aerial.jpg
+    caption: The pool from above
+  - image: /images/villas/terrace-fruit.jpg
+    caption: Breakfast on the terrace
+  - image: /images/villas/bedroom.jpg
+    caption: Rooms made for sleeping in
+  - image: /images/villas/living-room.jpg
+    caption: A living room, not a hotel room
+  - image: /images/villas/poolside-breakfast.jpg
+    caption: Poolside, first thing
+  - image: /images/villas/pool-dusk-palms.jpg
+    caption: The pool at dusk
+  - image: /images/villas/rooftop-staircase-sunset.jpg
+    caption: Up to the roof at sunset
+  - image: /images/villas/luxor-night-rooftop.jpg
+    caption: Luxor after dark, from the roof
+  - image: /images/villas/dawn-moon-rooftop.jpg
+    caption: A moon still up at dawn
+  - image: /images/villas/red-sea-sunrise-town.jpg
+    caption: Sunrise over the Red Sea
+  - image: /images/villas/nile-fields-sunset.jpg
+    caption: The Nile and the green fields at sunset
+  - image: /images/villas/desert-sunset-mountains.jpg
+    caption: Sunset behind the desert mountains
+stepsEyebrow: How it works
+stepsTitle: Tell us the vibe. We'll match the place.
+steps:
+  - title: Tell us what you're after
+    description: >-
+      Your dates, how many of you, sea or river, and the feeling you're looking
+      for. A sentence is enough to start.
+  - title: We send you two or three
+    description: >-
+      Not a search page — a short, honest shortlist with real photographs, real
+      rates, and what each place is genuinely like to stay in.
+  - title: Meet your host, move in
+    description: >-
+      We introduce you to the host and agree the terms directly. Your
+      consigliere stays on hand for anything you need while you're here.
+formEyebrow: Request availability
+formTitle: Tell us where and when
+formLead: >-
+  Send us your dates and the kind of place you're imagining. We come back
+  within 24 hours with what's free, what it costs, and honest notes on each
+  one — no obligation, no automated quote.
+formNote: >-
+  We reply within 24 hours. No spam, no selling your details. By sending you
+  agree to our privacy policy.
+closerEyebrow: Ready when you are
+closerTitle: Come for a week. Stay for the season.
+closerText: >-
+  Tell us your dates and the feeling you're after, and we'll show you the
+  places we'd stay in ourselves — with the host's name attached.
+metaTitle: Private Villas & Apartments in Luxor and Hurghada — Hand-Picked
+metaDescription: >-
+  Hand-picked private villas and apartments in Luxor and Hurghada. Huge
+  private terraces, Nile and Red Sea views, modern European interiors and
+  fast, tested Wi-Fi — made for retreats and longer stays, kept by verified
+  local hosts.

@@ -894,6 +894,89 @@ export default config({
       },
     }),
 
+    privateVillasPage: singleton({
+      label: "Private Villas page",
+      path: "content/private-villas-page/",
+      schema: {
+        heroEyebrow: fields.text({ label: "Hero eyebrow" }),
+        heroTitle: fields.text({ label: "Hero title", multiline: true }),
+        heroLead: fields.text({ label: "Hero lead", multiline: true }),
+        heroCtaLabel: fields.text({ label: "Hero CTA label" }),
+        heroImage: fields.image({ label: "Hero background image", directory: "public/images/villas", publicPath: "/images/villas/" }),
+        trustItems: fields.array(fields.text({ label: "Item" }), { label: "Trust strip items" }),
+
+        introEyebrow: fields.text({ label: "Intro eyebrow" }),
+        introTitle: fields.text({ label: "Intro title" }),
+        introLead: fields.text({ label: "Intro lead", multiline: true }),
+        vibePoints: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          { label: "How we pick (points)", itemLabel: (p) => p.fields.title.value || "Point" }
+        ),
+
+        placesEyebrow: fields.text({ label: "Places eyebrow" }),
+        placesTitle: fields.text({ label: "Places title" }),
+        places: fields.array(
+          fields.object({
+            eyebrow: fields.text({ label: "Eyebrow" }),
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+            image: fields.image({ label: "Image", directory: "public/images/villas", publicPath: "/images/villas/" }),
+            points: fields.array(fields.text({ label: "Point" }), { label: "Highlights" }),
+          }),
+          { label: "Places (Hurghada, Luxor)", itemLabel: (p) => p.fields.title.value || "Place" }
+        ),
+
+        featuresEyebrow: fields.text({ label: "Features eyebrow" }),
+        featuresTitle: fields.text({ label: "Features title" }),
+        features: fields.array(
+          fields.object({
+            icon: fields.text({ label: "Icon (character)" }),
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          { label: "What every place has", itemLabel: (p) => p.fields.title.value || "Feature" }
+        ),
+
+        retreatEyebrow: fields.text({ label: "Retreat band eyebrow" }),
+        retreatTitle: fields.text({ label: "Retreat band title" }),
+        retreatLead: fields.text({ label: "Retreat band lead", multiline: true }),
+        retreatImage: fields.image({ label: "Retreat band image", directory: "public/images/villas", publicPath: "/images/villas/" }),
+
+        galleryEyebrow: fields.text({ label: "Gallery eyebrow" }),
+        galleryTitle: fields.text({ label: "Gallery title" }),
+        gallery: fields.array(
+          fields.object({
+            image: fields.image({ label: "Image", directory: "public/images/villas", publicPath: "/images/villas/" }),
+            caption: fields.text({ label: "Caption" }),
+          }),
+          { label: "Gallery", itemLabel: (p) => p.fields.caption.value || "Image" }
+        ),
+
+        stepsEyebrow: fields.text({ label: "How it works eyebrow" }),
+        stepsTitle: fields.text({ label: "How it works title" }),
+        steps: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          { label: "Steps", itemLabel: (p) => p.fields.title.value || "Step" }
+        ),
+
+        formEyebrow: fields.text({ label: "Form eyebrow" }),
+        formTitle: fields.text({ label: "Form title" }),
+        formLead: fields.text({ label: "Form lead", multiline: true }),
+        formNote: fields.text({ label: "Form fine print", multiline: true }),
+
+        closerEyebrow: fields.text({ label: "Closer eyebrow" }),
+        closerTitle: fields.text({ label: "Closer title" }),
+        closerText: fields.text({ label: "Closer text", multiline: true }),
+        ...seoFields,
+      },
+    }),
+
     siteSettings: singleton({
       label: "Site settings",
       path: "content/site-settings/",

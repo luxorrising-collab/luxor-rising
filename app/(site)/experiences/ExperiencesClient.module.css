@@ -65,29 +65,29 @@
    Two columns on desktop (pitch + a 2x2 grid of real experiences), stacked on mobile. */
 .concierge {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(1.5rem, 4vw, 3rem);
+  grid-template-columns: 1fr 1.12fr;
+  gap: clamp(1.4rem, 3.5vw, 2.6rem);
   align-items: center;
   margin: 2.6rem 0 0.5rem;
-  padding: clamp(1.5rem, 4vw, 2.6rem);
+  padding: clamp(1.2rem, 3vw, 1.9rem);
   border: 1px solid var(--color-gold-soft);
   border-radius: 10px;
   background: var(--color-cream);
 }
 .conciergeText h2 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 2.6rem);
+  font-size: clamp(1.9rem, 4.6vw, 2.4rem);
   font-weight: 400;
   line-height: 1.05;
   color: var(--color-ink);
-  margin: 0.4rem 0 0.7rem;
+  margin: 0.3rem 0 0.55rem;
 }
 .conciergeText p {
   color: var(--color-espresso);
   max-width: 46ch;
-  margin: 0 0 1.3rem;
-  font-size: 1rem;
-  line-height: 1.6;
+  margin: 0 0 1.1rem;
+  font-size: 0.96rem;
+  line-height: 1.55;
 }
 .conciergeMeta {
   display: flex;
@@ -95,37 +95,100 @@
   flex-wrap: wrap;
   font-size: 0.85rem;
   color: var(--color-muted);
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.3rem;
 }
 .conciergeMeta b {
   color: var(--color-gold-deep);
 }
-.conciergeGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.55rem;
-}
-.conciergeTile {
+/* Skewed "journey" strip — a one-line visual of a concierge day's arc,
+   echoing the design-your-day progress bar. Each panel is skewed; the
+   image and label are counter-skewed so only the panel edges angle. */
+.journey {
   position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: 6px;
+  display: flex;
+  gap: 6px;
   overflow: hidden;
+  border-radius: 8px;
+  background: var(--color-cream-deep);
+  height: clamp(190px, 24vw, 240px);
 }
-.conciergeTile :global(img) {
+.jSeg {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 4px;
+  transform: skewX(-9deg);
+}
+/* pull the outer panels past the frame so the angled ends fill the corners */
+.jSeg:first-child {
+  margin-left: -34px;
+}
+.jSeg:last-child {
+  margin-right: -34px;
+}
+.jSegImg {
+  position: absolute;
+  inset: 0;
+  transform: skewX(9deg) scale(1.18);
+}
+.jSegImg :global(img) {
   object-fit: cover;
+  object-position: center;
+}
+.jSeg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(18, 11, 5, 0) 42%, rgba(18, 11, 5, 0.74) 100%);
+}
+.jSegLabel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  transform: skewX(9deg);
+  padding: 0.7rem 0.6rem 0.7rem 0.85rem;
+  color: #fff;
+}
+.jNum {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--color-gold-soft);
+  margin-bottom: 0.15rem;
+}
+.jName {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  line-height: 1.1;
+  color: #fff;
 }
 @media (max-width: 720px) {
   .concierge {
     grid-template-columns: 1fr;
-    gap: 1.4rem;
+    gap: 1.3rem;
   }
-  .conciergeGrid {
+  .journey {
     order: -1;
-  }
-  .conciergeTile {
-    aspect-ratio: 3 / 2;
+    height: 150px;
   }
   .conciergeText p {
     max-width: none;
+  }
+}
+@media (max-width: 520px) {
+  .jNum {
+    display: none;
+  }
+  .jName {
+    font-size: 0.72rem;
+  }
+  .jSeg:first-child {
+    margin-left: -22px;
+  }
+  .jSeg:last-child {
+    margin-right: -22px;
   }
 }

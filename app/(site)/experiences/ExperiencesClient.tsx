@@ -141,20 +141,27 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
             Design your day →
           </Link>
         </div>
-        <div className={styles.conciergeGrid} aria-hidden="true">
+        <div className={styles.journey} aria-hidden="true">
           {[
-            "karnak-at-dawn-hero",
-            "valley-of-the-kings-hero",
-            "felucca-sunset-sail-hero",
-            "private-desert-safari-hero",
-          ].map((n) => (
-            <div key={n} className={styles.conciergeTile}>
-              <Image
-                src={`/images/experiences/${n}.jpg`}
-                alt=""
-                fill
-                sizes="(max-width: 720px) 45vw, 22vw"
-              />
+            { n: "karnak-at-dawn-hero", label: "Dawn temple" },
+            { n: "valley-of-the-kings-hero", label: "The tombs" },
+            { n: "balloon-hero", label: "The sky" },
+            { n: "felucca-sunset-sail-hero", label: "The river" },
+            { n: "private-desert-safari-hero", label: "The desert" },
+          ].map((s, i) => (
+            <div key={s.n} className={styles.jSeg}>
+              <div className={styles.jSegImg}>
+                <Image
+                  src={`/images/experiences/${s.n}.jpg`}
+                  alt=""
+                  fill
+                  sizes="(max-width: 720px) 40vw, 16vw"
+                />
+              </div>
+              <div className={styles.jSegLabel}>
+                <span className={styles.jNum}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={styles.jName}>{s.label}</span>
+              </div>
             </div>
           ))}
         </div>

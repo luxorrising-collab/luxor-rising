@@ -275,11 +275,14 @@ export default async function ConciergeDayPage() {
           <Reveal className={styles.expGrid}>
             {expCards.map((e) => (
               <div className={styles.exp} key={e.h}>
-                <div className={styles.expIm}>
-                  <Image src={e.src} alt="" fill sizes="33vw" />
-                </div>
+                <Image src={e.src} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" />
+                <span className={styles.expLocal} aria-hidden>
+                  <span className={styles.expLocalDot} />
+                  Local host
+                </span>
+                {e.k && <span className={styles.expBadge}>{e.k}</span>}
+                <div className={styles.expScrim} />
                 <div className={styles.expTx}>
-                  {e.k && <div className={styles.expK}>{e.k}</div>}
                   <h4>{e.h}</h4>
                   <p>{e.p}</p>
                 </div>

@@ -261,62 +261,117 @@
   gap: 1.1rem;
   margin-top: 2.2rem;
 }
+/* image-forward experience cards with text overlaid at the foot */
 .exp {
-  border-radius: 6px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 14px 30px -22px rgba(42, 28, 16, 0.5);
-  transition: 0.3s;
-}
-.exp:hover {
-  transform: translateY(-4px);
-}
-.expIm {
   position: relative;
-  height: 232px;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 18px 40px -24px rgba(42, 28, 16, 0.6);
+  transition: transform 0.35s, box-shadow 0.35s;
+  isolation: isolate;
 }
-.expIm :global(img) {
+.exp :global(img) {
   object-fit: cover;
   object-position: center;
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+  z-index: 0;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-.exp:hover .expIm :global(img) {
-  transform: scale(1.06);
+.exp:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 30px 56px -22px rgba(42, 28, 16, 0.72);
+}
+.exp:hover :global(img) {
+  transform: scale(1.07);
+}
+.expScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 11, 4, 0) 28%,
+    rgba(18, 11, 4, 0.5) 58%,
+    rgba(18, 11, 4, 0.9) 100%
+  );
+}
+.expLocal {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: var(--color-gold);
+  padding: 0.34rem 0.68rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(42, 28, 16, 0.3);
+}
+.expLocalDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+.expBadge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(20, 12, 6, 0.55);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 0.3rem 0.62rem;
+  border-radius: 20px;
 }
 .expTx {
-  padding: 1.1rem 1.2rem 1.3rem;
-}
-.expK {
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-gold-deep);
+  position: relative;
+  z-index: 2;
+  padding: 1.2rem 1.3rem 1.4rem;
+  color: #fff;
 }
 .expTx h4 {
   font-family: var(--font-display);
-  font-size: 1.22rem;
+  font-size: 1.4rem;
   font-weight: 600;
-  color: var(--color-ink);
-  margin: 0.2rem 0 0.4rem;
+  color: #fff;
+  margin: 0 0 0.4rem;
+  line-height: 1.14;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 .expTx p {
-  font-size: 0.85rem;
-  opacity: 0.76;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.88);
 }
 .expAll {
   display: flex;
+  min-height: 360px;
   text-decoration: none;
   background: linear-gradient(160deg, var(--color-ink), #3a2818);
-  border-radius: 6px;
-  box-shadow: 0 14px 30px -22px rgba(42, 28, 16, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 18px 40px -24px rgba(42, 28, 16, 0.6);
   transition: 0.3s;
   align-items: center;
   justify-content: center;
 }
 .expAll:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 22px 42px -20px rgba(42, 28, 16, 0.6);
+  transform: translateY(-5px);
+  box-shadow: 0 30px 56px -22px rgba(42, 28, 16, 0.72);
 }
 .expAllIn {
   padding: 2.1rem 1.5rem;
@@ -589,13 +644,19 @@
 
 @media (max-width: 920px) {
   .cmp,
-  .grGrid,
-  .expGrid {
+  .grGrid {
     grid-template-columns: 1fr;
+  }
+  .expGrid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 @media (max-width: 560px) {
   .expGrid {
     grid-template-columns: 1fr;
+  }
+  .exp,
+  .expAll {
+    min-height: 320px;
   }
 }

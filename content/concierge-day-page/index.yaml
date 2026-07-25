@@ -26,9 +26,9 @@ sections:
     visible: false
   - section: socialProof
     visible: true
-  - section: guarantee
-    visible: true
   - section: scarcity
+    visible: true
+  - section: guarantee
     visible: true
   - section: gallery
     visible: true

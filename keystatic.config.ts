@@ -532,6 +532,19 @@ export default config({
           { label: "Hero background images (rotating)" }
         ),
 
+        // Section visibility — turn any of these off to hide that section on the page.
+        showContrast: fields.checkbox({ label: "Show: \"Why most people leave disappointed\" section", defaultValue: true }),
+        showDream: fields.checkbox({ label: "Show: \"What your day feels like\" band", defaultValue: true }),
+        showHowItWorks: fields.checkbox({ label: "Show: \"How it works\" section", defaultValue: true }),
+        showExperiences: fields.checkbox({ label: "Show: \"What your day can hold\" section", defaultValue: true }),
+        showValueStack: fields.checkbox({ label: "Show: value-stack comparison section", defaultValue: true }),
+        showSocialProof: fields.checkbox({ label: "Show: testimonials section", defaultValue: true }),
+        showGuarantee: fields.checkbox({ label: "Show: guarantee section", defaultValue: true }),
+        showScarcity: fields.checkbox({ label: "Show: scarcity section", defaultValue: true }),
+        showGallery: fields.checkbox({ label: "Show: gallery section", defaultValue: true }),
+        showFinalCta: fields.checkbox({ label: "Show: final call-to-action section", defaultValue: true }),
+        showFaq: fields.checkbox({ label: "Show: FAQ section", defaultValue: true }),
+
         contrastEyebrow: fields.text({ label: "Contrast section eyebrow" }),
         contrastTitle: fields.text({ label: "Contrast section title" }),
         contrastLead: fields.text({ label: "Contrast section lead", multiline: true }),

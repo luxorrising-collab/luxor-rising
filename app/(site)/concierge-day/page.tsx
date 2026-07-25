@@ -200,6 +200,7 @@ export default async function ConciergeDayPage() {
       </section>
 
       {/* CONTRAST */}
+      {page?.showContrast !== false && (
       <section>
         <Reveal className="wrap-narrow center">
           <span className="eyebrow">{page?.contrastEyebrow}</span>
@@ -229,8 +230,10 @@ export default async function ConciergeDayPage() {
           </Reveal>
         </div>
       </section>
+      )}
 
       {/* DREAM */}
+      {page?.showDream !== false && (
       <section className={styles.dream}>
         <Image src={dreamImg} alt="" fill sizes="100vw" />
         <div className={styles.dreamScrim} />
@@ -240,8 +243,10 @@ export default async function ConciergeDayPage() {
           <p>{page?.dreamText}</p>
         </Reveal>
       </section>
+      )}
 
       {/* HOW IT WORKS */}
+      {page?.showHowItWorks !== false && (
       <section id="how">
         <Reveal className="wrap-narrow center">
           <span className="eyebrow">How it works</span>
@@ -274,8 +279,10 @@ export default async function ConciergeDayPage() {
           </div>
         </Reveal>
       </section>
+      )}
 
       {/* EXPERIENCES */}
+      {page?.showExperiences !== false && (
       <section style={{ background: "var(--color-paper)" }}>
         <div className="wrap">
           <div className="center" style={{ marginBottom: ".6rem" }}>
@@ -313,6 +320,7 @@ export default async function ConciergeDayPage() {
           </Reveal>
         </div>
       </section>
+      )}
 
       <DayCountProvider>
       {/* CONFIGURATOR */}
@@ -343,6 +351,7 @@ export default async function ConciergeDayPage() {
       </section>
 
       {/* VALUE STACK */}
+      {page?.showValueStack !== false && (
       <section>
         <Reveal className="wrap-narrow center">
           <span className="eyebrow">What&apos;s handled for you</span>
@@ -371,9 +380,11 @@ export default async function ConciergeDayPage() {
           </Link>
         </div>
       </section>
+      )}
       </DayCountProvider>
 
       {/* SOCIAL PROOF */}
+      {page?.showSocialProof !== false && (
       <section style={{ background: "var(--color-paper)" }}>
         <Reveal className="wrap center">
           <span className="eyebrow">From recent guests</span>
@@ -409,8 +420,10 @@ export default async function ConciergeDayPage() {
           </p>
         </Reveal>
       </section>
+      )}
 
       {/* GUARANTEE */}
+      {page?.showGuarantee !== false && (
       <section className={styles.guarantee}>
         <Reveal className="wrap-narrow center">
           <div className={styles.seal}>The Luxor Rising promise</div>
@@ -439,8 +452,10 @@ export default async function ConciergeDayPage() {
           </div>
         </Reveal>
       </section>
+      )}
 
       {/* SCARCITY */}
+      {page?.showScarcity !== false && (
       <section className={styles.scarcity}>
         <div className="wrap-narrow">
           <div className={styles.scarBadge}>{page?.scarcityBadge}</div>
@@ -455,8 +470,10 @@ export default async function ConciergeDayPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* GALLERY */}
+      {page?.showGallery !== false && (
       <section>
         <div className="wrap center" style={{ marginBottom: ".5rem" }}>
           <span className="eyebrow">A glimpse of what waits</span>
@@ -466,8 +483,10 @@ export default async function ConciergeDayPage() {
           <GalleryMosaic items={galleryItems} />
         </div>
       </section>
+      )}
 
       {/* FINAL CTA */}
+      {page?.showFinalCta !== false && (
       <section className={styles.finalcta}>
         <Reveal className="wrap-narrow">
           <span className="eyebrow">{page?.finalEyebrow}</span>
@@ -485,8 +504,10 @@ export default async function ConciergeDayPage() {
           </p>
         </Reveal>
       </section>
+      )}
 
       {/* FAQ */}
+      {page?.showFaq !== false && (
       <section id="faq">
         <div className="wrap-narrow center">
           <span className="eyebrow">Good to know</span>
@@ -496,6 +517,7 @@ export default async function ConciergeDayPage() {
           <Faq items={FAQ_ITEMS} />
         </div>
       </section>
+      )}
 
       <MinimalFooter
         links={[

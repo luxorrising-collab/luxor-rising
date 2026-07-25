@@ -532,18 +532,52 @@ export default config({
           { label: "Hero background images (rotating)" }
         ),
 
-        // Section visibility — turn any of these off to hide that section on the page.
-        showContrast: fields.checkbox({ label: "Show: \"Why most people leave disappointed\" section", defaultValue: true }),
-        showDream: fields.checkbox({ label: "Show: \"What your day feels like\" band", defaultValue: true }),
-        showHowItWorks: fields.checkbox({ label: "Show: \"How it works\" section", defaultValue: true }),
-        showExperiences: fields.checkbox({ label: "Show: \"What your day can hold\" section", defaultValue: true }),
-        showValueStack: fields.checkbox({ label: "Show: value-stack comparison section", defaultValue: true }),
-        showSocialProof: fields.checkbox({ label: "Show: testimonials section", defaultValue: true }),
-        showGuarantee: fields.checkbox({ label: "Show: guarantee section", defaultValue: true }),
-        showScarcity: fields.checkbox({ label: "Show: scarcity section", defaultValue: true }),
-        showGallery: fields.checkbox({ label: "Show: gallery section", defaultValue: true }),
-        showFinalCta: fields.checkbox({ label: "Show: final call-to-action section", defaultValue: true }),
-        showFaq: fields.checkbox({ label: "Show: FAQ section", defaultValue: true }),
+        // Page sections — drag to reorder, and untick "Visible" to hide one.
+        // Sections render in this order; the hero and footer are fixed.
+        sections: fields.array(
+          fields.object({
+            section: fields.select({
+              label: "Section",
+              options: [
+                { label: "Why most people leave disappointed", value: "contrast" },
+                { label: "What your day feels like (band)", value: "dream" },
+                { label: "How it works", value: "howItWorks" },
+                { label: "What your day can hold", value: "experiences" },
+                { label: "Design your day (builder)", value: "builder" },
+                { label: "Value comparison", value: "valueStack" },
+                { label: "Testimonials", value: "socialProof" },
+                { label: "The Luxor Rising promise", value: "guarantee" },
+                { label: "Scarcity", value: "scarcity" },
+                { label: "Gallery", value: "gallery" },
+                { label: "Final call to action", value: "finalCta" },
+                { label: "FAQ", value: "faq" },
+              ],
+              defaultValue: "contrast",
+            }),
+            visible: fields.checkbox({ label: "Visible", defaultValue: true }),
+          }),
+          {
+            label: "Page sections (drag to reorder, untick to hide)",
+            itemLabel: (p) => {
+              const labels: Record<string, string> = {
+                contrast: "Why most people leave disappointed",
+                dream: "What your day feels like",
+                howItWorks: "How it works",
+                experiences: "What your day can hold",
+                builder: "Design your day (builder)",
+                valueStack: "Value comparison",
+                socialProof: "Testimonials",
+                guarantee: "The Luxor Rising promise",
+                scarcity: "Scarcity",
+                gallery: "Gallery",
+                finalCta: "Final call to action",
+                faq: "FAQ",
+              };
+              const name = labels[p.fields.section.value] || p.fields.section.value;
+              return p.fields.visible.value ? name : `${name} — hidden`;
+            },
+          }
+        ),
 
         contrastEyebrow: fields.text({ label: "Contrast section eyebrow" }),
         contrastTitle: fields.text({ label: "Contrast section title" }),

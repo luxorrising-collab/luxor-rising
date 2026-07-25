@@ -11,17 +11,31 @@ heroImages:
   - /images/concierge-day/hero-1-nile.jpg
   - /images/concierge-day/hero-2-westbank.jpg
   - /images/concierge-day/hero-3-karnak.jpg
-showContrast: true
-showDream: true
-showHowItWorks: true
-showExperiences: true
-showValueStack: true
-showSocialProof: true
-showGuarantee: true
-showScarcity: true
-showGallery: true
-showFinalCta: true
-showFaq: true
+sections:
+  - section: contrast
+    visible: true
+  - section: dream
+    visible: true
+  - section: howItWorks
+    visible: true
+  - section: experiences
+    visible: true
+  - section: builder
+    visible: true
+  - section: valueStack
+    visible: true
+  - section: socialProof
+    visible: true
+  - section: guarantee
+    visible: true
+  - section: scarcity
+    visible: true
+  - section: gallery
+    visible: true
+  - section: finalCta
+    visible: true
+  - section: faq
+    visible: true
 contrastEyebrow: Why most people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a queue.
 contrastLead: >-

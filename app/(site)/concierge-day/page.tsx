@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -91,6 +92,21 @@ const PROMISE_IMAGES = [
   "/images/experiences/camel-bedouin-breakfast-hero.jpg",
 ];
 
+const SECTION_FALLBACK = [
+  "contrast",
+  "dream",
+  "howItWorks",
+  "experiences",
+  "builder",
+  "valueStack",
+  "socialProof",
+  "guarantee",
+  "scarcity",
+  "gallery",
+  "finalCta",
+  "faq",
+];
+
 export default async function ConciergeDayPage() {
   const [page, pricingRules, experiences] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
@@ -105,7 +121,7 @@ export default async function ConciergeDayPage() {
   const priceBySlug = (slug: string) =>
     experiences.find((e) => e.slug === slug)?.entry.basePrice ?? 0;
   const named = (name: string, slug: string) => ({ name, price: priceBySlug(slug) });
-  // [day 1, day-2 additions, day-3 additions]
+  // [day 1, day-2 additions, day-3 additions, day-4 additions]
   const experiencePlan = [
     [
       named("Karnak at dawn", "karnak-at-dawn"),
@@ -162,6 +178,317 @@ export default async function ConciergeDayPage() {
     sunsetCustom: page?.builderSunsetCustomImage || undefined,
   };
 
+  // Section order + visibility come from Keystatic (drag to reorder there).
+  const orderedFromCms = (page?.sections ?? [])
+    .filter((s) => s.visible !== false && s.section)
+    .map((s) => s.section as string);
+  const orderedKeys = orderedFromCms.length > 0 ? orderedFromCms : SECTION_FALLBACK;
+
+  const sectionMap: Record<string, ReactNode> = {
+    contrast: (
+      <section key="contrast">
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">{page?.contrastEyebrow}</span>
+          <h2 className="display">{page?.contrastTitle}</h2>
+          <p className="lead" style={{ marginTop: "1rem" }}>
+            {page?.contrastLead}
+          </p>
+        </Reveal>
+        <div className="wrap">
+          <Reveal className={styles.cmp}>
+            <div className={`${styles.col} ${styles.bad}`}>
+              <h4>The usual way</h4>
+              <ul>
+                {(page?.badWayItems ?? []).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className={`${styles.col} ${styles.good}`}>
+              <h4>A Luxor Rising day</h4>
+              <ul>
+                {(page?.goodWayItems ?? []).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    ),
+    dream: (
+      <section key="dream" className={styles.dream}>
+        <Image src={dreamImg} alt="" fill sizes="100vw" />
+        <div className={styles.dreamScrim} />
+        <Reveal className={`wrap-narrow center ${styles.dreamContent}`}>
+          <span className="eyebrow light">What your day feels like</span>
+          <div className="divider-line" />
+          <p>{page?.dreamText}</p>
+        </Reveal>
+      </section>
+    ),
+    howItWorks: (
+      <section key="howItWorks" id="how">
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">How it works</span>
+          <h2 className="display">You design it. We arrange everything.</h2>
+          <div className="steps3">
+            <div className="s3">
+              <div className="num">01</div>
+              <h4>You design your day</h4>
+              <p>Tell us your date and shape your day — it takes a minute.</p>
+            </div>
+            <div className="s3">
+              <div className="num">02</div>
+              <h4>We arrange every detail</h4>
+              <p>
+                One consigliere handles every hour — entries timed before the crowds, private
+                transfer, and the temple guards who open doors a coach never gets. A licensed
+                Egyptologist joins you at the monuments too.
+              </p>
+            </div>
+            <div className="s3">
+              <div className="num">03</div>
+              <h4>You simply arrive</h4>
+              <p>Your consigliere is reachable all day. You experience Luxor; we handle the rest.</p>
+            </div>
+          </div>
+          <div className="disclosure">
+            Luxor Rising is your private concierge &amp; advisor. We arrange and coordinate;
+            experiences, guiding and transfers are delivered by our licensed local partners. Each
+            concierge day is a single day with no overnight stay.
+          </div>
+        </Reveal>
+      </section>
+    ),
+    experiences: (
+      <section key="experiences" style={{ background: "var(--color-paper)" }}>
+        <div className="wrap">
+          <div className="center" style={{ marginBottom: ".6rem" }}>
+            <span className="eyebrow">What your day can hold</span>
+            <h2 className="display">Arranged for you, delivered by locals</h2>
+            <p className="muted" style={{ maxWidth: "46ch", margin: ".5rem auto 0", fontSize: ".9rem" }}>
+              A sample of what your journey can hold across up to three days — tap any experience
+              to start designing your day.
+            </p>
+          </div>
+          <Reveal className={styles.expGrid}>
+            {expCards.map((e) => (
+              <div className={styles.exp} key={e.h}>
+                <div className={styles.expIm}>
+                  <Image src={e.src} alt="" fill sizes="33vw" />
+                </div>
+                <div className={styles.expTx}>
+                  {e.k && <div className={styles.expK}>{e.k}</div>}
+                  <h4>{e.h}</h4>
+                  <p>{e.p}</p>
+                </div>
+              </div>
+            ))}
+            <Link className={styles.expAll} href="#design">
+              <div className={styles.expAllIn}>
+                <div className="k">The full collection</div>
+                <h4>Explore all experiences</h4>
+                <p>
+                  Temples, tombs, the Nile, the desert and more — design your day and we&apos;ll
+                  build it from the full collection.
+                </p>
+                <span className={styles.expAllCta}>Design your day →</span>
+              </div>
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+    ),
+    builder: (
+      <section key="builder" id="design" style={{ background: "var(--color-paper)" }}>
+        <div className="wrap">
+          <div className="center" style={{ marginBottom: "2.2rem" }}>
+            <span className="eyebrow">Design your day</span>
+            <h2 className="display">Shape it, see the price, reserve.</h2>
+            <p className="lead" style={{ marginTop: ".6rem" }}>
+              A minute to build. The more days you spend with us, the more we include — and the
+              better the value.
+            </p>
+          </div>
+          <DayConfigurator
+            dayRate={pricingRules?.dayRate ?? 450}
+            volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
+              minDays: t.minDays ?? 0,
+              discountPercent: t.discountPercent ?? 0,
+            }))}
+            groupSupplement={(pricingRules?.groupSupplement ?? []).map((t) => ({
+              minGuests: t.minGuests ?? 0,
+              extraPerDay: t.extraPerDay ?? 0,
+            }))}
+            depositPercent={pricingRules?.depositPercent ?? 30}
+            images={builderImages}
+          />
+        </div>
+      </section>
+    ),
+    valueStack: (
+      <section key="valueStack">
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">What&apos;s handled for you</span>
+          <h2 className="display">
+            A day that would cost you far more to assemble — if you even could.
+          </h2>
+          <p className="lead" style={{ marginTop: ".7rem" }}>
+            Booked piece by piece — real prices from our own single experiences — a private
+            journey like this adds up fast, and that&apos;s before the hours of planning, the
+            language, and knowing who to trust. Choose how many days below and see it for yourself.
+          </p>
+        </Reveal>
+        <ValueStack
+          dayRate={pricingRules?.dayRate ?? 450}
+          volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
+            minDays: t.minDays ?? 0,
+            discountPercent: t.discountPercent ?? 0,
+          }))}
+          experiencePlan={experiencePlan}
+          perDayServices={perDayServices}
+          oneOffServices={oneOffServices}
+        />
+        <div className="center" style={{ marginTop: "2rem" }}>
+          <Link href="#design" className="btn btn-primary btn-lg">
+            Design your day →
+          </Link>
+        </div>
+      </section>
+    ),
+    socialProof: (
+      <section key="socialProof" style={{ background: "var(--color-paper)" }}>
+        <Reveal className="wrap center">
+          <span className="eyebrow">From recent guests</span>
+          <h2 className="display">The day they remember most.</h2>
+          <div className="tposts">
+            <div className="tp">
+              <div className="st">★★★★★</div>
+              <blockquote>
+                &quot;We&apos;ve travelled a lot. This was the first time we felt like guests, not
+                tourists. Karnak at sunrise, alone, is something I&apos;ll never forget.&quot;
+              </blockquote>
+              <div className="who">— Lena &amp; Tomáš, Vienna · 3-day concierge</div>
+            </div>
+            <div className="tp">
+              <div className="st">★★★★★</div>
+              <blockquote>
+                &quot;I planned nothing and missed nothing. Our Egyptologist was extraordinary,
+                and the felucca at sunset was pure magic.&quot;
+              </blockquote>
+              <div className="who">— Marcus, London · Signature day</div>
+            </div>
+            <div className="tp">
+              <div className="st">★★★★★</div>
+              <blockquote>
+                &quot;Worth every euro. They handled a last-minute change without us even
+                noticing. We&apos;re already planning to come back through them.&quot;
+              </blockquote>
+              <div className="who">— Sophie, Munich · 2-day concierge</div>
+            </div>
+          </div>
+          <p className="muted" style={{ fontSize: ".74rem", marginTop: "1rem" }}>
+            Sample testimonials — to be replaced with real guest reviews.
+          </p>
+        </Reveal>
+      </section>
+    ),
+    guarantee: (
+      <section key="guarantee" className={styles.guarantee}>
+        <div className={styles.grBg} aria-hidden>
+          {PROMISE_IMAGES.map((src, i) => (
+            <span key={i} className={styles.grSlice} style={{ backgroundImage: `url('${src}')` }} />
+          ))}
+        </div>
+        <div className={styles.grScrim} />
+        <Reveal className={`wrap-narrow center ${styles.grInner}`}>
+          <div className={styles.seal}>The Luxor Rising promise</div>
+          <h2 className="display" style={{ marginTop: ".6rem" }}>
+            Your day, guaranteed — or we make it right.
+          </h2>
+          <div className={styles.grGrid}>
+            <div className={styles.gr}>
+              <h4>Cancel freely</h4>
+              <p>Plans change. Cancel up to 7 days before for a full refund — no questions, no fine print.</p>
+            </div>
+            <div className={styles.gr}>
+              <h4>Pay your way</h4>
+              <p>
+                Settle in full, or place a deposit to hold your date and pay the rest on the day.
+                Your spot is secured either way.
+              </p>
+            </div>
+            <div className={styles.gr}>
+              <h4>We make it right</h4>
+              <p>
+                If anything we promised isn&apos;t delivered, you don&apos;t pay for it — and your
+                consigliere fixes it on the spot. That&apos;s the whole point of us.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+    ),
+    scarcity: (
+      <section key="scarcity" className={styles.scarcity}>
+        <div className="wrap-narrow">
+          <div className={styles.scarBadge}>{page?.scarcityBadge}</div>
+          <h2 className="display">{page?.scarcityTitle}</h2>
+          <p className="lead" style={{ marginTop: ".9rem" }}>
+            {page?.scarcityText}
+          </p>
+          <div style={{ marginTop: "1.6rem" }}>
+            <Link href="#design" className="btn btn-primary btn-lg">
+              Check your date →
+            </Link>
+          </div>
+        </div>
+      </section>
+    ),
+    gallery: (
+      <section key="gallery">
+        <div className="wrap center" style={{ marginBottom: ".5rem" }}>
+          <span className="eyebrow">A glimpse of what waits</span>
+          <h2 className="display">Moments from a Luxor Rising day</h2>
+        </div>
+        <div className="wrap">
+          <GalleryMosaic items={galleryItems} />
+        </div>
+      </section>
+    ),
+    finalCta: (
+      <section key="finalCta" className={styles.finalcta}>
+        <Reveal className="wrap-narrow">
+          <span className="eyebrow">{page?.finalEyebrow}</span>
+          <h2 className="display">{page?.finalTitle}</h2>
+          <p className="lead" style={{ marginTop: ".8rem" }}>
+            {page?.finalText}
+          </p>
+          <div style={{ marginTop: "1.8rem" }}>
+            <Link href="#design" className="btn btn-primary btn-lg">
+              Design your day →
+            </Link>
+          </div>
+          <p className="muted" style={{ fontSize: ".8rem", marginTop: "1rem" }}>
+            7-day free cancellation · deposit or pay in full · a handful of days each week
+          </p>
+        </Reveal>
+      </section>
+    ),
+    faq: (
+      <section key="faq" id="faq">
+        <div className="wrap-narrow center">
+          <span className="eyebrow">Good to know</span>
+          <h2 className="display">Questions, answered</h2>
+        </div>
+        <div className="wrap-narrow" style={{ paddingTop: 0 }}>
+          <Faq items={FAQ_ITEMS} />
+        </div>
+      </section>
+    ),
+  };
+
   return (
     <>
       <Nav scrollAware={false} ctaHref="#design" ctaLabel="Design your day" />
@@ -212,331 +539,10 @@ export default async function ConciergeDayPage() {
         </div>
       </section>
 
-      {/* CONTRAST */}
-      {page?.showContrast !== false && (
-      <section>
-        <Reveal className="wrap-narrow center">
-          <span className="eyebrow">{page?.contrastEyebrow}</span>
-          <h2 className="display">{page?.contrastTitle}</h2>
-          <p className="lead" style={{ marginTop: "1rem" }}>
-            {page?.contrastLead}
-          </p>
-        </Reveal>
-        <div className="wrap">
-          <Reveal className={styles.cmp}>
-            <div className={`${styles.col} ${styles.bad}`}>
-              <h4>The usual way</h4>
-              <ul>
-                {(page?.badWayItems ?? []).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className={`${styles.col} ${styles.good}`}>
-              <h4>A Luxor Rising day</h4>
-              <ul>
-                {(page?.goodWayItems ?? []).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-      )}
-
-      {/* DREAM */}
-      {page?.showDream !== false && (
-      <section className={styles.dream}>
-        <Image src={dreamImg} alt="" fill sizes="100vw" />
-        <div className={styles.dreamScrim} />
-        <Reveal className={`wrap-narrow center ${styles.dreamContent}`}>
-          <span className="eyebrow light">What your day feels like</span>
-          <div className="divider-line" />
-          <p>{page?.dreamText}</p>
-        </Reveal>
-      </section>
-      )}
-
-      {/* HOW IT WORKS */}
-      {page?.showHowItWorks !== false && (
-      <section id="how">
-        <Reveal className="wrap-narrow center">
-          <span className="eyebrow">How it works</span>
-          <h2 className="display">You design it. We arrange everything.</h2>
-          <div className="steps3">
-            <div className="s3">
-              <div className="num">01</div>
-              <h4>You design your day</h4>
-              <p>Tell us your date and shape your day — it takes a minute.</p>
-            </div>
-            <div className="s3">
-              <div className="num">02</div>
-              <h4>We arrange every detail</h4>
-              <p>
-                One consigliere handles every hour — entries timed before the crowds, private
-                transfer, and the temple guards who open doors a coach never gets. A licensed
-                Egyptologist joins you at the monuments too.
-              </p>
-            </div>
-            <div className="s3">
-              <div className="num">03</div>
-              <h4>You simply arrive</h4>
-              <p>Your consigliere is reachable all day. You experience Luxor; we handle the rest.</p>
-            </div>
-          </div>
-          <div className="disclosure">
-            Luxor Rising is your private concierge &amp; advisor. We arrange and coordinate;
-            experiences, guiding and transfers are delivered by our licensed local partners. Each
-            concierge day is a single day with no overnight stay.
-          </div>
-        </Reveal>
-      </section>
-      )}
-
-      {/* EXPERIENCES */}
-      {page?.showExperiences !== false && (
-      <section style={{ background: "var(--color-paper)" }}>
-        <div className="wrap">
-          <div className="center" style={{ marginBottom: ".6rem" }}>
-            <span className="eyebrow">What your day can hold</span>
-            <h2 className="display">Arranged for you, delivered by locals</h2>
-            <p className="muted" style={{ maxWidth: "46ch", margin: ".5rem auto 0", fontSize: ".9rem" }}>
-              A sample of what your journey can hold across up to three days — tap any experience
-              to start designing your day.
-            </p>
-          </div>
-          <Reveal className={styles.expGrid}>
-            {expCards.map((e) => (
-              <div className={styles.exp} key={e.h}>
-                <div className={styles.expIm}>
-                  <Image src={e.src} alt="" fill sizes="33vw" />
-                </div>
-                <div className={styles.expTx}>
-                  {e.k && <div className={styles.expK}>{e.k}</div>}
-                  <h4>{e.h}</h4>
-                  <p>{e.p}</p>
-                </div>
-              </div>
-            ))}
-            <Link className={styles.expAll} href="#design">
-              <div className={styles.expAllIn}>
-                <div className="k">The full collection</div>
-                <h4>Explore all experiences</h4>
-                <p>
-                  Temples, tombs, the Nile, the desert and more — design your day and we&apos;ll
-                  build it from the full collection.
-                </p>
-                <span className={styles.expAllCta}>Design your day →</span>
-              </div>
-            </Link>
-          </Reveal>
-        </div>
-      </section>
-      )}
-
-      <DayCountProvider>
-      {/* CONFIGURATOR */}
-      <section id="design" style={{ background: "var(--color-paper)" }}>
-        <div className="wrap">
-          <div className="center" style={{ marginBottom: "2.2rem" }}>
-            <span className="eyebrow">Design your day</span>
-            <h2 className="display">Shape it, see the price, reserve.</h2>
-            <p className="lead" style={{ marginTop: ".6rem" }}>
-              A minute to build. The more days you spend with us, the more we include — and the
-              better the value.
-            </p>
-          </div>
-          <DayConfigurator
-            dayRate={pricingRules?.dayRate ?? 450}
-            volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
-              minDays: t.minDays ?? 0,
-              discountPercent: t.discountPercent ?? 0,
-            }))}
-            groupSupplement={(pricingRules?.groupSupplement ?? []).map((t) => ({
-              minGuests: t.minGuests ?? 0,
-              extraPerDay: t.extraPerDay ?? 0,
-            }))}
-            depositPercent={pricingRules?.depositPercent ?? 30}
-            images={builderImages}
-          />
-        </div>
-      </section>
-
-      {/* VALUE STACK */}
-      {page?.showValueStack !== false && (
-      <section>
-        <Reveal className="wrap-narrow center">
-          <span className="eyebrow">What&apos;s handled for you</span>
-          <h2 className="display">
-            A day that would cost you far more to assemble — if you even could.
-          </h2>
-          <p className="lead" style={{ marginTop: ".7rem" }}>
-            Booked piece by piece — real prices from our own single experiences — a private
-            journey like this adds up fast, and that&apos;s before the hours of planning, the
-            language, and knowing who to trust. Choose how many days below and see it for yourself.
-          </p>
-        </Reveal>
-        <ValueStack
-          dayRate={pricingRules?.dayRate ?? 450}
-          volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
-            minDays: t.minDays ?? 0,
-            discountPercent: t.discountPercent ?? 0,
-          }))}
-          experiencePlan={experiencePlan}
-          perDayServices={perDayServices}
-          oneOffServices={oneOffServices}
-        />
-        <div className="center" style={{ marginTop: "2rem" }}>
-          <Link href="#design" className="btn btn-primary btn-lg">
-            Design your day →
-          </Link>
-        </div>
-      </section>
-      )}
-      </DayCountProvider>
-
-      {/* SOCIAL PROOF */}
-      {page?.showSocialProof !== false && (
-      <section style={{ background: "var(--color-paper)" }}>
-        <Reveal className="wrap center">
-          <span className="eyebrow">From recent guests</span>
-          <h2 className="display">The day they remember most.</h2>
-          <div className="tposts">
-            <div className="tp">
-              <div className="st">★★★★★</div>
-              <blockquote>
-                &quot;We&apos;ve travelled a lot. This was the first time we felt like guests, not
-                tourists. Karnak at sunrise, alone, is something I&apos;ll never forget.&quot;
-              </blockquote>
-              <div className="who">— Lena &amp; Tomáš, Vienna · 3-day concierge</div>
-            </div>
-            <div className="tp">
-              <div className="st">★★★★★</div>
-              <blockquote>
-                &quot;I planned nothing and missed nothing. Our Egyptologist was extraordinary,
-                and the felucca at sunset was pure magic.&quot;
-              </blockquote>
-              <div className="who">— Marcus, London · Signature day</div>
-            </div>
-            <div className="tp">
-              <div className="st">★★★★★</div>
-              <blockquote>
-                &quot;Worth every euro. They handled a last-minute change without us even
-                noticing. We&apos;re already planning to come back through them.&quot;
-              </blockquote>
-              <div className="who">— Sophie, Munich · 2-day concierge</div>
-            </div>
-          </div>
-          <p className="muted" style={{ fontSize: ".74rem", marginTop: "1rem" }}>
-            Sample testimonials — to be replaced with real guest reviews.
-          </p>
-        </Reveal>
-      </section>
-      )}
-
-      {/* GUARANTEE */}
-      {page?.showGuarantee !== false && (
-      <section className={styles.guarantee}>
-        <div className={styles.grBg} aria-hidden>
-          {PROMISE_IMAGES.map((src, i) => (
-            <span key={i} className={styles.grSlice} style={{ backgroundImage: `url('${src}')` }} />
-          ))}
-        </div>
-        <div className={styles.grScrim} />
-        <Reveal className={`wrap-narrow center ${styles.grInner}`}>
-          <div className={styles.seal}>The Luxor Rising promise</div>
-          <h2 className="display" style={{ marginTop: ".6rem" }}>
-            Your day, guaranteed — or we make it right.
-          </h2>
-          <div className={styles.grGrid}>
-            <div className={styles.gr}>
-              <h4>Cancel freely</h4>
-              <p>Plans change. Cancel up to 7 days before for a full refund — no questions, no fine print.</p>
-            </div>
-            <div className={styles.gr}>
-              <h4>Pay your way</h4>
-              <p>
-                Settle in full, or place a deposit to hold your date and pay the rest on the day.
-                Your spot is secured either way.
-              </p>
-            </div>
-            <div className={styles.gr}>
-              <h4>We make it right</h4>
-              <p>
-                If anything we promised isn&apos;t delivered, you don&apos;t pay for it — and your
-                consigliere fixes it on the spot. That&apos;s the whole point of us.
-              </p>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-      )}
-
-      {/* SCARCITY */}
-      {page?.showScarcity !== false && (
-      <section className={styles.scarcity}>
-        <div className="wrap-narrow">
-          <div className={styles.scarBadge}>{page?.scarcityBadge}</div>
-          <h2 className="display">{page?.scarcityTitle}</h2>
-          <p className="lead" style={{ marginTop: ".9rem" }}>
-            {page?.scarcityText}
-          </p>
-          <div style={{ marginTop: "1.6rem" }}>
-            <Link href="#design" className="btn btn-primary btn-lg">
-              Check your date →
-            </Link>
-          </div>
-        </div>
-      </section>
-      )}
-
-      {/* GALLERY */}
-      {page?.showGallery !== false && (
-      <section>
-        <div className="wrap center" style={{ marginBottom: ".5rem" }}>
-          <span className="eyebrow">A glimpse of what waits</span>
-          <h2 className="display">Moments from a Luxor Rising day</h2>
-        </div>
-        <div className="wrap">
-          <GalleryMosaic items={galleryItems} />
-        </div>
-      </section>
-      )}
-
-      {/* FINAL CTA */}
-      {page?.showFinalCta !== false && (
-      <section className={styles.finalcta}>
-        <Reveal className="wrap-narrow">
-          <span className="eyebrow">{page?.finalEyebrow}</span>
-          <h2 className="display">{page?.finalTitle}</h2>
-          <p className="lead" style={{ marginTop: ".8rem" }}>
-            {page?.finalText}
-          </p>
-          <div style={{ marginTop: "1.8rem" }}>
-            <Link href="#design" className="btn btn-primary btn-lg">
-              Design your day →
-            </Link>
-          </div>
-          <p className="muted" style={{ fontSize: ".8rem", marginTop: "1rem" }}>
-            7-day free cancellation · deposit or pay in full · a handful of days each week
-          </p>
-        </Reveal>
-      </section>
-      )}
-
-      {/* FAQ */}
-      {page?.showFaq !== false && (
-      <section id="faq">
-        <div className="wrap-narrow center">
-          <span className="eyebrow">Good to know</span>
-          <h2 className="display">Questions, answered</h2>
-        </div>
-        <div className="wrap-narrow" style={{ paddingTop: 0 }}>
-          <Faq items={FAQ_ITEMS} />
-        </div>
-      </section>
-      )}
+      {/* Sections render in the order set in Keystatic. The builder and value
+          stack both live inside one DayCountProvider so they share day count
+          wherever they sit in the order. */}
+      <DayCountProvider>{orderedKeys.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
 
       <MinimalFooter
         links={[

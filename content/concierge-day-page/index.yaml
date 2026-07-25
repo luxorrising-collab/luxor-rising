@@ -1,21 +1,21 @@
 heroEyebrow: Private concierge · Luxor & the West Bank
 heroTitle: The one day in Egypt you'll never stop talking about.
 heroSubtitle: >-
-  Your private consigliere arranges everything — the temples before the
-  crowds, your own Egyptologist, the Nile at golden hour. You bring
-  nothing but yourself.
+  Your private consigliere arranges everything — the temples before the crowds,
+  your own Egyptologist, the Nile at golden hour. You bring nothing but
+  yourself.
 heroTrustLine: 4.9 · 60+ private days arranged · for travellers already in Hurghada & Luxor
 startingPrice: 450
 priceNote: / day · ≤4 guests, private
 heroImages:
-  - /images/concierge-day/hero-1-nile.jpg
-  - /images/concierge-day/hero-2-westbank.jpg
-  - /images/concierge-day/hero-3-karnak.jpg
+  - /images/concierge-day/heroImages/0.jpg
+  - /images/concierge-day/heroImages/1.jpg
+  - /images/concierge-day/heroImages/2.jpg
 showContrast: true
 showDream: true
 showHowItWorks: true
 showExperiences: true
-showValueStack: true
+showValueStack: false
 showSocialProof: true
 showGuarantee: true
 showScarcity: true
@@ -25,10 +25,10 @@ showFaq: true
 contrastEyebrow: Why most people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a queue.
 contrastLead: >-
-  Most visitors meet Luxor through a packed coach, twenty rushed minutes
-  per temple, the midday heat, and a guide they share with forty
-  strangers. The real Egypt — the quiet, the colour, the awe — passes
-  them by. It doesn't have to be your story.
+  Most visitors meet Luxor through a packed coach, twenty rushed minutes per
+  temple, the midday heat, and a guide they share with forty strangers. The real
+  Egypt — the quiet, the colour, the awe — passes them by. It doesn't have to be
+  your story.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples at midday, shoulder to shoulder
@@ -42,74 +42,68 @@ goodWayItems:
   - Your own licensed Egyptologist, the story unfolded for you
   - A consigliere on call all day, and a promise it's right
 dreamText: >-
-  You wake before the heat. A private car is already waiting. At Karnak,
-  the great hall is almost empty — your Egyptologist unfolds three
-  thousand years as the first light moves between the columns. Lunch is
-  handled. By late afternoon the Nile is yours alone, a felucca tilting
-  into the gold. You took no decisions, stood in no queue, missed
-  nothing. You simply arrived — and Egypt did the rest.
-dreamImage: /images/concierge-day/dream.jpg
+  You wake before the heat. A private car is already waiting. At Karnak, the
+  great hall is almost empty — your Egyptologist unfolds three thousand years as
+  the first light moves between the columns. Lunch is handled. By late afternoon
+  the Nile is yours alone, a felucca tilting into the gold. You took no
+  decisions, stood in no queue, missed nothing. You simply arrived — and Egypt
+  did the rest.
+dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
-  - image: /images/concierge-day/exp-1-karnak.jpg
+  - image: /images/concierge-day/experiences/0/image.jpg
     title: Karnak at dawn
     description: The great hypostyle hall before the crowds arrive — arranged privately.
-    badge: ''
-  - image: /images/concierge-day/exp-2-valley.jpg
+  - image: /images/concierge-day/experiences/1/image.jpg
     title: Valley of the Kings
     description: The royal tombs, read for you by a licensed local guide.
-    badge: ''
-  - image: /images/concierge-day/exp-3-felucca.jpg
+  - image: /images/concierge-day/experiences/2/image.jpg
     title: A private felucca at golden hour
     description: The river to yourself as the light turns — hosted by our local boatman.
-    badge: ''
-  - image: /images/concierge-day/exp-4-desert.jpg
+  - image: /images/concierge-day/experiences/3/image.jpg
     title: A sunset picnic in the dunes
     description: A quiet table in the sand, set by our local host as the sun drops.
-    badge: ''
-  - image: /images/concierge-day/exp-5-medinet.jpg
+  - image: /images/concierge-day/experiences/4/image.jpg
     title: Medinet Habu
     description: >-
       Our insider temple — colour still on the walls, almost nobody there. Yours
       from day one.
-    badge: ''
-  - image: /images/concierge-day/exp-6-balloon.jpg
+  - image: /images/concierge-day/experiences/5/image.jpg
     title: Hot-air balloon at dawn
     description: Float over the West Bank at sunrise — we'll arrange it on request.
-    badge: ''
-  - image: /images/concierge-day/exp-7-deir-el-shelwit.jpg
+  - image: /images/concierge-day/experiences/6/image.jpg
     title: Deir el-Shelwit — the hidden temple of Isis
     description: >-
       A near-secret Greco-Roman temple, its ceilings still deep with colour. On
       us.
     badge: Signature bonus ★
-  - image: /images/concierge-day/exp-8-luxor-night.jpg
+  - image: /images/concierge-day/experiences/7/image.jpg
     title: A night in Luxor city
     description: The souk, the lantern-lit Corniche, and hosts who actually know the place.
     badge: After dark
 gallery:
-  - image: /images/concierge-day/gal-1-karnak.jpg
+  - image: /images/concierge-day/gallery/0/image.jpg
     caption: Karnak, before the crowds
-  - image: /images/concierge-day/gal-2-valley.jpg
+  - image: /images/concierge-day/gallery/1/image.jpg
     caption: Into the royal tombs
-  - image: /images/concierge-day/gal-3-stars.jpg
+  - image: /images/concierge-day/gallery/2/image.jpg
     caption: The desert sky, far from everything
-  - image: /images/concierge-day/gal-4-felucca.jpg
+  - image: /images/concierge-day/gallery/3/image.jpg
     caption: The Nile at golden hour
-  - image: /images/concierge-day/gal-5-dunes.jpg
+  - image: /images/concierge-day/gallery/4/image.jpg
     caption: A private table in the dunes
-  - image: /images/concierge-day/gal-6-medinet.jpg
+  - image: /images/concierge-day/gallery/5/image.jpg
     caption: Colour still on the walls
-  - image: /images/concierge-day/gal-7-balloon.jpg
+  - image: /images/concierge-day/gallery/6/image.jpg
     caption: Dawn over the West Bank
-  - image: /images/concierge-day/gal-8-cruise.jpg
+  - image: /images/concierge-day/gallery/7/image.jpg
     caption: Dinner on the river
-  - image: /images/concierge-day/gal-9-camel.jpg
+  - image: /images/concierge-day/gallery/8/image.jpg
     caption: Breakfast at the desert's edge
-builderJourneyMedinetImage: /images/concierge-day/builder-journey-medinet.jpg
-builderJourneyKarnakImage: /images/concierge-day/builder-journey-karnak.jpg
-builderSunsetNileImage: /images/concierge-day/builder-sunset-nile.jpg
-builderSunsetPicnicImage: /images/concierge-day/builder-sunset-picnic.jpg
-builderSunsetCustomImage: /images/concierge-day/builder-sunset-custom.jpg
+builderJourneyMedinetImage: /images/concierge-day/builderJourneyMedinetImage.jpg
+builderJourneyKarnakImage: /images/concierge-day/builderJourneyKarnakImage.jpg
+builderSunsetNileImage: /images/concierge-day/builderSunsetNileImage.jpg
+builderSunsetPicnicImage: /images/concierge-day/builderSunsetPicnicImage.jpg
+builderSunsetCustomImage: /images/concierge-day/builderSunsetCustomImage.jpg
 valueStackRows:
   - label: Your own licensed Egyptologist, all day
     price: €180
@@ -123,7 +117,7 @@ valueStackRows:
     price: €120
   - label: A consigliere on call from dawn to dusk
     price: €90
-  - label: 'Medinet Habu — our signature, from day one'
+  - label: Medinet Habu — our signature, from day one
     price: €90
   - label: 'At 3 days: a private photoshoot of your day'
     price: €250
@@ -131,46 +125,43 @@ valueStackTotal: €660+
 scarcityBadge: Why we keep it small
 scarcityTitle: A handful of private days each week. No more.
 scarcityText: >-
-  Every guest gets a real consigliere and a licensed local team for the
-  day — so we cap how many days we take. It keeps the experience
-  flawless, and it means popular dates go early. If your date matters,
-  claim it now.
+  Every guest gets a real consigliere and a licensed local team for the day — so
+  we cap how many days we take. It keeps the experience flawless, and it means
+  popular dates go early. If your date matters, claim it now.
 faq:
   - question: Is this really worth it over a cheap group tour?
     answer: >-
-      A group tour saves a little money and costs you the experience —
-      crowds, rushing, and a day you don't control. We give you the
-      temples before the crowds, your own expert, and zero decisions.
-      Most guests tell us it was the best day of their trip. That's what
-      you're paying for.
+      A group tour saves a little money and costs you the experience — crowds,
+      rushing, and a day you don't control. We give you the temples before the
+      crowds, your own expert, and zero decisions. Most guests tell us it was
+      the best day of their trip. That's what you're paying for.
   - question: Are you a travel agency?
     answer: >-
-      No. We're your private concierge and advisor. We arrange and
-      coordinate your day; the experiences, guiding and transfers are
-      delivered by our licensed local partners. Each day is a single day
-      with no overnight.
+      No. We're your private concierge and advisor. We arrange and coordinate
+      your day; the experiences, guiding and transfers are delivered by our
+      licensed local partners. Each day is a single day with no overnight.
   - question: Can I pay part on the day?
     answer: >-
-      Yes. Pay in full online, or place a deposit now to lock your date
-      and settle the rest on the day with your concierge.
+      Yes. Pay in full online, or place a deposit now to lock your date and
+      settle the rest on the day with your concierge.
   - question: What if my plans change?
     answer: >-
-      Cancel up to 7 days before for a full refund, no questions asked.
-      Closer to the day, talk to your consigliere — we'll do everything
-      we can to move it.
+      Cancel up to 7 days before for a full refund, no questions asked. Closer
+      to the day, talk to your consigliere — we'll do everything we can to move
+      it.
   - question: Who actually guides and drives?
     answer: >-
-      Licensed local specialists — a licensed Egyptologist for the
-      monuments, vetted drivers and hosts. We select, brief and
-      coordinate them, and stay reachable all day.
+      Licensed local specialists — a licensed Egyptologist for the monuments,
+      vetted drivers and hosts. We select, brief and coordinate them, and stay
+      reachable all day.
   - question: What if I want more than one day?
     answer: >-
       Add days in the configurator — the per-day price drops and extra
-      signatures and bonuses unlock (Medinet Habu, a private photoshoot,
-      a welcome gift and more). Each day stays a single day; we never
-      bundle an overnight.
+      signatures and bonuses unlock (Medinet Habu, a private photoshoot, a
+      welcome gift and more). Each day stays a single day; we never bundle an
+      overnight.
 finalEyebrow: Your date is waiting
 finalTitle: Give us one day. We'll give you the one you remember.
 finalText: >-
-  Private, effortless, and guaranteed — from €450. Pick your date before
-  it's taken.
+  Private, effortless, and guaranteed — from €450. Pick your date before it's
+  taken.

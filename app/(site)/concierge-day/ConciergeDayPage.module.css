@@ -444,15 +444,15 @@
   background-position: center;
 }
 .grSlice + .grSlice {
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 2px solid rgba(255, 255, 255, 0.28);
 }
 .grScrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, rgba(18, 11, 4, 0.82) 0%, rgba(18, 11, 4, 0.88) 50%, rgba(18, 11, 4, 0.92) 100%),
-    radial-gradient(ellipse at 50% 42%, rgba(18, 11, 4, 0.15) 0%, rgba(18, 11, 4, 0.55) 100%);
+    linear-gradient(180deg, rgba(18, 11, 4, 0.55) 0%, rgba(18, 11, 4, 0.6) 50%, rgba(18, 11, 4, 0.7) 100%),
+    radial-gradient(ellipse at 50% 46%, rgba(18, 11, 4, 0) 0%, rgba(18, 11, 4, 0.26) 100%);
 }
 .grInner {
   position: relative;
@@ -464,10 +464,11 @@
   color: var(--color-gold);
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
 }
 .guarantee h2 {
   color: #fff;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.6), 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 .grGrid {
   display: grid;

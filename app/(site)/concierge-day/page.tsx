@@ -78,6 +78,19 @@ const GALLERY = [
   { image: "/images/experiences/camel-bedouin-breakfast-hero.jpg", caption: "Breakfast at the desert's edge" },
 ];
 
+// High-quality image strip behind "The Luxor Rising promise" — echoes the
+// day builder's experience progress bar.
+const PROMISE_IMAGES = [
+  "/images/experiences/karnak-at-dawn-hero.jpg",
+  "/images/experiences/valley-of-the-kings-hero.jpg",
+  "/images/experiences/felucca-sunset-sail-hero.jpg",
+  "/images/experiences/medinet-habu-hero.jpg",
+  "/images/experiences/private-desert-safari-hero.jpg",
+  "/images/experiences/balloon-hero.jpg",
+  "/images/experiences/nile-dinner-cruise-hero.jpg",
+  "/images/experiences/camel-bedouin-breakfast-hero.jpg",
+];
+
 export default async function ConciergeDayPage() {
   const [page, pricingRules, experiences] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
@@ -425,7 +438,13 @@ export default async function ConciergeDayPage() {
       {/* GUARANTEE */}
       {page?.showGuarantee !== false && (
       <section className={styles.guarantee}>
-        <Reveal className="wrap-narrow center">
+        <div className={styles.grBg} aria-hidden>
+          {PROMISE_IMAGES.map((src, i) => (
+            <span key={i} className={styles.grSlice} style={{ backgroundImage: `url('${src}')` }} />
+          ))}
+        </div>
+        <div className={styles.grScrim} />
+        <Reveal className={`wrap-narrow center ${styles.grInner}`}>
           <div className={styles.seal}>The Luxor Rising promise</div>
           <h2 className="display" style={{ marginTop: ".6rem" }}>
             Your day, guaranteed — or we make it right.

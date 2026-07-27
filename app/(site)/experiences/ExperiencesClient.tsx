@@ -200,24 +200,22 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
       </Reveal>
 
       <div className={styles.filtersWrap}>
-        <FilterChips options={FILTERS} active={filter} onChange={setFilter} ariaLabel="Filter by type" />
-        <div
-          className={chip.row}
-          role="group"
-          aria-label="Filter by destination"
-          style={{ marginTop: ".6rem" }}
-        >
-          {LOCATIONS.map((l) => (
-            <button
-              key={l.value}
-              type="button"
-              className={`${chip.chip} ${locs.has(l.value) ? chip.on : ""}`}
-              onClick={() => toggleLoc(l.value)}
-              aria-pressed={locs.has(l.value)}
-            >
-              {l.label}
-            </button>
-          ))}
+        <div className={styles.filterBar}>
+          <FilterChips options={FILTERS} active={filter} onChange={setFilter} ariaLabel="Filter by type" />
+          <span className={styles.filterDivider} aria-hidden />
+          <div className={chip.row} role="group" aria-label="Filter by destination">
+            {LOCATIONS.map((l) => (
+              <button
+                key={l.value}
+                type="button"
+                className={`${chip.chip} ${locs.has(l.value) ? chip.on : ""}`}
+                onClick={() => toggleLoc(l.value)}
+                aria-pressed={locs.has(l.value)}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       <div className={styles.count}>

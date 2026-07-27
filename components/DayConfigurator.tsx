@@ -7,7 +7,7 @@ import StickyBar from "./StickyBar";
 import { useDayCount } from "./DayCount";
 
 type DayCount = 1 | 2 | 3 | 4;
-type Journey = "medinet" | "karnak";
+type Journey = "medinet" | "karnak" | "balloon";
 type Water = "nile" | "picnic" | "custom";
 type Pay = "full" | "deposit";
 
@@ -36,6 +36,11 @@ const JOURNEY: Record<
     temple: "Karnak at dawn — your initiation",
     companion: "Luxor Temple",
   },
+  balloon: {
+    name: "Eagle at Dawn",
+    temple: "Hot-air balloon at dawn — up over the West Bank like an eagle",
+    companion: "Then the day flows, decided with your consigliere",
+  },
 };
 const ALT: Record<
   Journey,
@@ -50,6 +55,11 @@ const ALT: Record<
     temple: "Medinet Habu — temple of Ramesses III",
     tsig: true,
     companion: "Hatshepsut Temple at Deir el-Bahari",
+  },
+  balloon: {
+    temple: "Karnak Temple at dawn",
+    tsig: false,
+    companion: "Medinet Habu — temple of Ramesses III",
   },
 };
 const EXPCOUNT: Record<DayCount, number> = { 1: 3, 2: 7, 3: 12, 4: 15 };
@@ -181,6 +191,7 @@ function itemClasses(it: PlanItem) {
 export type DayConfiguratorImages = {
   journeyMedinet?: string;
   journeyKarnak?: string;
+  journeyBalloon?: string;
   sunsetNile?: string;
   sunsetPicnic?: string;
   sunsetCustom?: string;
@@ -212,6 +223,7 @@ export default function DayConfigurator({
   const img = {
     journeyMedinet: images.journeyMedinet || "/images/desert-stargazing-dune.jpg",
     journeyKarnak: images.journeyKarnak || "/images/nile-felucca-table.jpg",
+    journeyBalloon: images.journeyBalloon || "/images/experiences/balloon-hero.jpg",
     sunsetNile: images.sunsetNile || "/images/nile-river-solo.jpg",
     sunsetPicnic: images.sunsetPicnic || "/images/desert-dinner-table.jpg",
     sunsetCustom: images.sunsetCustom || "/images/desert-stargazing-dune.jpg",
@@ -281,7 +293,7 @@ export default function DayConfigurator({
     }
     if (days >= 4) {
       pool.push("Valley of the Workers — Deir el-Medina");
-      pool.push("Hot-air balloon at dawn over the West Bank");
+      if (journey !== "balloon") pool.push("Hot-air balloon at dawn over the West Bank");
       bonus.push({ t: "Sailing lesson on the Nile", sig: true, bonus: true });
     }
     const handled: PlanItem[] = [];
@@ -519,7 +531,7 @@ export default function DayConfigurator({
             <div className={`${styles.pref} ${styles.prefJourney}`}>
               <div className={styles.prefQ}>First — where does your story begin?</div>
               <div className={styles.prefNote}>
-                Your first temple sets the tone of the whole journey — arranged privately, before the crowds.
+                Your opening sets the tone of the whole journey — arranged privately, before the crowds.
               </div>
               <div className={styles.journeyCards}>
                 <div
@@ -563,6 +575,28 @@ export default function DayConfigurator({
                     </div>
                     <span className={styles.jcPick}>
                       {journey === "karnak" ? "✓ This is your beginning" : "Begin here instead →"}
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className={`${styles.jcard} ${journey === "balloon" ? styles.sel : ""}`}
+                  onClick={() => setJourney("balloon")}
+                >
+                  <div className={styles.jcImg}>
+                    <Image src={img.journeyBalloon} alt="Hot-air balloon at dawn" fill sizes="240px" />
+                    <div className={styles.jcCap}>
+                      <span className={styles.jcEyebrow}>The Free Spirit</span>
+                      <h4>Eagle at Dawn</h4>
+                    </div>
+                  </div>
+                  <div className={styles.jcBody}>
+                    <p>Rise over the West Bank at first light — then go with the flow, and decide what follows together with your consigliere.</p>
+                    <div className={styles.jcPair}>
+                      <span className={styles.jcPairLbl}>then</span>
+                      <span className={styles.jcPairName}>You &amp; your consigliere</span>
+                    </div>
+                    <span className={styles.jcPick}>
+                      {journey === "balloon" ? "✓ This is your beginning" : "Begin here instead →"}
                     </span>
                   </div>
                 </div>

@@ -638,6 +638,11 @@ export default config({
           directory: "public/images/concierge-day",
           publicPath: "/images/concierge-day/",
         }),
+        builderJourneyBalloonImage: fields.image({
+          label: "Day builder — Balloon (Eagle at Dawn) journey image",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
         builderSunsetNileImage: fields.image({
           label: "Day builder — Nile sunset thumbnail",
           directory: "public/images/concierge-day",

@@ -173,6 +173,7 @@ export default async function ConciergeDayPage() {
   const builderImages = {
     journeyMedinet: page?.builderJourneyMedinetImage || undefined,
     journeyKarnak: page?.builderJourneyKarnakImage || undefined,
+    journeyBalloon: page?.builderJourneyBalloonImage || undefined,
     sunsetNile: page?.builderSunsetNileImage || undefined,
     sunsetPicnic: page?.builderSunsetPicnicImage || undefined,
     sunsetCustom: page?.builderSunsetCustomImage || undefined,

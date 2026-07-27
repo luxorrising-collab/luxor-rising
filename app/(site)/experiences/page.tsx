@@ -26,6 +26,13 @@ export const metadata: Metadata = {
 
 const BRAND = { "@type": "Brand", name: "Luxor Rising" };
 
+// Experiences on / starting from the Red Sea coast; everything else is Luxor.
+const HURGHADA_SLUGS = new Set([
+  "private-yacht-red-sea",
+  "red-sea-boat-snorkelling",
+  "hurghada-to-luxor-crossing",
+]);
+
 // The hand-curated signature / concierge-day products. CMS experiences are
 // appended to these at render time so the ItemList structured data always
 // reflects the full, live catalogue (better SEO + answer-engine coverage).
@@ -68,6 +75,8 @@ export default async function ExperiencesPage() {
         ? "with any day"
         : entry.pricePerPerson || entry.priceNote || undefined,
     ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
+    category: entry.category,
+    location: HURGHADA_SLUGS.has(slug) ? "hurghada" : "luxor",
   }));
 
   // Structured data: the full live catalogue (curated + every CMS product),

@@ -5,10 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import FilterChips from "@/components/FilterChips";
+import chip from "@/components/FilterChips.module.css";
 import ExperienceCard, { ExperienceCardProps } from "@/components/ExperienceCard";
 import styles from "./ExperiencesClient.module.css";
 
-type Item = ExperienceCardProps & { cat: string[] };
+type Item = ExperienceCardProps & { cat: string[]; loc?: string };
 
 export type CmsExperienceItem = Pick<
   ExperienceCardProps,
@@ -25,7 +26,7 @@ export type CmsExperienceItem = Pick<
   | "priceLabel"
   | "priceNote"
   | "ctaLabel"
->;
+> & { category?: string; location?: string };
 
 // Single experiences are now fully managed in Keystatic and injected via
 // `cmsItems` — including The Crossing and Reality Hunting. Nothing is
@@ -94,26 +95,57 @@ const FILTERS = [
   { value: "desert", label: "Desert & wild" },
 ];
 
-function matches(item: Item, filter: string) {
-  return filter === "all" || item.cat.includes(filter);
+const LOCATIONS = [
+  { value: "luxor", label: "Luxor" },
+  { value: "hurghada", label: "Hurghada" },
+];
+
+// Products are grouped by category so like sits with like.
+const CAT_ORDER: Record<string, number> = { temple: 0, sky: 1, desert: 2, signature: 3 };
+const catRank = (it: Item) => Math.min(...it.cat.map((c) => CAT_ORDER[c] ?? 99));
+
+function matches(item: Item, filter: string, locs: Set<string>) {
+  const catOk = filter === "all" || item.cat.includes(filter);
+  return catOk && locs.has(item.loc ?? "luxor");
 }
 
 export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExperienceItem[] }) {
   const [filter, setFilter] = useState("all");
+  // Both destinations on by default; you can toggle one off (never both).
+  const [locs, setLocs] = useState<Set<string>>(() => new Set(["luxor", "hurghada"]));
+  const toggleLoc = (v: string) =>
+    setLocs((prev) => {
+      const next = new Set(prev);
+      if (next.has(v)) {
+        if (next.size > 1) next.delete(v);
+      } else {
+        next.add(v);
+      }
+      return next;
+    });
 
   // Real, CMS-managed experiences are shown alongside the curated single-day
-  // lineup — new entries created in Keystatic land here automatically,
-  // without touching the hand-written cards above.
+  // lineup — new entries created in Keystatic land here automatically. They
+  // carry their real category + destination, and the whole list is sorted by
+  // category so like sits with like.
   const singleDayWithCms = useMemo<Item[]>(
-    () => [...cmsItems.map((item) => ({ ...item, cat: ["temple"] })), ...SINGLE_DAY],
+    () =>
+      [
+        ...cmsItems.map((item) => ({
+          ...item,
+          cat: [item.category || "temple"],
+          loc: item.location || "luxor",
+        })),
+        ...SINGLE_DAY,
+      ].sort((a, b) => catRank(a) - catRank(b)),
     [cmsItems]
   );
 
   const visibleSingleDay = useMemo(
-    () => singleDayWithCms.filter((i) => matches(i, filter)),
-    [singleDayWithCms, filter]
+    () => singleDayWithCms.filter((i) => matches(i, filter, locs)),
+    [singleDayWithCms, filter, locs]
   );
-  const visibleEnquiry = useMemo(() => ENQUIRY.filter((i) => matches(i, filter)), [filter]);
+  const visibleEnquiry = useMemo(() => ENQUIRY.filter((i) => matches(i, filter, locs)), [filter, locs]);
   const totalShown = visibleSingleDay.length + visibleEnquiry.length;
 
   return (
@@ -168,12 +200,28 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
       </Reveal>
 
       <div className={styles.filtersWrap}>
-        <FilterChips options={FILTERS} active={filter} onChange={setFilter} ariaLabel="Filter experiences" />
+        <FilterChips options={FILTERS} active={filter} onChange={setFilter} ariaLabel="Filter by type" />
+        <div
+          className={chip.row}
+          role="group"
+          aria-label="Filter by destination"
+          style={{ marginTop: ".6rem" }}
+        >
+          {LOCATIONS.map((l) => (
+            <button
+              key={l.value}
+              type="button"
+              className={`${chip.chip} ${locs.has(l.value) ? chip.on : ""}`}
+              onClick={() => toggleLoc(l.value)}
+              aria-pressed={locs.has(l.value)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div className={styles.count}>
-        {filter === "all"
-          ? `Showing all ${singleDayWithCms.length} single experiences`
-          : `Showing ${totalShown} experience${totalShown === 1 ? "" : "s"}`}
+        {`Showing ${totalShown} experience${totalShown === 1 ? "" : "s"}`}
       </div>
 
       {visibleSingleDay.length > 0 && (

@@ -27,13 +27,13 @@ const JOURNEY: Record<
   { name: string; temple: string; companion: string }
 > = {
   medinet: {
-    name: "Initiation to Power",
-    temple: "Medinet Habu — your initiation",
+    name: "Where it began",
+    temple: "Medinet Habu — your first temple",
     companion: "Hatshepsut Temple at Deir el-Bahari",
   },
   karnak: {
     name: "The Ancient Journey",
-    temple: "Karnak at dawn — your initiation",
+    temple: "Karnak at dawn — your first temple",
     companion: "Luxor Temple",
   },
   balloon: {
@@ -72,10 +72,10 @@ const STAGE: Record<DayCount, string> = {
 };
 const SIGB: Record<DayCount, number> = { 1: 0, 2: 0, 3: 2, 4: 3 };
 const IBMSG: Record<DayCount, string> = {
-  1: "A great first day. Add days to include more — and the value grows with each one.",
-  2: "Almost there — one more day unlocks your first signature bonuses.",
-  3: "The complete signature Luxor Rising experience — with 2 signature bonuses.",
-  4: "A slower, fourth day — more time to explore, and a sailing lesson on the Nile as your third signature bonus.",
+  1: "One day, done properly — three places, unhurried. Most guests who add a second day decide that after the first, not before.",
+  2: "Two days, still unhurried. The second one is mostly quieter places and more time in each.",
+  3: "Three days — the shape we'd choose ourselves, with two things added we think you'll remember.",
+  4: "Four days, deliberately slower. Fewer things per day, not more.",
 };
 const PRICE_TABLE: [string, number][] = [
   ["Medinet", 170],
@@ -283,10 +283,8 @@ export default function DayConfigurator({
         t: "Authentic local contacts — hosts, artisans & storytellers, introduced for you",
         local: true,
       });
-      pool.push("Private photoshoot of your journey");
-      bonus.push({ t: "Desert rally across the dunes", sig: true, bonus: true });
       bonus.push({
-        t: "Deir el-Shelwit — the hidden temple of Isis",
+        t: "Deir el-Shelwit — the hidden temple of Isis (€120), included",
         sig: true,
         bonus: true,
       });
@@ -294,7 +292,6 @@ export default function DayConfigurator({
     if (days >= 4) {
       pool.push("Valley of the Workers — Deir el-Medina");
       if (journey !== "balloon") pool.push("Hot-air balloon at dawn over the West Bank");
-      bonus.push({ t: "Sailing lesson on the Nile", sig: true, bonus: true });
     }
     const handled: PlanItem[] = [];
     if (hurg) handled.push("Hurghada hotel pickup & private desert crossing");
@@ -302,7 +299,13 @@ export default function DayConfigurator({
     handled.push("All monument entry tickets for " + gl);
     handled.push("Private, air-conditioned transfers throughout");
     handled.push("Every reservation, timing & fast-track entry, planned for you");
-    handled.push("Chilled water & cold towels through the day");
+    handled.push(
+      "Your day photographed on your own phone — you'll have them before dinner, not in six weeks"
+    );
+    handled.push("Chilled water & cold towels in the car — you won't be heroic about the heat");
+    handled.push(
+      "The guards know us: nobody follows you, sells you anything, or asks for a tip"
+    );
     if (days >= 4) handled.push("Upgraded VIP transfers on your unhurried days");
     handled.push("Your consigliere on WhatsApp — before you arrive & all day");
     handled.push("Free cancellation up to 7 days before");
@@ -541,7 +544,7 @@ export default function DayConfigurator({
                   <div className={styles.jcImg}>
                     <Image src={img.journeyMedinet} alt="Medinet Habu" fill sizes="240px" />
                     <div className={styles.jcCap}>
-                      <span className={styles.jcEyebrow}>The Initiation</span>
+                      <span className={styles.jcEyebrow}>The quiet one</span>
                       <h4>Medinet Habu</h4>
                     </div>
                   </div>
@@ -689,8 +692,7 @@ export default function DayConfigurator({
                 <div className={styles.sumJourney}>{JOURNEY[journey].name}</div>
               </div>
               <div className={styles.sumProof}>
-                <span className="s">★★★★★</span>
-                <span className="sr">4.9 · 60+ guests</span>
+                <span className="sr">60+ private days arranged</span>
               </div>
             </div>
 

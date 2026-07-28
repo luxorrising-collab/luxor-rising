@@ -479,6 +479,96 @@
 }
 
 /* guarantee */
+/* mechanism — the proof that the premium is real */
+.mech {
+  background: var(--color-cream);
+  border-top: 1px solid var(--color-cream-deep);
+  border-bottom: 1px solid var(--color-cream-deep);
+}
+.mechText {
+  margin-top: 1.6rem;
+  font-size: clamp(1.02rem, 1.7vw, 1.16rem);
+  line-height: 1.75;
+  color: var(--color-espresso);
+  border-left: 2px solid var(--color-gold);
+  padding-left: clamp(1rem, 2.5vw, 1.8rem);
+}
+.mechNote {
+  margin-top: 1.1rem;
+  padding-left: clamp(1rem, 2.5vw, 1.8rem);
+  font-size: 0.88rem;
+  color: var(--color-muted);
+}
+
+/* the shape of the day — an arc with hours */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-left: 1px solid var(--color-cream-deep);
+}
+.tlItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.6rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.85rem 0 0.85rem 1.4rem;
+}
+.tlItem::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 1.25rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+.tlTime {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tlLabel {
+  color: var(--color-espresso);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.tlNote {
+  margin-top: 1.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--color-cream-deep);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+  font-style: italic;
+}
+@media (max-width: 560px) {
+  .tlItem {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+    padding-left: 1.2rem;
+  }
+}
+
+/* threshold — the deeper read, deliberately far down the page */
+.threshold {
+  background: linear-gradient(180deg, var(--color-paper), var(--color-cream));
+  text-align: center;
+}
+
+/* longer journeys */
+.multiDay {
+  background: var(--color-cream);
+  border-top: 1px solid var(--color-cream-deep);
+  text-align: center;
+}
+
 /* promise — image-slice background (like the day builder's experience bar) */
 .guarantee {
   position: relative;

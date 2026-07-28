@@ -540,6 +540,8 @@ export default config({
               label: "Section",
               options: [
                 { label: "Why most people leave disappointed", value: "contrast" },
+                { label: "Why we can actually do this (mechanism)", value: "mechanism" },
+                { label: "The shape of the day (timeline)", value: "dayShape" },
                 { label: "What your day feels like (band)", value: "dream" },
                 { label: "How it works", value: "howItWorks" },
                 { label: "What your day can hold", value: "experiences" },
@@ -549,7 +551,9 @@ export default config({
                 { label: "The Luxor Rising promise", value: "guarantee" },
                 { label: "Scarcity", value: "scarcity" },
                 { label: "Gallery", value: "gallery" },
+                { label: "If you're standing at a threshold (deeper)", value: "threshold" },
                 { label: "Final call to action", value: "finalCta" },
+                { label: "Longer journeys (The Return)", value: "multiDay" },
                 { label: "FAQ", value: "faq" },
               ],
               defaultValue: "contrast",
@@ -561,6 +565,8 @@ export default config({
             itemLabel: (p) => {
               const labels: Record<string, string> = {
                 contrast: "Why most people leave disappointed",
+                mechanism: "Why we can actually do this",
+                dayShape: "The shape of the day",
                 dream: "What your day feels like",
                 howItWorks: "How it works",
                 experiences: "What your day can hold",
@@ -570,7 +576,9 @@ export default config({
                 guarantee: "The Luxor Rising promise",
                 scarcity: "Scarcity",
                 gallery: "Gallery",
+                threshold: "If you're standing at a threshold",
                 finalCta: "Final call to action",
+                multiDay: "Longer journeys",
                 faq: "FAQ",
               };
               const name = labels[p.fields.section.value] || p.fields.section.value;
@@ -588,6 +596,24 @@ export default config({
         goodWayItems: fields.array(fields.text({ label: "Item" }), {
           label: "\"A Luxor Rising day\" items",
         }),
+
+        // Mechanism — why the premium is real, not a claim.
+        mechanismEyebrow: fields.text({ label: "Mechanism eyebrow" }),
+        mechanismTitle: fields.text({ label: "Mechanism title" }),
+        mechanismText: fields.text({ label: "Mechanism text", multiline: true }),
+        mechanismNote: fields.text({ label: "Mechanism fine print", multiline: true }),
+
+        // The shape of the day — an arc with hours, not a list of stops.
+        dayShapeEyebrow: fields.text({ label: "Shape-of-day eyebrow" }),
+        dayShapeTitle: fields.text({ label: "Shape-of-day title" }),
+        dayShapeSteps: fields.array(
+          fields.object({
+            time: fields.text({ label: "Time (e.g. 05:40)" }),
+            label: fields.text({ label: "What happens" }),
+          }),
+          { label: "Shape of the day (timeline)", itemLabel: (p) => `${p.fields.time.value} — ${p.fields.label.value}` }
+        ),
+        dayShapeNote: fields.text({ label: "Shape-of-day closing line", multiline: true }),
 
         dreamText: fields.text({
           label: "\"What your day feels like\" text",
@@ -670,6 +696,18 @@ export default config({
           }
         ),
         valueStackTotal: fields.text({ label: "Value stack total" }),
+
+        // Second, deeper statement of the dream — deliberately far down the page.
+        thresholdEyebrow: fields.text({ label: "Threshold eyebrow" }),
+        thresholdTitle: fields.text({ label: "Threshold title" }),
+        thresholdText: fields.text({ label: "Threshold text", multiline: true }),
+
+        // Route to the longer journeys, where the deeper language belongs fully.
+        multiDayEyebrow: fields.text({ label: "Longer journeys eyebrow" }),
+        multiDayTitle: fields.text({ label: "Longer journeys title" }),
+        multiDayText: fields.text({ label: "Longer journeys text", multiline: true }),
+        multiDayCtaLabel: fields.text({ label: "Longer journeys CTA label" }),
+        multiDayCtaHref: fields.text({ label: "Longer journeys CTA link" }),
 
         scarcityBadge: fields.text({ label: "Scarcity badge" }),
         scarcityTitle: fields.text({ label: "Scarcity title" }),

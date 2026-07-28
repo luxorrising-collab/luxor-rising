@@ -94,16 +94,19 @@ const PROMISE_IMAGES = [
 
 const SECTION_FALLBACK = [
   "contrast",
+  "mechanism",
+  "dayShape",
   "dream",
   "howItWorks",
   "experiences",
   "builder",
   "valueStack",
-  "socialProof",
   "guarantee",
   "scarcity",
   "gallery",
+  "threshold",
   "finalCta",
+  "multiDay",
   "faq",
 ];
 
@@ -215,6 +218,64 @@ export default async function ConciergeDayPage() {
             </div>
           </Reveal>
         </div>
+      </section>
+    ),
+    mechanism: (
+      <section key="mechanism" className={styles.mech}>
+        <Reveal className="wrap-narrow">
+          <div className="center">
+            <span className="eyebrow">{page?.mechanismEyebrow}</span>
+            <h2 className="display">{page?.mechanismTitle}</h2>
+          </div>
+          <p className={styles.mechText}>{page?.mechanismText}</p>
+          {page?.mechanismNote && <p className={styles.mechNote}>{page.mechanismNote}</p>}
+        </Reveal>
+      </section>
+    ),
+    dayShape: (
+      <section key="dayShape" style={{ background: "var(--color-paper)" }}>
+        <Reveal className="wrap-narrow">
+          <div className="center" style={{ marginBottom: "2rem" }}>
+            <span className="eyebrow">{page?.dayShapeEyebrow}</span>
+            <h2 className="display">{page?.dayShapeTitle}</h2>
+          </div>
+          <ol className={styles.timeline}>
+            {(page?.dayShapeSteps ?? []).map((s, i) => (
+              <li className={styles.tlItem} key={s.time || i}>
+                <span className={styles.tlTime}>{s.time}</span>
+                <span className={styles.tlLabel}>{s.label}</span>
+              </li>
+            ))}
+          </ol>
+          {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
+        </Reveal>
+      </section>
+    ),
+    threshold: (
+      <section key="threshold" className={styles.threshold}>
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">{page?.thresholdEyebrow}</span>
+          <h2 className="display">{page?.thresholdTitle}</h2>
+          <p className="lead" style={{ marginTop: ".9rem" }}>
+            {page?.thresholdText}
+          </p>
+        </Reveal>
+      </section>
+    ),
+    multiDay: (
+      <section key="multiDay" className={styles.multiDay}>
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">{page?.multiDayEyebrow}</span>
+          <h2 className="display">{page?.multiDayTitle}</h2>
+          <p className="lead" style={{ marginTop: ".8rem" }}>
+            {page?.multiDayText}
+          </p>
+          <div style={{ marginTop: "1.6rem" }}>
+            <Link href={page?.multiDayCtaHref || "/private-guide"} className="btn btn-line btn-lg">
+              {page?.multiDayCtaLabel || "Begin a conversation →"}
+            </Link>
+          </div>
+        </Reveal>
       </section>
     ),
     dream: (
@@ -424,10 +485,11 @@ export default async function ConciergeDayPage() {
               </p>
             </div>
             <div className={styles.gr}>
-              <h4>We make it right</h4>
+              <h4>The first two hours are on us if we&apos;re wrong</h4>
               <p>
-                If anything we promised isn&apos;t delivered, you don&apos;t pay for it — and your
-                consigliere fixes it on the spot. That&apos;s the whole point of us.
+                If the first two hours don&apos;t feel different from any tour you&apos;ve been on
+                before, say so and the day is on us. No form, no argument — tell your consigliere
+                before lunch and we refund it in full.
               </p>
             </div>
           </div>

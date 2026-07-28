@@ -1,18 +1,24 @@
 heroEyebrow: Private concierge · Luxor & the West Bank
-heroTitle: The one day in Egypt you'll never stop talking about.
+heroTitle: You get one day at a place that waited three thousand years.
 heroSubtitle: >-
-  Your private consigliere arranges everything — the temples before the crowds,
-  your own Egyptologist, the Nile at golden hour. You bring nothing but
-  yourself.
-heroTrustLine: 4.9 · 60+ private days arranged · for travellers already in Hurghada & Luxor
+  You will probably stand here once. We put you inside the Valley at 6:15,
+  while the first coach is still an hour and a half away — with a licensed
+  Egyptologist beside you and not one decision to make.
+heroTrustLine: >-
+  60+ private days arranged in Luxor · run on the ground by Ahmed of Royal
+  Transfer
 startingPrice: 450
-priceNote: / day · ≤4 guests, private
+priceNote: per day · private, minimum 2 guests
 heroImages:
   - /images/concierge-day/heroImages/0.jpg
   - /images/concierge-day/heroImages/1.jpg
   - /images/concierge-day/heroImages/2.jpg
 sections:
   - section: contrast
+    visible: true
+  - section: mechanism
+    visible: true
+  - section: dayShape
     visible: true
   - section: dream
     visible: true
@@ -23,26 +29,33 @@ sections:
   - section: builder
     visible: true
   - section: valueStack
-    visible: false
-  - section: socialProof
-    visible: true
-  - section: scarcity
     visible: true
   - section: guarantee
     visible: true
+  - section: scarcity
+    visible: true
   - section: gallery
+    visible: true
+  - section: threshold
     visible: true
   - section: finalCta
     visible: true
+  - section: multiDay
+    visible: true
   - section: faq
     visible: true
+  # Hidden until we have real, named guest reviews. Do not switch on before then.
+  - section: socialProof
+    visible: false
 contrastEyebrow: Why most people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a queue.
 contrastLead: >-
   Most visitors meet Luxor through a packed coach, twenty rushed minutes per
   temple, the midday heat, and a guide they share with forty strangers. The real
-  Egypt — the quiet, the colour, the awe — passes them by. It doesn't have to be
-  your story.
+  Egypt — the quiet, the colour, the awe — passes them by. And here is the part
+  nobody says out loud: you flew four thousand kilometres to a place that has
+  stood for three and a half thousand years, and you will probably stand here
+  once. That is the whole argument for doing it properly.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples at midday, shoulder to shoulder
@@ -50,11 +63,44 @@ badWayItems:
   - A generic script, rushed and impersonal
   - You hope it's good. You find out on the day.
 goodWayItems:
-  - Private — just you and up to three guests
-  - Karnak at dawn, before the crowds arrive
-  - Every detail arranged; you make no decisions
-  - Your own licensed Egyptologist, the story unfolded for you
-  - A consigliere on call all day, and a promise it's right
+  - '05:40 — a private car at your door, while it is still dark'
+  - '06:15 — inside the first tomb, ninety minutes before the coaches'
+  - Three places, unhurried — not seven, ticked off
+  - Your licensed Egyptologist, named and briefed before you land
+  - One consigliere who owns the whole day — and a refund if the first two hours
+    don't feel different
+mechanismEyebrow: Why we can actually do this
+mechanismTitle: The whole difference is ninety minutes — and knowing which gate.
+mechanismText: >-
+  The Valley of the Kings opens at 6:00. The first coaches off the Hurghada road
+  park at about 8:40. We collect you at 5:40, use the side gate rather than the
+  main tourist entrance, and have your tickets in hand before we arrive — so you
+  are through and standing inside the first tomb around 6:15. Two hours later,
+  when the car parks fill, you are already having a long breakfast somewhere
+  else. That is not a perk we added to justify the price. It is the price.
+mechanismNote: >-
+  It only works because the people on the ground are ours: Ahmed has been
+  arranging private days in Luxor for [[POČET]] years, the drivers are vetted,
+  and the guards at the gates know us by name.
+dayShapeEyebrow: The shape of it
+dayShapeTitle: One day, three places, and six hours you are not asked for anything.
+dayShapeSteps:
+  - time: '05:40'
+    label: A private car at your door. Nobody speaks much yet.
+  - time: '06:15'
+    label: Through the gate and into the first tomb — empty.
+  - time: '08:30'
+    label: Hatshepsut as the light turns from grey to gold.
+  - time: '10:00'
+    label: Back for a long breakfast. The coaches arrive without you.
+  - time: '16:30'
+    label: Medinet Habu in the low sun, painted ceilings, nobody there.
+  - time: '18:10'
+    label: A felucca on the Nile, because the river is best last.
+dayShapeNote: >-
+  Three places in a day, not seven. You will be offered fewer things than anyone
+  else in Luxor will offer you — that is the product. The empty hours in the
+  middle are not a gap in the itinerary. They are what you are paying for.
 dreamText: >-
   You wake before the heat. A private car is already waiting. At Karnak, the
   great hall is almost empty — your Egyptologist unfolds three thousand years as
@@ -136,6 +182,25 @@ valueStackRows:
   - label: 'At 3 days: a private photoshoot of your day'
     price: €250
 valueStackTotal: €660+
+thresholdEyebrow: If you're standing at a threshold
+thresholdTitle: Some people come for Egypt. Some come for the pause before what's next.
+thresholdText: >-
+  We arrange a lot of these days for people between two chapters — a company
+  sold, a decision not yet made, a birthday that landed harder than expected. We
+  don't promise anything about that. A day can't fix a life. What it can do is
+  give you an early hour in a place built three thousand years ago by people who
+  were also trying to make something last, no schedule to keep, and someone
+  beside you who knows when not to talk. Most of the value is in the silence we
+  deliberately leave in the middle of the day.
+multiDayEyebrow: If one day isn't the question
+multiDayTitle: Some people aren't booking a day. They're booking a week to decide something.
+multiDayText: >-
+  The Return is seven days, written for one person, and we don't publish the
+  itinerary because there isn't one until we've spoken. If that is closer to why
+  you are reading this page than a single morning at Karnak, start a
+  conversation instead of a booking.
+multiDayCtaLabel: Begin a conversation →
+multiDayCtaHref: /private-guide
 scarcityBadge: Why we keep it small
 scarcityTitle: A handful of private days each week. No more.
 scarcityText: >-
@@ -149,6 +214,14 @@ faq:
       rushing, and a day you don't control. We give you the temples before the
       crowds, your own expert, and zero decisions. Most guests tell us it was
       the best day of their trip. That's what you're paying for.
+  - question: Why does this cost more than a tour?
+    answer: >-
+      Two reasons, and neither is a markup. The first is the hour — being inside
+      at 6:15 instead of 9:30 costs a private car, pre-bought tickets and people
+      on the ground who can do it. The second is that we pay our Egyptologists
+      roughly three times the going day rate in Luxor. That isn't charity: it's
+      how we get the ones who still love the material, instead of the ones
+      reciting the same script for the fourth time that day.
   - question: Are you a travel agency?
     answer: >-
       No. We're your private concierge and advisor. We arrange and coordinate

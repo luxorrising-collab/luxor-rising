@@ -100,8 +100,9 @@ const LOCATIONS = [
   { value: "hurghada", label: "Hurghada" },
 ];
 
-// Products are grouped by category so like sits with like.
-const CAT_ORDER: Record<string, number> = { temple: 0, sky: 1, desert: 2, signature: 3 };
+// Products are grouped by category so like sits with like — signature (our
+// flagship) leads, then temples, river, desert.
+const CAT_ORDER: Record<string, number> = { signature: 0, temple: 1, sky: 2, desert: 3 };
 const catRank = (it: Item) => Math.min(...it.cat.map((c) => CAT_ORDER[c] ?? 99));
 
 function matches(item: Item, filter: string, locs: Set<string>) {

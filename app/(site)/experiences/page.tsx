@@ -49,14 +49,12 @@ const CURATED_PRODUCTS = [
 
 export default async function ExperiencesPage() {
   const allExperiences = await reader.collections.experiences.all();
-  // Medinet Habu already has its own hand-curated "Signature" card below —
-  // skip it here so it isn't shown twice.
-  const activeExperiences = allExperiences.filter(
-    ({ slug, entry }) => entry.isActive && entry.title && slug !== "medinet-habu"
-  );
+  const activeExperiences = allExperiences.filter(({ entry }) => entry.isActive && entry.title);
 
   const cmsItems: CmsExperienceItem[] = activeExperiences.map(({ slug, entry }) => ({
-    href: `/experiences/${slug}`,
+    // Medinet Habu lives at the top level; link straight there rather than
+    // bouncing through the /experiences/[slug] redirect.
+    href: slug === "medinet-habu" ? "/medinet-habu" : `/experiences/${slug}`,
     src: entry.heroImage || "/images/medinet-habu-facade.jpg",
     alt: entry.name || entry.title,
     title: entry.title,

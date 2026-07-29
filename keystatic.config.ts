@@ -608,10 +608,13 @@ export default config({
         dayShapeTitle: fields.text({ label: "Shape-of-day title" }),
         dayShapeSteps: fields.array(
           fields.object({
-            time: fields.text({ label: "Time (e.g. 05:40)" }),
-            label: fields.text({ label: "What happens" }),
+            time: fields.text({
+              label: "Phase",
+              description: 'A moment in the day, not a clock time — e.g. "The quiet hour"',
+            }),
+            label: fields.text({ label: "What it feels like", multiline: true }),
           }),
-          { label: "Shape of the day (timeline)", itemLabel: (p) => `${p.fields.time.value} — ${p.fields.label.value}` }
+          { label: "The feel of the day", itemLabel: (p) => p.fields.time.value || "Phase" }
         ),
         dayShapeNote: fields.text({ label: "Shape-of-day closing line", multiline: true }),
 

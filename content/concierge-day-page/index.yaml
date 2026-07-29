@@ -1,8 +1,8 @@
 heroEyebrow: Private concierge · Luxor & the West Bank
 heroTitle: You get one day at a place that waited three thousand years.
 heroSubtitle: >-
-  You will probably stand here once. We put you inside the Valley at 6:15,
-  while the first coach is still an hour and a half away — with a licensed
+  You will probably stand here once. So we put you in each place at the hour it
+  is quietest — which is rarely the hour the coaches come — with a licensed
   Egyptologist beside you and not one decision to make.
 heroTrustLine: >-
   60+ private days arranged in Luxor · run on the ground by Ahmed of Royal
@@ -63,44 +63,55 @@ badWayItems:
   - A generic script, rushed and impersonal
   - You hope it's good. You find out on the day.
 goodWayItems:
-  - '05:40 — a private car at your door, while it is still dark'
-  - '06:15 — inside the first tomb, ninety minutes before the coaches'
+  - Coffee, the sunrise over the Nile, and a car that waits for you
+  - Each place at the hour it is actually quiet — which is rarely the obvious one
   - Three places, unhurried — not seven, ticked off
-  - Your licensed Egyptologist, named and briefed before you land
+  - Your licensed Egyptologist, named and booked before someone else takes them
   - One consigliere who owns the whole day — and a refund if the first two hours
     don't feel different
 mechanismEyebrow: Why we can actually do this
-mechanismTitle: The whole difference is ninety minutes — and knowing which gate.
+mechanismTitle: Every site has quiet hours. Almost nobody knows when they are.
 mechanismText: >-
-  The Valley of the Kings opens at 6:00. The first coaches off the Hurghada road
-  park at about 8:40. We collect you at 5:40, use the side gate rather than the
-  main tourist entrance, and have your tickets in hand before we arrive — so you
-  are through and standing inside the first tomb around 6:15. Two hours later,
-  when the car parks fill, you are already having a long breakfast somewhere
-  else. That is not a perk we added to justify the price. It is the price.
+  The quiet hour is not simply "early". It moves — with the day of the week, the
+  season, which cruise boats have just docked, which coach circuit is running
+  that morning. Ahmed has spent years watching it move, so he knows when each
+  site actually empties. Sometimes that is first light. Sometimes it is late
+  afternoon, when the light is better anyway. Occasionally it is the middle of
+  the day, when the heat clears a site completely and only a few people can take
+  it — and if you are one of them, you get somewhere extraordinary to yourself.
 mechanismNote: >-
-  It only works because the people on the ground are ours: Ahmed has been
-  arranging private days in Luxor for [[POČET]] years, the drivers are vetted,
-  and the guards at the gates know us by name.
-dayShapeEyebrow: The shape of it
-dayShapeTitle: One day, three places, and six hours you are not asked for anything.
+  Then he goes further than a schedule: a call ahead to the guards who know him,
+  and the Egyptologist you want booked before someone else takes them — not
+  whoever is left that morning. And the whole thing is built around when you are
+  at your best, not when a tour operator finds it convenient. That is what a
+  consigliere is for, and it is the difference you are paying for.
+dayShapeEyebrow: The feel of it
+dayShapeTitle: Not a schedule. A day with room in it.
 dayShapeSteps:
-  - time: '05:40'
-    label: A private car at your door. Nobody speaks much yet.
-  - time: '06:15'
-    label: Through the gate and into the first tomb — empty.
-  - time: '08:30'
-    label: Hatshepsut as the light turns from grey to gold.
-  - time: '10:00'
-    label: Back for a long breakfast. The coaches arrive without you.
-  - time: '16:30'
-    label: Medinet Habu in the low sun, painted ceilings, nobody there.
-  - time: '18:10'
-    label: A felucca on the Nile, because the river is best last.
+  - time: How it starts
+    label: >-
+      Coffee in your hand and the first light coming up over the Nile. Nobody
+      hurries you. The car is already waiting for whenever you are ready.
+  - time: The quiet hour
+    label: >-
+      You walk into the temple your consigliere chose for that particular day —
+      and there is almost nobody in it. Your Egyptologist reads the walls, then
+      knows when to stop talking.
+  - time: The long middle
+    label: >-
+      Nothing. Deliberately. A long breakfast, shade, the river — while everyone
+      else is queueing in the heat.
+  - time: When the light turns
+    label: >-
+      Back out as the colour comes into the stone, to a second place that is
+      quiet at exactly that hour.
+  - time: How it ends
+    label: >-
+      The Nile, unhurried, because the river is always best last.
 dayShapeNote: >-
   Three places in a day, not seven. You will be offered fewer things than anyone
   else in Luxor will offer you — that is the product. The empty hours in the
-  middle are not a gap in the itinerary. They are what you are paying for.
+  middle are not a gap in the plan. They are the plan.
 dreamText: >-
   You wake before the heat. A private car is already waiting. At Karnak, the
   great hall is almost empty — your Egyptologist unfolds three thousand years as

@@ -127,6 +127,7 @@ export default async function MedinetHabuPage() {
         bestTime={entry.bestTime}
         duration={entry.duration}
         glanceIncludes={entry.glanceIncludes}
+        takenCareOf={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
         highlights={entry.highlights.map((h) => ({ title: h.title, description: h.description }))}
         contentNode={entry.content.node}
         momentQuote={entry.momentQuote || undefined}
@@ -146,6 +147,7 @@ export default async function MedinetHabuPage() {
             }))}
             depositPercent={pricingRules?.depositPercent ?? 30}
             glanceIncludes={entry.glanceIncludes}
+            includeItems={entry.takenCareOf.map((t) => t.title)}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

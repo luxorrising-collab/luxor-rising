@@ -46,6 +46,8 @@ type ExperienceConfiguratorProps = {
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
   glanceIncludes?: string;
+  /** Preferred source for "what we arrange" — the product's own list. */
+  includeItems?: string[];
 };
 
 export default function ExperienceConfigurator({
@@ -59,6 +61,7 @@ export default function ExperienceConfigurator({
   ],
   depositPercent = 30,
   glanceIncludes,
+  includeItems,
 }: ExperienceConfiguratorProps) {
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
@@ -72,9 +75,11 @@ export default function ExperienceConfigurator({
   const deposit = Math.round((total * depositPercent) / 100);
 
   const includes = useMemo(() => {
+    if (includeItems?.length) return includeItems;
+    // Legacy: older products still describe this as a "·"-separated line.
     const parsed = parseIncludes(glanceIncludes);
     return parsed.length ? parsed : FALLBACK_INCLUDES;
-  }, [glanceIncludes]);
+  }, [includeItems, glanceIncludes]);
 
   useEffect(() => {
     if (dateInputRef.current) {

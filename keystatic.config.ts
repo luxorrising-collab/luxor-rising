@@ -131,9 +131,23 @@ export default config({
           description: 'e.g. "Dawn, before the crowds"',
         }),
         glanceIncludes: fields.text({
-          label: "\"Includes\" line",
-          description: 'e.g. "Includes private transfer · a certified Egyptologist on site..."',
+          label: "How the day feels (paragraph under the facts)",
+          multiline: true,
+          description:
+            "Describe the shape of the experience, not a list of inputs — the list below does that job.",
         }),
+        takenCareOf: fields.array(
+          fields.object({
+            title: fields.text({ label: "Item" }),
+            note: fields.text({ label: "Why it matters (optional)", multiline: true }),
+          }),
+          {
+            label: "What we take care of",
+            itemLabel: (p) => p.fields.title.value || "Item",
+            description:
+              "Lead with what nobody else can offer (the hour, the guards, the consigliere). Keep commodities like water last.",
+          }
+        ),
 
         // Body
         highlights: fields.array(

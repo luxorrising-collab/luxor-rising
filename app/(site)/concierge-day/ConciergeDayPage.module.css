@@ -254,6 +254,46 @@
   font-style: italic;
 }
 
+/* dayFeel — merged "what your day feels like" (image) + "the feel of it"
+   (phases). Image on one side, the day's phases as a timeline on the other. */
+.dfGrid {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr;
+  gap: clamp(1.8rem, 4vw, 3.6rem);
+  align-items: center;
+}
+.dfImg {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-cream-deep);
+}
+.dfImg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.dfBody :global(.eyebrow) {
+  color: var(--color-gold-deep);
+}
+.dfBody h2 {
+  margin: 0.3rem 0 1.4rem;
+}
+/* in the narrower column, stack each phase's label under its heading */
+.dfBody .tlItem {
+  grid-template-columns: 1fr;
+  gap: 0.2rem;
+}
+@media (max-width: 860px) {
+  .dfGrid {
+    grid-template-columns: 1fr;
+  }
+  .dfImg {
+    aspect-ratio: 16 / 10;
+    max-height: 360px;
+  }
+}
+
 /* experiences grid */
 .expGrid {
   display: grid;

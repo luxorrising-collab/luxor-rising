@@ -5,10 +5,10 @@ import Markdoc, { Tag, type Node } from "@markdoc/markdoc";
 import Reveal from "./Reveal";
 import Faq from "./Faq";
 import Gallery from "./Gallery";
+import ConsigliereSection from "./ConsigliereSection";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
-const CONS_ICONS = ["✦", "❖", "◆", "✧", "◈", "❋"];
 
 export type ExperienceHighlight = { title: string; description: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
@@ -245,67 +245,18 @@ export default function ExperienceTemplate({
         </section>
       )}
 
-      {/* WHO RUNS YOUR DAY — full-bleed portrait of the consigliere with the
-          intro + how-it-works flow as an overlay, then the points below. This
-          full-width image is the visual break after the gallery. */}
+      {/* WHO RUNS YOUR DAY — full-bleed consigliere cover, shared with the
+          concierge-day page. The full-width image is the break after the gallery. */}
       {consigliereTitle && (
-        <>
-          <section className={styles.consCover}>
-            {consigliereImage && (
-              <div className={styles.consCoverBg}>
-                <Image src={consigliereImage} alt={consigliereEyebrow || ""} fill sizes="100vw" />
-              </div>
-            )}
-            <div className={styles.consCoverScrim} />
-            <div className={`wrap ${styles.consCoverIn}`}>
-              <span className="eyebrow">{consigliereEyebrow}</span>
-              <h2 className="display">{consigliereTitle}</h2>
-              {consigliereLead && <p className={styles.consCoverLead}>{consigliereLead}</p>}
-              {howItWorksSteps.length > 0 && (
-                <>
-                  {(howItWorksEyebrow || howItWorksTitle) && (
-                    <div className={styles.flowLabel}>{howItWorksTitle || howItWorksEyebrow}</div>
-                  )}
-                  <ol className={styles.flow}>
-                    {howItWorksSteps.map((s, i) => (
-                      <li key={s.title || i}>
-                        <span className={styles.flowNum}>{String(i + 1).padStart(2, "0")}</span>
-                        <span className={styles.flowText}>
-                          <b>{s.title}.</b> {s.description}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                </>
-              )}
-            </div>
-          </section>
-
-          {(consiglierePoints.length > 0 || disclosureText) && (
-            <section className={styles.consigliere}>
-              <div className="wrap">
-                {consiglierePoints.length > 0 && (
-                  <Reveal className={styles.consGrid}>
-                    {consiglierePoints.map((p, i) => (
-                      <div className={styles.consItem} key={p.title || i}>
-                        <span className={styles.consIcon} aria-hidden>
-                          {CONS_ICONS[i % CONS_ICONS.length]}
-                        </span>
-                        <h4>{p.title}</h4>
-                        <p>{p.description}</p>
-                      </div>
-                    ))}
-                  </Reveal>
-                )}
-                {disclosureText && (
-                  <div className="disclosure" style={{ marginTop: consiglierePoints.length > 0 ? "2.4rem" : 0 }}>
-                    {disclosureText}
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
-        </>
+        <ConsigliereSection
+          eyebrow={consigliereEyebrow}
+          title={consigliereTitle}
+          lead={consigliereLead}
+          image={consigliereImage}
+          howItWorks={{ label: howItWorksTitle || howItWorksEyebrow, steps: howItWorksSteps }}
+          points={consiglierePoints}
+          disclosure={disclosureText}
+        />
       )}
 
       {/* BOOK / CONFIGURATOR */}

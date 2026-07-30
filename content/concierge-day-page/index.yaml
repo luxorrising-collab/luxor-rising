@@ -18,17 +18,20 @@ sections:
     visible: true
   - section: mechanism
     visible: true
-  - section: dayShape
-    visible: true
-  - section: dream
-    visible: true
-  - section: howItWorks
+  # Merged "What your day feels like" + "The feel of it" into one graphic section.
+  - section: dayFeel
     visible: true
   - section: experiences
+    visible: true
+  # Who runs your day — shared consigliere cover, with how-it-works folded in.
+  - section: consigliere
     visible: true
   - section: builder
     visible: true
   - section: valueStack
+    visible: true
+  # Sample reviews shown for layout; no structured data until reviewsVerified is on.
+  - section: socialProof
     visible: true
   - section: guarantee
     visible: true
@@ -44,9 +47,6 @@ sections:
     visible: true
   - section: faq
     visible: true
-  # Hidden until we have real, named guest reviews. Do not switch on before then.
-  - section: socialProof
-    visible: false
 contrastEyebrow: Why most people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a queue.
 contrastLead: >-

@@ -9,6 +9,7 @@ import Faq from "@/components/Faq";
 import DayConfigurator from "@/components/DayConfigurator";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
+import ConsigliereSection from "@/components/ConsigliereSection";
 import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./ConciergeDayPage.module.css";
@@ -95,12 +96,12 @@ const PROMISE_IMAGES = [
 const SECTION_FALLBACK = [
   "contrast",
   "mechanism",
-  "dayShape",
-  "dream",
-  "howItWorks",
+  "dayFeel",
   "experiences",
+  "consigliere",
   "builder",
   "valueStack",
+  "socialProof",
   "guarantee",
   "scarcity",
   "gallery",
@@ -111,13 +112,20 @@ const SECTION_FALLBACK = [
 ];
 
 export default async function ConciergeDayPage() {
-  const [page, pricingRules, experiences] = await Promise.all([
+  const [page, pricingRules, experiences, product] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
     reader.singletons.pricingRules.read(),
     reader.collections.experiences.all(),
+    reader.singletons.productPageSettings.read(),
   ]);
 
   const FAQ_ITEMS = (page?.faq ?? []).map((f) => ({ q: f.question, a: f.answer }));
+
+  // Reviews are shared with the product pages (edited once, in Keystatic). Shown
+  // here too, gated the same way — sample reviews render with a note but emit no
+  // structured data until reviewsVerified is switched on.
+  const reviews = (product?.testimonials ?? []).filter((t) => t.quote && t.author);
+  const reviewsVerified = product?.reviewsVerified ?? false;
 
   // Real single-experience prices, pulled from the live catalogue so the
   // "assemble it yourself" comparison always reflects what these actually cost.
@@ -250,6 +258,68 @@ export default async function ConciergeDayPage() {
           {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
         </Reveal>
       </section>
+    ),
+    // Merged "What your day feels like" (image) + "The feel of it" (phases) into
+    // one graphic section — image on one side, the day's phases as a timeline on
+    // the other. Less prose, more shape.
+    dayFeel: (
+      <section key="dayFeel" style={{ background: "var(--color-paper)" }}>
+        <div className="wrap">
+          <Reveal className={styles.dfGrid}>
+            <div className={styles.dfImg}>
+              <Image src={dreamImg} alt="" fill sizes="(max-width: 860px) 100vw, 46vw" />
+            </div>
+            <div className={styles.dfBody}>
+              <span className="eyebrow">{page?.dayShapeEyebrow}</span>
+              <h2 className="display">{page?.dayShapeTitle}</h2>
+              <ol className={styles.timeline}>
+                {(page?.dayShapeSteps ?? []).map((s, i) => (
+                  <li className={styles.tlItem} key={s.time || i}>
+                    <span className={styles.tlTime}>{s.time}</span>
+                    <span className={styles.tlLabel}>{s.label}</span>
+                  </li>
+                ))}
+              </ol>
+              {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    ),
+    // The person who runs the day — shared cover component with the product
+    // pages, with the concierge-day "how it works" folded into the overlay.
+    consigliere: (
+      <ConsigliereSection
+        key="consigliere"
+        eyebrow={product?.consigliereEyebrow}
+        title={product?.consigliereTitle ?? ""}
+        lead={product?.consigliereLead}
+        image={product?.consigliereImage || undefined}
+        howItWorks={{
+          label: "How your day works",
+          steps: [
+            {
+              title: "You design your day",
+              description: "Tell us your date and shape your day — it takes a minute.",
+            },
+            {
+              title: "We arrange every detail",
+              description:
+                "One consigliere handles every hour — entries timed before the crowds, private transfer, and the temple guards who open doors a coach never gets. A licensed Egyptologist joins you at the monuments too.",
+            },
+            {
+              title: "You simply arrive",
+              description:
+                "Your consigliere is reachable all day. You experience Luxor; we handle the rest.",
+            },
+          ],
+        }}
+        points={(product?.consiglierePoints ?? []).map((p) => ({
+          title: p.title,
+          description: p.description,
+        }))}
+        disclosure={product?.disclosureText}
+      />
     ),
     threshold: (
       <section key="threshold" className={styles.threshold}>
@@ -422,43 +492,35 @@ export default async function ConciergeDayPage() {
         </div>
       </section>
     ),
-    socialProof: (
-      <section key="socialProof" style={{ background: "var(--color-paper)" }}>
-        <Reveal className="wrap center">
-          <span className="eyebrow">From recent guests</span>
-          <h2 className="display">The day they remember most.</h2>
-          <div className="tposts">
-            <div className="tp">
-              <div className="st">★★★★★</div>
-              <blockquote>
-                &quot;We&apos;ve travelled a lot. This was the first time we felt like guests, not
-                tourists. Karnak at sunrise, alone, is something I&apos;ll never forget.&quot;
-              </blockquote>
-              <div className="who">— Lena &amp; Tomáš, Vienna · 3-day concierge</div>
+    socialProof:
+      reviews.length > 0 ? (
+        <section key="socialProof" style={{ background: "var(--color-paper)" }}>
+          <Reveal className="wrap center">
+            <span className="eyebrow">From recent guests</span>
+            <h2 className="display">The day they remember most.</h2>
+            {!reviewsVerified && (
+              <p className="muted" style={{ fontSize: ".74rem", marginTop: ".6rem" }}>
+                Sample reviews — shown for layout only, to be replaced with real guest words.
+              </p>
+            )}
+            <div className="tposts">
+              {reviews.map((t, i) => {
+                const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
+                return (
+                  <div className="tp" key={t.author || i}>
+                    <div className="st" aria-label={`${stars} out of 5`}>
+                      {"★".repeat(stars)}
+                      {"☆".repeat(5 - stars)}
+                    </div>
+                    <blockquote>&quot;{t.quote}&quot;</blockquote>
+                    <div className="who">— {t.author}</div>
+                  </div>
+                );
+              })}
             </div>
-            <div className="tp">
-              <div className="st">★★★★★</div>
-              <blockquote>
-                &quot;I planned nothing and missed nothing. Our Egyptologist was extraordinary,
-                and the felucca at sunset was pure magic.&quot;
-              </blockquote>
-              <div className="who">— Marcus, London · Signature day</div>
-            </div>
-            <div className="tp">
-              <div className="st">★★★★★</div>
-              <blockquote>
-                &quot;Worth every euro. They handled a last-minute change without us even
-                noticing. We&apos;re already planning to come back through them.&quot;
-              </blockquote>
-              <div className="who">— Sophie, Munich · 2-day concierge</div>
-            </div>
-          </div>
-          <p className="muted" style={{ fontSize: ".74rem", marginTop: "1rem" }}>
-            Sample testimonials — to be replaced with real guest reviews.
-          </p>
-        </Reveal>
-      </section>
-    ),
+          </Reveal>
+        </section>
+      ) : null,
     guarantee: (
       <section key="guarantee" className={styles.guarantee}>
         <div className={styles.grBg} aria-hidden>

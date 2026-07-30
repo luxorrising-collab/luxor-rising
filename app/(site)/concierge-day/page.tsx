@@ -514,18 +514,19 @@ export default async function ConciergeDayPage() {
       ) : null,
     guarantee: (
       <section key="guarantee" className={styles.guarantee}>
-        <Reveal className={`wrap-narrow ${styles.grInner}`}>
-          <div className={styles.grHead}>
-            <span className="eyebrow">The Luxor Rising promise</span>
-            <h2 className="display">Your day, guaranteed — or we make it right.</h2>
-            <p className={styles.grLead}>
-              You&apos;re booking a day you can&apos;t preview, in a country you may not know well.
-              So we carry the risk, not you — three ways, in writing.
-            </p>
-          </div>
+        <div className={styles.guaranteeBg}>
+          <Image src="/images/medinet-habu-facade.jpg" alt="" fill sizes="100vw" />
+        </div>
+        <div className={styles.guaranteeScrim} />
+        <Reveal className={`wrap-narrow center ${styles.grInner}`}>
+          <span className="eyebrow">The Luxor Rising promise</span>
+          <h2 className="display">Your day, guaranteed — or we make it right.</h2>
+          <p className={styles.grLead}>
+            You&apos;re booking a day you can&apos;t preview, in a country you may not know well.
+            So we carry the risk, not you — three ways, in writing.
+          </p>
           <div className={styles.grGrid}>
             <div className={styles.gr}>
-              <span className={styles.grKicker}>Our strongest promise</span>
               <div className={styles.grIcon} aria-hidden>
                 ✓
               </div>
@@ -603,6 +604,29 @@ export default async function ConciergeDayPage() {
           <p className="lead" style={{ marginTop: ".8rem" }}>
             {page?.finalText}
           </p>
+          <ol className={styles.finalSteps}>
+            <li>
+              <span className={styles.finalStepN}>1</span>
+              <span>
+                <b>You shape your day.</b> Pick a date and tell us what you&apos;re drawn to — a
+                minute, no obligation.
+              </span>
+            </li>
+            <li>
+              <span className={styles.finalStepN}>2</span>
+              <span>
+                <b>We arrange every hour.</b> The right places at their quietest, your Egyptologist,
+                the private car, the guards who open doors — one consigliere owns the whole day.
+              </span>
+            </li>
+            <li>
+              <span className={styles.finalStepN}>3</span>
+              <span>
+                <b>You just arrive.</b> Nothing to organise, decide or carry. You experience Luxor;
+                we handle the rest.
+              </span>
+            </li>
+          </ol>
           <div style={{ marginTop: "1.8rem" }}>
             <Link href="#design" className="btn btn-primary btn-lg">
               Design your day →

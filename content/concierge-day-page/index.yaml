@@ -37,10 +37,9 @@ sections:
     visible: true
   - section: gallery
     visible: true
-  # One longer-journey band (graphic), then the close. "mechanism" is folded into
-  # the FAQ and "threshold" retired — they read as repetitive this far down.
-  - section: multiDay
-    visible: true
+  # Straight to the close after the gallery. "mechanism" folded into the FAQ;
+  # "threshold" and "multiDay" retired — a single-day LP shouldn't send traffic
+  # to a longer journey, and they read as repetitive this far down.
   - section: finalCta
     visible: true
   - section: faq

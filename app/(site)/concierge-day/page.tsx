@@ -80,19 +80,6 @@ const GALLERY = [
   { image: "/images/experiences/camel-bedouin-breakfast-hero.jpg", caption: "Breakfast at the desert's edge" },
 ];
 
-// High-quality image strip behind "The Luxor Rising promise" — echoes the
-// day builder's experience progress bar.
-const PROMISE_IMAGES = [
-  "/images/experiences/karnak-at-dawn-hero.jpg",
-  "/images/experiences/valley-of-the-kings-hero.jpg",
-  "/images/experiences/felucca-sunset-sail-hero.jpg",
-  "/images/experiences/medinet-habu-hero.jpg",
-  "/images/experiences/private-desert-safari-hero.jpg",
-  "/images/experiences/balloon-hero.jpg",
-  "/images/experiences/nile-dinner-cruise-hero.jpg",
-  "/images/experiences/camel-bedouin-breakfast-hero.jpg",
-];
-
 const SECTION_FALLBACK = [
   "contrast",
   "mechanism",
@@ -527,38 +514,55 @@ export default async function ConciergeDayPage() {
       ) : null,
     guarantee: (
       <section key="guarantee" className={styles.guarantee}>
-        <div className={styles.grBg} aria-hidden>
-          {PROMISE_IMAGES.map((src, i) => (
-            <span key={i} className={styles.grSlice} style={{ backgroundImage: `url('${src}')` }} />
-          ))}
-        </div>
-        <div className={styles.grScrim} />
+        <div className={styles.grGlow} aria-hidden />
         <Reveal className={`wrap-narrow center ${styles.grInner}`}>
-          <div className={styles.seal}>The Luxor Rising promise</div>
-          <h2 className="display" style={{ marginTop: ".6rem" }}>
+          <div className={styles.grSeal} aria-hidden>
+            <span className={styles.grSealMark}>✓</span>
+          </div>
+          <span className="eyebrow" style={{ color: "var(--color-gold-soft)" }}>
+            The Luxor Rising promise
+          </span>
+          <h2 className="display" style={{ marginTop: ".5rem" }}>
             Your day, guaranteed — or we make it right.
           </h2>
+          <p className={styles.grLead}>
+            You&apos;re booking a day you can&apos;t preview, in a country you may not know well. So
+            we carry the risk, not you — three ways, in writing.
+          </p>
           <div className={styles.grGrid}>
-            <div className={styles.gr}>
-              <h4>Cancel freely</h4>
-              <p>Plans change. Cancel up to 7 days before for a full refund — no questions, no fine print.</p>
-            </div>
-            <div className={styles.gr}>
-              <h4>Pay your way</h4>
-              <p>
-                Settle in full, or place a deposit to hold your date and pay the rest on the day.
-                Your spot is secured either way.
-              </p>
-            </div>
-            <div className={styles.gr}>
-              <h4>The first two hours are on us if we&apos;re wrong</h4>
+            <div className={`${styles.gr} ${styles.grFeature}`}>
+              <span className={styles.grIcon} aria-hidden>
+                ✓
+              </span>
+              <h4>Love the first two hours, or it&apos;s free</h4>
               <p>
                 If the first two hours don&apos;t feel different from any tour you&apos;ve been on
                 before, say so and the day is on us. No form, no argument — tell your consigliere
                 before lunch and we refund it in full.
               </p>
             </div>
+            <div className={styles.gr}>
+              <span className={styles.grIcon} aria-hidden>
+                ↺
+              </span>
+              <h4>Cancel freely</h4>
+              <p>Plans change. Cancel up to 7 days before for a full refund — no questions, no fine print.</p>
+            </div>
+            <div className={styles.gr}>
+              <span className={styles.grIcon} aria-hidden>
+                €
+              </span>
+              <h4>Pay your way</h4>
+              <p>
+                Settle in full, or place a deposit to hold your date and pay the rest on the day.
+                Your spot is secured either way.
+              </p>
+            </div>
           </div>
+          <p className={styles.grFine}>
+            Real people, reachable all day — not a call centre. If anything is off, we fix it before
+            you have to ask.
+          </p>
         </Reveal>
       </section>
     ),
@@ -591,7 +595,11 @@ export default async function ConciergeDayPage() {
     ),
     finalCta: (
       <section key="finalCta" className={styles.finalcta}>
-        <Reveal className="wrap-narrow">
+        <div className={styles.finalBg}>
+          <Image src="/images/experiences/karnak-at-dawn-hero.jpg" alt="" fill sizes="100vw" />
+        </div>
+        <div className={styles.finalScrim} />
+        <Reveal className={`wrap-narrow center ${styles.finalIn}`}>
           <span className="eyebrow">{page?.finalEyebrow}</span>
           <h2 className="display">{page?.finalTitle}</h2>
           <p className="lead" style={{ marginTop: ".8rem" }}>
@@ -602,7 +610,7 @@ export default async function ConciergeDayPage() {
               Design your day →
             </Link>
           </div>
-          <p className="muted" style={{ fontSize: ".8rem", marginTop: "1rem" }}>
+          <p className={styles.finalFine}>
             7-day free cancellation · deposit or pay in full · a handful of days each week
           </p>
         </Reveal>

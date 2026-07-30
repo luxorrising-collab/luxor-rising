@@ -65,6 +65,12 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   // reviewsVerified is true — i.e. every review is a real, attributable guest.
   // Sample reviews still render on the page, but never as structured data.
   const realReviews = (globals?.testimonials ?? []).filter((t) => t.quote && t.author);
+  // Visual review summary (stars in the hero + on the price card). Shown for
+  // sample reviews too — it's presentational only; structured data stays gated.
+  const reviewCount = realReviews.length;
+  const reviewAverage = reviewCount
+    ? (realReviews.reduce((a, t) => a + (t.rating ?? 5), 0) / reviewCount).toFixed(1)
+    : undefined;
   const reviewJsonLd =
     globals?.reviewsVerified && realReviews.length
       ? {
@@ -163,6 +169,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
             glanceIncludes={entry.glanceIncludes}
             includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
             feelText={entry.glanceIncludes}
+            reviewAverage={reviewAverage}
+            reviewCount={reviewCount}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}
@@ -192,6 +200,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           date: t.date || undefined,
         }))}
         reviewsVerified={globals?.reviewsVerified ?? false}
+        reviewAverage={reviewAverage}
+        reviewCount={reviewCount}
         finalTitle={`Reserve ${entry.title}`}
         finalText={`Private, certified-guided, and arranged end to end — from €${entry.basePrice ?? 0}.`}
         finalCtaHref="#book"

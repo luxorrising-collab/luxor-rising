@@ -176,35 +176,71 @@
   border-top: 1px solid var(--color-cream-deep);
   border-bottom: 1px solid var(--color-cream-deep);
 }
-/* split: portrait on the left, intro + how-it-works flow on the right */
-.consSplit {
-  display: grid;
-  grid-template-columns: 0.85fr 1fr;
-  gap: clamp(1.8rem, 4vw, 3.4rem);
-  align-items: center;
-}
-.consImg {
+/* full-bleed cover: the consigliere's portrait fills the band, the intro and
+   how-it-works flow sit over it — a strong visual break after the gallery. */
+.consCover {
   position: relative;
-  aspect-ratio: 4 / 5;
-  border-radius: 12px;
   overflow: hidden;
-  background: var(--color-cream-deep);
+  background: #160d05;
+  display: flex;
+  align-items: center;
+  min-height: min(88vh, 760px);
 }
-.consImg :global(img) {
+.consCoverBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.consCoverBg :global(img) {
   object-fit: cover;
-  object-position: center;
+  /* Ahmed stands to the right of this wide frame — keep him in view while the
+     scrim darkens the left, where the text sits. */
+  object-position: 78% center;
 }
-.consLede :global(.lead) {
-  margin-top: 0.8rem;
+.consCoverScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+      90deg,
+      rgba(10, 8, 4, 0.9) 0%,
+      rgba(10, 8, 4, 0.66) 40%,
+      rgba(10, 8, 4, 0.18) 78%,
+      rgba(10, 8, 4, 0.05) 100%
+    ),
+    linear-gradient(180deg, rgba(10, 8, 4, 0.4) 0%, transparent 40%, rgba(10, 8, 4, 0.4) 100%);
+}
+.consCoverIn {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  max-width: 640px;
+  padding-top: clamp(3.5rem, 8vw, 6rem);
+  padding-bottom: clamp(3.5rem, 8vw, 6rem);
+}
+.consCoverIn :global(.eyebrow) {
+  color: var(--color-gold-soft);
+}
+.consCoverIn h2 {
+  color: #fff;
+  margin: 0.4rem 0 0;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
+}
+.consCoverLead {
+  margin-top: 1rem;
   max-width: 52ch;
+  font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+  line-height: 1.6;
+  color: #f0e6d6;
+  font-weight: 300;
 }
-/* how-it-works, folded in as a slim numbered flow */
+/* how-it-works, folded in as a slim numbered flow (over the dark image) */
 .flowLabel {
   margin-top: 1.8rem;
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-gold-deep);
+  color: var(--color-gold-soft);
   font-weight: 600;
 }
 .flow {
@@ -223,7 +259,7 @@
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-gold-deep);
+  color: var(--color-gold-soft);
   flex: none;
   width: 1.8rem;
   letter-spacing: 0.04em;
@@ -231,19 +267,18 @@
 .flowText {
   font-size: 0.92rem;
   line-height: 1.6;
-  color: var(--color-espresso);
+  color: #ede2cf;
 }
 .flowText b {
-  color: var(--color-ink);
+  color: #fff;
   font-weight: 600;
 }
-@media (max-width: 860px) {
-  .consSplit {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .consCover {
+    min-height: 0;
   }
-  .consImg {
-    aspect-ratio: 16 / 10;
-    max-height: 340px;
+  .consCoverScrim {
+    background: linear-gradient(180deg, rgba(10, 8, 4, 0.55) 0%, rgba(10, 8, 4, 0.82) 100%);
   }
 }
 

@@ -60,6 +60,9 @@ export type ExperienceTemplateProps = {
   testimonials: Testimonial[];
   /** When false, testimonials are shown but flagged as samples (no fake stars claimed as verified). */
   reviewsVerified?: boolean;
+  /** Aggregate review summary — shown as a star line in the hero, like the home page. */
+  reviewAverage?: string;
+  reviewCount?: number;
   finalTitle: string;
   finalText: string;
   finalCtaHref: string;
@@ -106,6 +109,8 @@ export default function ExperienceTemplate({
   testimonialsTitle,
   testimonials,
   reviewsVerified = false,
+  reviewAverage,
+  reviewCount = 0,
   finalTitle,
   finalText,
   finalCtaHref,
@@ -139,6 +144,13 @@ export default function ExperienceTemplate({
               Why it matters
             </Link>
           </div>
+          {reviewCount > 0 && (
+            <div className={styles.heroTrust}>
+              <span className="stars">★ ★ ★ ★ ★</span>{" "}
+              {reviewAverage ? `${reviewAverage} · ` : ""}
+              {reviewCount} guest {reviewCount === 1 ? "review" : "reviews"}
+            </div>
+          )}
         </div>
       </section>
 
@@ -233,59 +245,67 @@ export default function ExperienceTemplate({
         </section>
       )}
 
-      {/* WHO RUNS YOUR DAY — consigliere + how-it-works, merged, right before the price */}
+      {/* WHO RUNS YOUR DAY — full-bleed portrait of the consigliere with the
+          intro + how-it-works flow as an overlay, then the points below. This
+          full-width image is the visual break after the gallery. */}
       {consigliereTitle && (
-        <section className={styles.consigliere}>
-          <div className="wrap">
-            <div className={styles.consSplit}>
-              {consigliereImage && (
-                <div className={styles.consImg}>
-                  <Image src={consigliereImage} alt={consigliereEyebrow || ""} fill sizes="(max-width: 860px) 100vw, 44vw" />
-                </div>
+        <>
+          <section className={styles.consCover}>
+            {consigliereImage && (
+              <div className={styles.consCoverBg}>
+                <Image src={consigliereImage} alt={consigliereEyebrow || ""} fill sizes="100vw" />
+              </div>
+            )}
+            <div className={styles.consCoverScrim} />
+            <div className={`wrap ${styles.consCoverIn}`}>
+              <span className="eyebrow">{consigliereEyebrow}</span>
+              <h2 className="display">{consigliereTitle}</h2>
+              {consigliereLead && <p className={styles.consCoverLead}>{consigliereLead}</p>}
+              {howItWorksSteps.length > 0 && (
+                <>
+                  {(howItWorksEyebrow || howItWorksTitle) && (
+                    <div className={styles.flowLabel}>{howItWorksTitle || howItWorksEyebrow}</div>
+                  )}
+                  <ol className={styles.flow}>
+                    {howItWorksSteps.map((s, i) => (
+                      <li key={s.title || i}>
+                        <span className={styles.flowNum}>{String(i + 1).padStart(2, "0")}</span>
+                        <span className={styles.flowText}>
+                          <b>{s.title}.</b> {s.description}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </>
               )}
-              <div className={styles.consLede}>
-                <span className="eyebrow">{consigliereEyebrow}</span>
-                <h2 className="display">{consigliereTitle}</h2>
-                {consigliereLead && <p className="lead">{consigliereLead}</p>}
-                {howItWorksSteps.length > 0 && (
-                  <>
-                    {(howItWorksEyebrow || howItWorksTitle) && (
-                      <div className={styles.flowLabel}>{howItWorksTitle || howItWorksEyebrow}</div>
-                    )}
-                    <ol className={styles.flow}>
-                      {howItWorksSteps.map((s, i) => (
-                        <li key={s.title || i}>
-                          <span className={styles.flowNum}>{String(i + 1).padStart(2, "0")}</span>
-                          <span className={styles.flowText}>
-                            <b>{s.title}.</b> {s.description}
-                          </span>
-                        </li>
-                      ))}
-                    </ol>
-                  </>
+            </div>
+          </section>
+
+          {(consiglierePoints.length > 0 || disclosureText) && (
+            <section className={styles.consigliere}>
+              <div className="wrap">
+                {consiglierePoints.length > 0 && (
+                  <Reveal className={styles.consGrid}>
+                    {consiglierePoints.map((p, i) => (
+                      <div className={styles.consItem} key={p.title || i}>
+                        <span className={styles.consIcon} aria-hidden>
+                          {CONS_ICONS[i % CONS_ICONS.length]}
+                        </span>
+                        <h4>{p.title}</h4>
+                        <p>{p.description}</p>
+                      </div>
+                    ))}
+                  </Reveal>
+                )}
+                {disclosureText && (
+                  <div className="disclosure" style={{ marginTop: consiglierePoints.length > 0 ? "2.4rem" : 0 }}>
+                    {disclosureText}
+                  </div>
                 )}
               </div>
-            </div>
-            {consiglierePoints.length > 0 && (
-              <Reveal className={styles.consGrid}>
-                {consiglierePoints.map((p, i) => (
-                  <div className={styles.consItem} key={p.title || i}>
-                    <span className={styles.consIcon} aria-hidden>
-                      {CONS_ICONS[i % CONS_ICONS.length]}
-                    </span>
-                    <h4>{p.title}</h4>
-                    <p>{p.description}</p>
-                  </div>
-                ))}
-              </Reveal>
-            )}
-            {disclosureText && (
-              <div className="disclosure" style={{ marginTop: "2.4rem" }}>
-                {disclosureText}
-              </div>
-            )}
-          </div>
-        </section>
+            </section>
+          )}
+        </>
       )}
 
       {/* BOOK / CONFIGURATOR */}

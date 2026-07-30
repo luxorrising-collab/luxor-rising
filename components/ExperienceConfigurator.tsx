@@ -50,6 +50,9 @@ type ExperienceConfiguratorProps = {
   includeItems?: { title: string; note?: string }[];
   /** How the day feels — shown above the list, so it sells before it reassures. */
   feelText?: string;
+  /** Aggregate review summary — shown as a star line on the price card. */
+  reviewAverage?: string;
+  reviewCount?: number;
 };
 
 export default function ExperienceConfigurator({
@@ -65,6 +68,8 @@ export default function ExperienceConfigurator({
   glanceIncludes,
   includeItems,
   feelText,
+  reviewAverage,
+  reviewCount = 0,
 }: ExperienceConfiguratorProps) {
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
@@ -184,18 +189,9 @@ export default function ExperienceConfigurator({
             </div>
           </div>
 
-          {/* Detail lives here, in the wide column — the price card stays short so
-              the Reserve button is never pushed below the fold. */}
-          {feelText && (
-            <div className={styles.step}>
-              <div className={styles.stepH}>
-                <div className={styles.stepN}>4</div>
-                <h3>How the day feels</h3>
-              </div>
-              <p className={styles.feelText}>{feelText}</p>
-            </div>
-          )}
-
+          {/* The full "what we take care of" list lives here in the wide column —
+              it's a two-column grid that needs the width, and it gives the left
+              column the substance to balance the price card + feel on the right. */}
           {includes.length > 0 && (
             <div className={styles.step}>
               <div className={styles.careHead}>What we take care of</div>
@@ -213,9 +209,23 @@ export default function ExperienceConfigurator({
 
         <div className={styles.summary}>
           <div className={styles.sumH}>Your experience</div>
+          {reviewCount > 0 && (
+            <div className={styles.sumStars}>
+              <span className={styles.stars}>★★★★★</span>
+              {reviewAverage ? ` ${reviewAverage}` : ""} · {reviewCount}{" "}
+              {reviewCount === 1 ? "review" : "reviews"}
+            </div>
+          )}
           <div className={styles.sumProof}>
             {name} · private &amp; fully arranged
           </div>
+          {/* A short taste of the day, right before the price — sells before it asks. */}
+          {feelText && (
+            <div className={styles.sumFeel}>
+              <span className={styles.sumFeelH}>How the day feels</span>
+              {feelText}
+            </div>
+          )}
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>
             {group > 1 ? euro(perPerson) + " per person · more of you, less each" : "Private, just you"}

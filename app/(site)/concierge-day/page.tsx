@@ -334,14 +334,18 @@ export default async function ConciergeDayPage() {
     ),
     multiDay: (
       <section key="multiDay" className={styles.multiDay}>
-        <Reveal className="wrap-narrow center">
+        <div className={styles.multiDayBg}>
+          <Image src="/images/experiences/felucca-sunset-sail-hero.jpg" alt="" fill sizes="100vw" />
+        </div>
+        <div className={styles.multiDayScrim} />
+        <Reveal className={`wrap-narrow center ${styles.multiDayIn}`}>
           <span className="eyebrow">{page?.multiDayEyebrow}</span>
           <h2 className="display">{page?.multiDayTitle}</h2>
           <p className="lead" style={{ marginTop: ".8rem" }}>
             {page?.multiDayText}
           </p>
           <div style={{ marginTop: "1.6rem" }}>
-            <Link href={page?.multiDayCtaHref || "/private-guide"} className="btn btn-line btn-lg">
+            <Link href={page?.multiDayCtaHref || "/private-guide"} className="btn btn-ghost btn-lg">
               {page?.multiDayCtaLabel || "Begin a conversation →"}
             </Link>
           </div>

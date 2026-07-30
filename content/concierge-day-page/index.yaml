@@ -1,14 +1,12 @@
 heroEyebrow: Private concierge · Luxor & the West Bank
-heroTitle: You get one day at a place that waited three thousand years.
+heroTitle: The one day in Egypt you'll never stop talking about.
 heroSubtitle: >-
-  You will probably stand here once. So we put you in each place at the hour it
-  is quietest — which is rarely the hour the coaches come — with a licensed
-  Egyptologist beside you and not one decision to make.
-heroTrustLine: >-
-  60+ private days arranged in Luxor · run on the ground by Ahmed of Royal
-  Transfer
+  Your private consigliere arranges everything — the temples before the crowds,
+  your own Egyptologist, the Nile at golden hour. You bring nothing but
+  yourself.
+heroTrustLine: 4.9 · 60+ private days arranged · for travellers already in Hurghada & Luxor
 startingPrice: 450
-priceNote: per day · private, minimum 2 guests
+priceNote: / day · ≤4 guests, private
 heroImages:
   - /images/concierge-day/heroImages/0.jpg
   - /images/concierge-day/heroImages/1.jpg
@@ -16,10 +14,10 @@ heroImages:
 sections:
   - section: contrast
     visible: true
-  - section: mechanism
+  # Full-width feel band (flowing prose) + the day's phases as a schedule.
+  - section: dream
     visible: true
-  # Merged "What your day feels like" + "The feel of it" into one graphic section.
-  - section: dayFeel
+  - section: dayShape
     visible: true
   - section: experiences
     visible: true
@@ -39,11 +37,11 @@ sections:
     visible: true
   - section: gallery
     visible: true
-  - section: threshold
+  # One longer-journey band (graphic), then the close. "mechanism" is folded into
+  # the FAQ and "threshold" retired — they read as repetitive this far down.
+  - section: multiDay
     visible: true
   - section: finalCta
-    visible: true
-  - section: multiDay
     visible: true
   - section: faq
     visible: true
@@ -219,6 +217,16 @@ scarcityText: >-
   we cap how many days we take. It keeps the experience flawless, and it means
   popular dates go early. If your date matters, claim it now.
 faq:
+  - question: How do you actually get the temples empty?
+    answer: >-
+      Every site has quiet hours — but they move, with the day of the week, the
+      season, and which cruise boats have just docked. Ahmed has spent years
+      watching that pattern, so he knows when each place actually empties.
+      Sometimes it's first light; sometimes late afternoon, when the light is
+      better anyway; occasionally the middle of the day, when the heat clears a
+      site completely. Then he goes further than any schedule: a word with the
+      guards who know him, and your Egyptologist booked before someone else
+      takes them — not whoever is left that morning.
   - question: Is this really worth it over a cheap group tour?
     answer: >-
       A group tour saves a little money and costs you the experience — crowds,

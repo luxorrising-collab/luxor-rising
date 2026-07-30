@@ -602,11 +602,43 @@
   text-align: center;
 }
 
-/* longer journeys */
+/* longer journeys — a full-bleed image band so it doesn't read as one more
+   plain text block after the gallery. */
 .multiDay {
-  background: var(--color-cream);
-  border-top: 1px solid var(--color-cream-deep);
+  position: relative;
+  overflow: hidden;
+  background: #160d05;
   text-align: center;
+}
+.multiDayBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.multiDayBg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.multiDayScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(12, 8, 4, 0.72) 0%, rgba(12, 8, 4, 0.62) 45%, rgba(12, 8, 4, 0.78) 100%);
+}
+.multiDayIn {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+.multiDayIn :global(.eyebrow) {
+  color: var(--color-gold-soft);
+}
+.multiDayIn h2 {
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+.multiDayIn :global(.lead) {
+  color: #f0e6d6;
 }
 
 /* promise — image-slice background (like the day builder's experience bar) */

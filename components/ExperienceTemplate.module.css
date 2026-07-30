@@ -176,15 +176,93 @@
   border-top: 1px solid var(--color-cream-deep);
   border-bottom: 1px solid var(--color-cream-deep);
 }
+/* split: portrait on the left, intro + how-it-works flow on the right */
+.consSplit {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: clamp(1.8rem, 4vw, 3.4rem);
+  align-items: center;
+}
+.consImg {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-cream-deep);
+}
+.consImg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.consLede :global(.lead) {
+  margin-top: 0.8rem;
+  max-width: 52ch;
+}
+/* how-it-works, folded in as a slim numbered flow */
+.flowLabel {
+  margin-top: 1.8rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+}
+.flow {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.flow li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+}
+.flowNum {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gold-deep);
+  flex: none;
+  width: 1.8rem;
+  letter-spacing: 0.04em;
+}
+.flowText {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--color-espresso);
+}
+.flowText b {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+@media (max-width: 860px) {
+  .consSplit {
+    grid-template-columns: 1fr;
+  }
+  .consImg {
+    aspect-ratio: 16 / 10;
+    max-height: 340px;
+  }
+}
+
 .consGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(1.4rem, 3vw, 2.4rem);
-  margin-top: clamp(1.8rem, 4vw, 2.6rem);
+  margin-top: clamp(2.4rem, 5vw, 3.4rem);
 }
 .consItem {
   padding-top: 1rem;
   border-top: 2px solid var(--color-gold-soft);
+}
+.consIcon {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.4rem;
+  line-height: 1;
 }
 .consItem h4 {
   font-family: var(--font-display);
@@ -220,6 +298,19 @@
     border-left: none;
     padding: 0;
   }
+}
+
+/* sample-review disclaimer */
+.sampleNote {
+  display: inline-block;
+  margin: 0.6rem auto 0;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--color-gold-soft);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-gold-deep);
+  background: rgba(201, 160, 99, 0.08);
 }
 
 /* myth / initiation */

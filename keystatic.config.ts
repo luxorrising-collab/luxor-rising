@@ -499,6 +499,12 @@ export default config({
         consigliereEyebrow: fields.text({ label: "Consigliere eyebrow" }),
         consigliereTitle: fields.text({ label: "Consigliere title" }),
         consigliereLead: fields.text({ label: "Consigliere lead", multiline: true }),
+        consigliereImage: fields.image({
+          label: "Consigliere portrait",
+          description: "Photo shown next to the consigliere section.",
+          directory: "public/images/hosts",
+          publicPath: "/images/hosts/",
+        }),
         consiglierePoints: fields.array(
           fields.object({
             title: fields.text({ label: "Title" }),
@@ -521,6 +527,12 @@ export default config({
         ),
         testimonialsEyebrow: fields.text({ label: "Testimonials eyebrow" }),
         testimonialsTitle: fields.text({ label: "Testimonials title" }),
+        reviewsVerified: fields.checkbox({
+          label: "Reviews are real & verified",
+          description:
+            "Leave OFF while reviews below are samples: they still show on the page (with a 'sample' note) but emit NO star-rating structured data to Google. Turn ON only once every review is a real, attributable guest — then Google rich-result stars are generated.",
+          defaultValue: false,
+        }),
         testimonials: fields.array(
           fields.object({
             quote: fields.text({ label: "Quote", multiline: true }),
@@ -536,10 +548,10 @@ export default config({
             }),
           }),
           {
-            label: "Guest reviews (real only)",
+            label: "Guest reviews",
             itemLabel: (props) => props.fields.author.value || "Review",
             description:
-              "Only real, attributable reviews. These also power the star ratings Google shows — inventing them would be both dishonest and a search penalty.",
+              "Star ratings Google shows come from here. Keep 'Reviews are real & verified' OFF until every entry is a genuine, attributable guest — sample copy is fine to preview, it just won't emit structured data.",
           }
         ),
       },

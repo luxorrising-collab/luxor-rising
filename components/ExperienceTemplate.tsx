@@ -8,6 +8,7 @@ import Gallery from "./Gallery";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
+const CONS_ICONS = ["✦", "❖", "◆", "✧", "◈", "❋"];
 
 export type ExperienceHighlight = { title: string; description: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
@@ -16,7 +17,7 @@ export type FaqItemData = { q: string; a: string };
 export type HowItWorksStep = { title: string; description: string };
 export type GuaranteeItem = { title: string; description: string };
 export type ConsigliereePoint = { title: string; description: string };
-export type Testimonial = { quote: string; author: string };
+export type Testimonial = { quote: string; author: string; rating?: number; date?: string };
 
 export type ExperienceTemplateProps = {
   title: string;
@@ -49,6 +50,7 @@ export type ExperienceTemplateProps = {
   consigliereEyebrow?: string;
   consigliereTitle?: string;
   consigliereLead?: string;
+  consigliereImage?: string;
   consiglierePoints?: ConsigliereePoint[];
   guaranteeEyebrow: string;
   guaranteeTitle: string;
@@ -56,6 +58,8 @@ export type ExperienceTemplateProps = {
   testimonialsEyebrow: string;
   testimonialsTitle: string;
   testimonials: Testimonial[];
+  /** When false, testimonials are shown but flagged as samples (no fake stars claimed as verified). */
+  reviewsVerified?: boolean;
   finalTitle: string;
   finalText: string;
   finalCtaHref: string;
@@ -93,6 +97,7 @@ export default function ExperienceTemplate({
   consigliereEyebrow,
   consigliereTitle,
   consigliereLead,
+  consigliereImage,
   consiglierePoints = [],
   guaranteeEyebrow,
   guaranteeTitle,
@@ -100,6 +105,7 @@ export default function ExperienceTemplate({
   testimonialsEyebrow,
   testimonialsTitle,
   testimonials,
+  reviewsVerified = false,
   finalTitle,
   finalText,
   finalCtaHref,
@@ -227,49 +233,56 @@ export default function ExperienceTemplate({
         </section>
       )}
 
-      {/* HOW IT WORKS */}
-      <section>
-        <Reveal className="wrap-narrow center">
-          <span className="eyebrow">{howItWorksEyebrow}</span>
-          <h2 className="display">{howItWorksTitle}</h2>
-          <div className="steps3">
-            {howItWorksSteps.map((s, i) => (
-              <div className="s3" key={s.title || i}>
-                <div className="num">{String(i + 1).padStart(2, "0")}</div>
-                <h4>{s.title}</h4>
-                <p>{s.description}</p>
-              </div>
-            ))}
-          </div>
-          {disclosureText && <div className="disclosure">{disclosureText}</div>}
-        </Reveal>
-      </section>
-
-      {/* WHAT A CONSIGLIERE IS — right before the price, where the value question peaks */}
+      {/* WHO RUNS YOUR DAY — consigliere + how-it-works, merged, right before the price */}
       {consigliereTitle && (
         <section className={styles.consigliere}>
           <div className="wrap">
-            <div className="center">
-              <span className="eyebrow">{consigliereEyebrow}</span>
-              <h2 className="display">{consigliereTitle}</h2>
-              {consigliereLead && (
-                <p
-                  className="lead"
-                  style={{ marginTop: ".7rem", maxWidth: "62ch", marginLeft: "auto", marginRight: "auto" }}
-                >
-                  {consigliereLead}
-                </p>
+            <div className={styles.consSplit}>
+              {consigliereImage && (
+                <div className={styles.consImg}>
+                  <Image src={consigliereImage} alt={consigliereEyebrow || ""} fill sizes="(max-width: 860px) 100vw, 44vw" />
+                </div>
               )}
+              <div className={styles.consLede}>
+                <span className="eyebrow">{consigliereEyebrow}</span>
+                <h2 className="display">{consigliereTitle}</h2>
+                {consigliereLead && <p className="lead">{consigliereLead}</p>}
+                {howItWorksSteps.length > 0 && (
+                  <>
+                    {(howItWorksEyebrow || howItWorksTitle) && (
+                      <div className={styles.flowLabel}>{howItWorksTitle || howItWorksEyebrow}</div>
+                    )}
+                    <ol className={styles.flow}>
+                      {howItWorksSteps.map((s, i) => (
+                        <li key={s.title || i}>
+                          <span className={styles.flowNum}>{String(i + 1).padStart(2, "0")}</span>
+                          <span className={styles.flowText}>
+                            <b>{s.title}.</b> {s.description}
+                          </span>
+                        </li>
+                      ))}
+                    </ol>
+                  </>
+                )}
+              </div>
             </div>
             {consiglierePoints.length > 0 && (
               <Reveal className={styles.consGrid}>
                 {consiglierePoints.map((p, i) => (
                   <div className={styles.consItem} key={p.title || i}>
+                    <span className={styles.consIcon} aria-hidden>
+                      {CONS_ICONS[i % CONS_ICONS.length]}
+                    </span>
                     <h4>{p.title}</h4>
                     <p>{p.description}</p>
                   </div>
                 ))}
               </Reveal>
+            )}
+            {disclosureText && (
+              <div className="disclosure" style={{ marginTop: "2.4rem" }}>
+                {disclosureText}
+              </div>
             )}
           </div>
         </section>
@@ -348,14 +361,25 @@ export default function ExperienceTemplate({
           <Reveal className="wrap center">
             <span className="eyebrow">{testimonialsEyebrow}</span>
             <h2 className="display">{testimonialsTitle}</h2>
+            {!reviewsVerified && (
+              <p className={styles.sampleNote}>
+                Sample reviews — shown for layout only, to be replaced with real guest words.
+              </p>
+            )}
             <div className="tposts">
-              {testimonials.map((t, i) => (
-                <div className="tp" key={t.author || i}>
-                  <div className="st">★★★★★</div>
-                  <blockquote>&quot;{t.quote}&quot;</blockquote>
-                  <div className="who">— {t.author}</div>
-                </div>
-              ))}
+              {testimonials.map((t, i) => {
+                const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
+                return (
+                  <div className="tp" key={t.author || i}>
+                    <div className="st" aria-label={`${stars} out of 5`}>
+                      {"★".repeat(stars)}
+                      {"☆".repeat(5 - stars)}
+                    </div>
+                    <blockquote>&quot;{t.quote}&quot;</blockquote>
+                    <div className="who">— {t.author}</div>
+                  </div>
+                );
+              })}
             </div>
           </Reveal>
         </section>

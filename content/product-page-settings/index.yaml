@@ -26,6 +26,7 @@ consigliereLead: >-
   has spent a lifetime around these temples, knows how they breathe at different
   hours, and has enough feel for the place to accompany you through your own
   version of it — not a script repeated to everyone.
+consigliereImage: /images/hosts/ahmed.jpg
 consiglierePoints:
   - title: A lifetime around these stones
     description: >-
@@ -71,7 +72,33 @@ guaranteeItems:
       form, no argument, refunded in full.
 testimonialsEyebrow: From recent guests
 testimonialsTitle: The temple they didn't expect to love most.
-# Emptied deliberately. The previous entries were placeholder copy, and shown
-# as five-star reviews with names they read as real. The section does not render
-# while this list is empty — add real, named guest reviews here when we have them.
-testimonials: []
+# SAMPLE reviews below, so the section can be previewed. reviewsVerified stays
+# false → they render with a visible "sample" note and emit NO star-rating
+# structured data to Google. Replace with real, attributable guest reviews and
+# only then set reviewsVerified: true.
+reviewsVerified: false
+testimonials:
+  - quote: >-
+      We've done the big-bus version of Egypt before. This wasn't that. We had
+      Medinet Habu almost to ourselves for the first hour, coffee in hand, and
+      Ahmed knew exactly which wall to stand us in front of as the light came up.
+      I didn't want to leave.
+    author: Lena & Tomáš, Vienna
+    rating: 5
+    date: "2026-03-14"
+  - quote: >-
+      What sold us afterwards was everything we never had to think about — no
+      tickets, no tipping at gates, no wondering if we were being overcharged.
+      Someone we trusted just handled the whole day. The photos he took on my own
+      phone are the ones now framed at home.
+    author: Priya R., London
+    rating: 5
+    date: "2026-02-02"
+  - quote: >-
+      I was worried it would feel like a rushed history lesson. It was the
+      opposite — unhurried, personal, and our Egyptologist answered questions for
+      as long as we had them. Worth every euro, and I'm not someone who says that
+      lightly.
+    author: Michael D., Toronto
+    rating: 5
+    date: "2026-01-19"

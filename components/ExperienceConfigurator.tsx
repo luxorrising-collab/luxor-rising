@@ -46,8 +46,10 @@ type ExperienceConfiguratorProps = {
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
   glanceIncludes?: string;
-  /** Preferred source for "what we arrange" — the product's own list. */
-  includeItems?: string[];
+  /** Preferred source for "what we take care of" — the product's own list. */
+  includeItems?: { title: string; note?: string }[];
+  /** How the day feels — shown above the list, so it sells before it reassures. */
+  feelText?: string;
 };
 
 export default function ExperienceConfigurator({
@@ -62,6 +64,7 @@ export default function ExperienceConfigurator({
   depositPercent = 30,
   glanceIncludes,
   includeItems,
+  feelText,
 }: ExperienceConfiguratorProps) {
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
@@ -74,11 +77,11 @@ export default function ExperienceConfigurator({
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
 
-  const includes = useMemo(() => {
+  const includes = useMemo<{ title: string; note?: string }[]>(() => {
     if (includeItems?.length) return includeItems;
     // Legacy: older products still describe this as a "·"-separated line.
     const parsed = parseIncludes(glanceIncludes);
-    return parsed.length ? parsed : FALLBACK_INCLUDES;
+    return (parsed.length ? parsed : FALLBACK_INCLUDES).map((title) => ({ title }));
   }, [includeItems, glanceIncludes]);
 
   useEffect(() => {
@@ -185,8 +188,7 @@ export default function ExperienceConfigurator({
         <div className={styles.summary}>
           <div className={styles.sumH}>Your experience</div>
           <div className={styles.sumProof}>
-            <span style={{ letterSpacing: ".05em" }}>★★★★★</span> {name} · private &amp; fully
-            arranged
+            {name} · private &amp; fully arranged
           </div>
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>
@@ -196,10 +198,19 @@ export default function ExperienceConfigurator({
             {group}
             {group > 1 ? " guests" : " guest"} · {tripDate || "pick your date"}
           </div>
-          <div className={styles.sumSub}>What we arrange</div>
+          {feelText && (
+            <>
+              <div className={styles.sumSub}>How the day feels</div>
+              <p className={styles.sumFeel}>{feelText}</p>
+            </>
+          )}
+          <div className={styles.sumSub}>What we take care of</div>
           <ul className={styles.sumList}>
             {includes.map((i) => (
-              <li key={i}>{i}</li>
+              <li key={i.title}>
+                <b>{i.title}</b>
+                {i.note && <span>{i.note}</span>}
+              </li>
             ))}
           </ul>
           <div className={styles.sumSub}>How you&apos;d like to pay</div>

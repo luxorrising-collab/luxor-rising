@@ -10,7 +10,6 @@ import styles from "./ExperienceTemplate.module.css";
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
 
 export type ExperienceHighlight = { title: string; description: string };
-export type TakenCareOfItem = { title: string; note?: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
 export type ValueStackRow = { label: string; price: string };
 export type FaqItemData = { q: string; a: string };
@@ -27,7 +26,6 @@ export type ExperienceTemplateProps = {
   bestTime: string;
   duration: string;
   glanceIncludes: string;
-  takenCareOf?: TakenCareOfItem[];
   highlights: ExperienceHighlight[];
   contentNode: Node;
   momentQuote?: string;
@@ -68,7 +66,6 @@ export default function ExperienceTemplate({
   bestTime,
   duration,
   glanceIncludes,
-  takenCareOf = [],
   highlights,
   contentNode,
   momentQuote,
@@ -152,20 +149,9 @@ export default function ExperienceTemplate({
               <span>Cancellation</span>Free, up to 7 days
             </div>
           </div>
+          {/* Only the feel of the day here — "What we take care of" lives once,
+              down in the Reserve section, so it isn't said twice on the page. */}
           {glanceIncludes && <p className={styles.glanceIncl}>{glanceIncludes}</p>}
-          {takenCareOf.length > 0 && (
-            <div className={styles.care}>
-              <div className={styles.careHead}>What we take care of</div>
-              <ul className={styles.careList}>
-                {takenCareOf.map((item, i) => (
-                  <li key={item.title || i}>
-                    <b>{item.title}</b>
-                    {item.note && <span>{item.note}</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </section>
 

@@ -514,47 +514,45 @@ export default async function ConciergeDayPage() {
       ) : null,
     guarantee: (
       <section key="guarantee" className={styles.guarantee}>
-        <div className={styles.grGlow} aria-hidden />
-        <Reveal className={`wrap-narrow center ${styles.grInner}`}>
-          <div className={styles.grSeal} aria-hidden>
-            <span className={styles.grSealMark}>✓</span>
+        <Reveal className={`wrap-narrow ${styles.grInner}`}>
+          <div className={styles.grHead}>
+            <span className="eyebrow">The Luxor Rising promise</span>
+            <h2 className="display">Your day, guaranteed — or we make it right.</h2>
+            <p className={styles.grLead}>
+              You&apos;re booking a day you can&apos;t preview, in a country you may not know well.
+              So we carry the risk, not you — three ways, in writing.
+            </p>
           </div>
-          <span className="eyebrow" style={{ color: "var(--color-gold-soft)" }}>
-            The Luxor Rising promise
-          </span>
-          <h2 className="display" style={{ marginTop: ".5rem" }}>
-            Your day, guaranteed — or we make it right.
-          </h2>
-          <p className={styles.grLead}>
-            You&apos;re booking a day you can&apos;t preview, in a country you may not know well. So
-            we carry the risk, not you — three ways, in writing.
-          </p>
           <div className={styles.grGrid}>
-            <div className={`${styles.gr} ${styles.grFeature}`}>
-              <span className={styles.grIcon} aria-hidden>
+            <div className={styles.gr}>
+              <span className={styles.grKicker}>Our strongest promise</span>
+              <div className={styles.grIcon} aria-hidden>
                 ✓
-              </span>
+              </div>
               <h4>Love the first two hours, or it&apos;s free</h4>
               <p>
-                If the first two hours don&apos;t feel different from any tour you&apos;ve been on
-                before, say so and the day is on us. No form, no argument — tell your consigliere
-                before lunch and we refund it in full.
+                If the first two hours don&apos;t feel different from any tour you&apos;ve taken
+                before, tell your consigliere before lunch — no form, no argument — and the whole
+                day is refunded in full.
               </p>
             </div>
             <div className={styles.gr}>
-              <span className={styles.grIcon} aria-hidden>
+              <div className={styles.grIcon} aria-hidden>
                 ↺
-              </span>
+              </div>
               <h4>Cancel freely</h4>
-              <p>Plans change. Cancel up to 7 days before for a full refund — no questions, no fine print.</p>
+              <p>
+                Plans change. Cancel up to 7 days before for a full refund — no questions, no fine
+                print.
+              </p>
             </div>
             <div className={styles.gr}>
-              <span className={styles.grIcon} aria-hidden>
+              <div className={styles.grIcon} aria-hidden>
                 €
-              </span>
+              </div>
               <h4>Pay your way</h4>
               <p>
-                Settle in full, or place a deposit to hold your date and pay the rest on the day.
+                Pay in full, or leave a deposit to hold your date and settle the rest on the day.
                 Your spot is secured either way.
               </p>
             </div>

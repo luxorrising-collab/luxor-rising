@@ -61,6 +61,57 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
 
+  // Real guest reviews also power star ratings in search results. Emitted only
+
+  // when we actually have them — never fabricated, never an empty rating.
+
+  const realReviews = (globals?.testimonials ?? []).filter((t) => t.quote && t.author);
+
+  const reviewJsonLd = realReviews.length
+
+    ? {
+
+        aggregateRating: {
+
+          "@type": "AggregateRating",
+
+          ratingValue: (
+
+            realReviews.reduce((a, t) => a + (t.rating ?? 5), 0) / realReviews.length
+
+          ).toFixed(1),
+
+          reviewCount: realReviews.length,
+
+        },
+
+        review: realReviews.map((t) => ({
+
+          "@type": "Review",
+
+          reviewBody: t.quote,
+
+          author: { "@type": "Person", name: t.author },
+
+          ...(t.date ? { datePublished: t.date } : {}),
+
+          reviewRating: {
+
+            "@type": "Rating",
+
+            ratingValue: String(t.rating ?? 5),
+
+            bestRating: "5",
+
+          },
+
+        })),
+
+      }
+
+    : {};
+
+
   const JSON_LD = {
     "@context": "https://schema.org",
     "@graph": [
@@ -79,6 +130,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         description: entry.hook,
         brand: { "@type": "Brand", name: "Luxor Rising" },
         category: "Private guided experience",
+        ...reviewJsonLd,
         areaServed: "Luxor, Egypt",
         offers: {
           "@type": "Offer",
@@ -146,6 +198,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         howItWorksTitle={globals?.howItWorksTitle ?? "You choose a date. We arrange everything."}
         howItWorksSteps={(globals?.howItWorksSteps ?? []).map((s) => ({ title: s.title, description: s.description }))}
         disclosureText={globals?.disclosureText ?? ""}
+        consigliereEyebrow={globals?.consigliereEyebrow}
+        consigliereTitle={globals?.consigliereTitle}
+        consigliereLead={globals?.consigliereLead}
+        consiglierePoints={(globals?.consiglierePoints ?? []).map((p) => ({ title: p.title, description: p.description }))}
         guaranteeEyebrow={globals?.guaranteeEyebrow ?? "Our promise"}
         guaranteeTitle={globals?.guaranteeTitle ?? "Reserved with confidence — or we make it right."}
         guaranteeItems={(globals?.guaranteeItems ?? []).map((g) => ({ title: g.title, description: g.description }))}

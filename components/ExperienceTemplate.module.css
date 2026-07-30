@@ -170,56 +170,43 @@
   max-width: 70ch;
 }
 
-/* "What we take care of" — reassurance, after the feel of the day has landed */
-.care {
-  max-width: 760px;
-  margin: 2.4rem auto 0;
-  padding-top: 1.8rem;
+/* what a consigliere is */
+.consigliere {
+  background: var(--color-cream);
   border-top: 1px solid var(--color-cream-deep);
+  border-bottom: 1px solid var(--color-cream-deep);
 }
-.careHead {
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-gold-deep);
-  text-align: center;
-  margin-bottom: 1.2rem;
-}
-.careList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.consGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9rem 2rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+  margin-top: clamp(1.8rem, 4vw, 2.6rem);
 }
-.careList li {
-  position: relative;
-  padding-left: 1.5rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: var(--color-espresso);
+.consItem {
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-gold-soft);
 }
-.careList li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--color-gold-deep);
-  font-weight: 700;
-}
-.careList b {
-  font-weight: 600;
+.consItem h4 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
   color: var(--color-ink);
+  margin-bottom: 0.45rem;
+  line-height: 1.2;
 }
-.careList span {
-  display: block;
-  font-size: 0.84rem;
-  color: var(--color-muted);
-  margin-top: 0.1rem;
+.consItem p {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--color-espresso);
+  opacity: 0.85;
 }
-@media (max-width: 640px) {
-  .careList {
+@media (max-width: 860px) {
+  .consGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .consGrid {
     grid-template-columns: 1fr;
   }
 }

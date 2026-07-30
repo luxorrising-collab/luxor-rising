@@ -494,6 +494,19 @@ export default config({
           multiline: true,
           description: "Legal/positioning line shown under \"How it works\" on every product page.",
         }),
+        // "What a consigliere actually is" — shown on every product page, just
+        // before the booking section, where the value question peaks.
+        consigliereEyebrow: fields.text({ label: "Consigliere eyebrow" }),
+        consigliereTitle: fields.text({ label: "Consigliere title" }),
+        consigliereLead: fields.text({ label: "Consigliere lead", multiline: true }),
+        consiglierePoints: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            description: fields.text({ label: "Description", multiline: true }),
+          }),
+          { label: "What a consigliere does", itemLabel: (p) => p.fields.title.value || "Point" }
+        ),
+
         guaranteeEyebrow: fields.text({ label: "Guarantee eyebrow" }),
         guaranteeTitle: fields.text({ label: "Guarantee title" }),
         guaranteeItems: fields.array(
@@ -512,10 +525,21 @@ export default config({
           fields.object({
             quote: fields.text({ label: "Quote", multiline: true }),
             author: fields.text({ label: "Author", description: 'e.g. "Lena & Tomáš, Vienna"' }),
+            rating: fields.number({
+              label: "Rating out of 5",
+              validation: { min: 1, max: 5 },
+              defaultValue: 5,
+            }),
+            date: fields.text({
+              label: "Date (YYYY-MM-DD)",
+              description: "When they travelled — used for review rich results in Google.",
+            }),
           }),
           {
-            label: "Testimonials",
-            itemLabel: (props) => props.fields.author.value || "Testimonial",
+            label: "Guest reviews (real only)",
+            itemLabel: (props) => props.fields.author.value || "Review",
+            description:
+              "Only real, attributable reviews. These also power the star ratings Google shows — inventing them would be both dishonest and a search penalty.",
           }
         ),
       },

@@ -183,6 +183,32 @@ export default function ExperienceConfigurator({
               it gets, and confirms the exact timing with you within 24 hours of booking.
             </div>
           </div>
+
+          {/* Detail lives here, in the wide column — the price card stays short so
+              the Reserve button is never pushed below the fold. */}
+          {feelText && (
+            <div className={styles.step}>
+              <div className={styles.stepH}>
+                <div className={styles.stepN}>4</div>
+                <h3>How the day feels</h3>
+              </div>
+              <p className={styles.feelText}>{feelText}</p>
+            </div>
+          )}
+
+          {includes.length > 0 && (
+            <div className={styles.step}>
+              <div className={styles.careHead}>What we take care of</div>
+              <ul className={styles.careList}>
+                {includes.map((i) => (
+                  <li key={i.title}>
+                    <b>{i.title}</b>
+                    {i.note && <span>{i.note}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className={styles.summary}>
@@ -198,21 +224,6 @@ export default function ExperienceConfigurator({
             {group}
             {group > 1 ? " guests" : " guest"} · {tripDate || "pick your date"}
           </div>
-          {feelText && (
-            <>
-              <div className={styles.sumSub}>How the day feels</div>
-              <p className={styles.sumFeel}>{feelText}</p>
-            </>
-          )}
-          <div className={styles.sumSub}>What we take care of</div>
-          <ul className={styles.sumList}>
-            {includes.map((i) => (
-              <li key={i.title}>
-                <b>{i.title}</b>
-                {i.note && <span>{i.note}</span>}
-              </li>
-            ))}
-          </ul>
           <div className={styles.sumSub}>How you&apos;d like to pay</div>
           <div className={styles.payOpts}>
             <button

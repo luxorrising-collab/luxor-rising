@@ -15,6 +15,7 @@ export type ValueStackRow = { label: string; price: string };
 export type FaqItemData = { q: string; a: string };
 export type HowItWorksStep = { title: string; description: string };
 export type GuaranteeItem = { title: string; description: string };
+export type ConsigliereePoint = { title: string; description: string };
 export type Testimonial = { quote: string; author: string };
 
 export type ExperienceTemplateProps = {
@@ -45,6 +46,10 @@ export type ExperienceTemplateProps = {
   howItWorksTitle: string;
   howItWorksSteps: HowItWorksStep[];
   disclosureText: string;
+  consigliereEyebrow?: string;
+  consigliereTitle?: string;
+  consigliereLead?: string;
+  consiglierePoints?: ConsigliereePoint[];
   guaranteeEyebrow: string;
   guaranteeTitle: string;
   guaranteeItems: GuaranteeItem[];
@@ -85,6 +90,10 @@ export default function ExperienceTemplate({
   howItWorksTitle,
   howItWorksSteps,
   disclosureText,
+  consigliereEyebrow,
+  consigliereTitle,
+  consigliereLead,
+  consiglierePoints = [],
   guaranteeEyebrow,
   guaranteeTitle,
   guaranteeItems,
@@ -235,6 +244,36 @@ export default function ExperienceTemplate({
           {disclosureText && <div className="disclosure">{disclosureText}</div>}
         </Reveal>
       </section>
+
+      {/* WHAT A CONSIGLIERE IS — right before the price, where the value question peaks */}
+      {consigliereTitle && (
+        <section className={styles.consigliere}>
+          <div className="wrap">
+            <div className="center">
+              <span className="eyebrow">{consigliereEyebrow}</span>
+              <h2 className="display">{consigliereTitle}</h2>
+              {consigliereLead && (
+                <p
+                  className="lead"
+                  style={{ marginTop: ".7rem", maxWidth: "62ch", marginLeft: "auto", marginRight: "auto" }}
+                >
+                  {consigliereLead}
+                </p>
+              )}
+            </div>
+            {consiglierePoints.length > 0 && (
+              <Reveal className={styles.consGrid}>
+                {consiglierePoints.map((p, i) => (
+                  <div className={styles.consItem} key={p.title || i}>
+                    <h4>{p.title}</h4>
+                    <p>{p.description}</p>
+                  </div>
+                ))}
+              </Reveal>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* BOOK / CONFIGURATOR */}
       <section id="book" style={{ background: "var(--color-paper)" }}>

@@ -282,6 +282,11 @@ export default async function ConciergeDayPage() {
         title={product?.consigliereTitle ?? ""}
         lead={product?.consigliereLead}
         image={product?.consigliereImage || undefined}
+        images={[
+          { src: "/images/hosts/ahmed-nile-sunset.jpg", label: "Your consigliere", position: "72% center" },
+          { src: "/images/hosts/dr-nour.jpg", label: "Your Egyptologist", position: "center" },
+          { src: "/images/hosts/temple-guards.jpg", label: "The temple guards", position: "center" },
+        ]}
         howItWorks={{
           label: "How your day works",
           steps: [
@@ -521,47 +526,20 @@ export default async function ConciergeDayPage() {
         <Reveal className={`wrap-narrow center ${styles.grInner}`}>
           <span className="eyebrow">The Luxor Rising promise</span>
           <h2 className="display">Your day, guaranteed — or we make it right.</h2>
-          <p className={styles.grLead}>
-            You&apos;re booking a day you can&apos;t preview, in a country you may not know well.
-            So we carry the risk, not you — three ways, in writing.
-          </p>
           <div className={styles.grGrid}>
             <div className={styles.gr}>
-              <div className={styles.grIcon} aria-hidden>
-                ✓
-              </div>
               <h4>Love the first two hours, or it&apos;s free</h4>
-              <p>
-                If the first two hours don&apos;t feel different from any tour you&apos;ve taken
-                before, tell your consigliere before lunch — no form, no argument — and the whole
-                day is refunded in full.
-              </p>
+              <p>Not different from any tour you&apos;ve taken? Say so before lunch, refunded in full.</p>
             </div>
             <div className={styles.gr}>
-              <div className={styles.grIcon} aria-hidden>
-                ↺
-              </div>
               <h4>Cancel freely</h4>
-              <p>
-                Plans change. Cancel up to 7 days before for a full refund — no questions, no fine
-                print.
-              </p>
+              <p>Full refund up to 7 days before. No questions, no fine print.</p>
             </div>
             <div className={styles.gr}>
-              <div className={styles.grIcon} aria-hidden>
-                €
-              </div>
               <h4>Pay your way</h4>
-              <p>
-                Pay in full, or leave a deposit to hold your date and settle the rest on the day.
-                Your spot is secured either way.
-              </p>
+              <p>Pay in full, or a deposit now and the rest on the day.</p>
             </div>
           </div>
-          <p className={styles.grFine}>
-            Real people, reachable all day — not a call centre. If anything is off, we fix it before
-            you have to ask.
-          </p>
         </Reveal>
       </section>
     ),
@@ -604,29 +582,6 @@ export default async function ConciergeDayPage() {
           <p className="lead" style={{ marginTop: ".8rem" }}>
             {page?.finalText}
           </p>
-          <ol className={styles.finalSteps}>
-            <li>
-              <span className={styles.finalStepN}>1</span>
-              <span>
-                <b>You shape your day.</b> Pick a date and tell us what you&apos;re drawn to — a
-                minute, no obligation.
-              </span>
-            </li>
-            <li>
-              <span className={styles.finalStepN}>2</span>
-              <span>
-                <b>We arrange every hour.</b> The right places at their quietest, your Egyptologist,
-                the private car, the guards who open doors — one consigliere owns the whole day.
-              </span>
-            </li>
-            <li>
-              <span className={styles.finalStepN}>3</span>
-              <span>
-                <b>You just arrive.</b> Nothing to organise, decide or carry. You experience Luxor;
-                we handle the rest.
-              </span>
-            </li>
-          </ol>
           <div style={{ marginTop: "1.8rem" }}>
             <Link href="#design" className="btn btn-primary btn-lg">
               Design your day →

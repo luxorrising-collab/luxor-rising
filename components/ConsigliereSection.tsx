@@ -9,12 +9,16 @@ export type ConsHowItWorks = {
   label?: string;
   steps: { title: string; description: string }[];
 };
+export type ConsigliereSlice = { src: string; label?: string; position?: string };
 
 type ConsigliereSectionProps = {
   eyebrow?: string;
   title: string;
   lead?: string;
   image?: string;
+  /** Optional split background — one slice per person (consigliere, Egyptologist,
+   *  guard). When two or more are given, they replace the single cover image. */
+  images?: ConsigliereSlice[];
   /** How-it-works steps, folded into the cover overlay as a slim numbered flow. */
   howItWorks?: ConsHowItWorks;
   points: ConsigliereePoint[];
@@ -32,21 +36,44 @@ export default function ConsigliereSection({
   title,
   lead,
   image,
+  images,
   howItWorks,
   points,
   disclosure,
 }: ConsigliereSectionProps) {
   if (!title) return null;
   const steps = howItWorks?.steps ?? [];
+  const slices = images && images.length > 1 ? images : null;
   return (
     <>
       <section className={styles.consCover}>
-        {image && (
+        {slices ? (
+          <div className={styles.consSlices}>
+            {slices.map((s, i) => (
+              <div className={styles.consSlice} key={s.src || i}>
+                <Image
+                  src={s.src}
+                  alt={s.label || ""}
+                  fill
+                  sizes="(max-width: 860px) 34vw, 22vw"
+                  style={s.position ? { objectPosition: s.position } : undefined}
+                />
+              </div>
+            ))}
+          </div>
+        ) : image ? (
           <div className={styles.consCoverBg}>
             <Image src={image} alt={eyebrow || ""} fill sizes="100vw" />
           </div>
-        )}
+        ) : null}
         <div className={styles.consCoverScrim} />
+        {slices && (
+          <div className={styles.consCaps} aria-hidden>
+            {slices.map((s, i) => (
+              <span key={s.src || i}>{s.label}</span>
+            ))}
+          </div>
+        )}
         <div className={`wrap ${styles.consCoverIn}`}>
           {eyebrow && <span className="eyebrow">{eyebrow}</span>}
           <h2 className="display">{title}</h2>

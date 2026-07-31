@@ -19,6 +19,52 @@
      scrim darkens the left, where the text sits. */
   object-position: 78% center;
 }
+/* split background — one slice per person (consigliere / Egyptologist / guard) */
+.consSlices {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+}
+.consSlice {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.consSlice + .consSlice {
+  border-left: 2px solid rgba(232, 217, 188, 0.32);
+}
+.consSlice :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+/* per-slice captions, above the scrim so they stay legible */
+.consCaps {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  pointer-events: none;
+}
+.consCaps span {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  padding: 0.8rem 0.5rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f3e7cf;
+  background: linear-gradient(transparent, rgba(10, 8, 4, 0.62));
+}
+@media (max-width: 860px) {
+  .consCaps span {
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+  }
+}
 .consCoverScrim {
   position: absolute;
   inset: 0;

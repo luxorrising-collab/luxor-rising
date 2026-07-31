@@ -66,7 +66,7 @@ export default function ConsigliereSection({
             <Image src={image} alt={eyebrow || ""} fill sizes="100vw" />
           </div>
         ) : null}
-        <div className={styles.consCoverScrim} />
+        <div className={slices ? styles.consSlicesScrim : styles.consCoverScrim} />
         {slices && (
           <div className={styles.consCaps} aria-hidden>
             {slices.map((s, i) => (

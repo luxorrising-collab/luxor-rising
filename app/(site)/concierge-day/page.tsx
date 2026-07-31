@@ -283,9 +283,9 @@ export default async function ConciergeDayPage() {
         lead={product?.consigliereLead}
         image={product?.consigliereImage || undefined}
         images={[
-          { src: "/images/hosts/temple-guards.jpg", label: "The temple guards", position: "center" },
-          { src: "/images/hosts/ahmed-nile-sunset.jpg", label: "Your consigliere", position: "72% center" },
-          { src: "/images/hosts/dr-nour.jpg", label: "Your Egyptologist", position: "center" },
+          { src: "/images/hosts/dr-nour.jpg", label: "Your Egyptologist", position: "50% 55%" },
+          { src: "/images/hosts/ahmed-nile-sunset.jpg", label: "Your consigliere", position: "80% center" },
+          { src: "/images/hosts/temple-guards.jpg", label: "The temple guards", position: "45% 40%" },
         ]}
         howItWorks={{
           label: "How your day works",

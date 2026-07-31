@@ -608,7 +608,7 @@ export default async function ConciergeDayPage() {
 
   return (
     <>
-      <Nav scrollAware={false} ctaHref="#design" ctaLabel="Design your day" />
+      <Nav ctaHref="#design" ctaLabel="Design your day" />
 
       {/* HERO */}
       <section className={styles.phero}>

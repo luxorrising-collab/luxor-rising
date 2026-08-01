@@ -11,6 +11,10 @@ heroImages:
   - /images/concierge-day/heroImages/0.jpg
   - /images/concierge-day/heroImages/1.jpg
   - /images/concierge-day/heroImages/2.jpg
+  - /images/concierge-day/heroImages/3.jpg
+  - /images/concierge-day/heroImages/4.jpg
+  - /images/concierge-day/heroImages/5.jpg
+  - /images/concierge-day/heroImages/6.jpg
 sections:
   - section: contrast
     visible: true
@@ -31,8 +35,7 @@ sections:
   # Sample reviews shown for layout; no structured data until reviewsVerified is on.
   - section: socialProof
     visible: true
-  - section: guarantee
-    visible: true
+  # "guarantee" is now folded into the final CTA as one closing section.
   - section: scarcity
     visible: true
   - section: gallery
@@ -147,6 +150,21 @@ experiences:
     title: A night in Luxor city
     description: The souk, the lantern-lit Corniche, and hosts who actually know the place.
     badge: After dark
+  - image: /images/concierge-day/experiences/8/image.jpg
+    title: Hatshepsut at Deir el-Bahari
+    description: >-
+      The temple the woman who called herself king cut into the cliffs — best in
+      the first light, before the terraces fill.
+  - image: /images/concierge-day/experiences/9/image.jpg
+    title: A private Nile dinner cruise
+    description: >-
+      The river after dark, a table that's yours alone, and Luxor lit up along
+      the banks as you drift.
+  - image: /images/concierge-day/experiences/10/image.jpg
+    title: Dawn camel ride & Bedouin breakfast
+    description: >-
+      Out to the desert's edge at first light, then breakfast set in the sand by
+      a Bedouin host — quiet, and entirely yours.
 gallery:
   - image: /images/concierge-day/gallery/0/image.jpg
     caption: Karnak, before the crowds

@@ -286,12 +286,7 @@ export default async function ConciergeDayPage() {
         eyebrow={product?.consigliereEyebrow}
         title={product?.consigliereTitle ?? ""}
         lead={product?.consigliereLead}
-        image={product?.consigliereImage || undefined}
-        images={[
-          { src: "/images/hosts/dr-nour.jpg", label: "Your Egyptologist", position: "50% 55%" },
-          { src: "/images/hosts/ahmed-nile-sunset.jpg", label: "Your consigliere", position: "80% center" },
-          { src: "/images/hosts/temple-guards.jpg", label: "The temple guards", position: "45% 40%" },
-        ]}
+        image={product?.consigliereImage || "/images/hosts/ahmed-nile-sunset.jpg"}
         howItWorks={{
           label: "How your day works",
           steps: [
@@ -591,6 +586,24 @@ export default async function ConciergeDayPage() {
             <Link href="#design" className="btn btn-primary btn-lg">
               Design your day →
             </Link>
+          </div>
+          {/* The Luxor Rising promise, folded into the close as one guarantee section */}
+          <div className={styles.finalGuarantee}>
+            <span className={styles.finalGrEyebrow}>The Luxor Rising promise — or we make it right</span>
+            <div className={styles.finalGrGrid}>
+              <div className={styles.finalGr}>
+                <h4>Love the first two hours, or it&apos;s free</h4>
+                <p>Not different from any tour you&apos;ve taken? Say so before lunch, refunded in full.</p>
+              </div>
+              <div className={styles.finalGr}>
+                <h4>Cancel freely</h4>
+                <p>Full refund up to 7 days before. No questions, no fine print.</p>
+              </div>
+              <div className={styles.finalGr}>
+                <h4>Pay your way</h4>
+                <p>Pay in full, or a deposit now and the rest on the day.</p>
+              </div>
+            </div>
           </div>
           <p className={styles.finalFine}>
             7-day free cancellation · deposit or pay in full · a handful of days each week

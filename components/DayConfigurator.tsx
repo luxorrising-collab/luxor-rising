@@ -37,7 +37,7 @@ const JOURNEY: Record<
     companion: "Luxor Temple",
   },
   balloon: {
-    name: "Eagle at Dawn",
+    name: "Fly like an eagle",
     temple: "Hot-air balloon at dawn — up over the West Bank like an eagle",
     companion: "Then the day flows, decided with your consigliere",
   },
@@ -545,7 +545,7 @@ export default function DayConfigurator({
                     <Image src={img.journeyMedinet} alt="Medinet Habu" fill sizes="240px" />
                     <div className={styles.jcCap}>
                       <span className={styles.jcEyebrow}>The quiet one</span>
-                      <h4>Medinet Habu</h4>
+                      <h4>Initiation to power</h4>
                     </div>
                   </div>
                   <div className={styles.jcBody}>
@@ -589,7 +589,7 @@ export default function DayConfigurator({
                     <Image src={img.journeyBalloon} alt="Hot-air balloon at dawn" fill sizes="240px" />
                     <div className={styles.jcCap}>
                       <span className={styles.jcEyebrow}>The Free Spirit</span>
-                      <h4>Eagle at Dawn</h4>
+                      <h4>Fly like an eagle</h4>
                     </div>
                   </div>
                   <div className={styles.jcBody}>

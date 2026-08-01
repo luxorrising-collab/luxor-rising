@@ -167,7 +167,16 @@
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--color-gold-deep);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+/* the experience name — the card's real title, so it's clear what's being booked */
+.sumName {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.18;
+  color: var(--color-ink);
+  margin-bottom: 0.5rem;
 }
 .sumStars {
   font-size: 0.8rem;

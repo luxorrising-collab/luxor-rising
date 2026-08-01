@@ -208,7 +208,8 @@ export default function ExperienceConfigurator({
         </div>
 
         <div className={styles.summary}>
-          <div className={styles.sumH}>Your experience</div>
+          <div className={styles.sumH}>You&apos;re reserving</div>
+          <div className={styles.sumName}>{name}</div>
           {reviewCount > 0 && (
             <div className={styles.sumStars}>
               <span className={styles.stars}>★★★★★</span>
@@ -216,9 +217,7 @@ export default function ExperienceConfigurator({
               {reviewCount === 1 ? "review" : "reviews"}
             </div>
           )}
-          <div className={styles.sumProof}>
-            {name} · private &amp; fully arranged
-          </div>
+          <div className={styles.sumProof}>Private &amp; fully arranged</div>
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>
             {group > 1 ? euro(perPerson) + " per person · more of you, less each" : "Private, just you"}

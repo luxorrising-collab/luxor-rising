@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/*": ["./content/**"],
   },
+  // Next 16 only serves quality values declared here; hero photos use 90 for
+  // crisp full-bleed rendering, everything else stays on the default 75.
+  images: {
+    qualities: [75, 90],
+  },
 };
 
 export default nextConfig;

@@ -230,18 +230,23 @@ export default async function ConciergeDayPage() {
     dayShape: (
       <section key="dayShape" style={{ background: "var(--color-paper)" }}>
         <Reveal className="wrap-narrow">
-          <div className="center" style={{ marginBottom: "2rem" }}>
+          <div className="center" style={{ marginBottom: "1.4rem" }}>
             <span className="eyebrow">{page?.dayShapeEyebrow}</span>
             <h2 className="display">{page?.dayShapeTitle}</h2>
+            <p className="lead" style={{ marginTop: ".9rem", maxWidth: "62ch", marginInline: "auto" }}>
+              Two people can book the same temples and want completely different days. So
+              instead of a timetable, your consigliere composes the day around you — and puts
+              you in each place at the hour it is genuinely quiet.
+            </p>
           </div>
-          <ol className={styles.timeline}>
+          <div className={styles.principles}>
             {(page?.dayShapeSteps ?? []).map((s, i) => (
-              <li className={styles.tlItem} key={s.time || i}>
-                <span className={styles.tlTime}>{s.time}</span>
-                <span className={styles.tlLabel}>{s.label}</span>
-              </li>
+              <div className={styles.prItem} key={s.time || i}>
+                <h3 className={styles.prHead}>{s.time}</h3>
+                <p className={styles.prBody}>{s.label}</p>
+              </div>
             ))}
-          </ol>
+          </div>
           {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
         </Reveal>
       </section>
@@ -615,7 +620,7 @@ export default async function ConciergeDayPage() {
         <div className={styles.pheroBgs}>
           {heroBgList.map((src) => (
             <div key={src} className={styles.pheroBg}>
-              <Image src={src} alt="" fill priority sizes="100vw" />
+              <Image src={src} alt="" fill priority sizes="100vw" quality={90} />
             </div>
           ))}
         </div>

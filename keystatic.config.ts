@@ -657,18 +657,18 @@ export default config({
         mechanismText: fields.text({ label: "Mechanism text", multiline: true }),
         mechanismNote: fields.text({ label: "Mechanism fine print", multiline: true }),
 
-        // The shape of the day — an arc with hours, not a list of stops.
+        // How the day is arranged around the guest — principles, not a timetable.
         dayShapeEyebrow: fields.text({ label: "Shape-of-day eyebrow" }),
         dayShapeTitle: fields.text({ label: "Shape-of-day title" }),
         dayShapeSteps: fields.array(
           fields.object({
             time: fields.text({
-              label: "Phase",
-              description: 'A moment in the day, not a clock time — e.g. "The quiet hour"',
+              label: "Principle heading",
+              description: 'How we arrange the day, not a clock time — e.g. "We start with you, not a route"',
             }),
-            label: fields.text({ label: "What it feels like", multiline: true }),
+            label: fields.text({ label: "Explanation", multiline: true }),
           }),
-          { label: "The feel of the day", itemLabel: (p) => p.fields.time.value || "Phase" }
+          { label: "How the day is arranged", itemLabel: (p) => p.fields.time.value || "Principle" }
         ),
         dayShapeNote: fields.text({ label: "Shape-of-day closing line", multiline: true }),
 

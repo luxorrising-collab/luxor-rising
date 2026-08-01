@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./ExperienceConfigurator.module.css";
 import StickyBar from "./StickyBar";
@@ -53,6 +54,8 @@ type ExperienceConfiguratorProps = {
   /** Aggregate review summary — shown as a star line on the price card. */
   reviewAverage?: string;
   reviewCount?: number;
+  /** A photo of the place, shown as a banner at the top of the summary card. */
+  image?: string;
 };
 
 export default function ExperienceConfigurator({
@@ -70,6 +73,7 @@ export default function ExperienceConfigurator({
   feelText,
   reviewAverage,
   reviewCount = 0,
+  image,
 }: ExperienceConfiguratorProps) {
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
@@ -208,8 +212,21 @@ export default function ExperienceConfigurator({
         </div>
 
         <div className={styles.summary}>
-          <div className={styles.sumH}>You&apos;re reserving</div>
-          <div className={styles.sumName}>{name}</div>
+          {image ? (
+            <div className={styles.sumImg}>
+              <Image src={image} alt={name} fill sizes="(max-width: 880px) 100vw, 34vw" />
+              <div className={styles.sumImgScrim} />
+              <div className={styles.sumImgCap}>
+                <span className={styles.sumH}>You&apos;re reserving</span>
+                <span className={styles.sumName}>{name}</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className={styles.sumH}>You&apos;re reserving</div>
+              <div className={styles.sumName}>{name}</div>
+            </>
+          )}
           {reviewCount > 0 && (
             <div className={styles.sumStars}>
               <span className={styles.stars}>★★★★★</span>

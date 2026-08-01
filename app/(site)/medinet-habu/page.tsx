@@ -185,6 +185,7 @@ export default async function MedinetHabuPage() {
             feelText={entry.glanceIncludes}
             reviewAverage={reviewAverage}
             reviewCount={reviewCount}
+            image={entry.heroImage || undefined}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

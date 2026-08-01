@@ -171,6 +171,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
             feelText={entry.glanceIncludes}
             reviewAverage={reviewAverage}
             reviewCount={reviewCount}
+            image={entry.heroImage || undefined}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

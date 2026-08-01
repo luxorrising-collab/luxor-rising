@@ -10,6 +10,7 @@ import DayConfigurator from "@/components/DayConfigurator";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
+import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./ConciergeDayPage.module.css";
@@ -400,34 +401,7 @@ export default async function ConciergeDayPage() {
               to start designing your day.
             </p>
           </div>
-          <Reveal className={styles.expGrid}>
-            {expCards.map((e) => (
-              <div className={styles.exp} key={e.h}>
-                <Image src={e.src} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" />
-                <span className={styles.expLocal} aria-hidden>
-                  <span className={styles.expLocalDot} />
-                  Local host
-                </span>
-                {e.k && <span className={styles.expBadge}>{e.k}</span>}
-                <div className={styles.expScrim} />
-                <div className={styles.expTx}>
-                  <h4>{e.h}</h4>
-                  <p>{e.p}</p>
-                </div>
-              </div>
-            ))}
-            <Link className={styles.expAll} href="#design">
-              <div className={styles.expAllIn}>
-                <div className="k">The full collection</div>
-                <h4>Explore all experiences</h4>
-                <p>
-                  Temples, tombs, the Nile, the desert and more — design your day and we&apos;ll
-                  build it from the full collection.
-                </p>
-                <span className={styles.expAllCta}>Design your day →</span>
-              </div>
-            </Link>
-          </Reveal>
+          <ExperienceGrid cards={expCards} initial={6} />
         </div>
       </section>
     ),

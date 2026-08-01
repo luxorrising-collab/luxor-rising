@@ -219,13 +219,6 @@ export default function ExperienceConfigurator({
           <div className={styles.sumProof}>
             {name} · private &amp; fully arranged
           </div>
-          {/* A short taste of the day, right before the price — sells before it asks. */}
-          {feelText && (
-            <div className={styles.sumFeel}>
-              <span className={styles.sumFeelH}>How the day feels</span>
-              {feelText}
-            </div>
-          )}
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>
             {group > 1 ? euro(perPerson) + " per person · more of you, less each" : "Private, just you"}
@@ -271,6 +264,14 @@ export default function ExperienceConfigurator({
           <div className={styles.sumReassure}>
             Secure checkout by Stripe · No account needed · Free cancellation up to 7 days before
           </div>
+          {/* The emotional "how it feels" note sits BELOW the CTA — it reinforces the
+              decision without pushing the price and Reserve button below the fold. */}
+          {feelText && (
+            <div className={styles.sumFeel}>
+              <span className={styles.sumFeelH}>How the day feels</span>
+              {feelText}
+            </div>
+          )}
           <div className={styles.sumFine}>
             Private, just your group · Everything arranged end to end · Your consigliere confirms the
             exact timing within 24 hours

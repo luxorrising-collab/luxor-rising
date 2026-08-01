@@ -234,9 +234,9 @@
   font-size: 0.86rem;
   line-height: 1.6;
   color: var(--color-espresso);
-  margin: 0 0 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--color-cream-deep);
+  margin: 0.9rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-cream-deep);
 }
 .sumFeelH {
   display: block;

@@ -5,7 +5,7 @@ heroSubtitle: >-
   Egyptologist, the Nile at golden hour. You decide nothing, carry nothing, and
   miss nothing.
 heroTrustLine: 4.9 · 60+ private days arranged · trusted by travellers in Hurghada & Luxor
-startingPrice: 450
+startingPrice: 650
 priceNote: / day · ≤4 guests, private
 heroImages:
   - /images/concierge-day/heroImages/0.jpg
@@ -18,31 +18,24 @@ heroImages:
 sections:
   - section: contrast
     visible: true
-  # Full-width feel band (flowing prose) + the day's phases as a schedule.
   - section: dream
     visible: true
   - section: dayShape
     visible: true
   - section: experiences
     visible: true
-  # Who runs your day — shared consigliere cover, with how-it-works folded in.
   - section: consigliere
     visible: true
   - section: builder
     visible: true
   - section: valueStack
     visible: true
-  # Sample reviews shown for layout; no structured data until reviewsVerified is on.
   - section: socialProof
     visible: true
-  # "guarantee" is now folded into the final CTA as one closing section.
   - section: scarcity
     visible: true
   - section: gallery
     visible: true
-  # Straight to the close after the gallery. "mechanism" folded into the FAQ;
-  # "threshold" and "multiDay" retired — a single-day LP shouldn't send traffic
-  # to a longer journey, and they read as repetitive this far down.
   - section: finalCta
     visible: true
   - section: faq
@@ -64,10 +57,13 @@ badWayItems:
   - You hope it's good. You find out on the day.
 goodWayItems:
   - Coffee, the sunrise over the Nile, and a car that waits for you
-  - Each place at the hour it is actually quiet — which is rarely the obvious one
+  - >-
+    Each place at the hour it is actually quiet — which is rarely the obvious
+    one
   - Three places, unhurried — not seven, ticked off
   - Your licensed Egyptologist, named and booked before someone else takes them
-  - One consigliere who owns the whole day — and a refund if the first two hours
+  - >-
+    One consigliere who owns the whole day — and a refund if the first two hours
     don't feel different
 mechanismEyebrow: Why we can actually do this
 mechanismTitle: Every site has quiet hours. Almost nobody knows when they are.

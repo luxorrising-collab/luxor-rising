@@ -686,16 +686,33 @@ export default function DayConfigurator({
         {/* Summary */}
         <div>
           <div className={styles.summary}>
-            <div className={styles.sumHead}>
-              <div>
-                <div className={styles.sumH}>Your concierge journey</div>
-                <div className={styles.sumJourney}>{JOURNEY[journey].name}</div>
-              </div>
-              <div className={styles.sumProof}>
-                <span className="sr">60+ private days arranged</span>
+            {/* banner — the journey you're building, with the theme as its title */}
+            <div className={styles.sumImg}>
+              <Image
+                src={
+                  journey === "medinet"
+                    ? img.journeyMedinet
+                    : journey === "karnak"
+                      ? img.journeyKarnak
+                      : img.journeyBalloon
+                }
+                alt={JOURNEY[journey].name}
+                fill
+                sizes="(max-width: 920px) 100vw, 380px"
+              />
+              <div className={styles.sumImgScrim} />
+              <div className={styles.sumImgCap}>
+                <span className={styles.sumH}>Your concierge journey</span>
+                <span className={styles.sumJourney}>{JOURNEY[journey].name}</span>
               </div>
             </div>
 
+            {/* social proof — a high-ticket day needs trust up front */}
+            <div className={styles.sumStars}>
+              <span className={styles.stars}>★★★★★</span> 4.9 · 60+ private days arranged in Luxor
+            </div>
+
+            {/* price */}
             <div className={styles.sumPriceblock}>
               <div className={styles.sumPrice}>{euro(total)}</div>
               {showSavings && (
@@ -733,73 +750,7 @@ export default function DayConfigurator({
             )}
             <div className={styles.sumMeta}>{meta}</div>
 
-            <div className={styles.sumSub}>What&apos;s included</div>
-            <ul className={styles.sumIncl}>
-              <li>
-                <b>Day 1 · {JOURNEY[journey].name}</b>
-                <span>
-                  {medS} &amp; {compS}
-                </span>
-              </li>
-              <li>
-                <b>{EXPCOUNT[days]} experiences</b>
-                <span>arranged in any order with your consigliere</span>
-              </li>
-              {plan.bonus.length > 0 && (
-                <li>
-                  <b>
-                    {plan.bonus.length} signature bonus{plan.bonus.length > 1 ? "es" : ""}
-                  </b>
-                  <span>on us — yours free</span>
-                </li>
-              )}
-              <li>
-                <b>Everything handled</b>
-                <span>Egyptologist, entries, transfers &amp; timing</span>
-              </li>
-            </ul>
-            <button className={styles.sumMore} onClick={() => setListOpen((o) => !o)}>
-              {listOpen ? "Hide full itinerary" : "See full itinerary"}{" "}
-              <span>{listOpen ? "▴" : "▾"}</span>
-            </button>
-            <ul className={`${styles.sumList} ${listOpen ? styles.open : ""}`}>
-              <li className={styles.dh}>{plan.startTitle}</li>
-              {plan.start.map((it, i) => (
-                <li key={"s" + i} className={itemClasses(it)}>
-                  {itemText(it)}
-                </li>
-              ))}
-              {plan.pool.length > 0 && (
-                <>
-                  <li className={styles.dh}>Your experiences · in any order</li>
-                  {plan.pool.map((it, i) => (
-                    <li key={"p" + i} className={itemClasses(it)}>
-                      {itemText(it)}
-                    </li>
-                  ))}
-                </>
-              )}
-              {plan.bonus.length > 0 && (
-                <>
-                  <li className={`${styles.dh} ${styles.dhBonus}`}>Signature bonuses · on us</li>
-                  {plan.bonus.map((it, i) => (
-                    <li key={"b" + i} className={itemClasses(it)}>
-                      {itemText(it)}
-                      {typeof it === "object" && it.bonus && (
-                        <span className={styles.bpill}>bonus</span>
-                      )}
-                    </li>
-                  ))}
-                </>
-              )}
-              <li className={styles.dh}>Handled for you, throughout</li>
-              {plan.handled.map((it, i) => (
-                <li key={"h" + i} className={itemClasses(it)}>
-                  {itemText(it)}
-                </li>
-              ))}
-            </ul>
-
+            {/* pay + CTA — kept tight and high so the button never drops below the fold */}
             <div className={styles.sumSub}>How you&apos;d like to pay</div>
             <div className={styles.payOpts}>
               <div
@@ -823,19 +774,82 @@ export default function DayConfigurator({
                 : `Secure your date · ${euro(deposit)} today →`}
             </a>
             <div className={styles.sumCancel}>{cancelText}</div>
+            <div className={styles.sumTrust}>
+              <svg width="11" height="13" viewBox="0 0 11 13" fill="none">
+                <path d="M2 5V3.5A3.5 3.5 0 0 1 9 3.5V5" stroke="currentColor" strokeWidth="1.4" />
+                <rect x="1" y="5" width="9" height="7" rx="1.2" fill="currentColor" />
+              </svg>{" "}
+              Secure payment · Free cancellation up to 7 days before
+            </div>
 
-            <div className={styles.sumFoot}>
-              <div className={styles.sumTrust}>
-                <svg width="11" height="13" viewBox="0 0 11 13" fill="none">
-                  <path
-                    d="M2 5V3.5A3.5 3.5 0 0 1 9 3.5V5"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
-                  <rect x="1" y="5" width="9" height="7" rx="1.2" fill="currentColor" />
-                </svg>{" "}
-                Secure payment · Free cancellation up to 7 days before
-              </div>
+            {/* what you get — below the CTA, so it reassures without pushing the button down */}
+            <div className={styles.sumDetails}>
+              <div className={styles.sumSub}>What&apos;s included</div>
+              <ul className={styles.sumIncl}>
+                <li>
+                  <b>Day 1 · {JOURNEY[journey].name}</b>
+                  <span>
+                    {medS} &amp; {compS}
+                  </span>
+                </li>
+                <li>
+                  <b>{EXPCOUNT[days]} experiences</b>
+                  <span>arranged in any order with your consigliere</span>
+                </li>
+                {plan.bonus.length > 0 && (
+                  <li>
+                    <b>
+                      {plan.bonus.length} signature bonus{plan.bonus.length > 1 ? "es" : ""}
+                    </b>
+                    <span>on us — yours free</span>
+                  </li>
+                )}
+                <li>
+                  <b>Everything handled</b>
+                  <span>Egyptologist, entries, transfers &amp; timing</span>
+                </li>
+              </ul>
+              <button className={styles.sumMore} onClick={() => setListOpen((o) => !o)}>
+                {listOpen ? "Hide full itinerary" : "See full itinerary"}{" "}
+                <span>{listOpen ? "▴" : "▾"}</span>
+              </button>
+              <ul className={`${styles.sumList} ${listOpen ? styles.open : ""}`}>
+                <li className={styles.dh}>{plan.startTitle}</li>
+                {plan.start.map((it, i) => (
+                  <li key={"s" + i} className={itemClasses(it)}>
+                    {itemText(it)}
+                  </li>
+                ))}
+                {plan.pool.length > 0 && (
+                  <>
+                    <li className={styles.dh}>Your experiences · in any order</li>
+                    {plan.pool.map((it, i) => (
+                      <li key={"p" + i} className={itemClasses(it)}>
+                        {itemText(it)}
+                      </li>
+                    ))}
+                  </>
+                )}
+                {plan.bonus.length > 0 && (
+                  <>
+                    <li className={`${styles.dh} ${styles.dhBonus}`}>Signature bonuses · on us</li>
+                    {plan.bonus.map((it, i) => (
+                      <li key={"b" + i} className={itemClasses(it)}>
+                        {itemText(it)}
+                        {typeof it === "object" && it.bonus && (
+                          <span className={styles.bpill}>bonus</span>
+                        )}
+                      </li>
+                    ))}
+                  </>
+                )}
+                <li className={styles.dh}>Handled for you, throughout</li>
+                {plan.handled.map((it, i) => (
+                  <li key={"h" + i} className={itemClasses(it)}>
+                    {itemText(it)}
+                  </li>
+                ))}
+              </ul>
               <a
                 className={styles.sumAsk}
                 href="https://wa.me/0000000000?text=Hi%2C%20I%20have%20a%20question%20about%20a%20concierge%20day"

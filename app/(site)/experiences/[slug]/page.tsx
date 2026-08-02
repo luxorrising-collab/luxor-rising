@@ -172,6 +172,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
             reviewAverage={reviewAverage}
             reviewCount={reviewCount}
             image={entry.heroImage || undefined}
+            title={entry.title || undefined}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

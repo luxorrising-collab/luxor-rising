@@ -56,6 +56,9 @@ type ExperienceConfiguratorProps = {
   reviewCount?: number;
   /** A photo of the place, shown as a banner at the top of the summary card. */
   image?: string;
+  /** The evocative experience title (e.g. "Begin where the world began.") shown
+   *  prominently, with `name` as the place label above it — mirrors the hero. */
+  title?: string;
 };
 
 export default function ExperienceConfigurator({
@@ -74,7 +77,12 @@ export default function ExperienceConfigurator({
   reviewAverage,
   reviewCount = 0,
   image,
+  title,
 }: ExperienceConfiguratorProps) {
+  // The evocative title leads (uniqueness); the place name labels it (clarity).
+  const hasTitle = Boolean(title && title.trim() && title.trim() !== name.trim());
+  const cardLabel = hasTitle ? name : "You're reserving";
+  const cardTitle = hasTitle ? title! : name;
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
   const [tripDate, setTripDate] = useState("");
@@ -214,17 +222,17 @@ export default function ExperienceConfigurator({
         <div className={styles.summary}>
           {image ? (
             <div className={styles.sumImg}>
-              <Image src={image} alt={name} fill sizes="(max-width: 880px) 100vw, 34vw" />
+              <Image src={image} alt={name} fill sizes="(max-width: 880px) 92vw, 440px" />
               <div className={styles.sumImgScrim} />
               <div className={styles.sumImgCap}>
-                <span className={styles.sumH}>You&apos;re reserving</span>
-                <span className={styles.sumName}>{name}</span>
+                <span className={styles.sumH}>{cardLabel}</span>
+                <span className={styles.sumName}>{cardTitle}</span>
               </div>
             </div>
           ) : (
             <>
-              <div className={styles.sumH}>You&apos;re reserving</div>
-              <div className={styles.sumName}>{name}</div>
+              <div className={styles.sumH}>{cardLabel}</div>
+              <div className={styles.sumName}>{cardTitle}</div>
             </>
           )}
           {reviewCount > 0 && (

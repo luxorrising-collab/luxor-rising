@@ -83,9 +83,6 @@ export default function ExperienceConfigurator({
   const hasTitle = Boolean(title && title.trim() && title.trim() !== name.trim());
   const cardLabel = hasTitle ? name : "You're reserving";
   const cardTitle = hasTitle ? title! : name;
-  // The full "feel of the day", shown as prose over the photo — the emotional
-  // promise the buyer is paying for, right where the eye lands first.
-  const feelLine = feelText ? feelText.replace(/\s+/g, " ").trim() : "";
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
   const [tripDate, setTripDate] = useState("");
@@ -230,7 +227,6 @@ export default function ExperienceConfigurator({
               <div className={styles.sumImgCap}>
                 <span className={styles.sumH}>{cardLabel}</span>
                 <span className={styles.sumName}>{cardTitle}</span>
-                {feelLine && <span className={styles.sumImgFeel}>{feelLine}</span>}
               </div>
             </div>
           ) : (
@@ -292,6 +288,14 @@ export default function ExperienceConfigurator({
           <div className={styles.sumReassure}>
             Secure checkout by Stripe · No account needed · Free cancellation up to 7 days before
           </div>
+          {/* The emotional "how it feels" note sits BELOW the CTA — it reinforces the
+              decision without pushing the price and Reserve button below the fold. */}
+          {feelText && (
+            <div className={styles.sumFeel}>
+              <span className={styles.sumFeelH}>How the day feels</span>
+              {feelText}
+            </div>
+          )}
           <div className={styles.sumFine}>
             Private, just your group · Everything arranged end to end · Your consigliere confirms the
             exact timing within 24 hours

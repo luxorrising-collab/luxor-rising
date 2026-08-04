@@ -428,7 +428,6 @@ export default async function ConciergeDayPage() {
             }))}
             depositPercent={pricingRules?.depositPercent ?? 30}
             images={builderImages}
-            feelText={page?.dreamText || undefined}
           />
         </div>
       </section>

@@ -161,10 +161,6 @@
   padding: 1.6rem;
   position: sticky;
   top: 5.5rem;
-  /* stays fully usable even when the feel prose makes it taller than the screen */
-  max-height: calc(100vh - 6.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
 }
 .sumH {
   font-size: 0.72rem;
@@ -183,56 +179,35 @@
   margin-bottom: 0.5rem;
 }
 /* banner photo of the place — breaks out of the card padding at the top */
-/* image banner whose height grows with the feel prose overlaid on it */
 .sumImg {
   position: relative;
   margin: -1.6rem -1.6rem 1.1rem;
-  min-height: 210px;
+  height: 168px;
   border-radius: 12px 12px 0 0;
   overflow: hidden;
   background: var(--color-cream-deep);
-  display: flex;
-  align-items: flex-end;
 }
 .sumImg :global(img) {
   object-fit: cover;
   object-position: center;
-  z-index: 0;
 }
 .sumImgScrim {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(18, 11, 5, 0.16) 0%,
-    rgba(18, 11, 5, 0.12) 24%,
-    rgba(18, 11, 5, 0.58) 56%,
-    rgba(18, 11, 5, 0.9) 100%
-  );
+  background: linear-gradient(180deg, rgba(18, 11, 5, 0) 34%, rgba(18, 11, 5, 0.76) 100%);
 }
 .sumImgCap {
-  position: relative;
+  position: absolute;
+  left: 1.2rem;
+  right: 1.2rem;
+  bottom: 0.9rem;
   z-index: 2;
-  width: 100%;
-  padding: 3.2rem 1.3rem 1.15rem;
 }
 .sumImgCap .sumH {
   display: block;
   color: var(--color-gold-soft);
   margin-bottom: 0.1rem;
-}
-/* the feel of the day — one sensory line over the photo, the emotional promise
-   the buyer is paying for, right where the eye lands first */
-.sumImgFeel {
-  display: block;
-  margin-top: 0.5rem;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 0.9rem;
-  line-height: 1.45;
-  color: #f3e7cf;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
 }
 .sumImgCap .sumName {
   display: block;

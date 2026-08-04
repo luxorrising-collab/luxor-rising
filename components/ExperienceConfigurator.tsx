@@ -83,15 +83,9 @@ export default function ExperienceConfigurator({
   const hasTitle = Boolean(title && title.trim() && title.trim() !== name.trim());
   const cardLabel = hasTitle ? name : "You're reserving";
   const cardTitle = hasTitle ? title! : name;
-  // The "feel of the day" hook for the image overlay — the first two sentences of
-  // the feel text (kept full so it reads as prose, capped so it never runs away).
-  const feelLine = (() => {
-    if (!feelText) return "";
-    const sentences = feelText.match(/[^.!?]+[.!?]+/g) ?? [feelText];
-    let out = sentences.slice(0, 2).join(" ").replace(/\s+/g, " ").trim();
-    if (out.length > 240) out = sentences[0].replace(/\s+/g, " ").trim();
-    return out;
-  })();
+  // The full "feel of the day", shown as prose over the photo — the emotional
+  // promise the buyer is paying for, right where the eye lands first.
+  const feelLine = feelText ? feelText.replace(/\s+/g, " ").trim() : "";
   const [group, setGroup] = useState(2);
   const [pay, setPay] = useState<Pay>("full");
   const [tripDate, setTripDate] = useState("");

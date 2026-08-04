@@ -203,6 +203,8 @@ type DayConfiguratorProps = {
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
   images?: DayConfiguratorImages;
+  /** The "feel of the day" prose, shown over the summary-card banner. */
+  feelText?: string;
 };
 
 export default function DayConfigurator({
@@ -219,7 +221,9 @@ export default function DayConfigurator({
   ],
   depositPercent = 30,
   images = {},
+  feelText,
 }: DayConfiguratorProps) {
+  const feelLine = feelText ? feelText.replace(/\s+/g, " ").trim() : "";
   const img = {
     journeyMedinet: images.journeyMedinet || "/images/desert-stargazing-dune.jpg",
     journeyKarnak: images.journeyKarnak || "/images/nile-felucca-table.jpg",
@@ -704,6 +708,7 @@ export default function DayConfigurator({
               <div className={styles.sumImgCap}>
                 <span className={styles.sumH}>Your concierge journey</span>
                 <span className={styles.sumJourney}>{JOURNEY[journey].name}</span>
+                {feelLine && <span className={styles.sumImgFeel}>{feelLine}</span>}
               </div>
             </div>
 

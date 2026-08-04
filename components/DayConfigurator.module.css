@@ -588,6 +588,14 @@
   box-shadow: 0 24px 50px -28px rgba(42, 28, 16, 0.4);
   overflow: hidden;
 }
+/* the "Luxor Rising experience" progress bar, flush to the top of the card */
+.sumProgress.initbar {
+  margin: 0 -1.6rem 1.2rem;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-radius: 10px 10px 0 0;
+}
 /* banner photo of the journey — flush to the top of the card */
 .sumImg {
   position: relative;

@@ -419,58 +419,6 @@ export default function DayConfigurator({
                 );
               })}
             </div>
-            <div
-              className={`${styles.initbar} ${days >= 3 ? styles.full : ""} ${
-                days >= 4 ? styles.absorbed : ""
-              }`}
-            >
-              <div className={styles.ibBg}>
-                {Array.from({ length: EXPCOUNT[days] || 0 }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={styles.ibSlice}
-                    style={{
-                      backgroundImage: `url('${IMG_POOL[i % IMG_POOL.length]}')`,
-                    }}
-                  />
-                ))}
-              </div>
-              <div className={styles.ibOv} />
-              <div className={styles.ibHead}>
-                <span className={styles.ibTitle}>The Luxor Rising experience</span>
-                <span className={styles.ibStage}>{STAGE[days]}</span>
-              </div>
-              <div className={styles.ibCount}>
-                <b>{EXPCOUNT[days]}</b>
-                <span>experiences included</span>
-              </div>
-              <div className={`${styles.ibSigb} ${SIGB[days] > 0 ? styles.on : ""}`}>
-                <span className={styles.star}>★</span>
-                <span>
-                  {SIGB[days] > 0
-                    ? SIGB[days] + (SIGB[days] > 1 ? " signature bonuses included" : " signature bonus included")
-                    : ""}
-                </span>
-              </div>
-              <div className={styles.ibTrack}>
-                <div className={styles.ibFill} style={{ width: FILL[days] + "%" }} />
-                {[1, 2, 3].map((n, i) => (
-                  <span
-                    key={n}
-                    className={`${styles.ibNode} ${days >= n ? styles.reached : ""} ${
-                      days >= 3 && n === 3 ? styles.full : ""
-                    }`}
-                    style={{ left: [4, 50, 96][i] + "%" }}
-                  />
-                ))}
-              </div>
-              <div className={styles.ibLabels}>
-                <span>1 day</span>
-                <span>2 days</span>
-                <span>3 days</span>
-              </div>
-              <div className={styles.ibMsg}>{IBMSG[days]}</div>
-            </div>
           </div>
 
           {/* Step 2: group */}
@@ -686,25 +634,57 @@ export default function DayConfigurator({
         {/* Summary */}
         <div>
           <div className={styles.summary}>
-            {/* banner — the journey you're building, with the theme as its title */}
-            <div className={styles.sumImg}>
-              <Image
-                src={
-                  journey === "medinet"
-                    ? img.journeyMedinet
-                    : journey === "karnak"
-                      ? img.journeyKarnak
-                      : img.journeyBalloon
-                }
-                alt={JOURNEY[journey].name}
-                fill
-                sizes="(max-width: 920px) 100vw, 380px"
-              />
-              <div className={styles.sumImgScrim} />
-              <div className={styles.sumImgCap}>
-                <span className={styles.sumH}>Your concierge journey</span>
-                <span className={styles.sumJourney}>{JOURNEY[journey].name}</span>
+            {/* progress — "The Luxor Rising experience" bar, moved here from the
+                left column so the sticky card carries the build state at a glance */}
+            <div
+              className={`${styles.sumProgress} ${styles.initbar} ${days >= 3 ? styles.full : ""} ${
+                days >= 4 ? styles.absorbed : ""
+              }`}
+            >
+              <div className={styles.ibBg}>
+                {Array.from({ length: EXPCOUNT[days] || 0 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={styles.ibSlice}
+                    style={{ backgroundImage: `url('${IMG_POOL[i % IMG_POOL.length]}')` }}
+                  />
+                ))}
               </div>
+              <div className={styles.ibOv} />
+              <div className={styles.ibHead}>
+                <span className={styles.ibTitle}>The Luxor Rising experience</span>
+                <span className={styles.ibStage}>{STAGE[days]}</span>
+              </div>
+              <div className={styles.ibCount}>
+                <b>{EXPCOUNT[days]}</b>
+                <span>experiences included</span>
+              </div>
+              <div className={`${styles.ibSigb} ${SIGB[days] > 0 ? styles.on : ""}`}>
+                <span className={styles.star}>★</span>
+                <span>
+                  {SIGB[days] > 0
+                    ? SIGB[days] + (SIGB[days] > 1 ? " signature bonuses included" : " signature bonus included")
+                    : ""}
+                </span>
+              </div>
+              <div className={styles.ibTrack}>
+                <div className={styles.ibFill} style={{ width: FILL[days] + "%" }} />
+                {[1, 2, 3].map((n, i) => (
+                  <span
+                    key={n}
+                    className={`${styles.ibNode} ${days >= n ? styles.reached : ""} ${
+                      days >= 3 && n === 3 ? styles.full : ""
+                    }`}
+                    style={{ left: [4, 50, 96][i] + "%" }}
+                  />
+                ))}
+              </div>
+              <div className={styles.ibLabels}>
+                <span>1 day</span>
+                <span>2 days</span>
+                <span>3 days</span>
+              </div>
+              <div className={styles.ibMsg}>{IBMSG[days]}</div>
             </div>
 
             {/* social proof — a high-ticket day needs trust up front */}

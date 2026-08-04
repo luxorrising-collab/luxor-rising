@@ -77,6 +77,14 @@ const IBMSG: Record<DayCount, string> = {
   3: "Three days — the shape we'd choose ourselves, with two things added we think you'll remember.",
   4: "Four days, deliberately slower. Fewer things per day, not more.",
 };
+// A short, persuasive "feel" line over the card's hero shot — tuned to each day
+// count, since the shape (and the case for it) changes as the day grows.
+const FEEL: Record<DayCount, string> = {
+  1: "One day, done properly — three places at their quietest, and the first temple yours at dawn.",
+  2: "Two unhurried days — the Egypt everyone sees, then the quiet one almost no one does.",
+  3: "The three days we'd choose ourselves — with two signature moments, on us.",
+  4: "Four slow days — fewer things, far more time, Egypt entirely at your pace.",
+};
 const PRICE_TABLE: [string, number][] = [
   ["Medinet", 170],
   ["Karnak", 170],
@@ -704,6 +712,7 @@ export default function DayConfigurator({
               <div className={styles.sumImgCap}>
                 <span className={styles.sumH}>Your concierge journey</span>
                 <span className={styles.sumJourney}>{JOURNEY[journey].name}</span>
+                <span className={styles.sumJourneyFeel}>{FEEL[days]}</span>
               </div>
             </div>
 

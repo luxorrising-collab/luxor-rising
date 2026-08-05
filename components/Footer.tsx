@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Footer.module.css";
+import CookieSettingsButton from "./consent/CookieSettingsButton";
 
 type FooterLink = { href: string; label: string };
 type FooterColumn = { title: string; links: FooterLink[] };
@@ -35,7 +36,10 @@ export function FullFooter({ columns }: { columns: FooterColumn[] }) {
           ))}
         </div>
         <div className={styles.bottom}>
-          <div>© 2026 Luxor Rising — private concierge in Egypt</div>
+          <div>
+            © 2026 Luxor Rising — private concierge in Egypt ·{" "}
+            <CookieSettingsButton />
+          </div>
           <div className={styles.langs}>
             <a>EN</a>
             <a>SK</a>
@@ -79,7 +83,7 @@ export function MinimalFooter({
           ))}
         </div>
         <div className={styles.bottom}>
-          {bottomText}
+          {bottomText} · <CookieSettingsButton />
           {showLangs && (
             <span className={styles.langs}>
               {" "}

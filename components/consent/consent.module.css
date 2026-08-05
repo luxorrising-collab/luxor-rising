@@ -1,0 +1,226 @@
+/* Cookie consent — banner (bottom sheet) and preferences (centred dialog). */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none; /* the banner only claims its own footprint */
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(18, 11, 5, 0.5);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+  pointer-events: auto;
+  animation: fade 0.25s ease;
+}
+
+.panel {
+  position: fixed;
+  left: 50%;
+  bottom: 1.1rem;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 2rem));
+  background: var(--color-cream, #f7f1e6);
+  border: 1px solid var(--color-cream-deep, #e6dcc8);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(18, 11, 5, 0.28);
+  padding: 1.4rem 1.5rem;
+  pointer-events: auto;
+  animation: rise 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Preferences view sits centred like a modal. */
+.panelPrefs {
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.copy {
+  margin-bottom: 1.1rem;
+}
+.title {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-ink, #2a1d10);
+  margin: 0 0 0.4rem;
+}
+.text {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-espresso, #4a3826);
+  margin: 0;
+}
+.link {
+  color: var(--color-gold-deep, #a9803f);
+  border-bottom: 1px solid var(--color-gold-soft, #d8bd8c);
+  white-space: nowrap;
+}
+
+/* Category rows */
+.cats {
+  list-style: none;
+  margin: 0 0 1.2rem;
+  padding: 0;
+  border-top: 1px solid var(--color-cream-deep, #e6dcc8);
+}
+.cat {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-cream-deep, #e6dcc8);
+}
+.catName {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-ink, #2a1d10);
+  margin-bottom: 0.15rem;
+}
+.catDesc {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--color-muted, #7a6b58);
+}
+.always {
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep, #a9803f);
+  padding-top: 0.15rem;
+}
+
+/* Toggle switch */
+.toggle {
+  flex: none;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--color-cream-deep, #e6dcc8);
+  background: #fff;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-top: 0.1rem;
+}
+.toggleOn {
+  background: var(--color-gold, #c9a063);
+  border-color: var(--color-gold, #c9a063);
+}
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+.toggleOn .knob {
+  transform: translateX(18px);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+.ghost,
+.primary {
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.18s;
+}
+.ghost {
+  background: transparent;
+  border: 1.5px solid var(--color-cream-deep, #e6dcc8);
+  color: var(--color-espresso, #4a3826);
+}
+.ghost:hover {
+  border-color: var(--color-gold, #c9a063);
+}
+.primary {
+  background: var(--color-gold, #c9a063);
+  border: 1.5px solid var(--color-gold, #c9a063);
+  color: var(--color-ink, #2a1d10);
+}
+.primary:hover {
+  filter: brightness(1.04);
+}
+
+/* Footer "Cookie settings" trigger — inherits the surrounding link styling. */
+.footerLink {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+  .panel {
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    transform: none;
+    width: auto;
+  }
+  .panelPrefs {
+    top: auto;
+    transform: none;
+  }
+  .actions {
+    justify-content: stretch;
+  }
+  .ghost,
+  .primary {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

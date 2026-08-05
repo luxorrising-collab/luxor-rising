@@ -42,6 +42,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { href: "/private-guide", label: "Private Guide" },
       { href: "/concierge-day#how", label: "How it works" },
       { href: "/insiders-guide", label: "Insider's Guide" },
+      { href: "/private-villas", label: "Private Villas" },
       { href: "/reviews", label: "Reviews" },
     ],
   },

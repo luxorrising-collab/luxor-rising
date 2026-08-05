@@ -1218,5 +1218,32 @@ export default config({
         }),
       },
     }),
+    tracking: singleton({
+      label: "Tracking & analytics",
+      path: "content/tracking/",
+      schema: {
+        enabled: fields.checkbox({
+          label: "Enable analytics & the cookie banner",
+          description:
+            "Master switch. When off, nothing loads and no banner shows — regardless of the IDs below. Turn on once you've entered at least one ID.",
+          defaultValue: false,
+        }),
+        gtmId: fields.text({
+          label: "Google Tag Manager ID",
+          description:
+            "e.g. GTM-XXXXXXX. Recommended container for GA4 + Meta. Leave blank if unused.",
+        }),
+        ga4Id: fields.text({
+          label: "GA4 Measurement ID",
+          description:
+            "e.g. G-XXXXXXXXXX. Use this OR a GA4 tag inside GTM — not both, or pageviews double-count.",
+        }),
+        metaPixelId: fields.text({
+          label: "Meta (Facebook) Pixel ID",
+          description:
+            "e.g. 123456789012345. Only loads after a visitor accepts marketing cookies.",
+        }),
+      },
+    }),
   },
 });

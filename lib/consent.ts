@@ -29,16 +29,37 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // 180 days
 export const CONSENT_OPEN_EVENT = "lr:consent-open"; // reopen the preferences UI
 export const CONSENT_CHANGE_EVENT = "lr:consent-change"; // a choice was saved
 
-export const consentConfig = {
-  gtmId: process.env.NEXT_PUBLIC_GTM_ID ?? "",
-  ga4Id: process.env.NEXT_PUBLIC_GA4_ID ?? "",
-  metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "",
+/** Tracking config — sourced from Keystatic ("Tracking & analytics"). */
+export type ConsentConfig = {
+  enabled: boolean;
+  gtmId: string;
+  ga4Id: string;
+  metaPixelId: string;
 };
 
-/** Is any non-essential service configured? If not, no banner is needed. */
-export const hasTracking = Boolean(
-  consentConfig.gtmId || consentConfig.ga4Id || consentConfig.metaPixelId,
-);
+export const EMPTY_CONFIG: ConsentConfig = {
+  enabled: false,
+  gtmId: "",
+  ga4Id: "",
+  metaPixelId: "",
+};
+
+// The live config is set once by <ConsentProvider> (from the Keystatic value)
+// so plain helpers like applyConsent() can reach the Meta Pixel ID without
+// prop-drilling. Kept in module scope; the provider is the single writer.
+let _config: ConsentConfig = EMPTY_CONFIG;
+
+export function configureConsent(cfg: ConsentConfig): void {
+  _config = cfg;
+}
+export function getConsentConfig(): ConsentConfig {
+  return _config;
+}
+
+/** Tracking is live only if switched on AND at least one ID is present. */
+export function isTrackingEnabled(cfg: ConsentConfig): boolean {
+  return cfg.enabled && Boolean(cfg.gtmId || cfg.ga4Id || cfg.metaPixelId);
+}
 
 export const REJECT_ALL: ConsentChoices = {
   necessary: true,
@@ -99,8 +120,8 @@ export function applyConsent(choices: ConsentChoices): void {
     analytics_storage: choices.analytics ? "granted" : "denied",
   });
 
-  if (choices.marketing && consentConfig.metaPixelId) {
-    loadMetaPixel(consentConfig.metaPixelId);
+  if (choices.marketing && _config.metaPixelId) {
+    loadMetaPixel(_config.metaPixelId);
   } else {
     // Already loaded earlier this session? Tell Meta to stop firing.
     window.fbq?.("consent", "revoke");

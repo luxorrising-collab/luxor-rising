@@ -9,21 +9,22 @@ import {
   REJECT_ALL,
   applyConsent,
   getStoredConsent,
-  hasTracking,
   saveConsent,
   type ConsentChoices,
 } from "@/lib/consent";
+import { useTrackingEnabled } from "./ConsentProvider";
 
 type View = "hidden" | "banner" | "prefs";
 
 export default function ConsentBanner() {
+  const trackingEnabled = useTrackingEnabled();
   const [view, setView] = useState<View>("hidden");
   const [analytics, setAnalytics] = useState(false);
   const [marketing, setMarketing] = useState(false);
 
   // Decide on mount whether to show the banner, and wire the "reopen" event.
   useEffect(() => {
-    if (!hasTracking) return; // nothing non-essential configured → no banner
+    if (!trackingEnabled) return; // tracking off → no banner
     const stored = getStoredConsent();
     if (!stored) setView("banner");
 
@@ -35,7 +36,7 @@ export default function ConsentBanner() {
     };
     window.addEventListener(CONSENT_OPEN_EVENT, open);
     return () => window.removeEventListener(CONSENT_OPEN_EVENT, open);
-  }, []);
+  }, [trackingEnabled]);
 
   function commit(choices: ConsentChoices) {
     saveConsent(choices);

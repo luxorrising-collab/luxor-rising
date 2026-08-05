@@ -7,9 +7,10 @@ import {
   CONSENT_COOKIE,
   CONSENT_VERSION,
   applyConsent,
-  consentConfig,
   getStoredConsent,
+  isTrackingEnabled,
 } from "@/lib/consent";
+import { useConsentConfig } from "./ConsentProvider";
 
 /**
  * Loads the tracking scripts in a consent-safe order:
@@ -24,7 +25,8 @@ import {
  * only injected once marketing consent is granted.
  */
 export default function ConsentManager() {
-  const { gtmId, ga4Id } = consentConfig;
+  const config = useConsentConfig();
+  const { gtmId, ga4Id } = config;
   const pathname = usePathname();
 
   // On mount, re-apply the saved choice so Meta loads for returning opt-ins.
@@ -46,6 +48,8 @@ export default function ConsentManager() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  if (!isTrackingEnabled(config)) return null;
 
   return (
     <>

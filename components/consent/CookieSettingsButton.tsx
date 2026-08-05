@@ -1,7 +1,8 @@
 "use client";
 
 import styles from "./consent.module.css";
-import { hasTracking, openConsentSettings } from "@/lib/consent";
+import { openConsentSettings } from "@/lib/consent";
+import { useTrackingEnabled } from "./ConsentProvider";
 
 /** A footer link that reopens the cookie preferences. Hidden when no tracking. */
 export default function CookieSettingsButton({
@@ -9,7 +10,8 @@ export default function CookieSettingsButton({
 }: {
   label?: string;
 }) {
-  if (!hasTracking) return null;
+  const trackingEnabled = useTrackingEnabled();
+  if (!trackingEnabled) return null;
   return (
     <button
       type="button"

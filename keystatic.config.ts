@@ -36,6 +36,17 @@ const REVIEW_PLACEMENTS = [
   { label: "Reviews page — featured", value: "reviews-hero" },
 ] as const;
 
+// Partner categories double as the #hashtag each is grouped/filtered under.
+const PARTNER_CATEGORIES = [
+  { label: "Transfers & drivers", value: "transfers" },
+  { label: "Guiding & Egyptology", value: "guiding" },
+  { label: "Nile & boats", value: "nile" },
+  { label: "Desert & Bedouin", value: "desert" },
+  { label: "Ballooning", value: "balloon" },
+  { label: "Red Sea & diving", value: "redsea" },
+  { label: "Stays & hospitality", value: "stays" },
+] as const;
+
 // Shared SEO fields, reused by every content collection.
 const seoFields = {
   metaTitle: fields.text({
@@ -122,6 +133,75 @@ export default config({
           description: "Lower shows first.",
           defaultValue: 0,
         }),
+      },
+    }),
+
+    partners: collection({
+      label: "Partners' track record",
+      slugField: "name",
+      path: "content/partners/*/",
+      columns: ["name", "category", "rating", "reviewCount"],
+      schema: {
+        name: fields.slug({
+          name: {
+            label: "Partner name",
+            description: 'The business/person, e.g. "Royal Transfer Egypt".',
+          },
+        }),
+        category: fields.select({
+          label: "Category (becomes the #hashtag)",
+          options: PARTNER_CATEGORIES,
+          defaultValue: "transfers",
+        }),
+        role: fields.text({
+          label: "What they do",
+          description: 'Short, e.g. "Airport & intercity transfers".',
+        }),
+        explanation: fields.text({
+          label: "Why they're on the team",
+          multiline: true,
+          description: "A sentence or two on their track record and why we trust them.",
+        }),
+        source: fields.select({
+          label: "Review source",
+          options: REVIEW_SOURCES,
+          defaultValue: "google",
+        }),
+        profileUrl: fields.url({
+          label: "Link to their public reviews",
+          description:
+            "Paste their Google / TripAdvisor / Facebook reviews (or profile) link — shown as a live 'See all reviews ↗' link.",
+        }),
+        rating: fields.number({
+          label: "Rating snapshot (out of 5)",
+          validation: { min: 0, max: 5 },
+          defaultValue: 0,
+          description:
+            "Read it off their profile and type it here. Leave 0 to show just the link, no stars.",
+        }),
+        reviewCount: fields.number({
+          label: "Number of reviews (snapshot)",
+          defaultValue: 0,
+        }),
+        snapshotDate: fields.date({
+          label: "Snapshot date",
+          description: 'The "as of" date for the rating/count above.',
+        }),
+        verified: fields.checkbox({
+          label: "Verified partner",
+          description: "Working profile link + numbers checked against it.",
+          defaultValue: false,
+        }),
+        tags: fields.text({
+          label: "Extra hashtags (optional)",
+          description: 'Space-separated, e.g. "#airport #english-speaking".',
+        }),
+        logo: fields.image({
+          label: "Logo / photo (optional)",
+          directory: "public/images/partners",
+          publicPath: "/images/partners/",
+        }),
+        order: fields.number({ label: "Sort order", defaultValue: 0 }),
       },
     }),
 

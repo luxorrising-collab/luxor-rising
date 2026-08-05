@@ -4,8 +4,10 @@ import Nav from "@/components/Nav";
 import { MinimalFooter } from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import ReviewsWall from "@/components/reviews/ReviewsWall";
+import PartnersTrackRecord from "@/components/reviews/PartnersTrackRecord";
 import { aggregate, featuredFor } from "@/lib/reviews";
 import { getReviews } from "@/lib/reviews-server";
+import { getPartners } from "@/lib/partners-server";
 import styles from "@/components/reviews/reviews.module.css";
 
 export const metadata: Metadata = {
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ReviewsPage() {
-  const reviews = await getReviews();
+  const [reviews, partners] = await Promise.all([getReviews(), getPartners()]);
   const agg = aggregate(reviews); // null unless verified reviews exist
   const featured = featuredFor(reviews, "reviews-hero");
 
@@ -111,6 +113,23 @@ export default async function ReviewsPage() {
           </p>
         )}
       </section>
+
+      {partners.length > 0 && (
+        <section className="wrap">
+          <div className={styles.sectionHead}>
+            <span className="eyebrow">Our partners&apos; track record</span>
+            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
+              We hand-pick specialists who already have a name.
+            </h2>
+            <p>
+              We don&apos;t do everything ourselves — we choose the best local
+              driver, guide and boatman, each with their own public reputation.
+              Here&apos;s the receipts, straight from their profiles.
+            </p>
+          </div>
+          <PartnersTrackRecord partners={partners} />
+        </section>
+      )}
 
       <MinimalFooter
         links={[

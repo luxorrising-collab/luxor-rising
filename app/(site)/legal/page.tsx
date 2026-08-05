@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-const SECTIONS: { h: string; p: string }[] = [
+const SECTIONS: { h: string; p: string; href?: string }[] = [
   {
     h: "Terms & Conditions",
     p: "Booking terms, the role of Luxor Rising as concierge and coordinator, the role of licensed local partners who deliver the experiences, liability, and the single-day / no-overnight nature of the experiences.",
@@ -30,7 +30,8 @@ const SECTIONS: { h: string; p: string }[] = [
   },
   {
     h: "Cookie Policy",
-    p: "Which cookies the site sets, essential vs analytics, and how to manage them.",
+    p: "Exactly which cookies the site sets (essential, analytics, marketing), why, how long they last, and how you stay in control — now written in full.",
+    href: "/legal/cookies",
   },
   {
     h: "Safety",
@@ -67,6 +68,13 @@ export default function LegalPage() {
             <div key={s.h}>
               <h2>{s.h}</h2>
               <p>{s.p}</p>
+              {s.href && (
+                <p>
+                  <Link href={s.href} className="btn btn-ghost">
+                    Read the full policy →
+                  </Link>
+                </p>
+              )}
             </div>
           ))}
           <p style={{ marginTop: "2.4rem" }}>

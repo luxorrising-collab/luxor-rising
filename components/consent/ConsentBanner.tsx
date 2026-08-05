@@ -72,7 +72,7 @@ export default function ConsentBanner() {
                 With your permission we&apos;d also use analytics and marketing
                 cookies to understand what resonates and reach travellers like
                 you. You can decline without losing anything.{" "}
-                <Link href="/legal" className={styles.link}>
+                <Link href="/legal/cookies" className={styles.link}>
                   Read our cookie policy
                 </Link>
                 .

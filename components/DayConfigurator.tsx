@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
 import { useDayCount } from "./DayCount";
+import { trackBeginCheckout } from "@/lib/analytics";
 
 type DayCount = 1 | 2 | 3 | 4;
 type Journey = "medinet" | "karnak" | "balloon";
@@ -378,6 +379,18 @@ export default function DayConfigurator({
       setTimeout(() => dateInputRef.current?.focus(), 420);
       return;
     }
+    trackBeginCheckout({
+      value: total,
+      currency: "EUR",
+      items: [
+        {
+          item_id: `concierge-day-${days}d`,
+          item_name: `${days}-day Concierge Journey`,
+          price: total,
+          quantity: group,
+        },
+      ],
+    });
     const msg =
       pay === "full"
         ? "Pay " + euro(total) + " in full"

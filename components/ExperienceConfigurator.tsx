@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./ExperienceConfigurator.module.css";
 import StickyBar from "./StickyBar";
+import { trackBeginCheckout } from "@/lib/analytics";
 
 type Pay = "full" | "deposit";
 
@@ -118,6 +119,11 @@ export default function ExperienceConfigurator({
     setError("");
     setLoading(true);
     const amount = pay === "full" ? total : deposit;
+    trackBeginCheckout({
+      value: total,
+      currency: "EUR",
+      items: [{ item_id: slug, item_name: name, price: total, quantity: group }],
+    });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",

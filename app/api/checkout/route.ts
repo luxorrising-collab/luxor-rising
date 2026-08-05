@@ -67,7 +67,9 @@ export async function POST(req: Request) {
         date: date || "",
         mode,
       },
-      success_url: `${origin}/booking-confirmed?exp=${encodeURIComponent(name)}`,
+      // {CHECKOUT_SESSION_ID} is substituted by Stripe on redirect — it lets the
+      // confirmation page retrieve the real, paid amount server-side for analytics.
+      success_url: `${origin}/booking-confirmed?exp=${encodeURIComponent(name)}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/experiences/${slug}#book`,
     });
 

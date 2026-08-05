@@ -1,22 +1,76 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Stripe from "stripe";
 import Nav from "@/components/Nav";
 import { MinimalFooter } from "@/components/Footer";
+import PurchaseTracker from "@/components/analytics/PurchaseTracker";
 
 export const metadata: Metadata = {
   title: "Booking confirmed — Luxor Rising",
   robots: { index: false, follow: false },
 };
 
+// Stripe SDK needs the Node runtime.
+export const runtime = "nodejs";
+
+type Order = {
+  transactionId: string;
+  value: number;
+  currency: string;
+  slug: string;
+  name: string;
+};
+
+// Retrieve the real, PAID amount from Stripe — never trust a client-supplied
+// value for conversion reporting. Returns null unless the session is paid.
+async function getPaidOrder(
+  sessionId: string | undefined,
+  fallbackName: string,
+): Promise<Order | null> {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!sessionId || !key) return null;
+  try {
+    const stripe = new Stripe(key);
+    const s = await stripe.checkout.sessions.retrieve(sessionId);
+    if (s.payment_status !== "paid" || !s.amount_total) return null;
+    return {
+      transactionId:
+        typeof s.payment_intent === "string" ? s.payment_intent : s.id,
+      value: s.amount_total / 100,
+      currency: (s.currency ?? "eur").toUpperCase(),
+      slug: s.metadata?.slug || "experience",
+      name: fallbackName || "Luxor Rising experience",
+    };
+  } catch {
+    return null; // never block the thank-you page on an analytics lookup
+  }
+}
+
 export default async function BookingConfirmedPage({
   searchParams,
 }: {
-  searchParams: Promise<{ exp?: string }>;
+  searchParams: Promise<{ exp?: string; session_id?: string }>;
 }) {
-  const { exp } = await searchParams;
+  const { exp, session_id } = await searchParams;
+  const order = await getPaidOrder(session_id, exp ?? "");
 
   return (
     <>
+      {order && (
+        <PurchaseTracker
+          transactionId={order.transactionId}
+          value={order.value}
+          currency={order.currency}
+          items={[
+            {
+              item_id: order.slug,
+              item_name: order.name,
+              price: order.value,
+              quantity: 1,
+            },
+          ]}
+        />
+      )}
       <Nav scrollAware={false} ctaHref="/experiences" ctaLabel="Experiences" />
       <section style={{ minHeight: "70vh", display: "flex", alignItems: "center" }}>
         <div className="wrap-narrow center">

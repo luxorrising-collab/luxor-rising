@@ -19,6 +19,23 @@ const AUTHORS = [
   { label: "Dr. Nour", value: "dr-nour" },
 ] as const;
 
+const REVIEW_SOURCES = [
+  { label: "Google", value: "google" },
+  { label: "Meta / Facebook", value: "facebook" },
+  { label: "TripAdvisor", value: "tripadvisor" },
+  { label: "Airbnb", value: "airbnb" },
+  { label: "WhatsApp", value: "whatsapp" },
+  { label: "Direct / Email", value: "direct" },
+] as const;
+
+// Where a review can be pinned as the featured social proof.
+const REVIEW_PLACEMENTS = [
+  { label: "Home — hero", value: "home-hero" },
+  { label: "Concierge Day — social proof", value: "concierge" },
+  { label: "Experiences", value: "experiences" },
+  { label: "Reviews page — featured", value: "reviews-hero" },
+] as const;
+
 // Shared SEO fields, reused by every content collection.
 const seoFields = {
   metaTitle: fields.text({
@@ -44,6 +61,70 @@ export default config({
     : { kind: "local" },
 
   collections: {
+    reviews: collection({
+      label: "Reviews & social proof",
+      slugField: "author",
+      path: "content/reviews/*/",
+      columns: ["author", "source", "rating", "verified"],
+      schema: {
+        author: fields.slug({
+          name: {
+            label: "Author name",
+            description: 'The reviewer, e.g. "Lena & Tomáš" — used as the entry name.',
+          },
+        }),
+        location: fields.text({
+          label: "Location",
+          description: 'e.g. "Vienna, Austria" — shown under the name.',
+        }),
+        quote: fields.text({ label: "Review", multiline: true }),
+        rating: fields.number({
+          label: "Rating out of 5",
+          validation: { min: 1, max: 5 },
+          defaultValue: 5,
+        }),
+        date: fields.date({
+          label: "Date",
+          description: "When they travelled / left the review.",
+        }),
+        source: fields.select({
+          label: "Source",
+          options: REVIEW_SOURCES,
+          defaultValue: "google",
+        }),
+        sourceUrl: fields.url({
+          label: "Link to the original review",
+          description:
+            "Paste the public Google / Meta / TripAdvisor review (or profile) link. This is what makes it verifiable — the page shows a 'Verified ↗' link straight to the source.",
+        }),
+        verified: fields.checkbox({
+          label: "Verified — a real, attributable guest",
+          description:
+            "Turn ON only for genuine reviews with a working source link. Google star rich-results (structured data) are emitted for verified reviews ONLY — never for samples.",
+          defaultValue: false,
+        }),
+        avatar: fields.image({
+          label: "Photo (optional)",
+          directory: "public/images/reviews",
+          publicPath: "/images/reviews/",
+        }),
+        featured: fields.checkbox({
+          label: "Featured",
+          description: "Pin this review to the top of the sections chosen below.",
+          defaultValue: false,
+        }),
+        placements: fields.multiselect({
+          label: "Feature in these sections",
+          options: REVIEW_PLACEMENTS,
+        }),
+        order: fields.number({
+          label: "Sort order",
+          description: "Lower shows first.",
+          defaultValue: 0,
+        }),
+      },
+    }),
+
     articles: collection({
       label: "Articles (Insider's Guide)",
       slugField: "title",

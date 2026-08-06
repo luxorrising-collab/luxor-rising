@@ -15,7 +15,6 @@ export const MAIN_NAV: NavLink[] = [
   { href: "/experiences", label: "Experiences" },
   { href: "/private-guide", label: "Private Guide" },
   { href: "/insiders-guide", label: "Insider's Guide" },
-  { href: "/reviews", label: "Reviews" },
   { href: "/#about", label: "About" },
 ];
 

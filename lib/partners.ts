@@ -28,6 +28,21 @@ export const PARTNER_CATEGORY_LABELS: Record<string, string> = {
   stays: "Stays & hospitality",
 };
 
+/**
+ * The real overall rating, weighted by each verified partner's actual review
+ * count — so the headline matches the live public totals (e.g. Google's 5.0
+ * from 9), not just the handful of individual reviews transcribed onto the page.
+ */
+export function partnerAggregate(
+  partners: Partner[],
+): { average: number; count: number; sources: number } | null {
+  const v = partners.filter((p) => p.verified && p.rating > 0 && p.reviewCount > 0);
+  if (!v.length) return null;
+  const count = v.reduce((s, p) => s + p.reviewCount, 0);
+  const weighted = v.reduce((s, p) => s + p.rating * p.reviewCount, 0) / count;
+  return { average: Math.round(weighted * 10) / 10, count, sources: v.length };
+}
+
 /** Turn a category + free-text tags field into clean #hashtags. */
 export function hashtagsFor(partner: Partner): string[] {
   const base = "#" + partner.category;

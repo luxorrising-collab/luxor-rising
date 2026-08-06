@@ -6,6 +6,7 @@ import JsonLd from "@/components/JsonLd";
 import ReviewsWall from "@/components/reviews/ReviewsWall";
 import PartnersTrackRecord from "@/components/reviews/PartnersTrackRecord";
 import { aggregate, featuredFor } from "@/lib/reviews";
+import { partnerAggregate } from "@/lib/partners";
 import { getReviews } from "@/lib/reviews-server";
 import { getPartners } from "@/lib/partners-server";
 import styles from "@/components/reviews/reviews.module.css";
@@ -19,8 +20,12 @@ export const metadata: Metadata = {
 
 export default async function ReviewsPage() {
   const [reviews, partners] = await Promise.all([getReviews(), getPartners()]);
-  const agg = aggregate(reviews); // null unless verified reviews exist
   const featured = featuredFor(reviews, "reviews-hero");
+
+  // Overall rating = the real weighted total from verified partner sources
+  // (e.g. Google's 5.0 from 9), falling back to the on-page reviews. This keeps
+  // the headline honest to the live public totals, not just the cards shown.
+  const agg = partnerAggregate(partners) ?? aggregate(reviews);
 
   // Structured data ONLY from verified reviews — never emit stars for samples.
   const verified = reviews.filter((r) => r.verified);

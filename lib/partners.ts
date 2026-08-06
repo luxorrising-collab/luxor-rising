@@ -4,6 +4,7 @@
 export type Partner = {
   slug: string;
   name: string;
+  channel: string;
   category: string;
   role: string;
   explanation: string;
@@ -41,6 +42,23 @@ export function partnerAggregate(
   const count = v.reduce((s, p) => s + p.reviewCount, 0);
   const weighted = v.reduce((s, p) => s + p.rating * p.reviewCount, 0) / count;
   return { average: Math.round(weighted * 10) / 10, count, sources: v.length };
+}
+
+/**
+ * Section summary: overall rating, total review count, and the "as of" date
+ * (the most recent snapshot among the sources) — best-practice for showing a
+ * dated rating aggregated from external profiles.
+ */
+export function sourceStats(
+  sources: Partner[],
+): { average: number; count: number; asOf: string | null } | null {
+  const agg = partnerAggregate(sources);
+  if (!agg) return null;
+  const dates = sources
+    .filter((s) => s.verified && s.snapshotDate)
+    .map((s) => s.snapshotDate as string)
+    .sort();
+  return { ...agg, asOf: dates.length ? dates[dates.length - 1] : null };
 }
 
 /** Turn a category + free-text tags field into clean #hashtags. */

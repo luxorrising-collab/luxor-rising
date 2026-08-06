@@ -1,0 +1,17 @@
+name: Luxor Rising
+channel: direct
+category: concierge
+role: Reviews left directly on our Google Business Profile
+explanation: >-
+  Our own reviews, left directly for Luxor Rising. We're new and building these
+  the honest way — one real guest at a time. Paste your Google Business Profile
+  link below, and once reviews come in, add the rating and count here and tick
+  Verified.
+source: google
+profileUrl: ""
+rating: 0
+reviewCount: 0
+snapshotDate: 2026-08-06
+verified: false
+tags: '#google-business-profile'
+order: 1

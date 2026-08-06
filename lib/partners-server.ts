@@ -8,6 +8,7 @@ export async function getPartners(): Promise<Partner[]> {
     .map(({ slug, entry }) => ({
       slug,
       name: entry.name,
+      channel: entry.channel,
       category: entry.category,
       role: entry.role,
       explanation: entry.explanation,

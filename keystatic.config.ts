@@ -38,6 +38,7 @@ const REVIEW_PLACEMENTS = [
 
 // Partner categories double as the #hashtag each is grouped/filtered under.
 const PARTNER_CATEGORIES = [
+  { label: "Concierge & tours", value: "concierge" },
   { label: "Transfers & drivers", value: "transfers" },
   { label: "Guiding & Egyptology", value: "guiding" },
   { label: "Nile & boats", value: "nile" },
@@ -143,16 +144,27 @@ export default config({
     }),
 
     partners: collection({
-      label: "Partners' track record",
+      label: "Review sources & partners",
       slugField: "name",
       path: "content/partners/*/",
-      columns: ["name", "category", "rating", "reviewCount"],
+      columns: ["name", "channel", "rating", "reviewCount"],
       schema: {
         name: fields.slug({
           name: {
-            label: "Partner name",
-            description: 'The business/person, e.g. "Royal Transfer Egypt".',
+            label: "Name",
+            description:
+              'The business/person, e.g. "Royal Transfer Egypt" — or "Luxor Rising" for your own channel.',
           },
+        }),
+        channel: fields.select({
+          label: "Channel",
+          description:
+            "Is this one of OUR own review channels (e.g. our Google Business Profile), or a third-party partner? Direct channels appear in the top section; partners in the track-record section.",
+          options: [
+            { label: "Our own channel (direct)", value: "direct" },
+            { label: "Third-party partner", value: "partner" },
+          ],
+          defaultValue: "partner",
         }),
         category: fields.select({
           label: "Category (becomes the #hashtag)",

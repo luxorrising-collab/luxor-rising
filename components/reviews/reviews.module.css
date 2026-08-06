@@ -28,6 +28,25 @@
   border-radius: 999px;
   padding: 0.35rem 0.9rem;
 }
+/* Per-section overall rating summary (rating · count · as of date). */
+.sectionRating {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--color-espresso);
+}
+.sectionRating b {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--color-ink);
+}
+.sectionRating .asof {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
 
 /* Featured review — the headline social proof. */
 .featured {

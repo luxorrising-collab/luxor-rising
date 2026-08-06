@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import { MinimalFooter } from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
-import ReviewsWall from "@/components/reviews/ReviewsWall";
 import PartnersTrackRecord from "@/components/reviews/PartnersTrackRecord";
-import { aggregate, featuredFor } from "@/lib/reviews";
-import { partnerAggregate } from "@/lib/partners";
+import { featuredFor } from "@/lib/reviews";
+import { sourceStats } from "@/lib/partners";
 import { getReviews } from "@/lib/reviews-server";
 import { getPartners } from "@/lib/partners-server";
 import styles from "@/components/reviews/reviews.module.css";
@@ -13,27 +12,52 @@ import styles from "@/components/reviews/reviews.module.css";
 export const metadata: Metadata = {
   title: "Reviews — what guests say about their private days in Luxor",
   description:
-    "Real, verified reviews of Luxor Rising's private concierge days — from Google, TripAdvisor and past guests.",
+    "Real, verified reviews of Luxor Rising's private concierge days — from our own Google profile and our hand-picked local partners.",
   alternates: { canonical: "/reviews" },
 };
+
+function fmtMonth(d: string | null) {
+  if (!d) return "";
+  const p = new Date(d);
+  return Number.isNaN(p.getTime())
+    ? ""
+    : p.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+}
+
+function SectionRating({
+  stats,
+}: {
+  stats: { average: number; count: number; asOf: string | null };
+}) {
+  return (
+    <div className={styles.sectionRating}>
+      <span className={styles.stars}>{"★".repeat(Math.round(stats.average))}</span>
+      <b>{stats.average.toFixed(1)}</b>
+      <span>
+        · {stats.count} {stats.count === 1 ? "review" : "reviews"}
+      </span>
+      {stats.asOf && <span className={styles.asof}>· as of {fmtMonth(stats.asOf)}</span>}
+    </div>
+  );
+}
 
 export default async function ReviewsPage() {
   const [reviews, partners] = await Promise.all([getReviews(), getPartners()]);
   const featured = featuredFor(reviews, "reviews-hero");
 
-  // Overall rating = the real weighted total from verified partner sources
-  // (e.g. Google's 5.0 from 9), falling back to the on-page reviews. This keeps
-  // the headline honest to the live public totals, not just the cards shown.
-  const agg = partnerAggregate(partners) ?? aggregate(reviews);
+  const directSources = partners.filter((p) => p.channel === "direct");
+  const partnerSources = partners.filter((p) => p.channel !== "direct");
+  const directStats = sourceStats(directSources);
+  const partnerStats = sourceStats(partnerSources);
 
-  // Reviews not tied to a partner show in the standalone wall; partner reviews
-  // render under their partner.
-  const directReviews = reviews.filter((r) => !r.partner);
-
-  // Structured data ONLY from verified reviews — never emit stars for samples.
-  const verified = reviews.filter((r) => r.verified);
+  // Structured data (Luxor Rising's own AggregateRating) is emitted ONLY from
+  // our own verified channels — never from a partner's reviews, which belong to
+  // the partner, not us. Nothing is claimed until our direct reviews are real.
+  const directVerified = reviews.filter(
+    (r) => r.verified && directSources.some((s) => s.slug === r.partner),
+  );
   const structuredData =
-    agg && verified.length
+    directStats && directVerified.length
       ? {
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
@@ -41,11 +65,11 @@ export default async function ReviewsPage() {
           url: "https://luxorrising.com",
           aggregateRating: {
             "@type": "AggregateRating",
-            ratingValue: String(agg.average),
-            reviewCount: String(agg.count),
+            ratingValue: String(directStats.average),
+            reviewCount: String(directStats.count),
             bestRating: "5",
           },
-          review: verified.map((r) => ({
+          review: directVerified.map((r) => ({
             "@type": "Review",
             author: { "@type": "Person", name: r.author },
             reviewRating: {
@@ -69,21 +93,6 @@ export default async function ReviewsPage() {
         <h1 className="display" style={{ margin: ".3rem 0 0" }}>
           The day people don&apos;t stop talking about.
         </h1>
-
-        {agg ? (
-          <div className={styles.aggregate}>
-            <span className={styles.stars}>{"★".repeat(Math.round(agg.average))}</span>
-            <span className={styles.aggBig}>{agg.average.toFixed(1)}</span>
-            <span>
-              from {agg.count} verified {agg.count === 1 ? "review" : "reviews"}
-            </span>
-          </div>
-        ) : (
-          <span className={styles.sampleNote}>
-            Sample reviews shown while we publish verified guest reviews — no
-            rating is claimed until they&apos;re real.
-          </span>
-        )}
 
         {featured && (
           <figure className={styles.featured}>
@@ -112,15 +121,33 @@ export default async function ReviewsPage() {
         )}
       </section>
 
-      {/* Direct Luxor Rising guest reviews (not tied to a partner) get the
-          standalone wall; partner reviews live under their partner below. */}
-      {directReviews.length > 0 && (
+      {/* Section 1 — our own channels (Google Business Profile etc.). */}
+      {directSources.length > 0 && (
         <section className="wrap">
-          <ReviewsWall reviews={directReviews} />
+          <div className={styles.sectionHead}>
+            <span className="eyebrow">On our own channels</span>
+            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
+              Reviewed directly for Luxor Rising.
+            </h2>
+            <p>
+              Reviews guests leave us directly — on our Google Business Profile
+              and to our team. We&apos;re new, and building these the honest way.
+            </p>
+            {directStats ? (
+              <SectionRating stats={directStats} />
+            ) : (
+              <span className={styles.sampleNote}>
+                Template reviews shown — real ones appear here as guests post
+                them, with no rating claimed until then.
+              </span>
+            )}
+          </div>
+          <PartnersTrackRecord partners={directSources} reviews={reviews} />
         </section>
       )}
 
-      {partners.length > 0 && (
+      {/* Section 2 — our hand-picked partners' track record. */}
+      {partnerSources.length > 0 && (
         <section className="wrap">
           <div className={styles.sectionHead}>
             <span className="eyebrow">Our partners&apos; track record</span>
@@ -132,6 +159,7 @@ export default async function ReviewsPage() {
               driver, guide and boatman, each with their own public reputation.
               Here&apos;s the receipts, straight from their profiles.
             </p>
+            {partnerStats && <SectionRating stats={partnerStats} />}
             <span className={styles.vetBadge}>
               <span aria-hidden>🤝</span>
               <span>
@@ -141,7 +169,7 @@ export default async function ReviewsPage() {
               </span>
             </span>
           </div>
-          <PartnersTrackRecord partners={partners} reviews={reviews} />
+          <PartnersTrackRecord partners={partnerSources} reviews={reviews} />
         </section>
       )}
 

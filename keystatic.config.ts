@@ -108,6 +108,12 @@ export default config({
           description:
             "Paste the public Google / Meta / TripAdvisor review (or profile) link. This is what makes it verifiable — the page shows a 'Verified ↗' link straight to the source.",
         }),
+        partner: fields.relationship({
+          label: "Partner this review is about",
+          collection: "partners",
+          description:
+            "Link the review to the partner it belongs to — it then shows under that partner. Leave empty for a direct Luxor Rising guest review.",
+        }),
         verified: fields.checkbox({
           label: "Verified — a real, attributable guest",
           description:

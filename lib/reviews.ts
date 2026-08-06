@@ -15,6 +15,7 @@ export type Review = {
   avatar: string | null;
   featured: boolean;
   placements: string[];
+  partner: string | null;
   order: number;
 };
 

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Nav from "@/components/Nav";
 import { MinimalFooter } from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
@@ -26,6 +25,10 @@ export default async function ReviewsPage() {
   // (e.g. Google's 5.0 from 9), falling back to the on-page reviews. This keeps
   // the headline honest to the live public totals, not just the cards shown.
   const agg = partnerAggregate(partners) ?? aggregate(reviews);
+
+  // Reviews not tied to a partner show in the standalone wall; partner reviews
+  // render under their partner.
+  const directReviews = reviews.filter((r) => !r.partner);
 
   // Structured data ONLY from verified reviews — never emit stars for samples.
   const verified = reviews.filter((r) => r.verified);
@@ -109,15 +112,13 @@ export default async function ReviewsPage() {
         )}
       </section>
 
-      <section className="wrap">
-        {reviews.length ? (
-          <ReviewsWall reviews={reviews} />
-        ) : (
-          <p style={{ textAlign: "center", padding: "2rem 0 4rem", color: "var(--color-muted)" }}>
-            Reviews are being added. <Link href="/concierge-day">Design your day →</Link>
-          </p>
-        )}
-      </section>
+      {/* Direct Luxor Rising guest reviews (not tied to a partner) get the
+          standalone wall; partner reviews live under their partner below. */}
+      {directReviews.length > 0 && (
+        <section className="wrap">
+          <ReviewsWall reviews={directReviews} />
+        </section>
+      )}
 
       {partners.length > 0 && (
         <section className="wrap">
@@ -131,8 +132,16 @@ export default async function ReviewsPage() {
               driver, guide and boatman, each with their own public reputation.
               Here&apos;s the receipts, straight from their profiles.
             </p>
+            <span className={styles.vetBadge}>
+              <span aria-hidden>🤝</span>
+              <span>
+                <strong>Every partner is hand-picked and personally tested</strong>{" "}
+                — we work alongside them, for up to 30 days, before they ever
+                touch your trip.
+              </span>
+            </span>
           </div>
-          <PartnersTrackRecord partners={partners} />
+          <PartnersTrackRecord partners={partners} reviews={reviews} />
         </section>
       )}
 

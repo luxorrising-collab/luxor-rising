@@ -2,21 +2,30 @@
 
 import { useMemo, useState } from "react";
 import PartnerCard from "./PartnerCard";
+import ReviewCard from "./ReviewCard";
 import styles from "./reviews.module.css";
-import { PARTNER_CATEGORY_LABELS, type Partner } from "@/lib/partners";
+import { type Partner } from "@/lib/partners";
+import type { Review } from "@/lib/reviews";
 
-export default function PartnersTrackRecord({ partners }: { partners: Partner[] }) {
-  const categories = useMemo(() => {
-    const present = Array.from(new Set(partners.map((p) => p.category)));
-    return present.sort();
-  }, [partners]);
-
+export default function PartnersTrackRecord({
+  partners,
+  reviews,
+}: {
+  partners: Partner[];
+  reviews: Review[];
+}) {
+  const categories = useMemo(
+    () => Array.from(new Set(partners.map((p) => p.category))).sort(),
+    [partners],
+  );
   const [active, setActive] = useState<string>("all");
 
   const shown = useMemo(
     () => (active === "all" ? partners : partners.filter((p) => p.category === active)),
     [partners, active],
   );
+
+  const reviewsFor = (slug: string) => reviews.filter((r) => r.partner === slug);
 
   return (
     <div>
@@ -44,17 +53,23 @@ export default function PartnersTrackRecord({ partners }: { partners: Partner[] 
         </div>
       )}
 
-      <div className={styles.partnerGrid}>
-        {shown.map((p) => (
-          <PartnerCard key={p.slug} partner={p} />
-        ))}
+      <div className={styles.partnerBlocks}>
+        {shown.map((p) => {
+          const prs = reviewsFor(p.slug);
+          return (
+            <div key={p.slug} className={styles.partnerBlock}>
+              <PartnerCard partner={p} />
+              {prs.length > 0 && (
+                <div className={styles.partnerReviews}>
+                  {prs.map((r) => (
+                    <ReviewCard key={r.slug} review={r} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
-
-      {active !== "all" && (
-        <p className={styles.partnerCat}>
-          {PARTNER_CATEGORY_LABELS[active] ?? active}
-        </p>
-      )}
     </div>
   );
 }

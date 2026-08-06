@@ -288,3 +288,34 @@
   line-height: 1.6;
   margin: 0.4rem 0 0;
 }
+/* Vetting promise — the "we test partners for up to 30 days" trust note. */
+.vetBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(201, 160, 99, 0.12);
+  border: 1px solid var(--color-gold-soft);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--color-espresso);
+}
+.vetBadge strong {
+  color: var(--color-ink);
+}
+
+/* A partner + its own reviews, stacked into one block. */
+.partnerBlocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  padding-bottom: 1rem;
+}
+.partnerReviews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}

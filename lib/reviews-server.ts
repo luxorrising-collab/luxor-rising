@@ -18,6 +18,7 @@ export async function getReviews(): Promise<Review[]> {
       avatar: entry.avatar,
       featured: entry.featured,
       placements: [...(entry.placements ?? [])],
+      partner: entry.partner,
       order: entry.order ?? 0,
     }))
     .sort(

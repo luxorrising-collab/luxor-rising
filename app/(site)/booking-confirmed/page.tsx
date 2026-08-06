@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Stripe from "stripe";
+import { cookies, headers } from "next/headers";
 import Nav from "@/components/Nav";
 import { MinimalFooter } from "@/components/Footer";
 import PurchaseTracker from "@/components/analytics/PurchaseTracker";
+import { reader } from "@/lib/keystatic-reader";
+import { sendMetaPurchase } from "@/lib/meta-capi";
 
 export const metadata: Metadata = {
   title: "Booking confirmed — Luxor Rising",
@@ -19,6 +22,7 @@ type Order = {
   currency: string;
   slug: string;
   name: string;
+  email: string | null;
 };
 
 // Retrieve the real, PAID amount from Stripe — never trust a client-supplied
@@ -40,9 +44,53 @@ async function getPaidOrder(
       currency: (s.currency ?? "eur").toUpperCase(),
       slug: s.metadata?.slug || "experience",
       name: fallbackName || "Luxor Rising experience",
+      email: s.customer_details?.email ?? null,
     };
   } catch {
     return null; // never block the thank-you page on an analytics lookup
+  }
+}
+
+// Server-side Meta Purchase (Conversions API), fired once the order is paid.
+// Best practice: shares the browser Pixel's event id for de-dup, enriches match
+// with hashed email + fbp/fbc + IP/UA, and ONLY runs with marketing consent.
+async function fireServerConversion(order: Order): Promise<void> {
+  try {
+    const token = process.env.META_CAPI_ACCESS_TOKEN;
+    if (!token) return; // CAPI not configured — Pixel still covers the browser
+    const tracking = await reader.singletons.tracking.read();
+    if (!tracking?.enabled || !tracking.metaPixelId) return;
+
+    const cookieStore = await cookies();
+    let marketing = false;
+    try {
+      const raw = cookieStore.get("lr_consent")?.value;
+      marketing = !!(raw && JSON.parse(decodeURIComponent(raw)).marketing);
+    } catch {
+      marketing = false;
+    }
+    if (!marketing) return; // GDPR: no marketing consent → no server conversion
+
+    const hdrs = await headers();
+    const host = hdrs.get("host");
+
+    await sendMetaPurchase({
+      pixelId: tracking.metaPixelId,
+      token,
+      eventId: order.transactionId, // matches the browser Pixel for de-dup
+      value: order.value,
+      currency: order.currency,
+      contentIds: [order.slug],
+      email: order.email,
+      fbp: cookieStore.get("_fbp")?.value ?? null,
+      fbc: cookieStore.get("_fbc")?.value ?? null,
+      clientIp: (hdrs.get("x-forwarded-for") ?? "").split(",")[0].trim() || null,
+      userAgent: hdrs.get("user-agent"),
+      eventSourceUrl: host ? `https://${host}/booking-confirmed` : null,
+      testEventCode: process.env.META_CAPI_TEST_EVENT_CODE ?? null,
+    });
+  } catch {
+    // analytics must never break the thank-you page
   }
 }
 
@@ -53,6 +101,7 @@ export default async function BookingConfirmedPage({
 }) {
   const { exp, session_id } = await searchParams;
   const order = await getPaidOrder(session_id, exp ?? "");
+  if (order) await fireServerConversion(order);
 
   return (
     <>

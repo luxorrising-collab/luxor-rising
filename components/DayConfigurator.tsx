@@ -121,10 +121,6 @@ const IMG_POOL = [
   "/images/nile-felucca-table.jpg",
 ];
 
-function priceOf(nm: string) {
-  for (const [k, v] of PRICE_TABLE) if (nm.indexOf(k) >= 0) return v;
-  return 0;
-}
 function euro(n: number) {
   return "€" + n.toLocaleString("en-US");
 }
@@ -212,6 +208,10 @@ type DayConfiguratorProps = {
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
   images?: DayConfiguratorImages;
+  /** À-la-carte price map (substring → price) sourced from the live experience
+   *  catalogue, so the breakdown matches real product prices. Falls back to the
+   *  built-in table if not supplied. */
+  priceTable?: [string, number][];
 };
 
 export default function DayConfigurator({
@@ -228,7 +228,15 @@ export default function DayConfigurator({
   ],
   depositPercent = 30,
   images = {},
+  priceTable,
 }: DayConfiguratorProps) {
+  // Prices come from the live catalogue when supplied (keeps the breakdown in
+  // sync with real product prices); the built-in table is only a fallback.
+  const table = priceTable && priceTable.length ? priceTable : PRICE_TABLE;
+  const priceOf = (nm: string) => {
+    for (const [k, v] of table) if (nm.indexOf(k) >= 0) return v;
+    return 0;
+  };
   const img = {
     journeyMedinet: images.journeyMedinet || "/images/desert-stargazing-dune.jpg",
     journeyKarnak: images.journeyKarnak || "/images/nile-felucca-table.jpg",

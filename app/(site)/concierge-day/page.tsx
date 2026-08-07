@@ -119,6 +119,35 @@ export default async function ConciergeDayPage() {
   // "assemble it yourself" comparison always reflects what these actually cost.
   const priceBySlug = (slug: string) =>
     experiences.find((e) => e.slug === slug)?.entry.basePrice ?? 0;
+
+  // À-la-carte price map for the builder's "see full breakdown" — sourced from
+  // the SAME live product prices, so the breakdown and the value-stack always
+  // agree and update from Keystatic. Keys match the builder's plan wording
+  // (substring match); order preserved. Pure services/add-ons that aren't
+  // standalone catalogue products keep sensible fixed values.
+  const alaCartePrices: [string, number][] = [
+    ["Medinet", priceBySlug("medinet-habu")],
+    ["Karnak", priceBySlug("karnak-at-dawn")],
+    ["Hatshepsut", priceBySlug("hatshepsut-temple")],
+    ["Luxor Temple", priceBySlug("luxor-temple")],
+    ["Valley of the Kings", priceBySlug("valley-of-the-kings")],
+    ["Deir el-Shelwit", priceBySlug("deir-el-shelwit")],
+    ["Colossi", priceBySlug("colossi-of-memnon")],
+    ["Valley of the Workers", priceBySlug("deir-el-medina")],
+    ["felucca", priceBySlug("felucca-sunset-sail")],
+    ["sail on the Nile", priceBySlug("felucca-sunset-sail")],
+    ["Sunset sail", priceBySlug("felucca-sunset-sail")],
+    ["picnic", priceBySlug("private-desert-safari")],
+    ["choosing", priceBySlug("private-desert-safari")],
+    ["Desert rally", priceBySlug("private-desert-safari")],
+    ["night in Luxor", priceBySlug("luxor-by-night")],
+    ["photoshoot", 120],
+    ["balloon", priceBySlug("hot-air-balloon-luxor")],
+    ["Sailing lesson", priceBySlug("felucca-sunset-sail")],
+    ["Egyptologist", 140],
+    ["air-conditioned transfers", 90],
+    ["Hurghada", priceBySlug("hurghada-to-luxor-crossing")],
+  ];
   const named = (name: string, slug: string) => ({ name, price: priceBySlug(slug) });
   // [day 1, day-2 additions, day-3 additions, day-4 additions]
   const experiencePlan = [
@@ -428,6 +457,7 @@ export default async function ConciergeDayPage() {
             }))}
             depositPercent={pricingRules?.depositPercent ?? 30}
             images={builderImages}
+            priceTable={alaCartePrices}
           />
         </div>
       </section>

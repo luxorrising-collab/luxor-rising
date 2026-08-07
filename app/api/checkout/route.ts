@@ -11,6 +11,7 @@ type Body = {
   mode?: "full" | "deposit";
   guests?: number;
   date?: string;
+  cancelPath?: string;
 };
 
 export async function POST(req: Request) {
@@ -31,12 +32,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad request." }, { status: 400 });
   }
 
-  const { name, slug, amountCents, mode = "full", guests, date } = body;
+  const { name, slug, amountCents, mode = "full", guests, date, cancelPath } = body;
   if (!name || !slug || !amountCents || amountCents < 100) {
     return NextResponse.json({ error: "Missing or invalid booking details." }, { status: 400 });
   }
 
   const origin = req.headers.get("origin") || new URL(req.url).origin;
+  // Only accept an internal, single-slash path for the cancel URL (no open
+  // redirects). Falls back to the product page.
+  const safeCancel =
+    cancelPath && /^\/(?!\/)[A-Za-z0-9\-_/#?=&.]*$/.test(cancelPath)
+      ? cancelPath
+      : `/experiences/${slug}#book`;
   const stripe = new Stripe(key);
 
   try {
@@ -70,7 +77,7 @@ export async function POST(req: Request) {
       // {CHECKOUT_SESSION_ID} is substituted by Stripe on redirect — it lets the
       // confirmation page retrieve the real, paid amount server-side for analytics.
       success_url: `${origin}/booking-confirmed?exp=${encodeURIComponent(name)}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/experiences/${slug}#book`,
+      cancel_url: `${origin}${safeCancel}`,
     });
 
     return NextResponse.json({ url: session.url });

@@ -248,6 +248,8 @@ export default function DayConfigurator({
   const [dateError, setDateError] = useState(false);
   const [bdOpen, setBdOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const dateFieldRef = useRef<HTMLDivElement>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -371,42 +373,49 @@ export default function DayConfigurator({
     }
   }, []);
 
-  function handleReserve(e: React.MouseEvent) {
+  async function handleReserve(e: React.MouseEvent) {
     e.preventDefault();
+    if (loading) return;
     if (!tripDate) {
       setDateError(true);
       dateFieldRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       setTimeout(() => dateInputRef.current?.focus(), 420);
       return;
     }
+    const name = `${days}-day Concierge Journey`;
+    const slug = `concierge-day-${days}d`;
     trackBeginCheckout({
       value: total,
       currency: "EUR",
-      items: [
-        {
-          item_id: `concierge-day-${days}d`,
-          item_name: `${days}-day Concierge Journey`,
-          price: total,
-          quantity: group,
-        },
-      ],
+      items: [{ item_id: slug, item_name: name, price: total, quantity: group }],
     });
-    const msg =
-      pay === "full"
-        ? "Pay " + euro(total) + " in full"
-        : "Pay " +
-          euro(deposit) +
-          " deposit now, " +
-          euro(total - deposit) +
-          " on the day";
-    alert(
-      "Prototype — this is where Stripe checkout opens.\n\n" +
-        days +
-        "-day concierge journey on " +
-        tripDate +
-        "\n" +
-        msg
-    );
+    setError("");
+    setLoading(true);
+    const amount = pay === "full" ? total : deposit;
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          slug,
+          amountCents: amount * 100,
+          mode: pay,
+          guests: group,
+          date: tripDate,
+          cancelPath: "/concierge-day#build",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url as string;
+        return;
+      }
+      setError(data.error || "We couldn't open secure checkout just now. Please try again.");
+    } catch {
+      setError("We couldn't reach checkout. Please check your connection and try again.");
+    }
+    setLoading(false);
   }
 
   return (
@@ -790,11 +799,23 @@ export default function DayConfigurator({
                 <span>Deposit now · rest on the day</span>
               </div>
             </div>
-            <a href="#" className={`btn btn-primary ${styles.sumBtn}`} onClick={handleReserve}>
-              {pay === "full"
-                ? `Reserve your journey · ${euro(total)} →`
-                : `Secure your date · ${euro(deposit)} today →`}
+            <a
+              href="#"
+              className={`btn btn-primary ${styles.sumBtn}`}
+              onClick={handleReserve}
+              aria-disabled={loading}
+            >
+              {loading
+                ? "Opening secure checkout…"
+                : pay === "full"
+                  ? `Reserve your journey · ${euro(total)} →`
+                  : `Secure your date · ${euro(deposit)} today →`}
             </a>
+            {error && (
+              <div role="alert" className={styles.sumCancel} style={{ color: "#9a2b2b" }}>
+                {error}
+              </div>
+            )}
             <div className={styles.sumCancel}>{cancelText}</div>
             <div className={styles.sumTrust}>
               <svg width="11" height="13" viewBox="0 0 11 13" fill="none">

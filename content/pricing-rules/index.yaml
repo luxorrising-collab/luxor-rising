@@ -13,4 +13,4 @@ groupSupplement:
     extraPerDay: 70
   - minGuests: 4
     extraPerDay: 55
-depositPercent: 30
+depositPercent: 50

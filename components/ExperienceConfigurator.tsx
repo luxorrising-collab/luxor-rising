@@ -71,7 +71,7 @@ export default function ExperienceConfigurator({
     { minGuests: 3, extraPerGuest: 55 },
     { minGuests: 4, extraPerGuest: 45 },
   ],
-  depositPercent = 30,
+  depositPercent = 50,
   glanceIncludes,
   includeItems,
   feelText,
@@ -89,6 +89,7 @@ export default function ExperienceConfigurator({
   const [tripDate, setTripDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
   const total = basePrice + extra(group, groupSupplement);
@@ -114,6 +115,10 @@ export default function ExperienceConfigurator({
     if (!tripDate) {
       dateInputRef.current?.focus();
       setError("Please pick your date first.");
+      return;
+    }
+    if (!agreed) {
+      setError("Please agree to the Terms and Cancellation Policy to continue.");
       return;
     }
     setError("");
@@ -278,6 +283,27 @@ export default function ExperienceConfigurator({
               <span>Deposit · rest on the day</span>
             </button>
           </div>
+          <label className={styles.sumConsent}>
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked);
+                if (error) setError("");
+              }}
+            />
+            <span>
+              I agree to the{" "}
+              <Link href="/legal/terms" target="_blank">
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link href="/legal/cancellation" target="_blank">
+                Cancellation Policy
+              </Link>
+              .
+            </span>
+          </label>
           <a
             href="#"
             className={`btn btn-primary ${styles.sumBtn}`}
@@ -292,7 +318,8 @@ export default function ExperienceConfigurator({
             </div>
           )}
           <div className={styles.sumReassure}>
-            Secure checkout by Stripe · No account needed · Free cancellation up to 7 days before
+            Secure checkout by Stripe · No account needed ·{" "}
+            <Link href="/legal/cancellation">Free cancellation up to 7 days before</Link>
           </div>
           {/* The emotional "how it feels" note sits BELOW the CTA — it reinforces the
               decision without pushing the price and Reserve button below the fold. */}

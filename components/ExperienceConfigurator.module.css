@@ -383,11 +383,36 @@
   width: 100%;
   margin-top: 0.2rem;
 }
+.sumConsent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-espresso);
+  text-align: left;
+  margin: 0.2rem 0 0.7rem;
+}
+.sumConsent input {
+  margin-top: 0.15rem;
+  accent-color: var(--color-gold);
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+.sumConsent a {
+  color: var(--color-gold-deep);
+  text-decoration: underline;
+}
 .sumReassure {
   font-size: 0.74rem;
   color: var(--color-gold-deep);
   text-align: center;
   margin-top: 0.7rem;
+}
+.sumReassure a {
+  color: var(--color-gold-deep);
+  text-decoration: underline;
 }
 .sumFine {
   font-size: 0.72rem;

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
 import { useDayCount } from "./DayCount";
@@ -226,7 +227,7 @@ export default function DayConfigurator({
     { minGuests: 3, extraPerDay: 70 },
     { minGuests: 4, extraPerDay: 55 },
   ],
-  depositPercent = 30,
+  depositPercent = 50,
   images = {},
   priceTable,
 }: DayConfiguratorProps) {
@@ -258,6 +259,7 @@ export default function DayConfigurator({
   const [listOpen, setListOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const dateFieldRef = useRef<HTMLDivElement>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -371,7 +373,9 @@ export default function DayConfigurator({
   const cancelText = tripDate
     ? (() => {
         const dl = cancelDeadline(tripDate);
-        return dl ? "Free cancellation until " + dl + " — full refund, no questions" : "";
+        return dl
+          ? "Free cancellation until " + dl + " — refunded, less any non-refundable bookings"
+          : "";
       })()
     : "";
 
@@ -388,6 +392,10 @@ export default function DayConfigurator({
       setDateError(true);
       dateFieldRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       setTimeout(() => dateInputRef.current?.focus(), 420);
+      return;
+    }
+    if (!agreed) {
+      setError("Please agree to the Terms and Cancellation Policy to continue.");
       return;
     }
     const name = `${days}-day Concierge Journey`;
@@ -807,6 +815,27 @@ export default function DayConfigurator({
                 <span>Deposit now · rest on the day</span>
               </div>
             </div>
+            <label className={styles.sumConsent}>
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => {
+                  setAgreed(e.target.checked);
+                  if (error) setError("");
+                }}
+              />
+              <span>
+                I agree to the{" "}
+                <Link href="/legal/terms" target="_blank">
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link href="/legal/cancellation" target="_blank">
+                  Cancellation Policy
+                </Link>
+                .
+              </span>
+            </label>
             <a
               href="#"
               className={`btn btn-primary ${styles.sumBtn}`}

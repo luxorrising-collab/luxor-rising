@@ -165,7 +165,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
               minGuests: t.minGuests ?? 0,
               extraPerGuest: t.extraPerGuest ?? 0,
             }))}
-            depositPercent={pricingRules?.depositPercent ?? 30}
+            depositPercent={pricingRules?.depositPercent ?? 50}
             glanceIncludes={entry.glanceIncludes}
             includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
             feelText={entry.glanceIncludes}

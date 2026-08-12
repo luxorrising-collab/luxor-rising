@@ -14,19 +14,18 @@ export const metadata: Metadata = {
 const SECTIONS: { h: string; p: string; href?: string }[] = [
   {
     h: "Terms & Conditions",
-    p: "Booking terms, the role of Luxor Rising as concierge and coordinator, the role of licensed local partners who deliver the experiences, liability, and the single-day / no-overnight nature of the experiences.",
+    p: "Booking terms, our role as concierge and coordinator, the licensed local partners who deliver the experiences, limits of liability, and the single-day nature of the experiences — now written in full.",
+    href: "/legal/terms",
   },
   {
     h: "Cancellation & Refunds",
-    p: "Free cancellation up to 7 days before; deposit vs pay-in-full; what happens if a partner cannot deliver; how refunds are processed and how long they take.",
-  },
-  {
-    h: "Payments",
-    p: "Accepted methods, currency (EUR), when the balance is due, and the security of card handling via the payment provider. No card details are stored by Luxor Rising.",
+    p: "Pay in full or a 50% deposit; free cancellation up to 7 days before (less non-refundable costs); the Concierge Day first-two-hours promise; how refunds are processed — now written in full.",
+    href: "/legal/cancellation",
   },
   {
     h: "Privacy Policy",
-    p: "What personal data is collected (name, email, trip details), why, how long it is kept, who it is shared with (local partners, payment provider), and your rights under GDPR.",
+    p: "What personal data we collect, why, how long we keep it, who it is shared with (local partners, Stripe, and — only with consent — Google/Meta), and your rights under GDPR — now written in full.",
+    href: "/legal/privacy",
   },
   {
     h: "Cookie Policy",

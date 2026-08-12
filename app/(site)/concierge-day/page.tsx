@@ -455,7 +455,7 @@ export default async function ConciergeDayPage() {
               minGuests: t.minGuests ?? 0,
               extraPerDay: t.extraPerDay ?? 0,
             }))}
-            depositPercent={pricingRules?.depositPercent ?? 30}
+            depositPercent={pricingRules?.depositPercent ?? 50}
             images={builderImages}
             priceTable={alaCartePrices}
           />

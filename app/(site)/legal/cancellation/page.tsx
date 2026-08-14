@@ -98,22 +98,23 @@ export default function CancellationPage() {
             difference may apply if rates for the new date differ.
           </p>
 
-          <h2>5. The Concierge Day first-two-hours promise</h2>
+          <h2>5. Our money-back promise</h2>
           <p>
-            We stand behind the Concierge Day. If, within the{" "}
-            <strong>first two hours</strong> of your day, you feel it genuinely
-            isn&apos;t what we promised, tell your consigliere{" "}
+            We stand behind every experience. If, early on — within the{" "}
+            <strong>first hour</strong> of a single experience, or the{" "}
+            <strong>first two hours</strong> of a Concierge Day — you feel it
+            genuinely isn&apos;t what we promised, tell your consigliere or guide{" "}
             <strong>at that moment</strong> and give us the chance to put it right.
-            If we can&apos;t, we&apos;ll end the day there and refund the price you
-            paid, <strong>less any non-refundable costs</strong> already incurred
-            on your behalf (section 2).
+            If we can&apos;t, we&apos;ll stop there and refund the price you paid,{" "}
+            <strong>less any non-refundable costs</strong> already incurred on your
+            behalf (section 2).
           </p>
           <p>
-            This promise applies once per booking, to Concierge Days only, and at
-            our reasonable discretion. It applies only where you raised the concern
-            within the first two hours and allowed us a fair opportunity to
-            resolve it; it does not cover a change of mind, weather, or matters
-            outside our control after that point.
+            This promise applies once per booking and at our reasonable discretion.
+            It applies only where you raised the concern within that opening window
+            and allowed us a fair opportunity to resolve it; it does not cover a
+            change of mind, weather, or matters outside our control after that
+            point.
           </p>
 
           <h2>6. If we or a partner cannot deliver</h2>

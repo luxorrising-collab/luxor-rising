@@ -252,7 +252,7 @@ export default function DayConfigurator({
   const [journey, setJourney] = useState<Journey>("medinet");
   const [photo, setPhoto] = useState(false);
   const [hurg, setHurg] = useState(false);
-  const [pay, setPay] = useState<Pay>("full");
+  const [pay, setPay] = useState<Pay>("deposit");
   const [tripDate, setTripDate] = useState("");
   const [dateError, setDateError] = useState(false);
   const [bdOpen, setBdOpen] = useState(false);
@@ -358,14 +358,7 @@ export default function DayConfigurator({
   });
   const showSavings = sepTotal > total;
 
-  const dlabel = days + (days > 1 ? " days" : " day");
   const glabel = group + (group > 1 ? " guests" : " guest");
-  const meta =
-    dlabel +
-    " · " +
-    glabel +
-    (group > 1 ? " · " + euro(perPerson) + " pp" : "") +
-    (tripDate ? " · " + fmtDate(tripDate) : " · pick your date");
 
   const medS = JOURNEY[journey].temple.split(" — ")[0];
   const compS = JOURNEY[journey].companion.split(" at ")[0].split(" — ")[0];
@@ -544,36 +537,10 @@ export default function DayConfigurator({
             </div>
           </div>
 
-          {/* Step 3: date */}
-          <div className={`${styles.step} ${tripDate ? styles.stepDone : ""}`}>
-            <div className={styles.stepH}>
-              <div className={styles.stepN}>3</div>
-              <h3>Pick your date</h3>
-            </div>
-            <div
-              ref={dateFieldRef}
-              className={`${styles.fld} ${dateError ? styles.err : ""}`}
-            >
-              <input
-                ref={dateInputRef}
-                type="date"
-                value={tripDate}
-                onChange={(e) => {
-                  setTripDate(e.target.value);
-                  setDateError(false);
-                }}
-              />
-            </div>
-            <div className={styles.fldErr}>Choose your date to continue — it takes a second.</div>
-            <div className={styles.fldHint}>
-              We confirm availability within 12 hours. Free cancellation up to 7 days before.
-            </div>
-          </div>
-
-          {/* Step 4: preferences */}
+          {/* Step 3: preferences (date moved to the checkout card, right) */}
           <div className={styles.step}>
             <div className={styles.stepH}>
-              <div className={styles.stepN}>4</div>
+              <div className={styles.stepN}>3</div>
               <h3>Your preferences</h3>
             </div>
 
@@ -766,9 +733,14 @@ export default function DayConfigurator({
                 <span className={styles.sumSavepill}>Save {euro(sepTotal - total)}</span>
               )}
             </div>
+            {group > 1 && (
+              <div className={styles.sumPp}>
+                {euro(perPerson)} per person · {glabel}
+              </div>
+            )}
             {showSavings && (
               <div className={styles.sumAnchor}>
-                {euro(sepTotal)} if booked à la carte{" "}
+                <s>{euro(sepTotal)}</s> if you booked each separately{" "}
                 <button className={styles.bdToggle} onClick={() => setBdOpen((o) => !o)}>
                   {bdOpen ? "hide breakdown ▴" : "see breakdown ▾"}
                 </button>
@@ -795,24 +767,53 @@ export default function DayConfigurator({
                 </div>
               </div>
             )}
-            <div className={styles.sumMeta}>{meta}</div>
+
+            {/* value stack — the scope of the offer, right at the price */}
+            <div className={styles.sumChips}>
+              <span className={styles.sumChip}>{EXPCOUNT[days]} experiences</span>
+              {plan.bonus.length > 0 && (
+                <span className={`${styles.sumChip} ${styles.sumChipFree}`}>
+                  {plan.bonus.length} signature bonus{plan.bonus.length > 1 ? "es" : ""} — free
+                </span>
+              )}
+              <span className={styles.sumChip}>Everything handled</span>
+            </div>
+
+            {/* date — moved into the card so checkout is self-contained */}
+            <div className={styles.sumSubRow}>
+              <span className={styles.sumSub}>Your date</span>
+              <span className={styles.sumScar}>Only one group a day</span>
+            </div>
+            <div ref={dateFieldRef} className={`${styles.sumDate} ${dateError ? styles.err : ""}`}>
+              <input
+                ref={dateInputRef}
+                type="date"
+                value={tripDate}
+                onChange={(e) => {
+                  setTripDate(e.target.value);
+                  setDateError(false);
+                  if (error) setError("");
+                }}
+              />
+            </div>
 
             {/* pay + CTA — kept tight and high so the button never drops below the fold */}
             <div className={styles.sumSub}>How you&apos;d like to pay</div>
             <div className={styles.payOpts}>
+              <div
+                className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
+                onClick={() => setPay("deposit")}
+              >
+                <span className={styles.payRec}>Easiest</span>
+                <b>{euro(deposit)}</b>
+                <span>to reserve · rest on the day</span>
+              </div>
               <div
                 className={`${styles.pay} ${pay === "full" ? styles.sel : ""}`}
                 onClick={() => setPay("full")}
               >
                 <b>{euro(total)}</b>
                 <span>Pay in full</span>
-              </div>
-              <div
-                className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
-                onClick={() => setPay("deposit")}
-              >
-                <b>{euro(deposit)}</b>
-                <span>Deposit now · rest on the day</span>
               </div>
             </div>
             <label className={styles.sumConsent}>
@@ -853,13 +854,23 @@ export default function DayConfigurator({
                 {error}
               </div>
             )}
-            <div className={styles.sumCancel}>{cancelText}</div>
-            <div className={styles.sumTrust}>
-              <svg width="11" height="13" viewBox="0 0 11 13" fill="none">
-                <path d="M2 5V3.5A3.5 3.5 0 0 1 9 3.5V5" stroke="currentColor" strokeWidth="1.4" />
-                <rect x="1" y="5" width="9" height="7" rx="1.2" fill="currentColor" />
-              </svg>{" "}
-              Secure payment · Free cancellation up to 7 days before
+            <div className={styles.sumReassure2}>
+              <div className={`${styles.rrow} ${styles.rrowGuar}`}>
+                <span className={styles.ric} aria-hidden>🛡</span>
+                <span>
+                  <b>First two hours, or your money back.</b> If your day isn&apos;t what we
+                  promised, tell us in the first two hours and we refund it — less any
+                  non-refundable bookings.
+                </span>
+              </div>
+              <div className={styles.rrow}>
+                <span className={styles.ric} aria-hidden>🔒</span>
+                <span>Secure checkout by Stripe — no account needed</span>
+              </div>
+              <div className={styles.rrow}>
+                <span className={styles.ric} aria-hidden>↩</span>
+                <span>{cancelText || "Free cancellation up to 7 days before"}</span>
+              </div>
             </div>
 
             {/* what you get — below the CTA, so it reassures without pushing the button down */}

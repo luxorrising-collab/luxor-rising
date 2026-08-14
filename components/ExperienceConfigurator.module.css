@@ -414,6 +414,55 @@
   color: var(--color-gold-deep);
   text-decoration: underline;
 }
+.pay {
+  position: relative;
+}
+.payRec {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: var(--color-gold-deep);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.42rem;
+  border-radius: 999px;
+}
+.sumReassure2 {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.rrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--color-espresso);
+  text-align: left;
+}
+.rrow .ric {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.rrow a {
+  color: var(--color-gold-deep);
+  text-decoration: underline;
+}
+.rrowGuar {
+  background: rgba(79, 122, 82, 0.1);
+  border: 1px solid rgba(79, 122, 82, 0.28);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+}
+.rrowGuar b {
+  color: var(--color-ink);
+}
 .sumFine {
   font-size: 0.72rem;
   opacity: 0.6;

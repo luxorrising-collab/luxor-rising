@@ -85,7 +85,7 @@ export default function ExperienceConfigurator({
   const cardLabel = hasTitle ? name : "You're reserving";
   const cardTitle = hasTitle ? title! : name;
   const [group, setGroup] = useState(2);
-  const [pay, setPay] = useState<Pay>("full");
+  const [pay, setPay] = useState<Pay>("deposit");
   const [tripDate, setTripDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -161,23 +161,6 @@ export default function ExperienceConfigurator({
           <div className={styles.step}>
             <div className={styles.stepH}>
               <div className={styles.stepN}>1</div>
-              <h3>Pick your date</h3>
-            </div>
-            <input
-              ref={dateInputRef}
-              type="date"
-              className={styles.dateInput}
-              value={tripDate}
-              onChange={(e) => {
-                setTripDate(e.target.value);
-                if (error) setError("");
-              }}
-            />
-          </div>
-
-          <div className={styles.step}>
-            <div className={styles.stepH}>
-              <div className={styles.stepN}>2</div>
               <h3>Who&apos;s coming?</h3>
             </div>
             <div className={styles.grpOpts}>
@@ -202,7 +185,7 @@ export default function ExperienceConfigurator({
 
           <div className={styles.step}>
             <div className={styles.stepH}>
-              <div className={styles.stepN}>3</div>
+              <div className={styles.stepN}>2</div>
               <h3>The timing</h3>
             </div>
             <div className={styles.timingCard}>
@@ -258,12 +241,30 @@ export default function ExperienceConfigurator({
           <div className={styles.sumPer}>
             {group > 1 ? euro(perPerson) + " per person · more of you, less each" : "Private, just you"}
           </div>
-          <div className={styles.sumMeta}>
-            {group}
-            {group > 1 ? " guests" : " guest"} · {tripDate || "pick your date"}
-          </div>
+          {/* date — moved into the card so checkout is self-contained (matches concierge) */}
+          <div className={styles.sumSub}>Your date</div>
+          <input
+            ref={dateInputRef}
+            type="date"
+            className={styles.dateInput}
+            value={tripDate}
+            onChange={(e) => {
+              setTripDate(e.target.value);
+              if (error) setError("");
+            }}
+          />
           <div className={styles.sumSub}>How you&apos;d like to pay</div>
           <div className={styles.payOpts}>
+            <button
+              type="button"
+              className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
+              onClick={() => setPay("deposit")}
+              aria-pressed={pay === "deposit"}
+            >
+              <span className={styles.payRec}>Easiest</span>
+              <b>{euro(deposit)}</b>
+              <span>to reserve · rest on the day</span>
+            </button>
             <button
               type="button"
               className={`${styles.pay} ${pay === "full" ? styles.sel : ""}`}
@@ -272,15 +273,6 @@ export default function ExperienceConfigurator({
             >
               <b>{euro(total)}</b>
               <span>Pay in full</span>
-            </button>
-            <button
-              type="button"
-              className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
-              onClick={() => setPay("deposit")}
-              aria-pressed={pay === "deposit"}
-            >
-              <b>{euro(deposit)}</b>
-              <span>Deposit · rest on the day</span>
             </button>
           </div>
           <label className={styles.sumConsent}>
@@ -310,16 +302,35 @@ export default function ExperienceConfigurator({
             onClick={handleReserve}
             aria-disabled={loading}
           >
-            {loading ? "Opening secure checkout…" : "Reserve & pay"}
+            {loading
+              ? "Opening secure checkout…"
+              : pay === "deposit"
+                ? `Reserve for ${euro(deposit)} →`
+                : `Reserve & pay ${euro(total)} →`}
           </a>
           {error && (
             <div role="alert" className={styles.sumError}>
               {error}
             </div>
           )}
-          <div className={styles.sumReassure}>
-            Secure checkout by Stripe · No account needed ·{" "}
-            <Link href="/legal/cancellation">Free cancellation up to 7 days before</Link>
+          <div className={styles.sumReassure2}>
+            <div className={`${styles.rrow} ${styles.rrowGuar}`}>
+              <span className={styles.ric} aria-hidden>🛡</span>
+              <span>
+                <b>First hour, or your money back.</b> If it isn&apos;t what we promised, tell
+                us in the first hour and we refund it — less any non-refundable bookings.
+              </span>
+            </div>
+            <div className={styles.rrow}>
+              <span className={styles.ric} aria-hidden>🔒</span>
+              <span>Secure checkout by Stripe — no account needed</span>
+            </div>
+            <div className={styles.rrow}>
+              <span className={styles.ric} aria-hidden>↩</span>
+              <span>
+                <Link href="/legal/cancellation">Free cancellation up to 7 days before</Link>
+              </span>
+            </div>
           </div>
           {/* The emotional "how it feels" note sits BELOW the CTA — it reinforces the
               decision without pushing the price and Reserve button below the fold. */}
@@ -329,10 +340,6 @@ export default function ExperienceConfigurator({
               {feelText}
             </div>
           )}
-          <div className={styles.sumFine}>
-            Private, just your group · Everything arranged end to end · Your consigliere confirms the
-            exact timing within 24 hours
-          </div>
           <div className={styles.upsell}>
             Want the whole day arranged around it? <Link href="/concierge-day">Build a Concierge Day →</Link>
           </div>

@@ -977,6 +977,115 @@
   font-size: 0.7rem;
   opacity: 0.65;
 }
+/* redesign: per-person, value chips, in-card date, deposit badge, reassurance */
+.sumPp {
+  font-size: 0.9rem;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  margin: 0.35rem 0 0.15rem;
+}
+.sumAnchor s {
+  opacity: 0.85;
+}
+.sumChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}
+.sumChip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-espresso);
+  background: var(--color-cream);
+  border: 1px solid var(--color-cream-deep);
+  border-radius: 999px;
+  padding: 0.26rem 0.6rem;
+}
+.sumChipFree {
+  color: var(--color-gold-deep);
+  border-color: var(--color-gold-soft);
+  background: rgba(201, 160, 99, 0.12);
+}
+.sumSubRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.sumSubRow .sumSub {
+  margin: 0;
+}
+.sumScar {
+  font-size: 0.72rem;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+}
+.sumDate {
+  margin-top: 0.4rem;
+}
+.sumDate input {
+  width: 100%;
+  border: 1.5px solid var(--color-gold-soft);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: #fff;
+}
+.sumDate.err input {
+  border-color: #c0563f;
+  box-shadow: 0 0 0 2px rgba(192, 86, 63, 0.15);
+}
+.pay {
+  position: relative;
+}
+.payRec {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: var(--color-gold-deep);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.42rem;
+  border-radius: 999px;
+}
+.sumReassure2 {
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-cream-deep);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.rrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--color-espresso);
+}
+.rrow .ric {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.rrowGuar {
+  background: rgba(79, 122, 82, 0.1);
+  border: 1px solid rgba(79, 122, 82, 0.28);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+}
+.rrowGuar b {
+  color: var(--color-ink);
+}
 .sumConsent {
   display: flex;
   align-items: flex-start;

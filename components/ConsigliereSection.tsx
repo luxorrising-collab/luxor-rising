@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Reveal from "./Reveal";
+import Link from "next/link";
 import styles from "./ConsigliereSection.module.css";
 
-const CONS_ICONS = ["✦", "❖", "◆", "✧", "◈", "❋"];
+const CONS_ICONS = ["✦", "❖", "◆"];
 
 export type ConsigliereePoint = { title: string; description: string };
 export type ConsHowItWorks = {
@@ -16,20 +16,22 @@ type ConsigliereSectionProps = {
   title: string;
   lead?: string;
   image?: string;
-  /** Optional split background — one slice per person (consigliere, Egyptologist,
-   *  guard). When two or more are given, they replace the single cover image. */
+  /** Optional split background — one slice per person. */
   images?: ConsigliereSlice[];
-  /** How-it-works steps, folded into the cover overlay as a slim numbered flow. */
+  /** Accepted for compatibility; not rendered (the how-it-works flow lives on
+   *  the Private Guide page). */
   howItWorks?: ConsHowItWorks;
-  points: ConsigliereePoint[];
+  points?: ConsigliereePoint[];
+  moreHref?: string;
+  moreLabel?: string;
   disclosure?: string;
 };
 
 /**
- * Full-bleed portrait of the consigliere with the intro (and optional
- * how-it-works flow) as an overlay, then the "what he does" points below.
- * Shared by the experience template and the concierge-day page so the
- * "who runs your day" story looks identical everywhere.
+ * "Who runs your day" band: the Private Guide consigliere explanation
+ * (eyebrow · title · lead · three pillars) laid over a full-bleed portrait of
+ * Ahmed on the Nile, with a link through to the full story. Shared by the
+ * concierge-day and experience pages so it reads the same everywhere.
  */
 export default function ConsigliereSection({
   eyebrow,
@@ -37,89 +39,64 @@ export default function ConsigliereSection({
   lead,
   image,
   images,
-  howItWorks,
-  points,
-  disclosure,
+  points = [],
+  moreHref = "/private-guide",
+  moreLabel = "Meet your consigliere →",
 }: ConsigliereSectionProps) {
   if (!title) return null;
-  const steps = howItWorks?.steps ?? [];
   const slices = images && images.length > 1 ? images : null;
+  const pillars = points.slice(0, 3);
+
   return (
-    <>
-      <section className={styles.consCover}>
-        {slices ? (
-          <div className={styles.consSlices}>
-            {slices.map((s, i) => (
-              <div className={styles.consSlice} key={s.src || i}>
-                <Image
-                  src={s.src}
-                  alt={s.label || ""}
-                  fill
-                  sizes="(max-width: 860px) 34vw, 22vw"
-                  style={s.position ? { objectPosition: s.position } : undefined}
-                />
+    <section className={styles.consCover}>
+      {slices ? (
+        <div className={styles.consSlices}>
+          {slices.map((s, i) => (
+            <div className={styles.consSlice} key={s.src || i}>
+              <Image
+                src={s.src}
+                alt={s.label || ""}
+                fill
+                sizes="(max-width: 860px) 34vw, 22vw"
+                style={s.position ? { objectPosition: s.position } : undefined}
+              />
+            </div>
+          ))}
+        </div>
+      ) : image ? (
+        <div className={styles.consCoverBg}>
+          <Image src={image} alt={eyebrow || ""} fill sizes="100vw" priority={false} />
+        </div>
+      ) : null}
+      <div className={slices ? styles.consSlicesScrim : styles.consCoverScrim} />
+      {slices && (
+        <div className={styles.consCaps} aria-hidden>
+          {slices.map((s, i) => (
+            <span key={s.src || i}>{s.label}</span>
+          ))}
+        </div>
+      )}
+      <div className={`wrap ${styles.consCoverIn}`}>
+        {eyebrow && <span className="eyebrow">{eyebrow}</span>}
+        <h2 className="display">{title}</h2>
+        {lead && <p className={styles.consCoverLead}>{lead}</p>}
+        {pillars.length > 0 && (
+          <div className={styles.consPillars}>
+            {pillars.map((p, i) => (
+              <div className={styles.consPillar} key={p.title || i}>
+                <span className={styles.consPillarIcon} aria-hidden>
+                  {CONS_ICONS[i % CONS_ICONS.length]}
+                </span>
+                <h4>{p.title}</h4>
+                <p>{p.description}</p>
               </div>
-            ))}
-          </div>
-        ) : image ? (
-          <div className={styles.consCoverBg}>
-            <Image src={image} alt={eyebrow || ""} fill sizes="100vw" />
-          </div>
-        ) : null}
-        <div className={slices ? styles.consSlicesScrim : styles.consCoverScrim} />
-        {slices && (
-          <div className={styles.consCaps} aria-hidden>
-            {slices.map((s, i) => (
-              <span key={s.src || i}>{s.label}</span>
             ))}
           </div>
         )}
-        <div className={`wrap ${styles.consCoverIn}`}>
-          {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-          <h2 className="display">{title}</h2>
-          {lead && <p className={styles.consCoverLead}>{lead}</p>}
-          {steps.length > 0 && (
-            <>
-              {howItWorks?.label && <div className={styles.flowLabel}>{howItWorks.label}</div>}
-              <ol className={styles.flow}>
-                {steps.map((s, i) => (
-                  <li key={s.title || i}>
-                    <span className={styles.flowNum}>{String(i + 1).padStart(2, "0")}</span>
-                    <span className={styles.flowText}>
-                      <b>{s.title}.</b> {s.description}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </>
-          )}
-        </div>
-      </section>
-
-      {(points.length > 0 || disclosure) && (
-        <section className={styles.consigliere}>
-          <div className="wrap">
-            {points.length > 0 && (
-              <Reveal className={styles.consGrid}>
-                {points.map((p, i) => (
-                  <div className={styles.consItem} key={p.title || i}>
-                    <span className={styles.consIcon} aria-hidden>
-                      {CONS_ICONS[i % CONS_ICONS.length]}
-                    </span>
-                    <h4>{p.title}</h4>
-                    <p>{p.description}</p>
-                  </div>
-                ))}
-              </Reveal>
-            )}
-            {disclosure && (
-              <div className="disclosure" style={{ marginTop: points.length > 0 ? "2.4rem" : 0 }}>
-                {disclosure}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-    </>
+        <Link href={moreHref} className={styles.consMore}>
+          {moreLabel}
+        </Link>
+      </div>
+    </section>
   );
 }

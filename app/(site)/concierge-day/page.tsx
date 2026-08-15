@@ -317,30 +317,10 @@ export default async function ConciergeDayPage() {
         title={product?.consigliereTitle ?? ""}
         lead={product?.consigliereLead}
         image={product?.consigliereImage || "/images/hosts/ahmed-nile-sunset.jpg"}
-        howItWorks={{
-          label: "How your day works",
-          steps: [
-            {
-              title: "You design your day",
-              description: "Tell us your date and shape your day — it takes a minute.",
-            },
-            {
-              title: "We arrange every detail",
-              description:
-                "One consigliere handles every hour — entries timed before the crowds, private transfer, and the temple guards who open doors a coach never gets. A licensed Egyptologist joins you at the monuments too.",
-            },
-            {
-              title: "You simply arrive",
-              description:
-                "Your consigliere is reachable all day. You experience Luxor; we handle the rest.",
-            },
-          ],
-        }}
         points={(product?.consiglierePoints ?? []).map((p) => ({
           title: p.title,
           description: p.description,
         }))}
-        disclosure={product?.disclosureText}
       />
     ),
     threshold: (

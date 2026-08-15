@@ -253,9 +253,7 @@ export default function ExperienceTemplate({
           title={consigliereTitle}
           lead={consigliereLead}
           image={consigliereImage}
-          howItWorks={{ label: howItWorksTitle || howItWorksEyebrow, steps: howItWorksSteps }}
           points={consiglierePoints}
-          disclosure={disclosureText}
         />
       )}
 

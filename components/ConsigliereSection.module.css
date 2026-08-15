@@ -6,7 +6,7 @@
   background: #160d05;
   display: flex;
   align-items: center;
-  min-height: min(88vh, 760px);
+  min-height: min(46vh, 400px);
 }
 .consCoverBg {
   position: absolute;
@@ -15,9 +15,7 @@
 }
 .consCoverBg :global(img) {
   object-fit: cover;
-  /* Ahmed stands to the right of this wide frame — keep him in view while the
-     scrim darkens the left, where the text sits. */
-  object-position: 78% center;
+  object-position: center;
 }
 /* split background — one slice per person (consigliere / Egyptologist / guard) */
 .consSlices {
@@ -82,22 +80,19 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-      90deg,
-      rgba(10, 8, 4, 0.9) 0%,
-      rgba(10, 8, 4, 0.66) 40%,
-      rgba(10, 8, 4, 0.18) 78%,
-      rgba(10, 8, 4, 0.05) 100%
-    ),
-    linear-gradient(180deg, rgba(10, 8, 4, 0.4) 0%, transparent 40%, rgba(10, 8, 4, 0.4) 100%);
+  /* Uniform, centred darkening so the centred text + pillars stay legible. */
+  background: radial-gradient(120% 100% at 50% 50%, rgba(10, 8, 4, 0.52), rgba(10, 8, 4, 0.78)),
+    linear-gradient(180deg, rgba(10, 8, 4, 0.35) 0%, transparent 30%, rgba(10, 8, 4, 0.45) 100%);
 }
 .consCoverIn {
   position: relative;
   z-index: 2;
   color: #fff;
-  max-width: 640px;
-  padding-top: clamp(3.5rem, 8vw, 6rem);
-  padding-bottom: clamp(3.5rem, 8vw, 6rem);
+  max-width: 940px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: clamp(2.8rem, 6vw, 4.5rem);
+  padding-bottom: clamp(2.8rem, 6vw, 4.5rem);
 }
 .consCoverIn :global(.eyebrow) {
   color: var(--color-gold-soft);
@@ -105,15 +100,97 @@
 .consCoverIn h2 {
   color: #fff;
   margin: 0.4rem 0 0;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
 }
 .consCoverLead {
-  margin-top: 1rem;
-  max-width: 52ch;
+  margin: 1rem auto 0;
+  max-width: 64ch;
   font-size: clamp(1.02rem, 1.5vw, 1.18rem);
   line-height: 1.6;
   color: #f0e6d6;
   font-weight: 300;
+}
+/* three pillars over the image (the Private Guide explanation, condensed) */
+.consPillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  margin: 2.2rem auto 0;
+  max-width: 900px;
+  text-align: left;
+}
+.consPillar {
+  padding-top: 0.9rem;
+  border-top: 2px solid rgba(227, 207, 164, 0.55);
+}
+.consPillarIcon {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-gold-soft);
+  margin-bottom: 0.4rem;
+  line-height: 1;
+}
+.consPillar h4 {
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+}
+.consPillar p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #ece1cf;
+}
+@media (max-width: 720px) {
+  .consPillars {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    max-width: 460px;
+  }
+}
+/* concise benefit strip — replaces the long points grid */
+.consStrip {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem 1.4rem;
+  max-width: 620px;
+}
+.consStrip li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1.25;
+  color: #fff;
+}
+.consStripIcon {
+  color: var(--color-gold-soft);
+  font-size: 0.8rem;
+  flex: none;
+}
+.consMore {
+  display: inline-block;
+  margin-top: 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid var(--color-gold-soft);
+  padding-bottom: 2px;
+}
+.consMore:hover {
+  color: var(--color-gold-soft);
+}
+@media (max-width: 640px) {
+  .consStrip {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
 }
 /* how-it-works, folded in as a slim numbered flow (over the dark image) */
 .flowLabel {

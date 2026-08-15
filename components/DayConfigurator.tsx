@@ -213,6 +213,9 @@ type DayConfiguratorProps = {
    *  catalogue, so the breakdown matches real product prices. Falls back to the
    *  built-in table if not supplied. */
   priceTable?: [string, number][];
+  /** Brand titles (substring → poetic product title) for signature experiences,
+   *  shown as a small italic subtitle under the place name in the breakdown. */
+  brandTable?: [string, string][];
 };
 
 export default function DayConfigurator({
@@ -230,6 +233,7 @@ export default function DayConfigurator({
   depositPercent = 50,
   images = {},
   priceTable,
+  brandTable,
 }: DayConfiguratorProps) {
   // Prices come from the live catalogue when supplied (keeps the breakdown in
   // sync with real product prices); the built-in table is only a fallback.
@@ -237,6 +241,10 @@ export default function DayConfigurator({
   const priceOf = (nm: string) => {
     for (const [k, v] of table) if (nm.indexOf(k) >= 0) return v;
     return 0;
+  };
+  const brandOf = (nm: string) => {
+    for (const [k, v] of brandTable ?? []) if (v && nm.indexOf(k) >= 0) return v;
+    return "";
   };
   const img = {
     journeyMedinet: images.journeyMedinet || "/images/desert-stargazing-dune.jpg",
@@ -340,17 +348,21 @@ export default function DayConfigurator({
     };
   }, [journey, group, water, photo, days, hurg]);
 
-  const priced: { nm: string; pr: number; bonus: boolean }[] = [];
+  const priced: { nm: string; pr: number; bonus: boolean; brand: string }[] = [];
   let sepTotal = 0;
   [plan.start, plan.pool, plan.bonus, plan.handled].forEach((arr) => {
     arr.forEach((it) => {
       const nm = itemText(it);
       const pr = priceOf(nm);
       if (pr > 0) {
+        const place = nm.split(" — ")[0];
+        const brand = brandOf(nm);
         priced.push({
-          nm: nm.split(" — ")[0],
+          nm: place,
           pr,
           bonus: typeof it === "object" && !!it.bonus,
+          // Don't repeat the brand title when it's already the place label.
+          brand: brand && brand.replace(/[.]$/, "") !== place ? brand : "",
         });
         sepTotal += pr;
       }
@@ -750,9 +762,12 @@ export default function DayConfigurator({
               <div className={`${styles.sumBd} ${bdOpen ? styles.open : ""}`}>
                 {priced.map((x, i) => (
                   <div className={styles.bdRow} key={i}>
-                    <span>
-                      {x.nm}
-                      {x.bonus && <em>bonus</em>}
+                    <span className={styles.bdName}>
+                      <span>
+                        {x.nm}
+                        {x.bonus && <em>bonus</em>}
+                      </span>
+                      {x.brand && <span className={styles.bdBrand}>{x.brand}</span>}
                     </span>
                     <span>{euro(x.pr)}</span>
                   </div>

@@ -754,12 +754,26 @@
 }
 .bdRow {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.6rem;
   padding: 0.16rem 0;
 }
 .bdRow span:first-child {
   opacity: 0.85;
+}
+.bdName {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.bdBrand {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.76rem;
+  line-height: 1.2;
+  color: var(--color-gold-deep);
+  opacity: 0.92;
 }
 .bdRow em {
   font-style: normal;

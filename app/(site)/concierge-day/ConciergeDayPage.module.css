@@ -93,7 +93,7 @@
   position: relative;
   z-index: 2;
   color: #fff;
-  max-width: 780px;
+  max-width: 960px;
   padding-top: 7rem;
   padding-bottom: clamp(2.4rem, 5vw, 4.2rem);
 }
@@ -108,7 +108,7 @@
 .oneline {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(1.15rem, 1.9vw, 1.45rem);
+  font-size: clamp(1.05rem, 1.55vw, 1.32rem);
   color: #f5ead2;
   line-height: 1.5;
   margin: 1.1rem 0 1.4rem;
@@ -940,6 +940,15 @@
   color: rgba(245, 234, 210, 0.82);
   max-width: 30ch;
   margin: 0 auto;
+}
+/* Reserve two title lines on desktop so the three descriptions align on one row. */
+@media (min-width: 720px) {
+  .finalGr h4 {
+    min-height: 2.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 @media (max-width: 760px) {
   .finalGrGrid {

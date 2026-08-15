@@ -148,6 +148,26 @@ export default async function ConciergeDayPage() {
     ["air-conditioned transfers", 90],
     ["Hurghada", priceBySlug("hurghada-to-luxor-crossing")],
   ];
+
+  // Brand titles for the signature experiences in the breakdown — the place name
+  // stays the clear label, the poetic product title (e.g. "Begin where the world
+  // began.") shows as a small italic subtitle. Services/add-ons stay plain.
+  const brandBySlug = (slug: string) =>
+    experiences.find((e) => e.slug === slug)?.entry.title ?? "";
+  const alaCarteBrands: [string, string][] = [
+    ["Medinet", brandBySlug("medinet-habu")],
+    ["Karnak", brandBySlug("karnak-at-dawn")],
+    ["Hatshepsut", brandBySlug("hatshepsut-temple")],
+    ["Luxor Temple", brandBySlug("luxor-temple")],
+    ["Valley of the Kings", brandBySlug("valley-of-the-kings")],
+    ["Deir el-Shelwit", brandBySlug("deir-el-shelwit")],
+    ["Valley of the Workers", brandBySlug("deir-el-medina")],
+    ["Sunset sail", brandBySlug("felucca-sunset-sail")],
+    ["sail on the Nile", brandBySlug("felucca-sunset-sail")],
+    ["felucca", brandBySlug("felucca-sunset-sail")],
+    ["night in Luxor", brandBySlug("luxor-by-night")],
+    ["balloon", brandBySlug("hot-air-balloon-luxor")],
+  ];
   const named = (name: string, slug: string) => ({ name, price: priceBySlug(slug) });
   // [day 1, day-2 additions, day-3 additions, day-4 additions]
   const experiencePlan = [
@@ -410,7 +430,7 @@ export default async function ConciergeDayPage() {
               to start designing your day.
             </p>
           </div>
-          <ExperienceGrid cards={expCards} initial={6} />
+          <ExperienceGrid cards={expCards} initial={9} />
         </div>
       </section>
     ),
@@ -438,6 +458,7 @@ export default async function ConciergeDayPage() {
             depositPercent={pricingRules?.depositPercent ?? 50}
             images={builderImages}
             priceTable={alaCartePrices}
+            brandTable={alaCarteBrands}
           />
         </div>
       </section>
@@ -638,19 +659,19 @@ export default async function ConciergeDayPage() {
             Design your day →
           </Link>
           <div className={styles.heroFacts}>
-            <div className="f">
+            <div className={styles.f}>
               <b>Zero</b>
               <span>Decisions for you</span>
             </div>
-            <div className="f">
+            <div className={styles.f}>
               <b>≤4</b>
               <span>You &amp; your group</span>
             </div>
-            <div className="f">
+            <div className={styles.f}>
               <b>Local</b>
               <span>Licensed experts</span>
             </div>
-            <div className="f">
+            <div className={styles.f}>
               <b>7-day</b>
               <span>Free cancellation</span>
             </div>

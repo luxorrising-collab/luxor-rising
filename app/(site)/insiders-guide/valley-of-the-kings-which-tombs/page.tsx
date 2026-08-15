@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Markdoc, { Tag, type RenderableTreeNode } from "@markdoc/markdoc";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import JsonLd from "@/components/JsonLd";
 import Faq from "@/components/Faq";
@@ -440,14 +441,7 @@ export default async function ValleyOfTheKingsArticle() {
       </section>
 
       <div style={{ paddingBottom: "64px" }}>
-        <MinimalFooter
-          links={[
-            { href: "/", label: "Home" },
-            { href: "/concierge-day", label: "Concierge Days" },
-            { href: "/experiences", label: "Experiences" },
-            { href: "/insiders-guide", label: "Insider's Guide" },
-          ]}
-        />
+        <FullFooter columns={FOOTER_COLUMNS} />
       </div>
 
       <StickyBar

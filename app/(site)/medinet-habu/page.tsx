@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
@@ -224,15 +225,7 @@ export default async function MedinetHabuPage() {
         finalCtaLabel="Reserve this experience →"
       />
 
-      <MinimalFooter
-        links={[
-          { href: "/", label: "Home" },
-          { href: "/concierge-day", label: "Concierge Days" },
-          { href: "/experiences", label: "Experiences" },
-          { href: "/private-villas", label: "Private Villas" },
-        ]}
-        bottomText="© 2026 Luxor Rising — private concierge in Egypt · Luxor & Hurghada"
-      />
+      <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ArticleTemplate from "@/components/ArticleTemplate";
 import { reader } from "@/lib/keystatic-reader";
@@ -85,14 +86,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         contentNode={entry.content.node}
       />
 
-      <MinimalFooter
-        links={[
-          { href: "/", label: "Home" },
-          { href: "/concierge-day", label: "Concierge Days" },
-          { href: "/experiences", label: "Experiences" },
-          { href: "/insiders-guide", label: "Insider's Guide" },
-        ]}
-      />
+      <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import JsonLd from "@/components/JsonLd";
 import StickyBar from "@/components/StickyBar";
@@ -204,14 +205,7 @@ export default async function ExperiencesPage() {
       </section>
 
       <div style={{ paddingBottom: "64px" }}>
-        <MinimalFooter
-          links={[
-            { href: "/", label: "Home" },
-            { href: "/concierge-day", label: "Concierge Days" },
-            { href: "/experiences", label: "Experiences" },
-            { href: "/insiders-guide", label: "Insider's Guide" },
-          ]}
-        />
+        <FullFooter columns={FOOTER_COLUMNS} />
       </div>
 
       <StickyBar

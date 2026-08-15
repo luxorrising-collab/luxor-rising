@@ -49,10 +49,10 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: "Help & legal",
     links: [
       { href: "/#about", label: "Contact" },
-      { href: "/legal", label: "Safety" },
-      { href: "/legal", label: "Payments & refunds" },
-      { href: "/legal", label: "FAQ" },
-      { href: "/legal", label: "Terms · Privacy · Cookies" },
+      { href: "/legal/cancellation", label: "Cancellation & refunds" },
+      { href: "/legal/terms", label: "Terms & conditions" },
+      { href: "/legal/privacy", label: "Privacy" },
+      { href: "/legal/cookies", label: "Cookies" },
     ],
   },
 ];

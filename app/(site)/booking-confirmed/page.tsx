@@ -3,7 +3,8 @@ import Link from "next/link";
 import Stripe from "stripe";
 import { cookies, headers } from "next/headers";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import PurchaseTracker from "@/components/analytics/PurchaseTracker";
 import { reader } from "@/lib/keystatic-reader";
 import { sendMetaPurchase } from "@/lib/meta-capi";
@@ -168,14 +169,7 @@ export default async function BookingConfirmedPage({
           </div>
         </div>
       </section>
-      <MinimalFooter
-        links={[
-          { href: "/", label: "Home" },
-          { href: "/experiences", label: "Experiences" },
-          { href: "/concierge-day", label: "Concierge Days" },
-        ]}
-        bottomText="© 2026 Luxor Rising — private concierge in Egypt · Luxor & Hurghada"
-      />
+      <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );
 }

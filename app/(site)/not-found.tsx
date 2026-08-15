@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -32,15 +33,7 @@ export default function NotFound() {
           </div>
         </div>
       </section>
-      <MinimalFooter
-        links={[
-          { href: "/", label: "Home" },
-          { href: "/experiences", label: "Experiences" },
-          { href: "/concierge-day", label: "Concierge Days" },
-          { href: "/reviews", label: "Reviews" },
-        ]}
-        bottomText="© 2026 Luxor Rising — private concierge in Egypt · Luxor & Hurghada"
-      />
+      <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );
 }

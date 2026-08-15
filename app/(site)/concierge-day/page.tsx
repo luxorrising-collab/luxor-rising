@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import { MinimalFooter } from "@/components/Footer";
+import { FullFooter } from "@/components/Footer";
+import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import Faq from "@/components/Faq";
 import DayConfigurator from "@/components/DayConfigurator";
@@ -684,13 +685,7 @@ export default async function ConciergeDayPage() {
           wherever they sit in the order. */}
       <DayCountProvider>{orderedKeys.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
 
-      <MinimalFooter
-        links={[
-          { href: "#", label: "WhatsApp" },
-          { href: "#", label: "hello@luxorrising.com" },
-          { href: "#", label: "Luxor & Hurghada, Egypt" },
-        ]}
-      />
+      <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );
 }

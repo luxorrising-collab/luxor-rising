@@ -72,7 +72,7 @@ export default async function ExperiencesPage() {
     priceNote:
       entry.priceType === "included"
         ? "with any day"
-        : entry.pricePerPerson || entry.priceNote || undefined,
+        : entry.priceNote || undefined,
     ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
     category: entry.category,
     location: HURGHADA_SLUGS.has(slug) ? "hurghada" : "luxor",

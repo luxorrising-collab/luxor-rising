@@ -134,7 +134,7 @@ export default function ExperienceTemplate({
           <div className={styles.priceRow}>
             <span className="from">From</span>
             <span className="amt">€{basePrice}</span>
-            <span className="per">{[pricePerPerson, priceNote].filter(Boolean).join(" · ")}</span>
+            <span className="per">{priceNote}</span>
           </div>
           <div className={styles.heroCta}>
             <Link href="#book" className="btn btn-primary btn-lg">
@@ -170,7 +170,6 @@ export default function ExperienceTemplate({
             </div>
             <div className={styles.gf}>
               <span>From</span>€{basePrice}
-              {pricePerPerson ? ` · ${pricePerPerson}` : ""}
             </div>
             <div className={styles.gf}>
               <span>Cancellation</span>Free, up to 7 days

@@ -454,6 +454,13 @@ export default config({
           label: "Price note",
           description: 'Free text shown next to the price, e.g. "/ day, private"',
         }),
+        maxGuests: fields.integer({
+          label: "Max guests (booking)",
+          description:
+            "Largest party the booking selector allows. 4 for almost everything; raise it only for whole-boat charters (e.g. the yacht at 8).",
+          defaultValue: 4,
+          validation: { min: 1, max: 12 },
+        }),
         groupSupplement: fields.array(
           fields.object({
             minGuests: fields.integer({

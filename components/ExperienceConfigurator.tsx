@@ -45,6 +45,8 @@ type ExperienceConfiguratorProps = {
   name?: string;
   slug?: string;
   basePrice?: number;
+  /** Largest bookable party. 4 for most; charters (e.g. the yacht) allow more. */
+  maxGuests?: number;
   groupSupplement?: GroupSupplementTier[];
   depositPercent?: number;
   glanceIncludes?: string;
@@ -66,6 +68,7 @@ export default function ExperienceConfigurator({
   name = "this experience",
   slug = "",
   basePrice = 140,
+  maxGuests = 4,
   groupSupplement = [
     { minGuests: 2, extraPerGuest: 70 },
     { minGuests: 3, extraPerGuest: 55 },
@@ -164,7 +167,7 @@ export default function ExperienceConfigurator({
               <h3>Who&apos;s coming?</h3>
             </div>
             <div className={styles.grpOpts}>
-              {[1, 2, 3, 4].map((g) => (
+              {Array.from({ length: maxGuests }, (_, i) => i + 1).map((g) => (
                 <button
                   key={g}
                   type="button"
@@ -179,7 +182,7 @@ export default function ExperienceConfigurator({
             <div className={styles.grpNote}>
               {group > 1
                 ? euro(perPerson) + " per person — adding guests lowers the per-person rate."
-                : "Travelling with your partner or friends? Add them — the per-person price drops. Private, up to 4 guests."}
+                : `Travelling with your partner or friends? Add them — the per-person price drops. Private, up to ${maxGuests} guests.`}
             </div>
           </div>
 

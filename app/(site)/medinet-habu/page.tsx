@@ -176,6 +176,7 @@ export default async function MedinetHabuPage() {
             name="Medinet Habu"
             slug={SLUG}
             basePrice={entry.basePrice ?? 0}
+            maxGuests={entry.maxGuests ?? 4}
             groupSupplement={entry.groupSupplement.map((t) => ({
               minGuests: t.minGuests ?? 0,
               extraPerGuest: t.extraPerGuest ?? 0,

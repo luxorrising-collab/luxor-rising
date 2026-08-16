@@ -669,6 +669,23 @@
     gap: 0.15rem;
     padding-left: 1.2rem;
   }
+  /* Four trust facts sit cramped in one row on a phone (≈76px each, 9px
+     labels). Reflow to a roomy 2×2 with a legible label size. */
+  .heroFacts {
+    flex-wrap: wrap;
+    gap: 1.1rem 0.6rem;
+  }
+  .heroFacts .f {
+    flex: 0 0 calc(50% - 0.3rem);
+  }
+  .heroFacts .f span {
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+  }
+  /* the vertical hairline separators only make sense in a single row */
+  .heroFacts .f + .f::before {
+    display: none;
+  }
 }
 
 /* threshold — the deeper read, deliberately far down the page */

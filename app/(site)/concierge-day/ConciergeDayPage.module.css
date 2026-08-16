@@ -258,7 +258,9 @@
 .dreamContent {
   position: relative;
   z-index: 2;
-  padding: clamp(4.5rem, 9vw, 8rem) 0;
+  /* vertical band padding only — keep the horizontal side gutter that
+     .wrap-narrow provides, so the text never touches the screen edge */
+  padding-block: clamp(4.5rem, 9vw, 8rem);
 }
 .dreamContent :global(.eyebrow) {
   color: var(--color-gold-soft);

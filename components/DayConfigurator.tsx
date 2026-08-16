@@ -321,6 +321,11 @@ export default function DayConfigurator({
     if (days >= 4) {
       pool.push("Valley of the Workers — Deir el-Medina");
       if (journey !== "balloon") pool.push("Hot-air balloon at dawn over the West Bank");
+      bonus.push({
+        t: "Sailing lesson on the Nile — take the tiller yourself (€140), included",
+        sig: true,
+        bonus: true,
+      });
     }
     const handled: PlanItem[] = [];
     if (hurg) handled.push("Hurghada hotel pickup & private desert crossing");
@@ -568,9 +573,10 @@ export default function DayConfigurator({
                 >
                   <div className={styles.jcImg}>
                     <Image src={img.journeyMedinet} alt="Medinet Habu" fill sizes="240px" />
+                    <span className={styles.jcSig}>Signature ★</span>
                     <div className={styles.jcCap}>
-                      <span className={styles.jcEyebrow}>The quiet one</span>
-                      <h4>Initiation to power</h4>
+                      <span className={styles.jcEyebrow}>Initiation to power</span>
+                      <h4>Medinet Habu</h4>
                     </div>
                   </div>
                   <div className={styles.jcBody}>
@@ -613,8 +619,8 @@ export default function DayConfigurator({
                   <div className={styles.jcImg}>
                     <Image src={img.journeyBalloon} alt="Hot-air balloon at dawn" fill sizes="240px" />
                     <div className={styles.jcCap}>
-                      <span className={styles.jcEyebrow}>The Free Spirit</span>
-                      <h4>Fly like an eagle</h4>
+                      <span className={styles.jcEyebrow}>Fly like an eagle</span>
+                      <h4>Balloons at sunrise</h4>
                     </div>
                   </div>
                   <div className={styles.jcBody}>

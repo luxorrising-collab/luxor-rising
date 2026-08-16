@@ -144,7 +144,7 @@ export default async function ConciergeDayPage() {
     ["night in Luxor", priceBySlug("luxor-by-night")],
     ["photoshoot", 120],
     ["balloon", priceBySlug("hot-air-balloon-luxor")],
-    ["Sailing lesson", priceBySlug("felucca-sunset-sail")],
+    ["Sailing lesson", priceBySlug("sailing-lesson-nile")],
     ["Egyptologist", 140],
     ["air-conditioned transfers", 90],
     ["Hurghada", priceBySlug("hurghada-to-luxor-crossing")],
@@ -168,6 +168,7 @@ export default async function ConciergeDayPage() {
     ["felucca", brandBySlug("felucca-sunset-sail")],
     ["night in Luxor", brandBySlug("luxor-by-night")],
     ["balloon", brandBySlug("hot-air-balloon-luxor")],
+    ["Sailing lesson", brandBySlug("sailing-lesson-nile")],
   ];
   const named = (name: string, slug: string) => ({ name, price: priceBySlug(slug) });
   // [day 1, day-2 additions, day-3 additions, day-4 additions]

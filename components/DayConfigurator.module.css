@@ -229,6 +229,21 @@
     rgba(18, 11, 5, 0.74)
   );
 }
+.jcSig {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  font-size: 0.56rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #120b05;
+  background: var(--color-gold-soft, #e8c98a);
+  padding: 0.2rem 0.44rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(18, 11, 5, 0.35);
+}
 .jcCap {
   position: relative;
   z-index: 1;

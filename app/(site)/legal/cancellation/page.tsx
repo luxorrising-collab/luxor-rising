@@ -131,7 +131,7 @@ export default function CancellationPage() {
           <h2>7. How refunds are made</h2>
           <p>
             Approved refunds are returned to your original payment method, normally
-            within <strong>[X]</strong> business days of approval. Your bank or card
+            within <strong>14</strong> business days of approval. Your bank or card
             provider may take additional time to show the funds.
           </p>
 
@@ -147,8 +147,10 @@ export default function CancellationPage() {
           <h2>Contact</h2>
           <p>
             Questions about a booking or a refund:{" "}
-            <strong>[bookings contact email]</strong>. This policy is issued by{" "}
-            <strong>[Luxor Rising — legal entity name]</strong> and forms part of
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
+            This policy is issued by <strong>Evam trade, s.r.o.</strong> (IČO
+            48&nbsp;093&nbsp;572, DIČ 2120062648), Doležalova 3424/15C, 821 04
+            Bratislava – mestská časť Ružinov, Slovak Republic, and forms part of
             our <Link href="/legal/terms">Terms &amp; Conditions</Link>.
           </p>
 

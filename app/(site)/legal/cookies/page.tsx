@@ -273,12 +273,14 @@ export default function CookiePolicyPage() {
 
           <h2>Contact</h2>
           <p>
-            This Cookie Policy is issued by{" "}
-            <strong>[Luxor Rising — legal entity name]</strong>, of{" "}
-            <strong>[registered address]</strong>, the data controller for this
+            This Cookie Policy is issued by <strong>Evam trade, s.r.o.</strong>{" "}
+            (IČO 48&nbsp;093&nbsp;572, DIČ 2120062648), of{" "}
+            <strong>Doležalova 3424/15C, 821 04 Bratislava – mestská časť
+            Ružinov, Slovak Republic</strong>, the data controller for this
             site. Questions or requests about cookies and your data:{" "}
-            <strong>[privacy contact email]</strong>. This policy sits alongside
-            our <Link href="/legal">Privacy Policy</Link>, which covers personal
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
+            This policy sits alongside our{" "}
+            <Link href="/legal">Privacy Policy</Link>, which covers personal
             data more broadly.
           </p>
 

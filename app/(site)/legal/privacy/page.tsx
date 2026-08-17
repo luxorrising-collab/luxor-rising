@@ -47,10 +47,13 @@ export default function PrivacyPage() {
 
           <h2>Who is responsible for your data</h2>
           <p>
-            The data controller is{" "}
-            <strong>[Luxor Rising — legal entity name]</strong>, of{" "}
-            <strong>[registered address]</strong>. For any privacy question or
-            request, contact <strong>[privacy contact email]</strong>.
+            The data controller is <strong>Evam trade, s.r.o.</strong>, a company
+            registered in the Slovak Republic (IČO 48&nbsp;093&nbsp;572, DIČ
+            2120062648) with its registered seat at{" "}
+            <strong>Doležalova 3424/15C, 821 04 Bratislava – mestská časť
+            Ružinov, Slovak Republic</strong>. For any privacy question or
+            request, contact{" "}
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
           </p>
 
           <h2>What we collect</h2>
@@ -142,8 +145,9 @@ export default function PrivacyPage() {
           <p>
             We keep booking and enquiry data for as long as needed to provide the
             service and handle any follow-up, and then only as long as required for
-            legal, tax and accounting purposes (typically up to{" "}
-            <strong>[6–7]</strong> years for financial records), after which it is
+            legal, tax and accounting purposes (up to{" "}
+            <strong>10</strong> years for financial records, as required by Slovak
+            accounting and tax law), after which it is
             deleted or anonymised. Marketing data is kept until you withdraw consent
             or it expires.
           </p>
@@ -154,9 +158,12 @@ export default function PrivacyPage() {
             data, correct it, delete it, restrict or object to its use, or provide
             it in a portable form; and you can withdraw consent at any time
             (including via <Link href="/legal/cookies">cookie settings</Link>). To
-            exercise any of these, email <strong>[privacy contact email]</strong>.
+            exercise any of these, email{" "}
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
             You also have the right to complain to your local data-protection
-            authority.
+            authority, or to our supervisory authority, the Office for Personal
+            Data Protection of the Slovak Republic (Úrad na ochranu osobných
+            údajov Slovenskej republiky).
           </p>
 
           <h2>Security</h2>
@@ -181,9 +188,10 @@ export default function PrivacyPage() {
 
           <h2>Contact</h2>
           <p>
-            <strong>[Luxor Rising — legal entity name]</strong> ·{" "}
-            <strong>[registered address]</strong> ·{" "}
-            <strong>[privacy contact email]</strong>.
+            <strong>Evam trade, s.r.o.</strong> · Doležalova 3424/15C, 821 04
+            Bratislava – mestská časť Ružinov, Slovak Republic · IČO
+            48&nbsp;093&nbsp;572 · DIČ 2120062648 ·{" "}
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
           </p>
 
           <p style={{ marginTop: "2.4rem" }}>

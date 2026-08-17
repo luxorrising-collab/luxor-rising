@@ -49,9 +49,13 @@ export default function TermsPage() {
 
           <h2>1. Who we are and what we do</h2>
           <p>
-            Luxor Rising (&ldquo;we&rdquo;, &ldquo;us&rdquo;), operated by{" "}
-            <strong>[Luxor Rising — legal entity name]</strong> of{" "}
-            <strong>[registered address]</strong>, is a private travel{" "}
+            Luxor Rising (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is a brand operated by{" "}
+            <strong>Evam trade, s.r.o.</strong>, a company registered in the Slovak
+            Republic with its registered seat at{" "}
+            <strong>Doležalova 3424/15C, 821 04 Bratislava – mestská časť
+            Ružinov, Slovak Republic</strong> (Company ID / IČO
+            48&nbsp;093&nbsp;572, Tax ID / DIČ 2120062648). Luxor Rising is a
+            private travel{" "}
             <strong>concierge and coordinator</strong>. We design, arrange and
             coordinate private experiences that are <strong>delivered by
             independent, licensed local partners</strong> — Egyptologists and
@@ -196,17 +200,18 @@ export default function TermsPage() {
 
           <h2>12. Governing law</h2>
           <p>
-            These terms are governed by the laws of{" "}
-            <strong>[governing law jurisdiction]</strong>, and the courts of{" "}
-            <strong>[jurisdiction]</strong> have jurisdiction, without affecting any
+            These terms are governed by the laws of the{" "}
+            <strong>Slovak Republic</strong>, and the courts of the{" "}
+            <strong>Slovak Republic</strong> have jurisdiction, without affecting any
             mandatory consumer-protection rights you have where you live.
           </p>
 
           <h2>Contact</h2>
           <p>
-            <strong>[Luxor Rising — legal entity name]</strong> ·{" "}
-            <strong>[registered address]</strong> ·{" "}
-            <strong>[bookings contact email]</strong>.
+            <strong>Evam trade, s.r.o.</strong> · Doležalova 3424/15C, 821 04
+            Bratislava – mestská časť Ružinov, Slovak Republic · IČO
+            48&nbsp;093&nbsp;572 · DIČ 2120062648 ·{" "}
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
           </p>
 
           <p style={{ marginTop: "2.4rem" }}>

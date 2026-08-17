@@ -64,7 +64,6 @@ const ALT: Record<
     companion: "Medinet Habu — temple of Ramesses III",
   },
 };
-const EXPCOUNT: Record<DayCount, number> = { 1: 3, 2: 7, 3: 12, 4: 15 };
 const FILL: Record<DayCount, number> = { 1: 12, 2: 52, 3: 100, 4: 100 };
 const STAGE: Record<DayCount, string> = {
   1: "A taste",
@@ -72,7 +71,6 @@ const STAGE: Record<DayCount, string> = {
   3: "The signature",
   4: "Unhurried",
 };
-const SIGB: Record<DayCount, number> = { 1: 0, 2: 0, 3: 2, 4: 3 };
 const IBMSG: Record<DayCount, string> = {
   1: "One day, done properly — three places, unhurried. Most guests who add a second day decide that after the first, not before.",
   2: "Two days, still unhurried. The second one is mostly quieter places and more time in each.",
@@ -355,6 +353,13 @@ export default function DayConfigurator({
     };
   }, [journey, group, water, photo, days, hurg]);
 
+  // Counts shown in the progress bar are derived from the actual itinerary, so
+  // they can never drift from what's really included. Experiences = the touring
+  // items (start + pool); signature bonuses = the free extras (Deir el-Shelwit
+  // from day 3, Sailing lesson added on day 4).
+  const expCount = plan.start.length + plan.pool.length;
+  const sigbCount = plan.bonus.length;
+
   const priced: { nm: string; pr: number; bonus: boolean; brand: string }[] = [];
   let sepTotal = 0;
   [plan.start, plan.pool, plan.bonus, plan.handled].forEach((arr) => {
@@ -483,7 +488,7 @@ export default function DayConfigurator({
               }`}
             >
               <div className={styles.ibBg}>
-                {Array.from({ length: EXPCOUNT[days] || 0 }).map((_, i) => (
+                {Array.from({ length: expCount }).map((_, i) => (
                   <span
                     key={i}
                     className={styles.ibSlice}
@@ -499,14 +504,14 @@ export default function DayConfigurator({
                 <span className={styles.ibStage}>{STAGE[days]}</span>
               </div>
               <div className={styles.ibCount}>
-                <b>{EXPCOUNT[days]}</b>
+                <b>{expCount}</b>
                 <span>experiences included</span>
               </div>
-              <div className={`${styles.ibSigb} ${SIGB[days] > 0 ? styles.on : ""}`}>
+              <div className={`${styles.ibSigb} ${sigbCount > 0 ? styles.on : ""}`}>
                 <span className={styles.star}>★</span>
                 <span>
-                  {SIGB[days] > 0
-                    ? SIGB[days] + (SIGB[days] > 1 ? " signature bonuses included" : " signature bonus included")
+                  {sigbCount > 0
+                    ? sigbCount + (sigbCount > 1 ? " signature bonuses included" : " signature bonus included")
                     : ""}
                 </span>
               </div>
@@ -793,7 +798,7 @@ export default function DayConfigurator({
 
             {/* value stack — the scope of the offer, right at the price */}
             <div className={styles.sumChips}>
-              <span className={styles.sumChip}>{EXPCOUNT[days]} experiences</span>
+              <span className={styles.sumChip}>{expCount} experiences</span>
               {plan.bonus.length > 0 && (
                 <span className={`${styles.sumChip} ${styles.sumChipFree}`}>
                   {plan.bonus.length} signature bonus{plan.bonus.length > 1 ? "es" : ""} — free
@@ -907,7 +912,7 @@ export default function DayConfigurator({
                   </span>
                 </li>
                 <li>
-                  <b>{EXPCOUNT[days]} experiences</b>
+                  <b>{expCount} experiences</b>
                   <span>arranged in any order with your consigliere</span>
                 </li>
                 {plan.bonus.length > 0 && (

@@ -336,7 +336,9 @@ export default function DayConfigurator({
     handled.push(
       "Your day photographed on your own phone — you'll have them before dinner, not in six weeks"
     );
-    handled.push("Chilled water & cold towels in the car — you won't be heroic about the heat");
+    handled.push(
+      "A full meal and up to three hand-picked local food & coffee stops a day — where locals actually eat"
+    );
     handled.push(
       "The guards know us: nobody follows you, sells you anything, or asks for a tip"
     );

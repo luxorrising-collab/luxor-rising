@@ -715,12 +715,13 @@ export default function DayConfigurator({
                 <span className={styles.chk}>✓</span>
                 <div>
                   <b style={{ fontWeight: 500 }}>
-                    Hurghada → Luxor transfer{" "}
+                    Hurghada ⇄ Luxor day trip{" "}
                     <span className={styles.addonRec}>Recommended</span>
                   </b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
-                    Arrive the day before and start fresh — private door-to-door
-                    across the desert, timed with your consigliere to suit you.{" "}
+                    Coming from the Red Sea? The original private round-trip —
+                    collected door-to-door, an unhurried day in Luxor, home the
+                    same night, timed with your consigliere.{" "}
                     <Link
                       href="/experiences/hurghada-to-luxor-crossing"
                       className={styles.addonLink}

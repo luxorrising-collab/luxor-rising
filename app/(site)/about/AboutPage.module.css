@@ -1,0 +1,221 @@
+/* ABOUT — the story of Luxor Rising. Editorial, narrative, first person. */
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  color: #fff;
+}
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.heroBg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 11, 5, 0.62) 0%,
+    rgba(18, 11, 5, 0.5) 45%,
+    rgba(18, 11, 5, 0.72) 100%
+  );
+}
+.heroIn {
+  position: relative;
+  z-index: 2;
+  padding-block: 5rem;
+}
+.heroIn :global(.eyebrow) {
+  color: var(--color-gold-soft);
+}
+.heroIn h1 {
+  color: #fff;
+  max-width: 20ch;
+  margin: 0.4rem auto 0;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
+}
+.heroIn :global(.lead) {
+  color: #f0e6d6;
+}
+.rule {
+  width: 54px;
+  height: 2px;
+  background: var(--color-gold);
+  margin: 1.8rem auto 1.6rem;
+}
+.heroCtas {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Narrative story block — a comfortable reading measure, centred column */
+.story {
+  max-width: 62ch;
+  margin: 0 auto;
+}
+.story h2 {
+  margin: 0.35rem 0 1.1rem;
+}
+.story p {
+  color: var(--color-espresso);
+  font-size: 1.06rem;
+  line-height: 1.75;
+  margin: 0 0 1.1rem;
+}
+.story p:last-child {
+  margin-bottom: 0;
+}
+.story em {
+  font-style: italic;
+  color: var(--color-gold-deep);
+}
+/* alternating tinted section */
+.tint {
+  background: var(--color-cream);
+  border-top: 1px solid var(--color-cream-deep);
+  border-bottom: 1px solid var(--color-cream-deep);
+}
+
+/* Full-bleed moment quote */
+.moment {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  color: #fff;
+}
+.moment :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.momentScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(14, 9, 4, 0.66), rgba(14, 9, 4, 0.74));
+}
+.momentIn {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(4rem, 9vw, 7rem);
+}
+.momentIn p {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  line-height: 1.35;
+  max-width: 24ch;
+  margin: 0 auto;
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Founder profile card */
+.founderWrap {
+  background: var(--color-paper);
+  border-top: 1px solid var(--color-cream-deep);
+  border-bottom: 1px solid var(--color-cream-deep);
+}
+.founder {
+  text-align: center;
+  max-width: 60ch;
+}
+.founderMark {
+  color: var(--color-gold);
+  font-size: 1.6rem;
+  margin-bottom: 0.9rem;
+}
+.founderName {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0.3rem 0 0.2rem;
+}
+.founderRole {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  margin-bottom: 1.4rem;
+}
+.founder p {
+  color: var(--color-espresso);
+  font-size: 1.04rem;
+  line-height: 1.75;
+  margin: 0 auto 1rem;
+  max-width: 54ch;
+}
+.founderKicker {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.16rem !important;
+  color: var(--color-gold-deep);
+}
+
+/* Ahmed partner card */
+.partner {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: clamp(1.6rem, 4vw, 3.2rem);
+  align-items: center;
+}
+.partnerImg {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 50px -28px rgba(42, 28, 16, 0.55);
+}
+.partnerImg :global(img) {
+  object-fit: cover;
+  object-position: center;
+}
+.partnerBody p {
+  color: var(--color-espresso);
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+/* Closer */
+.closer {
+  text-align: center;
+  background: linear-gradient(180deg, var(--color-paper), var(--color-cream));
+  border-top: 1px solid var(--color-cream-deep);
+}
+.closerCtas {
+  margin-top: 1.8rem;
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+  .partner {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+  .partnerImg {
+    max-width: 360px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 11;
+  }
+  .partnerBody {
+    text-align: center;
+  }
+  .story p {
+    font-size: 1.01rem;
+  }
+}

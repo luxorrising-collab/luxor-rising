@@ -58,7 +58,7 @@ const ENQUIRY: Item[] = [
     meta: "Desert & wild",
     title: "The Multi-Day Journey",
     hook: "Four days built for someone at a turning point. Temples in the morning, desert at night, and long conversations with people who have spent their lives listening to travellers decide things.",
-    facts: [<><b>4 days</b></>, <><b>1–4</b> guests</>, <>Consigliere <b>throughout</b></>],
+    facts: [<><b>4 days</b></>, <><b>1–4</b> guests</>, <>Concierge <b>throughout</b></>],
     badge: "Hero journey",
     badgeVariant: "signature",
     priceLabel: "From",
@@ -160,7 +160,7 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
           <p>
             The heart of Luxor Rising — one private day with <b>several experiences</b> woven into
             it. A signature temple at dawn like <b>Medinet Habu</b> or <b>Karnak</b> while the
-            coaches still queue, then the tombs, the river or the desert. One consigliere handles
+            coaches still queue, then the tombs, the river or the desert. One concierge handles
             every ticket, transfer and timing.
           </p>
           <div className={styles.conciergeMeta}>
@@ -230,7 +230,7 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
             <span className={styles.tag}>Instant reservation</span>
           </div>
           <p className={styles.secSub}>
-            One experience, one consigliere, everything handled — entry, transfer, timing, and a
+            One experience, one concierge, everything handled — entry, transfer, timing, and a
             licensed Egyptologist who actually reads the walls. Reserve online in two minutes. Or
             weave several into a <Link href="/concierge-day">concierge day</Link>.
           </p>

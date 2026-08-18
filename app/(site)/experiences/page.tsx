@@ -13,14 +13,14 @@ import styles from "./ExperiencesPage.module.css";
 export const metadata: Metadata = {
   title: "Experiences in Luxor — Private, Curated, One Day at a Time",
   description:
-    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your consigliere, delivered by licensed local specialists. From €640 a day.",
+    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your concierge, delivered by licensed local specialists. From €640 a day.",
   alternates: { canonical: "/experiences" },
   openGraph: {
     type: "website",
     siteName: "Luxor Rising",
     title: "Experiences in Luxor — Private, Curated, One Day at a Time",
     description:
-      "Private temples, tombs, sunrise balloon, desert and Nile. Curated by your consigliere in Luxor.",
+      "Private temples, tombs, sunrise balloon, desert and Nile. Curated by your concierge in Luxor.",
     url: "/experiences",
   },
 };
@@ -42,7 +42,7 @@ const CURATED_PRODUCTS = [
     "@type": "Product",
     name: "The Concierge Day",
     description:
-      "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one consigliere handling everything.",
+      "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one concierge handling everything.",
     brand: BRAND,
     offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
   },
@@ -170,7 +170,7 @@ export default async function ExperiencesPage() {
             <div className="s3">
               <div className="num">02</div>
               <h4>We write the day</h4>
-              <p>Your consigliere builds the order and the timing so you land at each site in its best hour and miss the coaches entirely.</p>
+              <p>Your concierge builds the order and the timing so you land at each site in its best hour and miss the coaches entirely.</p>
             </div>
             <div className="s3">
               <div className="num">03</div>

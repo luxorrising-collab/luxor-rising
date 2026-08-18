@@ -21,7 +21,7 @@ export function FullFooter({ columns }: { columns: FooterColumn[] }) {
               />
             </Link>
             <p className={styles.tagline}>
-              Your private consigliere in Egypt — we arrange, you arrive.
+              Your private concierge in Egypt — we arrange, you arrive.
             </p>
           </div>
           {columns.map((col) => (
@@ -73,7 +73,7 @@ export function MinimalFooter({
           />
         </Link>
         <p className={styles.tagline}>
-          Your private consigliere in Egypt — we arrange, you arrive.
+          Your private concierge in Egypt — we arrange, you arrive.
         </p>
         <div className={styles.minimalLinks}>
           {links.map((l, i) => (

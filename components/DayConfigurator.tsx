@@ -41,7 +41,7 @@ const JOURNEY: Record<
   balloon: {
     name: "Fly like an eagle",
     temple: "Hot-air balloon at dawn — up over the West Bank like an eagle",
-    companion: "Then the day flows, decided with your consigliere",
+    companion: "Then the day flows, decided with your concierge",
   },
 };
 const ALT: Record<
@@ -345,7 +345,7 @@ export default function DayConfigurator({
       "The guards know us: nobody follows you, sells you anything, or asks for a tip"
     );
     if (days >= 4) handled.push("Upgraded VIP transfers on your unhurried days");
-    handled.push("Your consigliere on WhatsApp — before you arrive & all day");
+    handled.push("Your concierge on WhatsApp — before you arrive & all day");
     handled.push("Free cancellation up to 7 days before");
 
     return {
@@ -635,10 +635,10 @@ export default function DayConfigurator({
                     </div>
                   </div>
                   <div className={styles.jcBody}>
-                    <p>Rise over the West Bank at first light — then go with the flow, and decide what follows together with your consigliere.</p>
+                    <p>Rise over the West Bank at first light — then go with the flow, and decide what follows together with your concierge.</p>
                     <div className={styles.jcPair}>
                       <span className={styles.jcPairLbl}>then</span>
-                      <span className={styles.jcPairName}>You &amp; your consigliere</span>
+                      <span className={styles.jcPairName}>You &amp; your concierge</span>
                     </div>
                     <span className={styles.jcPick}>
                       {journey === "balloon" ? "✓ This is your beginning" : "Begin here instead →"}
@@ -678,13 +678,13 @@ export default function DayConfigurator({
                   <span className={styles.thumb}>
                     <Image src={img.sunsetCustom} alt="" fill sizes="46px" />
                   </span>
-                  <span>Something else — tell your consigliere</span>
+                  <span>Something else — tell your concierge</span>
                   <span className={styles.dot} />
                 </div>
               </div>
               <div className={styles.grpNote}>
                 {water === "custom"
-                  ? "Have something particular in mind? Your consigliere shapes it around you — just say the word."
+                  ? "Have something particular in mind? Your concierge shapes it around you — just say the word."
                   : "Whichever you choose first, the other is arranged for you on a later day."}
               </div>
             </div>
@@ -721,7 +721,7 @@ export default function DayConfigurator({
                   <div className="muted" style={{ fontSize: ".76rem" }}>
                     Coming from the Red Sea? The original private round-trip —
                     collected door-to-door, an unhurried day in Luxor, home the
-                    same night, timed with your consigliere.{" "}
+                    same night, timed with your concierge.{" "}
                     <Link
                       href="/experiences/hurghada-to-luxor-crossing"
                       className={styles.addonLink}
@@ -931,7 +931,7 @@ export default function DayConfigurator({
                 </li>
                 <li>
                   <b>{expCount} experiences</b>
-                  <span>arranged in any order with your consigliere</span>
+                  <span>arranged in any order with your concierge</span>
                 </li>
                 {plan.bonus.length > 0 && (
                   <li>

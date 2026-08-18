@@ -35,7 +35,7 @@ function parseIncludes(s?: string): string[] {
     .map((x) => x.charAt(0).toUpperCase() + x.slice(1));
 }
 const FALLBACK_INCLUDES = [
-  "Your consigliere, with you start to finish",
+  "Your concierge, with you start to finish",
   "Private transfer, door to door",
   "Every reservation and all the timing",
   "Timed against the crowds",
@@ -193,7 +193,7 @@ export default function ExperienceConfigurator({
             </div>
             <div className={styles.timingCard}>
               <b>Timed against the crowds.</b> We don&apos;t hand you a fixed slot on a coach
-              clock — your consigliere arranges the hour so you have it as close to yours alone as
+              clock — your concierge arranges the hour so you have it as close to yours alone as
               it gets, and confirms the exact timing with you within 24 hours of booking.
             </div>
           </div>

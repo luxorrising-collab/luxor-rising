@@ -120,7 +120,7 @@ export default function TermsPage() {
             Unless expressly stated otherwise, experiences are single-day and do
             not include overnight accommodation, flights or travel insurance.
             Timings, routes and the order of visits are arranged for quality and
-            may be adjusted by us or your consigliere on the day — for example for
+            may be adjusted by us or your concierge on the day — for example for
             weather, crowds, site access or safety — without reducing the value of
             the experience. Descriptions and images are indicative.
           </p>

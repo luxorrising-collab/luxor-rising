@@ -28,7 +28,7 @@ type ConsigliereSectionProps = {
 };
 
 /**
- * "Who runs your day" band: the Private Guide consigliere explanation
+ * "Who runs your day" band: the Private Guide concierge explanation
  * (eyebrow · title · lead · three pillars) laid over a full-bleed portrait of
  * Ahmed on the Nile, with a link through to the full story. Shared by the
  * concierge-day and experience pages so it reads the same everywhere.
@@ -41,7 +41,7 @@ export default function ConsigliereSection({
   images,
   points = [],
   moreHref = "/private-guide",
-  moreLabel = "Meet your consigliere →",
+  moreLabel = "Meet your concierge →",
 }: ConsigliereSectionProps) {
   if (!title) return null;
   const slices = images && images.length > 1 ? images : null;

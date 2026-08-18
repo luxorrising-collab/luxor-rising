@@ -29,7 +29,7 @@ export default function Error({
           </h1>
           <p className="lead" style={{ maxWidth: "48ch", margin: "0 auto 1.8rem" }}>
             A hiccup on our side, not yours. Try again — and if it keeps
-            happening, message your consigliere on WhatsApp and we&apos;ll sort it.
+            happening, message your concierge on WhatsApp and we&apos;ll sort it.
           </p>
           <div style={{ display: "flex", gap: ".8rem", justifyContent: "center", flexWrap: "wrap" }}>
             <button type="button" className="btn btn-primary btn-lg" onClick={() => reset()}>

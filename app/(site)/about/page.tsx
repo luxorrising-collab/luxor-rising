@@ -195,12 +195,12 @@ export default function AboutPage() {
           <div className={styles.partnerBody}>
             <span className="eyebrow">The man who started it all</span>
             <h3 className="display" style={{ margin: ".3rem 0 .8rem" }}>
-              Ahmed, your consigliere.
+              Ahmed, your concierge.
             </h3>
             <p>
               Ahmed is the reason this exists — and the person who now looks after you on the
               ground, exactly the way he looked after me. His full story, and what a
-              consigliere really is, lives on its own page.
+              concierge really is, lives on its own page.
             </p>
             <Link href="/private-guide" className="btn btn-line" style={{ marginTop: "1.2rem" }}>
               Meet Ahmed →

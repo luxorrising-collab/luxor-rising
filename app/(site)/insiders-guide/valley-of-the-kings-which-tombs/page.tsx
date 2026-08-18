@@ -165,7 +165,7 @@ export default async function ValleyOfTheKingsArticle() {
         author: {
           "@type": "Person",
           name: author.name,
-          jobTitle: "Consigliere, Luxor Rising",
+          jobTitle: "Concierge, Luxor Rising",
           knowsAbout: ["Valley of the Kings", "Luxor", "Ancient Egypt"],
         },
         reviewedBy: { "@type": "Person", name: "Dr. Nour", jobTitle: "Licensed Egyptologist" },
@@ -388,7 +388,7 @@ export default async function ValleyOfTheKingsArticle() {
         {/* AUTHOR */}
         <AuthorBox
           name={author.name}
-          bio="Born on the west bank of Luxor, twenty minutes from the Valley gate. He has spent twenty years opening doors in this city — for archaeologists, film crews, and people who simply wanted to see it properly. He is our consigliere: he does not carry the flag, he decides the order of the day."
+          bio="Born on the west bank of Luxor, twenty minutes from the Valley gate. He has spent twenty years opening doors in this city — for archaeologists, film crews, and people who simply wanted to see it properly. He is our concierge: he does not carry the flag, he decides the order of the day."
           href="/insiders-guide"
           ctaLabel="More from the guide →"
         />

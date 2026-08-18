@@ -23,7 +23,7 @@ export default function EnquiryForm({ note }: { note?: string }) {
       <div className={styles.ok}>
         <h4>Request received.</h4>
         <p>
-          Thank you — your consigliere will read this personally and reply within 24 hours with who&apos;d host
+          Thank you — your concierge will read this personally and reply within 24 hours with who&apos;d host
           you and a suggested shape for your days.
         </p>
       </div>

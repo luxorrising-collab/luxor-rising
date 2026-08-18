@@ -103,7 +103,7 @@ export default function CancellationPage() {
             We stand behind every experience. If, early on — within the{" "}
             <strong>first hour</strong> of a single experience, or the{" "}
             <strong>first two hours</strong> of a Concierge Day — you feel it
-            genuinely isn&apos;t what we promised, tell your consigliere or guide{" "}
+            genuinely isn&apos;t what we promised, tell your concierge or guide{" "}
             <strong>at that moment</strong> and give us the chance to put it right.
             If we can&apos;t, we&apos;ll stop there and refund the price you paid,{" "}
             <strong>less any non-refundable costs</strong> already incurred on your

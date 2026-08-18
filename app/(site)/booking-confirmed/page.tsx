@@ -154,7 +154,7 @@ export default async function BookingConfirmedPage({
             ) : (
               <>Your payment went through and a receipt is on its way to your email.</>
             )}{" "}
-            Your consigliere will be in touch within 24 hours to lock in the exact timing and every
+            Your concierge will be in touch within 24 hours to lock in the exact timing and every
             last detail.
           </p>
           <div

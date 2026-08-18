@@ -15,7 +15,7 @@ import styles from "./InsidersGuidePage.module.css";
 export const metadata: Metadata = {
   title: "The Insider's Guide to Luxor — written by the people who live it",
   description:
-    "Honest, specific guidance on Luxor: which tombs are worth it, when to go, what the guidebooks get wrong. Written by our consigliere in Luxor and a licensed Egyptologist.",
+    "Honest, specific guidance on Luxor: which tombs are worth it, when to go, what the guidebooks get wrong. Written by our concierge in Luxor and a licensed Egyptologist.",
   alternates: { canonical: "/insiders-guide" },
   openGraph: {
     type: "website",

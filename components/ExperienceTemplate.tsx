@@ -244,7 +244,7 @@ export default function ExperienceTemplate({
         </section>
       )}
 
-      {/* WHO RUNS YOUR DAY — full-bleed consigliere cover, shared with the
+      {/* WHO RUNS YOUR DAY — full-bleed concierge cover, shared with the
           concierge-day page. The full-width image is the break after the gallery. */}
       {consigliereTitle && (
         <ConsigliereSection

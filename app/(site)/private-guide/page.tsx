@@ -109,7 +109,7 @@ export default async function PrivateGuidePage() {
         </section>
       )}
 
-      {/* MOMENT — breaks up the text between the consigliere definition and the comparison */}
+      {/* MOMENT — breaks up the text between the concierge definition and the comparison */}
       {page.momentQuote && (
         <section className={styles.moment}>
           {page.momentImage && <Image src={page.momentImage} alt="" fill sizes="100vw" />}

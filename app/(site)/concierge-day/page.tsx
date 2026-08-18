@@ -196,7 +196,7 @@ export default async function ConciergeDayPage() {
   ];
   // Consigliere leads; temple guards are on your side; the Egyptologist is an addition.
   const perDayServices = [
-    { name: "A consigliere managing every hour of it", price: 90 },
+    { name: "A concierge managing every hour of it", price: 90 },
     { name: "Temple guards opening doors a coach never gets", price: 70 },
     { name: "Private air-conditioned car & driver", price: 90 },
     { name: "Monument entries, timed before the crowds", price: 60 },
@@ -287,7 +287,7 @@ export default async function ConciergeDayPage() {
             <h2 className="display">{page?.dayShapeTitle}</h2>
             <p className="lead" style={{ marginTop: ".9rem", maxWidth: "62ch", marginInline: "auto" }}>
               Two people can book the same temples and want completely different days. So
-              instead of a timetable, your consigliere composes the day around you — and puts
+              instead of a timetable, your concierge composes the day around you — and puts
               you in each place at the hour it is genuinely quiet.
             </p>
           </div>
@@ -402,7 +402,7 @@ export default async function ConciergeDayPage() {
               <div className="num">02</div>
               <h4>We arrange every detail</h4>
               <p>
-                One consigliere handles every hour — entries timed before the crowds, private
+                One concierge handles every hour — entries timed before the crowds, private
                 transfer, and the temple guards who open doors a coach never gets. A licensed
                 Egyptologist joins you at the monuments too.
               </p>
@@ -410,7 +410,7 @@ export default async function ConciergeDayPage() {
             <div className="s3">
               <div className="num">03</div>
               <h4>You simply arrive</h4>
-              <p>Your consigliere is reachable all day. You experience Luxor; we handle the rest.</p>
+              <p>Your concierge is reachable all day. You experience Luxor; we handle the rest.</p>
             </div>
           </div>
           <div className="disclosure">

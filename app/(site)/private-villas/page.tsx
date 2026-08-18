@@ -224,7 +224,7 @@ export default async function PrivateVillasPage() {
             <p style={{ fontSize: ".88rem", marginTop: "1rem" }}>
               Want the days arranged too?{" "}
               <Link href="/private-guide" style={{ color: "var(--color-gold-deep)", borderBottom: "1px solid var(--color-gold-soft)" }}>
-                Meet your consigliere →
+                Meet your concierge →
               </Link>
             </p>
           </div>

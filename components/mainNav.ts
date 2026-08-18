@@ -15,7 +15,7 @@ export const MAIN_NAV: NavLink[] = [
   { href: "/experiences", label: "Experiences" },
   { href: "/private-guide", label: "Private Guide" },
   { href: "/insiders-guide", label: "Insider's Guide" },
-  { href: "/about", label: "About" },
+  { href: "/#about", label: "About" },
 ];
 
 export type FooterColumn = { title: string; links: { href: string; label: string }[] };
@@ -37,7 +37,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Company",
     links: [
-      { href: "/about", label: "About us" },
+      { href: "/#about", label: "About us" },
       { href: "/private-guide", label: "Private Guide" },
       { href: "/concierge-day#how", label: "How it works" },
       { href: "/insiders-guide", label: "Insider's Guide" },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -7,11 +8,16 @@ import Reveal from "@/components/Reveal";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import styles from "./AboutPage.module.css";
 
+// Work in progress — hidden from the live site for now. Flip PUBLISHED to true
+// (and restore the /about links in components/mainNav.ts) when it's ready.
+const PUBLISHED = false;
+
 export const metadata: Metadata = {
   title: "Our Story — How Luxor Rising Began",
   description:
     "Luxor Rising began with 28 days in Egypt, a friendship with Ahmed, and four days in Luxor that changed the founder's life. The story of why we exist.",
   alternates: { canonical: "/about" },
+  robots: { index: false, follow: false },
   openGraph: {
     type: "website",
     siteName: "Luxor Rising",
@@ -23,6 +29,8 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  if (!PUBLISHED) notFound();
+
   return (
     <>
       <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />

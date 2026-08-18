@@ -272,10 +272,14 @@ export default function DayConfigurator({
   const photoIncluded = days >= 3;
   const photoActive = photoIncluded || photo;
 
+  // Hurghada → Luxor transfer upsell — real price pulled from the
+  // hurghada-to-luxor-crossing product via the Keystatic-fed price table.
+  const hurgPrice = priceOf("Hurghada") || 150;
+
   function addonsCost() {
     let c = 0;
     if (photo && days < 3) c += 120;
-    if (hurg) c += 150;
+    if (hurg) c += hurgPrice;
     return c;
   }
   const total = dayTotal(days, group, dayRate, volumeDiscount, groupSupplement) + addonsCost();
@@ -710,12 +714,25 @@ export default function DayConfigurator({
               >
                 <span className={styles.chk}>✓</span>
                 <div>
-                  <b style={{ fontWeight: 500 }}>Hurghada pickup &amp; desert crossing</b>
+                  <b style={{ fontWeight: 500 }}>
+                    Hurghada → Luxor transfer{" "}
+                    <span className={styles.addonRec}>Recommended</span>
+                  </b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
-                    Private door-to-door transfer across the Eastern Desert
+                    Arrive the day before and start fresh — private door-to-door
+                    across the desert, timed with your consigliere to suit you.{" "}
+                    <Link
+                      href="/experiences/hurghada-to-luxor-crossing"
+                      className={styles.addonLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      See details →
+                    </Link>
                   </div>
                 </div>
-                <span className={styles.ax}>+€150</span>
+                <span className={styles.ax}>+€{hurgPrice}</span>
               </div>
             </div>
           </div>

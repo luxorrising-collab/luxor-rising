@@ -120,6 +120,36 @@
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* "What we make possible" — three handled pillars */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  max-width: 62ch;
+  margin: 2.4rem auto 0;
+}
+.pillar {
+  text-align: center;
+}
+.pillarIcon {
+  color: var(--color-gold);
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+.pillar h4 {
+  font-family: var(--font-display);
+  font-size: 1.14rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0 0 0.4rem;
+}
+.pillar p {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--color-espresso);
+  margin: 0;
+}
+
 /* Founder profile card */
 .founderWrap {
   background: var(--color-paper);
@@ -203,6 +233,11 @@
 }
 
 @media (max-width: 760px) {
+  .pillars {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+    max-width: 34ch;
+  }
   .partner {
     grid-template-columns: 1fr;
     gap: 1.4rem;

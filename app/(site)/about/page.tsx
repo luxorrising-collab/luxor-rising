@@ -8,22 +8,24 @@ import Reveal from "@/components/Reveal";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import styles from "./AboutPage.module.css";
 
-// Work in progress — hidden from the live site for now. Flip PUBLISHED to true
-// (and restore the /about links in components/mainNav.ts) when it's ready.
-const PUBLISHED = false;
+// Preview state: reachable at /about so it can be reviewed, but kept OUT of the
+// menu (see components/mainNav.ts) and OUT of search (robots noindex below).
+// To fully launch: keep PUBLISHED true, remove the robots line, and restore the
+// /about links in components/mainNav.ts. To re-hide entirely: set PUBLISHED false.
+const PUBLISHED = true;
 
 export const metadata: Metadata = {
-  title: "Our Story — How Luxor Rising Began",
+  title: "A Retreat for Leaders — Why Luxor Rising Exists",
   description:
-    "Luxor Rising began with 28 days in Egypt, a friendship with Ahmed, and four days in Luxor that changed the founder's life. The story of why we exist.",
+    "For thousands of years, the people who shaped the world withdrew to the desert and came back clearer. Luxor, at the edge of the Sahara, is where leaders and visionaries reset — arranged end to end.",
   alternates: { canonical: "/about" },
   robots: { index: false, follow: false },
   openGraph: {
     type: "website",
     siteName: "Luxor Rising",
-    title: "Our Story — How Luxor Rising Began",
+    title: "A Retreat for Leaders — Why Luxor Rising Exists",
     description:
-      "Twenty-eight days in Egypt, a friendship with Ahmed, and four days in Luxor that changed everything.",
+      "Where leaders and visionaries go to step out of the noise and set the next vision clear.",
     url: "/about",
   },
 };
@@ -35,192 +37,173 @@ export default function AboutPage() {
     <>
       <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
-      {/* HERO */}
+      {/* HERO — the visitor is the hero; the sell is quiet and already here */}
       <header className={styles.hero}>
         <div className={styles.heroBg}>
           <Image src="/images/desert-sunset-silhouette.jpg" alt="" fill priority sizes="100vw" />
         </div>
         <div className={styles.heroScrim} />
         <Reveal className={`wrap ${styles.heroIn}`}>
-          <span className="eyebrow">Our story</span>
-          <h1 className="display">Four days at the edge of the Sahara changed my life.</h1>
-          <p className="lead" style={{ maxWidth: "56ch", margin: "1rem auto 0" }}>
-            Luxor Rising began the way the best things do — unplanned, on a trip I took to
-            save myself, in the company of a man who would become my partner.
+          <span className="eyebrow">For leaders &amp; visionaries</span>
+          <h1 className="display">The desert is where leaders go to become themselves again.</h1>
+          <p className="lead" style={{ maxWidth: "60ch", margin: "1rem auto 0" }}>
+            For thousands of years, the people who shaped the world withdrew to the emptiness —
+            and came back clearer, stronger, and certain of what to do next. Luxor, at the edge
+            of the Sahara, is where you do the same. We arrange everything else.
           </p>
           <div className={styles.rule} />
           <div className={styles.heroCtas}>
             <Link href="/concierge-day" className="btn btn-primary btn-lg">
-              Design your day →
+              Design your days →
             </Link>
-            <Link href="/private-guide" className="btn btn-line btn-lg">
-              Meet Ahmed
+            <Link href="/private-guide#request" className="btn btn-line btn-lg">
+              Talk to us
             </Link>
           </div>
         </Reveal>
       </header>
 
-      {/* WHY I CAME */}
-      <section>
-        <div className="wrap">
-          <Reveal className={styles.story}>
-            <span className="eyebrow">Why I came</span>
-            <h2 className="display">I came to Egypt to find a new vision.</h2>
-            <p>
-              I spend my working life as a performance strategist in Central Europe. I help
-              people and businesses perform under pressure — which means I know, intimately,
-              what pressure and burnout do to a person. After the hardest year of my life, in
-              business and personally, I needed to step out of it completely. Not a holiday.
-              A retreat.
-            </p>
-            <p>
-              I wanted somewhere old enough, and quiet enough, to set a new vision for my
-              life. I chose the desert. I went to Egypt for twenty-eight days — and I went
-              with a second, quieter intention too: to find partners, and build something
-              real here.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* AHMED */}
+      {/* THE PAIN — empathy + authority, spoken to the leader */}
       <section className={styles.tint}>
         <div className="wrap">
           <Reveal className={styles.story}>
-            <span className="eyebrow">The friendship</span>
-            <h2 className="display">From the airport, to the airport — Ahmed.</h2>
+            <span className="eyebrow">If you&apos;ve come this far</span>
+            <h2 className="display">Success has its own kind of exhaustion.</h2>
             <p>
-              From the moment I landed, a man named Ahmed took care of everything. He met me
-              at the airport, and twenty-eight days later he said goodbye to me there. In
-              between, he showed me an Egypt no visitor gets to see.
+              No one warns you that building something can hollow you out. That a brutal year —
+              a loss, an ending, a fight you didn&apos;t choose — can leave you running on will
+              alone, unable to hear your own judgement over the noise.
             </p>
             <p>
-              It was Ahmed who insisted I go to Luxor. He didn&apos;t just book it — he told
-              me how the place <em>feels</em>, what makes it unlike anywhere else on earth,
-              why it mattered. Then he arranged four days for me. They were perfect.
+              You are used to carrying it. You carry it well. But somewhere in you, you already
+              know the truth: you cannot set the next vision from inside the burnout that took
+              the last one. To see clearly again, you have to step out of it — completely.
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* MOMENT — full-bleed quote */}
+      {/* THE TIMELESS ANSWER — traditions + great leaders */}
+      <section>
+        <div className="wrap">
+          <Reveal className={styles.story}>
+            <span className="eyebrow">This is not new</span>
+            <h2 className="display">Every tradition sends its seekers into the emptiness.</h2>
+            <p>
+              The instinct is ancient, and it is universal. <strong>Christ</strong> withdrew to
+              the wilderness for forty days before he began. The <strong>Prophet Muhammad</strong>{" "}
+              retreated to a cave in the desert hills, and returned with words that remade the
+              world. The <strong>Buddha</strong> walked away from a palace into solitude, and
+              came back awake.
+            </p>
+            <p>
+              Different faiths, one pattern: leave the world behind, sit in the silence, and
+              return transformed. And it was never only the prophets — reformers, founders and
+              commanders have always known the same secret. The largest decisions are not made
+              in the room full of noise. They are made in the stillness you retreat to first.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* WHY LUXOR — the deeper meaning of the place */}
+      <section className={styles.tint}>
+        <div className="wrap">
+          <Reveal className={styles.story}>
+            <span className="eyebrow">Why here</span>
+            <h2 className="display">The oldest ground people ever came to touch the infinite.</h2>
+            <p>
+              Luxor sits at the edge of the Sahara, on land that has been sacred longer than
+              almost anywhere on earth. For thousands of years, pharaohs, priests and pilgrims
+              came here to stand between the living and the eternal — to make their reckonings
+              where the veil felt thin and reality seemed closest to the infinite.
+            </p>
+            <p>
+              That charge never left. People feel it the moment they arrive: a stillness with
+              weight to it, a scale that quiets the mind and widens it at once. It is, simply,
+              the most powerful ground we know to think a life over on.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* MOMENT — full-bleed emotional peak */}
       <section className={styles.moment}>
         <Image src="/images/experiences/karnak-at-dawn-hero.jpg" alt="" fill sizes="100vw" />
         <div className={styles.momentScrim} />
         <Reveal className={`wrap ${styles.momentIn}`}>
           <p>
-            Luxor sits at the edge of the Sahara, on one of the oldest ritual grounds on the
-            planet. I have never, anywhere, felt so at home.
+            Where the world first went to touch forever — and where you go to see your own life
+            clearly.
           </p>
         </Reveal>
       </section>
 
-      {/* FOUR DAYS */}
+      {/* WHAT WE DO — the guide's plan, the subtle sell made concrete */}
       <section>
         <div className="wrap">
           <Reveal className={styles.story}>
-            <span className="eyebrow">Luxor</span>
-            <h2 className="display">Four days, and a new vision.</h2>
+            <span className="eyebrow">What we make possible</span>
+            <h2 className="display">You bring the questions. We carry everything else.</h2>
             <p>
-              I watched the sun rise over the sea and set over the desert. I spent the days
-              contemplating — really contemplating — and somewhere inside them I set the new
-              vision I had come for. Those four days were deeply, permanently impactful. There
-              is a power to that place, a vibe I still cannot fully explain and have never
-              stopped feeling.
+              A retreat only works if nothing pulls you back out of it. So we remove all of it —
+              the planning, the logistics, the decisions, the friction. Private from the moment
+              you land to the moment you leave. Temples at dawn before another soul arrives. The
+              desert at the hour it goes silent. Days shaped entirely around the state of mind
+              you came to find.
             </p>
-            <p>
-              I had arrived intending to build cooperations in Egypt. What I did not expect
-              was to find, in Ahmed, someone chasing the exact same dream — a local who had
-              been looking for a partner to build it with.
-            </p>
+          </Reveal>
+          <Reveal className={styles.pillars}>
+            <div className={styles.pillar}>
+              <div className={styles.pillarIcon} aria-hidden>✦</div>
+              <h4>Private &amp; unhurried</h4>
+              <p>No groups, no clock. The temples, the river and the desert, at their quietest hour.</p>
+            </div>
+            <div className={styles.pillar}>
+              <div className={styles.pillarIcon} aria-hidden>❖</div>
+              <h4>Nothing to arrange</h4>
+              <p>Every transfer, ticket, meal and timing is handled. You make no decisions you didn&apos;t come to make.</p>
+            </div>
+            <div className={styles.pillar}>
+              <div className={styles.pillarIcon} aria-hidden>◆</div>
+              <h4>Timed for stillness</h4>
+              <p>The days are composed around space to think — not a checklist of sights to survive.</p>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      {/* THE PARTNERSHIP / WHY WE EXIST */}
-      <section className={styles.tint}>
-        <div className="wrap">
-          <Reveal className={styles.story}>
-            <span className="eyebrow">Luxor Rising</span>
-            <h2 className="display">Two people, one dream.</h2>
-            <p>
-              Luxor Rising is what we built together: my outside eye for how a day should
-              feel and flow, and Ahmed&apos;s lifetime of knowing this place — its people,
-              and how to open doors that never open for tourists.
-            </p>
-            <p>
-              We made the company we wished had existed when I first arrived. One that takes
-              a tired, overwhelmed traveller and hands them the version of Egypt I was lucky
-              enough to be given: nothing to arrange, nothing to carry, nothing to prove.
-              Just arrive — and let the oldest place on earth do the rest.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* FOUNDER PROFILE */}
+      {/* FOUNDER — brief credibility, in service of the visitor */}
       <section className={styles.founderWrap}>
         <Reveal className={`wrap-narrow ${styles.founder}`}>
-          <div className={styles.founderMark} aria-hidden>
-            ✦
-          </div>
-          <span className="eyebrow">The founder</span>
-          {/* TODO: replace with the founder's name, and add a portrait to
-              /images/about/founder.jpg if you'd like one shown here. */}
-          <h3 className={styles.founderName}>[ Your name ]</h3>
-          <div className={styles.founderRole}>Founder · Performance strategist, Central Europe</div>
+          <div className={styles.founderMark} aria-hidden>✦</div>
+          <span className="eyebrow">Who&apos;s behind it</span>
+          <h3 className={styles.founderName}>Built by someone who works with people like you.</h3>
           <p>
-            Across more than sixty projects, I&apos;ve built a career on helping people and
-            organisations perform under pressure without breaking. Luxor Rising is the other
-            side of that work — the place, and the way, to put yourself back together and see
-            clearly again.
+            Luxor Rising is led by a performance strategist who works directly with masters of
+            their craft — more than sixty leaders across their segments — helping them reach
+            their goals in the brutal reality of e-commerce, alongside some of the best in
+            Central Europe.
           </p>
           <p className={styles.founderKicker}>
-            It&apos;s the trip that changed me, made into something I can hand to you.
+            So the person arranging your days already understands the pressure you carry — and
+            exactly why stepping out of it, properly, changes everything.
           </p>
-        </Reveal>
-      </section>
-
-      {/* AHMED CROSS-LINK */}
-      <section className={styles.partnerWrap}>
-        <Reveal className={`wrap ${styles.partner}`}>
-          <div className={styles.partnerImg}>
-            <Image
-              src="/images/hosts/ahmed-nile-sunset.jpg"
-              alt="Ahmed, on the Nile at sunset"
-              fill
-              sizes="(max-width: 760px) 100vw, 420px"
-            />
-          </div>
-          <div className={styles.partnerBody}>
-            <span className="eyebrow">The man who started it all</span>
-            <h3 className="display" style={{ margin: ".3rem 0 .8rem" }}>
-              Ahmed, your concierge.
-            </h3>
-            <p>
-              Ahmed is the reason this exists — and the person who now looks after you on the
-              ground, exactly the way he looked after me. His full story, and what a
-              concierge really is, lives on its own page.
-            </p>
-            <Link href="/private-guide" className="btn btn-line" style={{ marginTop: "1.2rem" }}>
-              Meet Ahmed →
-            </Link>
-          </div>
         </Reveal>
       </section>
 
       {/* CLOSER */}
       <section className={styles.closer}>
         <Reveal className="wrap-narrow">
-          <span className="eyebrow">Your turn</span>
-          <h2 className="display">Come and feel it for yourself.</h2>
-          <p className="lead" style={{ marginTop: ".8rem", maxWidth: "52ch", marginLeft: "auto", marginRight: "auto" }}>
-            The four days that changed my life are the ones we now arrange for you — private,
-            unhurried, and handled end to end.
+          <span className="eyebrow">Your reckoning</span>
+          <h2 className="display">Set your next vision where the world set its first.</h2>
+          <p className="lead" style={{ marginTop: ".8rem", maxWidth: "50ch", marginLeft: "auto", marginRight: "auto" }}>
+            A private retreat in Luxor, arranged end to end. You arrive; everything else is
+            handled.
           </p>
           <div className={styles.closerCtas}>
             <Link href="/concierge-day" className="btn btn-primary btn-lg">
-              Design your day →
+              Design your days →
             </Link>
             <Link href="/private-guide#request" className="btn btn-line btn-lg">
               Talk to us

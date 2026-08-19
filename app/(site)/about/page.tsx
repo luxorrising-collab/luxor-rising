@@ -8,10 +8,8 @@ import Reveal from "@/components/Reveal";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import styles from "./AboutPage.module.css";
 
-// Preview state: reachable at /about so it can be reviewed, but kept OUT of the
-// menu (see components/mainNav.ts) and OUT of search (robots noindex below).
-// To fully launch: keep PUBLISHED true, remove the robots line, and restore the
-// /about links in components/mainNav.ts. To re-hide entirely: set PUBLISHED false.
+// Live. To re-hide entirely, set PUBLISHED to false (404s the route) and revert
+// the /about links in components/mainNav.ts back to the /#about anchor.
 const PUBLISHED = true;
 
 export const metadata: Metadata = {
@@ -19,7 +17,6 @@ export const metadata: Metadata = {
   description:
     "For thousands of years, the people who shaped the world withdrew to the desert and came back clearer. Luxor, at the edge of the Sahara, is where leaders and visionaries reset — arranged end to end.",
   alternates: { canonical: "/about" },
-  robots: { index: false, follow: false },
   openGraph: {
     type: "website",
     siteName: "Luxor Rising",

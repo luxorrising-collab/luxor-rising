@@ -1,6 +1,10 @@
-# Napojenia & env premenné — mapa a prevod kontroly
+# Napojenia & env premenné — referenčná mapa
 
-Presné detaily každého napojenia webu a čo treba, aby mal nový účet plnú kontrolu.
+> **Toto je len referencia. Ak zostávaš ty na tom istom počítači, NIČ tu nemeníš** —
+> všetky napojenia už fungujú. Dokument slúži na to, aby si (aj nový Claude) vedel,
+> čo je kde a kde sú kľúče. Kroky typu „pridať Owner / pozvať do tímu" platia **iba**
+> vtedy, ak by projekt preberal **niekto iný**; pre teba ich ignoruj.
+
 Tajné **hodnoty** tu nie sú (a ani nesmú byť) — len názvy a kde ich nájsť.
 
 ---

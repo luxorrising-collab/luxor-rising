@@ -1,8 +1,11 @@
 # Luxor Rising — Handover / Onboarding
 
 Tento priečinok obsahuje **všetko, čo potrebuješ na prevzatie projektu Luxor Rising
-pod nový Claude účet** — tak, aby napojenia na web (Vercel, GitHub, Keystatic,
-doména) zostali plne funkčné.
+pod nový Claude účet.**
+
+> **Scenár:** ten istý počítač a tá istá infraštruktúra (GitHub, Vercel, doména) —
+> **mení sa iba Claude účet.** Žiadne nové účty okrem Clauda sa nezakladajú a na
+> napojeniach sa **nič nemení.** Fungujú ďalej tak, ako sú.
 
 ## Čo je tu
 

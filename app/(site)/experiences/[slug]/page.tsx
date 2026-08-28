@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Nav from "@/components/Nav";
-import { FullFooter } from "@/components/Footer";
+import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";

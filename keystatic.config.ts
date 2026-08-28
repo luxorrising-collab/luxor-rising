@@ -1402,6 +1402,18 @@ export default config({
           directory: "public/images",
           publicPath: "/images/",
         }),
+        instagramUrl: fields.url({
+          label: "Instagram URL",
+          description: "Shown as an icon in the footer. Leave blank to hide it.",
+        }),
+        facebookUrl: fields.url({
+          label: "Facebook URL",
+          description: "Shown as an icon in the footer. Leave blank to hide it.",
+        }),
+        youtubeUrl: fields.url({
+          label: "YouTube URL",
+          description: "Shown as an icon in the footer. Leave blank to hide it.",
+        }),
       },
     }),
     tracking: singleton({

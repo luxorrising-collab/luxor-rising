@@ -3,7 +3,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import { FullFooter } from "@/components/Footer";
+import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import Reveal from "@/components/Reveal";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import { reader } from "@/lib/keystatic-reader";

@@ -87,6 +87,8 @@
   padding-top: 1.4rem;
   border-top: 1px solid rgba(232, 217, 188, 0.15);
   font-size: 0.78rem;
+}
+.bottomCopy {
   opacity: 0.6;
 }
 .minimal .bottom {
@@ -94,12 +96,29 @@
   font-size: 0.76rem;
   opacity: 0.55;
 }
-.langs a {
-  margin-left: 0.8rem;
-  cursor: pointer;
+.social {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
 }
-.langs a:hover {
+.minimal .social {
+  justify-content: center;
+  margin: 0.2rem 0 1.4rem;
+}
+.social a {
+  display: flex;
+  color: var(--color-sand);
+  opacity: 0.8;
+  transition: 0.25s ease;
+}
+.social a:hover {
+  opacity: 1;
   color: var(--color-gold);
+  transform: translateY(-1px);
+}
+.social svg {
+  width: 17px;
+  height: 17px;
 }
 
 /* minimal (concierge-day / medinet-habu) */

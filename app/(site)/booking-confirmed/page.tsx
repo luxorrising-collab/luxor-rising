@@ -3,7 +3,7 @@ import Link from "next/link";
 import Stripe from "stripe";
 import { cookies, headers } from "next/headers";
 import Nav from "@/components/Nav";
-import { FullFooter } from "@/components/Footer";
+import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import PurchaseTracker from "@/components/analytics/PurchaseTracker";
 import { reader } from "@/lib/keystatic-reader";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
-import { FullFooter } from "@/components/Footer";
+import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import PartnersTrackRecord from "@/components/reviews/PartnersTrackRecord";

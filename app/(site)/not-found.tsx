@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import { FullFooter } from "@/components/Footer";
+import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 
 export const metadata: Metadata = {

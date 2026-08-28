@@ -1,0 +1,28 @@
+# Luxor Rising — Handover / Onboarding
+
+Tento priečinok obsahuje **všetko, čo potrebuješ na prevzatie projektu Luxor Rising
+pod nový Claude účet** — tak, aby napojenia na web (Vercel, GitHub, Keystatic,
+doména) zostali plne funkčné.
+
+## Čo je tu
+
+| Súbor | Pre koho | Čo obsahuje |
+|-------|----------|-------------|
+| **[01-NAVOD-PRENOS-SK.md](01-NAVOD-PRENOS-SK.md)** | Pre teba (človeka) | Jednoduchý návod krok za krokom: ako prejsť pod nový Claude účet a zachovať všetky napojenia. **Začni tu.** |
+| **[02-PROJECT-SEED.md](02-PROJECT-SEED.md)** | Pre Clauda (nový účet) | Kompletný „seed" — celý kontext projektu. Toto dáš prečítať novému Claudovi, aby vedel o projekte všetko čo doterajší. |
+| **[03-CONNECTIONS-AND-ENV.md](03-CONNECTIONS-AND-ENV.md)** | Pre teba | Mapa všetkých napojení (GitHub, Vercel, doména, Stripe, Meta) + zoznam env premenných (bez tajných hodnôt) + ako dať novému účtu plný prístup. |
+| **[_local-private/](_local-private/)** | Pre teba | Bezpečné miesto na tvojom disku pre citlivé dokumenty (heslá, kľúče, exporty). **NIE je v gite** — nikdy sa nenahrá na GitHub. |
+
+## Najdôležitejšia vec, ktorú treba pochopiť
+
+**Web nie je viazaný na Claude účet.** Kód žije na GitHube, beží na Verceli,
+edituje sa cez Keystatic — a nič z toho nezávisí od toho, ktorým Claude účtom si
+prihlásený. Claude (Claude Code) je len nástroj na tvojom počítači, ktorý pracuje
+s kódom.
+
+Takže „prevod pod nový Claude účet" v praxi znamená len:
+1. Na novom účte prihlásiť Claude Code,
+2. mať naklonovaný repozitár a prístup ku GitHub + Vercel účtom,
+3. dať novému Claudovi prečítať `02-PROJECT-SEED.md`.
+
+Detaily sú v návode.

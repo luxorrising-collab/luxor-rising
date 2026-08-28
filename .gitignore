@@ -44,3 +44,7 @@ next-env.d.ts
 /public/luxor new images/
 /_prototype/
 /obsah-stranok.xlsx
+
+# Handover: private/secret documents — keep on disk, never commit (README stays)
+/docs/handover/_local-private/*
+!/docs/handover/_local-private/README.md

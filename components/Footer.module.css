@@ -17,7 +17,6 @@
 }
 .logo img {
   width: 140px;
-  border-radius: 12px;
 }
 .minimal .logo img {
   width: 120px;
@@ -34,6 +33,18 @@
 .minimal .tagline {
   max-width: 360px;
   margin: 1rem auto 0;
+}
+.taglineSecondary {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--color-gold-soft);
+  opacity: 0.75;
+  max-width: 260px;
+  margin-top: 0.6rem;
+}
+.minimal .taglineSecondary {
+  max-width: 360px;
+  margin: 0.6rem auto 0;
 }
 .col h4 {
   font-size: 0.68rem;

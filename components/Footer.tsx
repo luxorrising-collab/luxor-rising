@@ -14,7 +14,7 @@ export function FullFooter({ columns }: { columns: FooterColumn[] }) {
           <div className={styles.brandCol}>
             <Link href="/" className={styles.logo}>
               <Image
-                src="/images/logo-footer.png"
+                src="/images/logo-footer.jpg"
                 alt="Luxor Rising"
                 width={140}
                 height={140}
@@ -22,6 +22,9 @@ export function FullFooter({ columns }: { columns: FooterColumn[] }) {
             </Link>
             <p className={styles.tagline}>
               Your private concierge in Egypt — we arrange, you arrive.
+            </p>
+            <p className={styles.taglineSecondary}>
+              Where reality meets tranquility and every moment becomes cherished.
             </p>
           </div>
           {columns.map((col) => (
@@ -66,7 +69,7 @@ export function MinimalFooter({
       <div className="wrap">
         <Link href="/" className={styles.logo}>
           <Image
-            src="/images/logo-footer.png"
+            src="/images/logo-footer.jpg"
             alt="Luxor Rising"
             width={120}
             height={120}
@@ -74,6 +77,9 @@ export function MinimalFooter({
         </Link>
         <p className={styles.tagline}>
           Your private concierge in Egypt — we arrange, you arrive.
+        </p>
+        <p className={styles.taglineSecondary}>
+          Where reality meets tranquility and every moment becomes cherished.
         </p>
         <div className={styles.minimalLinks}>
           {links.map((l, i) => (

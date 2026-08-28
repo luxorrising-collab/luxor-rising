@@ -34,17 +34,30 @@
   max-width: 360px;
   margin: 1rem auto 0;
 }
+.brandDivider {
+  display: block;
+  width: 34px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-gold) 0%, transparent 100%);
+  margin: 1.2rem 0 1rem;
+}
+.minimal .brandDivider {
+  margin: 1.2rem auto 1rem;
+  background: linear-gradient(90deg, transparent, var(--color-gold) 50%, transparent);
+}
 .taglineSecondary {
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
   color: var(--color-gold-soft);
-  opacity: 0.75;
-  max-width: 260px;
-  margin-top: 0.6rem;
+  max-width: 270px;
 }
 .minimal .taglineSecondary {
-  max-width: 360px;
-  margin: 0.6rem auto 0;
+  max-width: 380px;
+  margin: 0 auto;
 }
 .col h4 {
   font-size: 0.68rem;

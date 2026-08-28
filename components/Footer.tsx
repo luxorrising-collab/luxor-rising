@@ -23,6 +23,7 @@ export function FullFooter({ columns }: { columns: FooterColumn[] }) {
             <p className={styles.tagline}>
               Your private concierge in Egypt — we arrange, you arrive.
             </p>
+            <span className={styles.brandDivider} aria-hidden="true" />
             <p className={styles.taglineSecondary}>
               Where reality meets tranquility and every moment becomes cherished.
             </p>
@@ -78,6 +79,7 @@ export function MinimalFooter({
         <p className={styles.tagline}>
           Your private concierge in Egypt — we arrange, you arrive.
         </p>
+        <span className={styles.brandDivider} aria-hidden="true" />
         <p className={styles.taglineSecondary}>
           Where reality meets tranquility and every moment becomes cherished.
         </p>

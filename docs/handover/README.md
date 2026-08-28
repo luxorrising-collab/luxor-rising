@@ -13,6 +13,7 @@ pod nový Claude účet.**
 |-------|----------|-------------|
 | **[00-MAJITELSKY-NAVOD-SK.md](00-MAJITELSKY-NAVOD-SK.md)** | Pre teba (majiteľa) | Ľudský prehľad: čo vlastním, ako sa robia zmeny, účty pod kontrolou, bežné situácie. **Začni tu.** |
 | **[01-NAVOD-PRENOS-SK.md](01-NAVOD-PRENOS-SK.md)** | Pre teba (človeka) | Návod krok za krokom: ako prejsť pod nový Claude účet (3 kroky + test). |
+| **[PROMPT-PRE-NOVEHO-CLAUDE.md](PROMPT-PRE-NOVEHO-CLAUDE.md)** | Pre teba → Clauda | Hotová **úvodná prompta** na skopírovanie — prvá správa pre nový Claude účet. |
 | **[02-PROJECT-SEED.md](02-PROJECT-SEED.md)** | Pre Clauda (nový účet) | Kompletný „seed" — celý kontext projektu. Toto dáš prečítať novému Claudovi, aby vedel o projekte všetko čo doterajší. |
 | **[03-CONNECTIONS-AND-ENV.md](03-CONNECTIONS-AND-ENV.md)** | Pre teba | Mapa všetkých napojení (GitHub, Vercel, doména, Stripe, Meta) + zoznam env premenných (bez tajných hodnôt) + ako dať novému účtu plný prístup. |
 | **[_local-private/](_local-private/)** | Pre teba | Bezpečné miesto na tvojom disku pre citlivé dokumenty (heslá, kľúče, exporty). **NIE je v gite** — nikdy sa nenahrá na GitHub. |

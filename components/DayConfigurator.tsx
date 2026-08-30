@@ -210,7 +210,7 @@ type DayConfiguratorProps = {
   /** À-la-carte price map (substring → price) sourced from the live experience
    *  catalogue, so the breakdown matches real product prices. Falls back to the
    *  built-in table if not supplied. */
-  priceTable?: [string, number][];
+  priceTable?: [string, number, boolean?][];
   /** Brand titles (substring → poetic product title) for signature experiences,
    *  shown as a small italic subtitle under the place name in the breakdown. */
   brandTable?: [string, string][];
@@ -239,6 +239,12 @@ export default function DayConfigurator({
   const priceOf = (nm: string) => {
     for (const [k, v] of table) if (nm.indexOf(k) >= 0) return v;
     return 0;
+  };
+  // A price is an estimate when it isn't a standalone active à-la-carte product
+  // (e.g. the Egyptologist, generic transfers, the photo add-on, a bonus).
+  const estimateOf = (nm: string) => {
+    for (const t of table) if (nm.indexOf(t[0]) >= 0) return Boolean(t[2]);
+    return false;
   };
   const brandOf = (nm: string) => {
     for (const [k, v] of brandTable ?? []) if (v && nm.indexOf(k) >= 0) return v;
@@ -364,7 +370,7 @@ export default function DayConfigurator({
   const expCount = plan.start.length + plan.pool.length;
   const sigbCount = plan.bonus.length;
 
-  const priced: { nm: string; pr: number; bonus: boolean; brand: string }[] = [];
+  const priced: { nm: string; pr: number; bonus: boolean; brand: string; estimate: boolean }[] = [];
   let sepTotal = 0;
   [plan.start, plan.pool, plan.bonus, plan.handled].forEach((arr) => {
     arr.forEach((it) => {
@@ -379,6 +385,7 @@ export default function DayConfigurator({
           bonus: typeof it === "object" && !!it.bonus,
           // Don't repeat the brand title when it's already the place label.
           brand: brand && brand.replace(/[.]$/, "") !== place ? brand : "",
+          estimate: estimateOf(nm),
         });
         sepTotal += pr;
       }
@@ -800,7 +807,14 @@ export default function DayConfigurator({
                       </span>
                       {x.brand && <span className={styles.bdBrand}>{x.brand}</span>}
                     </span>
-                    <span>{euro(x.pr)}</span>
+                    <span>
+                      {euro(x.pr)}
+                      {x.estimate && (
+                        <em style={{ marginLeft: ".35em", opacity: 0.6, fontStyle: "italic", fontWeight: 400 }}>
+                          (estimate)
+                        </em>
+                      )}
+                    </span>
                   </div>
                 ))}
                 <div className={`${styles.bdRow} ${styles.bdTot}`}>

@@ -14,6 +14,7 @@ import ConsigliereSection from "@/components/ConsigliereSection";
 import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
+import { getFinalPriceMap } from "@/lib/pricing";
 import styles from "./ConciergeDayPage.module.css";
 
 export const metadata: Metadata = {
@@ -101,11 +102,12 @@ const SECTION_FALLBACK = [
 ];
 
 export default async function ConciergeDayPage() {
-  const [page, pricingRules, experiences, product] = await Promise.all([
+  const [page, pricingRules, experiences, product, priceMap] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
     reader.singletons.pricingRules.read(),
     reader.collections.experiences.all(),
     reader.singletons.productPageSettings.read(),
+    getFinalPriceMap(),
   ]);
 
   const FAQ_ITEMS = (page?.faq ?? []).map((f) => ({ q: f.question, a: f.answer }));
@@ -119,14 +121,16 @@ export default async function ConciergeDayPage() {
   // Real single-experience prices, pulled from the live catalogue so the
   // "assemble it yourself" comparison always reflects what these actually cost.
   const priceBySlug = (slug: string) =>
-    experiences.find((e) => e.slug === slug)?.entry.basePrice ?? 0;
+    priceMap.get(slug) ?? experiences.find((e) => e.slug === slug)?.entry.basePrice ?? 0;
 
   // À-la-carte price map for the builder's "see full breakdown" — sourced from
   // the SAME live product prices, so the breakdown and the value-stack always
   // agree and update from Keystatic. Keys match the builder's plan wording
   // (substring match); order preserved. Pure services/add-ons that aren't
   // standalone catalogue products keep sensible fixed values.
-  const alaCartePrices: [string, number][] = [
+  // Third element = estimate: not a standalone active à-la-carte product, so its
+  // price is shown flagged "(estimate)" in the breakdown.
+  const alaCartePrices: [string, number, boolean?][] = [
     ["Medinet", priceBySlug("medinet-habu")],
     ["Karnak", priceBySlug("karnak-at-dawn")],
     ["Hatshepsut", priceBySlug("hatshepsut-temple")],
@@ -142,11 +146,11 @@ export default async function ConciergeDayPage() {
     ["choosing", priceBySlug("private-desert-safari")],
     ["Desert rally", priceBySlug("private-desert-safari")],
     ["night in Luxor", priceBySlug("luxor-by-night")],
-    ["photoshoot", 120],
+    ["photoshoot", 120, true],
     ["balloon", priceBySlug("hot-air-balloon-luxor")],
-    ["Sailing lesson", priceBySlug("sailing-lesson-nile")],
-    ["Egyptologist", 140],
-    ["air-conditioned transfers", 90],
+    ["Sailing lesson", priceBySlug("sailing-lesson-nile"), true],
+    ["Egyptologist", 140, true],
+    ["air-conditioned transfers", 90, true],
     ["Hurghada", priceBySlug("hurghada-to-luxor-crossing")],
   ];
 

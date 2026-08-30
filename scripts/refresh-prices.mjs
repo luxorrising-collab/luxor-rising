@@ -52,6 +52,7 @@ const SLUG = {
   "Hurghada Airport Transfer": "",
   "Photoshoot — photographer + OWN camera & editing": "",
   "Photos on YOUR phone — host shoots on guest smartphone": "",
+  "Sailing lesson on the Nile": "sailing-lesson-nile",
 };
 
 const kebab = (s) =>
@@ -101,7 +102,7 @@ try {
   }
 } catch { /* pricing-rules missing — skip */ }
 
-for (let r = 15; r <= 51; r++) {
+for (let r = 15; r <= 52; r++) {
   const name = str(ws.getCell(`A${r}`)).trim();
   const category = str(ws.getCell(`B${r}`)).trim();
   if (!name || !category) continue; // category-header / blank rows have no B
@@ -115,22 +116,6 @@ for (let r = 15; r <= 51; r++) {
     finalPrice: Math.round(final),
     experienceSlug: slug,
   });
-}
-
-// "Sailing lesson on the Nile" isn't a chart row, but by the same cascade it is
-// structurally a private felucca + instruction — identical L0 layers — so it
-// carries the felucca's final. Derive it so it tracks any felucca cost change.
-{
-  const felucca = products.find((p) => p.experienceSlug === "felucca-sunset-sail");
-  if (felucca) {
-    products.push({
-      key: "sailing-lesson-nile",
-      name: "Sailing lesson on the Nile",
-      category: "Nile & river",
-      finalPrice: felucca.finalPrice,
-      experienceSlug: "sailing-lesson-nile",
-    });
-  }
 }
 
 const q = (s) => JSON.stringify(s); // valid YAML double-quoted scalar

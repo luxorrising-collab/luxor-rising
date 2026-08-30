@@ -4,7 +4,7 @@ products:
   - key: "design-your-day"
     name: "Design your day (Concierge Day)"
     category: "Concierge day"
-    finalPrice: 450
+    finalPrice: 800
     experienceSlug: ""
   - key: "medinet-habu"
     name: "Medinet Habu, Before Anyone Else"

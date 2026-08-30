@@ -59,7 +59,7 @@ offeringCards:
     description: >-
       Know what you want? Build a private day, see the price, and reserve — your
       own Egyptologist, and not one decision to make.
-    priceLabel: From €450
+    priceLabel: From €800
     ctaLabel: Design your day →
     href: /concierge-day
 momentImage: /images/momentImage.jpg
@@ -187,8 +187,8 @@ guidePosts:
     href: /insiders-guide
 finalEyebrow: Your date is waiting
 finalTitle: Give us one day. We'll give you the one you remember.
-finalLead: Private, effortless, and guaranteed — from €450. Design your day in a minute.
+finalLead: Private, effortless, and guaranteed — from €800. Design your day in a minute.
 finalCtaLabel: Design your day →
 finalCtaHref: /concierge-day
-stickyBarPrice: From €450
+stickyBarPrice: From €800
 stickyBarMeta: a private day · free cancellation up to 7 days before

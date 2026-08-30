@@ -1,4 +1,4 @@
-dayRate: 450
+dayRate: 800
 volumeDiscount:
   - minDays: 2
     discountPercent: 5.56

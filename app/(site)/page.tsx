@@ -277,7 +277,7 @@ export default async function HomePage() {
 
       {/* Mobile-only sticky action bar — thumb-reachable CTA for small screens */}
       <StickyBar
-        name={page?.stickyBarPrice ?? "From €450"}
+        name={page?.stickyBarPrice ?? "From €800"}
         meta={page?.stickyBarMeta ?? ""}
         ctaHref="/concierge-day"
         ctaLabel="Design your day →"

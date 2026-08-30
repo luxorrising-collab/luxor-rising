@@ -20,7 +20,7 @@ import styles from "./ConciergeDayPage.module.css";
 export const metadata: Metadata = {
   title: "The Signature Concierge Day",
   description:
-    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and not one decision to make. From €450.",
+    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and not one decision to make. From €800.",
 };
 
 const EXPERIENCES = [
@@ -452,7 +452,7 @@ export default async function ConciergeDayPage() {
             </p>
           </div>
           <DayConfigurator
-            dayRate={pricingRules?.dayRate ?? 450}
+            dayRate={pricingRules?.dayRate ?? 800}
             volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
               minDays: t.minDays ?? 0,
               discountPercent: t.discountPercent ?? 0,
@@ -483,7 +483,7 @@ export default async function ConciergeDayPage() {
           </p>
         </Reveal>
         <ValueStack
-          dayRate={pricingRules?.dayRate ?? 450}
+          dayRate={pricingRules?.dayRate ?? 800}
           volumeDiscount={(pricingRules?.volumeDiscount ?? []).map((t) => ({
             minDays: t.minDays ?? 0,
             discountPercent: t.discountPercent ?? 0,
@@ -658,7 +658,7 @@ export default async function ConciergeDayPage() {
           </div>
           <div className={styles.priceRow}>
             <span className="from">From</span>
-            <span className="amt">€{page?.startingPrice ?? 450}</span>
+            <span className="amt">€{page?.startingPrice ?? 800}</span>
             <span className="per">{page?.priceNote}</span>
           </div>
           <Link href="#design" className="btn btn-primary btn-lg">

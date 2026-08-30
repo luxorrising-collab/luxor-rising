@@ -99,7 +99,7 @@
 .social {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1.3rem;
 }
 .minimal .social {
   justify-content: center;
@@ -117,8 +117,8 @@
   transform: translateY(-1px);
 }
 .social svg {
-  width: 17px;
-  height: 17px;
+  width: 24px;
+  height: 24px;
 }
 
 /* minimal (concierge-day / medinet-habu) */

@@ -9,155 +9,155 @@ products:
   - key: "medinet-habu"
     name: "Medinet Habu, Before Anyone Else"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 375
     experienceSlug: "medinet-habu"
   - key: "valley-of-the-kings"
     name: "The Valley of the Kings, Tombs Chosen for You"
     category: "Temples & tombs"
-    finalPrice: 379
+    finalPrice: 390
     experienceSlug: "valley-of-the-kings"
   - key: "karnak-at-dawn"
     name: "Karnak in the Quiet Hour"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 380
     experienceSlug: "karnak-at-dawn"
   - key: "luxor-temple"
     name: "Luxor Temple at Golden Hour"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 360
     experienceSlug: "luxor-temple"
   - key: "hatshepsut-temple"
     name: "Hatshepsut & the Cliffs of Deir el-Bahari"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 360
     experienceSlug: "hatshepsut-temple"
   - key: "tutankhamun-tomb"
     name: "Inside Tutankhamun's Tomb (VIP)"
     category: "Temples & tombs"
-    finalPrice: 426
+    finalPrice: 430
     experienceSlug: "tutankhamun-tomb"
   - key: "nefertari-tomb"
     name: "Nefertari — Finest Painted Tomb on Earth"
     category: "Temples & tombs"
-    finalPrice: 288
+    finalPrice: 350
     experienceSlug: "nefertari-tomb"
   - key: "dendera-abydos"
     name: "Dendera & Abydos, the Drive Worth Taking"
     category: "Temples & tombs"
-    finalPrice: 514
+    finalPrice: 500
     experienceSlug: "dendera-abydos"
   - key: "luxor-by-night"
     name: "Luxor by Night — Temples Illuminated"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 370
     experienceSlug: "luxor-by-night"
   - key: "ramesseum-valley-of-queens"
     name: "The Ramesseum & the Valley of the Queens"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 350
     experienceSlug: "ramesseum-valley-of-queens"
   - key: "deir-el-medina"
     name: "Deir el-Medina — Tomb-Builders' Village"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 330
     experienceSlug: "deir-el-medina"
   - key: "deir-el-shelwit"
     name: "Deir el-Shelwit — Hidden Temple of Isis"
     category: "Temples & tombs"
-    finalPrice: 369
+    finalPrice: 320
     experienceSlug: "deir-el-shelwit"
   - key: "colossi-of-memnon"
     name: "The Colossi of Memnon, on the Way"
     category: "Temples & tombs"
-    finalPrice: 349
+    finalPrice: 290
     experienceSlug: "colossi-of-memnon"
   - key: "hot-air-balloon-luxor"
     name: "Sunrise Hot Air Balloon (per person)"
     category: "Nile & river"
-    finalPrice: 395
+    finalPrice: 400
     experienceSlug: "hot-air-balloon-luxor"
   - key: "hot-air-balloon-private-vip"
     name: "Private VIP Balloon — basket for two (per person)"
     category: "Nile & river"
-    finalPrice: 818
+    finalPrice: 850
     experienceSlug: "hot-air-balloon-private-vip"
   - key: "balloon-valley-of-the-kings"
     name: "Balloon & Valley of the Kings (per person)"
     category: "Nile & river"
-    finalPrice: 530
+    finalPrice: 550
     experienceSlug: "balloon-valley-of-the-kings"
   - key: "felucca-sunset-sail"
     name: "A Private Felucca at Golden Hour"
     category: "Nile & river"
-    finalPrice: 345
+    finalPrice: 350
     experienceSlug: "felucca-sunset-sail"
   - key: "nile-dinner-cruise"
     name: "Dinner on the Nile, Just Your Table"
     category: "Nile & river"
-    finalPrice: 365
+    finalPrice: 370
     experienceSlug: "nile-dinner-cruise"
   - key: "banana-island-felucca"
     name: "Banana Island by Felucca, with Lunch"
     category: "Nile & river"
-    finalPrice: 365
+    finalPrice: 360
     experienceSlug: "banana-island-felucca"
   - key: "private-desert-safari"
     name: "Private 4x4 Sunset Safari & Bedouin Dinner"
     category: "Desert & wild"
-    finalPrice: 405
+    finalPrice: 400
     experienceSlug: "private-desert-safari"
   - key: "the-private-desert-table-luxury-picnic"
     name: "The Private Desert Table (luxury picnic)"
     category: "Desert & wild"
-    finalPrice: 607
+    finalPrice: 600
     experienceSlug: ""
   - key: "desert-astronomy-night"
     name: "Stargazing in the Dunes (per person)"
     category: "Desert & wild"
-    finalPrice: 385
+    finalPrice: 380
     experienceSlug: "desert-astronomy-night"
   - key: "camel-bedouin-breakfast"
     name: "Camel & a Bedouin Breakfast"
     category: "Desert & wild"
-    finalPrice: 365
+    finalPrice: 360
     experienceSlug: "camel-bedouin-breakfast"
   - key: "reality-hunting"
     name: "Reality Hunting (local day)"
     category: "Desert & wild"
-    finalPrice: 456
+    finalPrice: 450
     experienceSlug: "reality-hunting"
   - key: "red-sea-boat-snorkelling"
     name: "Private Speedboat & Snorkelling (group)"
     category: "Hurghada — sea"
-    finalPrice: 738
+    finalPrice: 750
     experienceSlug: "red-sea-boat-snorkelling"
   - key: "private-yacht-red-sea"
     name: "Private Motor Yacht, Full Day (group)"
     category: "Hurghada — sea"
-    finalPrice: 1927
+    finalPrice: 1900
     experienceSlug: "private-yacht-red-sea"
   - key: "hurghada-to-luxor-crossing"
     name: "Hurghada -> Luxor Private Transfer"
     category: "Transfers"
-    finalPrice: 665
+    finalPrice: 650
     experienceSlug: "hurghada-to-luxor-crossing"
   - key: "full-day-private-driver-disposal"
     name: "Full-Day Private Driver (disposal)"
     category: "Transfers"
-    finalPrice: 435
+    finalPrice: 425
     experienceSlug: ""
   - key: "hurghada-airport-transfer"
     name: "Hurghada Airport Transfer"
     category: "Transfers"
-    finalPrice: 234
+    finalPrice: 225
     experienceSlug: ""
   - key: "photoshoot-photographer-own-camera-editing"
     name: "Photoshoot — photographer + OWN camera & editing"
     category: "Add-ons & services"
-    finalPrice: 564
+    finalPrice: 550
     experienceSlug: ""
   - key: "sailing-lesson-nile"
     name: "Sailing lesson on the Nile"
     category: "Nile & river"
-    finalPrice: 345
+    finalPrice: 350
     experienceSlug: "sailing-lesson-nile"

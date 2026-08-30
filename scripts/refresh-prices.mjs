@@ -106,7 +106,8 @@ for (let r = 15; r <= 52; r++) {
   const name = str(ws.getCell(`A${r}`)).trim();
   const category = str(ws.getCell(`B${r}`)).trim();
   if (!name || !category) continue; // category-header / blank rows have no B
-  const final = num(ws.getCell(`U${r}`));
+  // Prefer the prestige "Sell price" (col X); fall back to the cost-cascade FINAL (col U).
+  const final = num(ws.getCell(`X${r}`)) ?? num(ws.getCell(`U${r}`));
   if (final == null) continue;
   const slug = SLUG[name] ?? "";
   products.push({

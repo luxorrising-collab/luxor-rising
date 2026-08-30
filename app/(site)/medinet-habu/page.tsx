@@ -7,25 +7,34 @@ import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
 import { reader } from "@/lib/keystatic-reader";
+import { getFinalPrice, parseEuro } from "@/lib/pricing";
 
 const SLUG = "medinet-habu";
 
 async function getData() {
-  const [entry, globals, pricingRules] = await Promise.all([
+  const [entry, globals, pricingRules, finalPrice] = await Promise.all([
     reader.collections.experiences.read(SLUG, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
+    getFinalPrice(SLUG),
   ]);
   if (!entry) return null;
-  return { entry, globals, pricingRules };
+  const basePrice = finalPrice ?? entry.basePrice ?? 0;
+  const vst = parseEuro(entry.valueStackTotal);
+  const showAssembledTotal = vst != null && vst > basePrice;
+  return { entry, globals, pricingRules, basePrice, showAssembledTotal };
 }
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getData();
   if (!data) return {};
-  const { entry } = data;
-  const title = entry.metaTitle || entry.title;
-  const description = entry.metaDescription || entry.hook;
+  const { entry, basePrice } = data;
+  const swap = (s: string) =>
+    entry.basePrice && basePrice !== entry.basePrice
+      ? s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${basePrice}`)
+      : s;
+  const title = swap(entry.metaTitle || entry.title);
+  const description = swap(entry.metaDescription || entry.hook);
   return {
     title,
     description,
@@ -50,7 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MedinetHabuPage() {
   const data = await getData();
   if (!data) notFound();
-  const { entry, globals, pricingRules } = data;
+  const { entry, globals, pricingRules, basePrice, showAssembledTotal } = data;
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -121,7 +130,7 @@ export default async function MedinetHabuPage() {
         areaServed: "Luxor, Egypt",
         offers: {
           "@type": "Offer",
-          price: String(entry.basePrice ?? 0),
+          price: String(basePrice),
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
           url: "https://luxorrising.com/medinet-habu#book",
@@ -175,7 +184,7 @@ export default async function MedinetHabuPage() {
           <ExperienceConfigurator
             name="Medinet Habu"
             slug={SLUG}
-            basePrice={entry.basePrice ?? 0}
+            basePrice={basePrice}
             maxGuests={entry.maxGuests ?? 4}
             groupSupplement={entry.groupSupplement.map((t) => ({
               minGuests: t.minGuests ?? 0,
@@ -193,7 +202,8 @@ export default async function MedinetHabuPage() {
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}
         valueStackTotal={entry.valueStackTotal}
-        basePrice={entry.basePrice ?? 0}
+        showAssembledTotal={showAssembledTotal}
+        basePrice={basePrice}
         priceNote={entry.priceNote}
         pricePerPerson={entry.pricePerPerson || undefined}
         faq={entry.faq.map((f) => ({ q: f.question, a: f.answer }))}
@@ -221,7 +231,7 @@ export default async function MedinetHabuPage() {
         reviewAverage={reviewAverage}
         reviewCount={reviewCount}
         finalTitle="Begin where everything began."
-        finalText={`Private, certified-guided, and arranged end to end — from €${entry.basePrice ?? 0}. Reserve your hour at the mound.`}
+        finalText={`Private, certified-guided, and arranged end to end — from €${basePrice}. Reserve your hour at the mound.`}
         finalCtaHref="#book"
         finalCtaLabel="Reserve this experience →"
       />

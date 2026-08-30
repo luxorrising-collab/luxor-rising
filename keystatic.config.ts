@@ -1416,6 +1416,42 @@ export default config({
         }),
       },
     }),
+    pricing: singleton({
+      label: "Product prices",
+      path: "content/pricing/",
+      schema: {
+        lastSyncedFromChart: fields.text({
+          label: "Last synced from chart",
+          description: "Set automatically by scripts/refresh-prices.mjs. Read-only reference.",
+        }),
+        chartSource: fields.text({
+          label: "Chart source file",
+          description: "Which internal workbook the prices were last read from.",
+        }),
+        products: fields.array(
+          fields.object({
+            key: fields.text({ label: "Key", description: "Stable identifier (usually the experience slug)." }),
+            name: fields.text({ label: "Product" }),
+            category: fields.text({ label: "Category" }),
+            finalPrice: fields.number({
+              label: "Final price (€)",
+              description: "The guest-facing FINAL PRODUCT PRICE from the pricing chart.",
+              validation: { min: 0 },
+            }),
+            experienceSlug: fields.text({
+              label: "Linked experience slug (optional)",
+              description: "content/experiences/<slug> this price maps to, if any.",
+            }),
+          }),
+          {
+            label: "Products",
+            itemLabel: (p) =>
+              `${p.fields.name.value || "Product"} — €${p.fields.finalPrice.value ?? 0}`,
+          }
+        ),
+      },
+    }),
+
     tracking: singleton({
       label: "Tracking & analytics",
       path: "content/tracking/",

@@ -1,0 +1,158 @@
+lastSyncedFromChart: "2026-08-30"
+chartSource: "Luxor_Rising_Modely_naklady_ROAS.xlsx"
+products:
+  - key: "design-your-day"
+    name: "Design your day (Concierge Day)"
+    category: "Concierge day"
+    finalPrice: 450
+    experienceSlug: ""
+  - key: "medinet-habu"
+    name: "Medinet Habu, Before Anyone Else"
+    category: "Temples & tombs"
+    finalPrice: 263
+    experienceSlug: "medinet-habu"
+  - key: "valley-of-the-kings"
+    name: "The Valley of the Kings, Tombs Chosen for You"
+    category: "Temples & tombs"
+    finalPrice: 298
+    experienceSlug: "valley-of-the-kings"
+  - key: "karnak-at-dawn"
+    name: "Karnak in the Quiet Hour"
+    category: "Temples & tombs"
+    finalPrice: 288
+    experienceSlug: "karnak-at-dawn"
+  - key: "luxor-temple"
+    name: "Luxor Temple at Golden Hour"
+    category: "Temples & tombs"
+    finalPrice: 281
+    experienceSlug: "luxor-temple"
+  - key: "hatshepsut-temple"
+    name: "Hatshepsut & the Cliffs of Deir el-Bahari"
+    category: "Temples & tombs"
+    finalPrice: 275
+    experienceSlug: "hatshepsut-temple"
+  - key: "tutankhamun-tomb"
+    name: "Inside Tutankhamun's Tomb (VIP)"
+    category: "Temples & tombs"
+    finalPrice: 345
+    experienceSlug: "tutankhamun-tomb"
+  - key: "nefertari-tomb"
+    name: "Nefertari — Finest Painted Tomb on Earth"
+    category: "Temples & tombs"
+    finalPrice: 263
+    experienceSlug: "nefertari-tomb"
+  - key: "dendera-abydos"
+    name: "Dendera & Abydos, the Drive Worth Taking"
+    category: "Temples & tombs"
+    finalPrice: 450
+    experienceSlug: "dendera-abydos"
+  - key: "luxor-by-night"
+    name: "Luxor by Night — Temples Illuminated"
+    category: "Temples & tombs"
+    finalPrice: 281
+    experienceSlug: "luxor-by-night"
+  - key: "ramesseum-valley-of-queens"
+    name: "The Ramesseum & the Valley of the Queens"
+    category: "Temples & tombs"
+    finalPrice: 277
+    experienceSlug: "ramesseum-valley-of-queens"
+  - key: "deir-el-medina"
+    name: "Deir el-Medina — Tomb-Builders' Village"
+    category: "Temples & tombs"
+    finalPrice: 263
+    experienceSlug: "deir-el-medina"
+  - key: "deir-el-shelwit"
+    name: "Deir el-Shelwit — Hidden Temple of Isis"
+    category: "Temples & tombs"
+    finalPrice: 255
+    experienceSlug: "deir-el-shelwit"
+  - key: "colossi-of-memnon"
+    name: "The Colossi of Memnon, on the Way"
+    category: "Temples & tombs"
+    finalPrice: 248
+    experienceSlug: "colossi-of-memnon"
+  - key: "hot-air-balloon-luxor"
+    name: "Sunrise Hot Air Balloon (per person)"
+    category: "Nile & river"
+    finalPrice: 343
+    experienceSlug: "hot-air-balloon-luxor"
+  - key: "hot-air-balloon-private-vip"
+    name: "Private VIP Balloon — basket for two (per person)"
+    category: "Nile & river"
+    finalPrice: 766
+    experienceSlug: "hot-air-balloon-private-vip"
+  - key: "balloon-valley-of-the-kings"
+    name: "Balloon & Valley of the Kings (per person)"
+    category: "Nile & river"
+    finalPrice: 478
+    experienceSlug: "balloon-valley-of-the-kings"
+  - key: "felucca-sunset-sail"
+    name: "A Private Felucca at Golden Hour"
+    category: "Nile & river"
+    finalPrice: 292
+    experienceSlug: "felucca-sunset-sail"
+  - key: "nile-dinner-cruise"
+    name: "Dinner on the Nile, Just Your Table"
+    category: "Nile & river"
+    finalPrice: 312
+    experienceSlug: "nile-dinner-cruise"
+  - key: "banana-island-felucca"
+    name: "Banana Island by Felucca, with Lunch"
+    category: "Nile & river"
+    finalPrice: 292
+    experienceSlug: "banana-island-felucca"
+  - key: "private-desert-safari"
+    name: "Private 4x4 Sunset Safari & Bedouin Dinner"
+    category: "Desert & wild"
+    finalPrice: 353
+    experienceSlug: "private-desert-safari"
+  - key: "the-private-desert-table-luxury-picnic"
+    name: "The Private Desert Table (luxury picnic)"
+    category: "Desert & wild"
+    finalPrice: 554
+    experienceSlug: ""
+  - key: "desert-astronomy-night"
+    name: "Stargazing in the Dunes (per person)"
+    category: "Desert & wild"
+    finalPrice: 333
+    experienceSlug: "desert-astronomy-night"
+  - key: "camel-bedouin-breakfast"
+    name: "Camel & a Bedouin Breakfast"
+    category: "Desert & wild"
+    finalPrice: 312
+    experienceSlug: "camel-bedouin-breakfast"
+  - key: "reality-hunting"
+    name: "Reality Hunting (local day)"
+    category: "Desert & wild"
+    finalPrice: 403
+    experienceSlug: "reality-hunting"
+  - key: "red-sea-boat-snorkelling"
+    name: "Private Speedboat & Snorkelling (group)"
+    category: "Hurghada — sea"
+    finalPrice: 685
+    experienceSlug: "red-sea-boat-snorkelling"
+  - key: "private-yacht-red-sea"
+    name: "Private Motor Yacht, Full Day (group)"
+    category: "Hurghada — sea"
+    finalPrice: 1875
+    experienceSlug: "private-yacht-red-sea"
+  - key: "hurghada-to-luxor-crossing"
+    name: "Hurghada -> Luxor Private Transfer"
+    category: "Transfers"
+    finalPrice: 585
+    experienceSlug: "hurghada-to-luxor-crossing"
+  - key: "full-day-private-driver-disposal"
+    name: "Full-Day Private Driver (disposal)"
+    category: "Transfers"
+    finalPrice: 355
+    experienceSlug: ""
+  - key: "hurghada-airport-transfer"
+    name: "Hurghada Airport Transfer"
+    category: "Transfers"
+    finalPrice: 153
+    experienceSlug: ""
+  - key: "photoshoot-photographer-own-camera-editing"
+    name: "Photoshoot — photographer + OWN camera & editing"
+    category: "Add-ons & services"
+    finalPrice: 323
+    experienceSlug: ""

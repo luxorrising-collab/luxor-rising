@@ -39,6 +39,8 @@ export type ExperienceTemplateProps = {
   configurator: React.ReactNode;
   valueStackRows: ValueStackRow[];
   valueStackTotal: string;
+  /** Hide the struck-through "assembled separately" total when it would sit below our price. */
+  showAssembledTotal?: boolean;
   basePrice: number;
   priceNote: string;
   pricePerPerson?: string;
@@ -89,6 +91,7 @@ export default function ExperienceTemplate({
   configurator,
   valueStackRows,
   valueStackTotal,
+  showAssembledTotal = true,
   basePrice,
   priceNote,
   pricePerPerson,
@@ -288,7 +291,7 @@ export default function ExperienceTemplate({
                   <span className="v">{row.price}</span>
                 </div>
               ))}
-              {valueStackTotal && (
+              {valueStackTotal && showAssembledTotal && (
                 <div className={`${styles.stackRow} ${styles.tot}`}>
                   <span>Assembled separately</span>
                   <span className="v">

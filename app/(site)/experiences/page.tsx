@@ -8,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import StickyBar from "@/components/StickyBar";
 import ExperiencesClient, { type CmsExperienceItem } from "./ExperiencesClient";
 import { reader } from "@/lib/keystatic-reader";
+import { getFinalPriceMap } from "@/lib/pricing";
 import styles from "./ExperiencesPage.module.css";
 
 export const metadata: Metadata = {
@@ -49,8 +50,14 @@ const CURATED_PRODUCTS = [
 ];
 
 export default async function ExperiencesPage() {
-  const allExperiences = await reader.collections.experiences.all();
+  const [allExperiences, priceMap] = await Promise.all([
+    reader.collections.experiences.all(),
+    getFinalPriceMap(),
+  ]);
   const activeExperiences = allExperiences.filter(({ entry }) => entry.isActive && entry.title);
+  // Single source of truth: the Product-prices singleton wins over the stored basePrice.
+  const priceOf = (slug: string, entry: { basePrice?: number | null }) =>
+    priceMap.get(slug) ?? entry.basePrice ?? 0;
 
   const cmsItems: CmsExperienceItem[] = activeExperiences.map(({ slug, entry }) => ({
     // Medinet Habu lives at the top level; link straight there rather than
@@ -67,7 +74,7 @@ export default async function ExperiencesPage() {
     // At-a-glance facts reduce uncertainty (duration + group size are the two
     // questions every buyer has) — a small, proven conversion lift.
     facts: [entry.duration, entry.groupSize].filter((f): f is string => Boolean(f)),
-    priceValue: entry.priceType === "included" ? "Included" : `€${entry.basePrice ?? 0}`,
+    priceValue: entry.priceType === "included" ? "Included" : `€${priceOf(slug, entry)}`,
     priceLabel: entry.priceType === "included" ? "Included" : "From",
     priceNote:
       entry.priceType === "included"
@@ -90,7 +97,7 @@ export default async function ExperiencesPage() {
     image: entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined,
     offers: {
       "@type": "Offer",
-      price: String(entry.basePrice ?? 0),
+      price: String(priceOf(slug, entry)),
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
       url: `https://luxorrising.com/experiences/${slug}#book`,

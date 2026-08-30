@@ -7,16 +7,25 @@ import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
 import { reader } from "@/lib/keystatic-reader";
+import { getFinalPrice, parseEuro } from "@/lib/pricing";
 
 async function getData(slug: string) {
-  const [entry, globals, pricingRules] = await Promise.all([
+  const [entry, globals, pricingRules, finalPrice] = await Promise.all([
     reader.collections.experiences.read(slug, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
+    getFinalPrice(slug),
   ]);
   // Inactive experiences 404 rather than render at their direct URL.
   if (!entry || !entry.isActive) return null;
-  return { entry, globals, pricingRules };
+  // Single source of truth: the Product-prices singleton wins when it has a
+  // value for this product, so every price anchor below stays consistent.
+  const basePrice = finalPrice ?? entry.basePrice ?? 0;
+  const vst = parseEuro(entry.valueStackTotal);
+  // Only show the struck-through "assembled separately" total while it stays
+  // above our price — otherwise it reads as crossing out a smaller number.
+  const showAssembledTotal = vst != null && vst > basePrice;
+  return { entry, globals, pricingRules, basePrice, showAssembledTotal };
 }
 
 export async function generateMetadata({
@@ -27,9 +36,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const data = await getData(slug);
   if (!data) return {};
-  const { entry } = data;
-  const title = entry.metaTitle || entry.title;
-  const description = entry.metaDescription || entry.hook;
+  const { entry, basePrice } = data;
+  // Keep the "from €X" figure in SEO title/description consistent with the live price.
+  const swap = (s: string) =>
+    entry.basePrice && basePrice !== entry.basePrice
+      ? s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${basePrice}`)
+      : s;
+  const title = swap(entry.metaTitle || entry.title);
+  const description = swap(entry.metaDescription || entry.hook);
   return {
     title,
     description,
@@ -57,7 +71,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
 
   const data = await getData(slug);
   if (!data) notFound();
-  const { entry, globals, pricingRules } = data;
+  const { entry, globals, pricingRules, basePrice, showAssembledTotal } = data;
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -118,7 +132,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         areaServed: "Luxor, Egypt",
         offers: {
           "@type": "Offer",
-          price: String(entry.basePrice ?? 0),
+          price: String(basePrice),
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
           url: `https://luxorrising.com/experiences/${slug}#book`,
@@ -161,7 +175,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           <ExperienceConfigurator
             name={entry.name || entry.title}
             slug={slug}
-            basePrice={entry.basePrice ?? 0}
+            basePrice={basePrice}
             maxGuests={entry.maxGuests ?? 4}
             groupSupplement={entry.groupSupplement.map((t) => ({
               minGuests: t.minGuests ?? 0,
@@ -179,7 +193,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}
         valueStackTotal={entry.valueStackTotal}
-        basePrice={entry.basePrice ?? 0}
+        showAssembledTotal={showAssembledTotal}
+        basePrice={basePrice}
         priceNote={entry.priceNote}
         pricePerPerson={entry.pricePerPerson || undefined}
         faq={entry.faq.map((f) => ({ q: f.question, a: f.answer }))}
@@ -207,7 +222,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         reviewAverage={reviewAverage}
         reviewCount={reviewCount}
         finalTitle={`Reserve ${entry.title}`}
-        finalText={`Private, certified-guided, and arranged end to end — from €${entry.basePrice ?? 0}.`}
+        finalText={`Private, certified-guided, and arranged end to end — from €${basePrice}.`}
         finalCtaHref="#book"
         finalCtaLabel="Reserve this experience →"
       />

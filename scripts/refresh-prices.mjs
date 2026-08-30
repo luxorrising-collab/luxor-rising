@@ -117,6 +117,22 @@ for (let r = 15; r <= 51; r++) {
   });
 }
 
+// "Sailing lesson on the Nile" isn't a chart row, but by the same cascade it is
+// structurally a private felucca + instruction — identical L0 layers — so it
+// carries the felucca's final. Derive it so it tracks any felucca cost change.
+{
+  const felucca = products.find((p) => p.experienceSlug === "felucca-sunset-sail");
+  if (felucca) {
+    products.push({
+      key: "sailing-lesson-nile",
+      name: "Sailing lesson on the Nile",
+      category: "Nile & river",
+      finalPrice: felucca.finalPrice,
+      experienceSlug: "sailing-lesson-nile",
+    });
+  }
+}
+
 const q = (s) => JSON.stringify(s); // valid YAML double-quoted scalar
 const today = new Date().toISOString().slice(0, 10);
 let yaml = "";

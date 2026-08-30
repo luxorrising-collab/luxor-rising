@@ -156,3 +156,8 @@ products:
     category: "Add-ons & services"
     finalPrice: 564
     experienceSlug: ""
+  - key: "sailing-lesson-nile"
+    name: "Sailing lesson on the Nile"
+    category: "Nile & river"
+    finalPrice: 345
+    experienceSlug: "sailing-lesson-nile"

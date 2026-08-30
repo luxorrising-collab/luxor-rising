@@ -148,7 +148,7 @@ export default async function ConciergeDayPage() {
     ["night in Luxor", priceBySlug("luxor-by-night")],
     ["photoshoot", 120, true],
     ["balloon", priceBySlug("hot-air-balloon-luxor")],
-    ["Sailing lesson", priceBySlug("sailing-lesson-nile"), true],
+    ["Sailing lesson", priceBySlug("sailing-lesson-nile")],
     ["Egyptologist", 140, true],
     ["air-conditioned transfers", 90, true],
     ["Hurghada", priceBySlug("hurghada-to-luxor-crossing")],

@@ -173,7 +173,7 @@ export default function ExperiencesClient({
             <span>
               <b>From €{conciergeDayPrice}</b> / day
             </span>
-            <span>Private · 1–8 guests</span>
+            <span>Private · 1–4 guests</span>
             <span>Several experiences, one day</span>
           </div>
           <Link href="/concierge-day" className="btn btn-primary">

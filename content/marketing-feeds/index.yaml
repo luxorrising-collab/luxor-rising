@@ -1,0 +1,4 @@
+enabled: true
+metaFeedUrl: https://luxorrising.com/api/feeds/meta
+googleFeedUrl: https://luxorrising.com/api/feeds/google
+refreshUrl: https://luxorrising.com/api/feeds/refresh

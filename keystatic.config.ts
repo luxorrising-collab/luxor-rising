@@ -1452,6 +1452,34 @@ export default config({
       },
     }),
 
+    marketingFeeds: singleton({
+      label: "Marketing feeds (Meta & Google)",
+      path: "content/marketing-feeds/",
+      schema: {
+        enabled: fields.checkbox({
+          label: "Serve the product feeds",
+          defaultValue: true,
+          description:
+            "When on, the two feed URLs below return the live catalogue. Turn off to disable them.",
+        }),
+        metaFeedUrl: fields.url({
+          label: "Meta catalogue feed URL",
+          description:
+            "Meta Commerce Manager → Catalogue → Data sources → Add a scheduled feed, and paste this URL.",
+        }),
+        googleFeedUrl: fields.url({
+          label: "Google page feed URL (Performance Max)",
+          description:
+            "Google Ads → Tools → Business data → Page feeds → upload/schedule this URL, then attach it to your Performance Max campaign (final-URL expansion).",
+        }),
+        refreshUrl: fields.url({
+          label: "Manual refresh",
+          description:
+            "Open this link to force both feeds to regenerate immediately after a price or product change.",
+        }),
+      },
+    }),
+
     tracking: singleton({
       label: "Tracking & analytics",
       path: "content/tracking/",

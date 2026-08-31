@@ -14,7 +14,7 @@ import styles from "./ExperiencesPage.module.css";
 export const metadata: Metadata = {
   title: "Experiences in Luxor — Private, Curated, One Day at a Time",
   description:
-    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your concierge, delivered by licensed local specialists. From €640 a day.",
+    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your concierge, delivered by licensed local specialists. From €800 a day.",
   alternates: { canonical: "/experiences" },
   openGraph: {
     type: "website",
@@ -45,7 +45,7 @@ const CURATED_PRODUCTS = [
     description:
       "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one concierge handling everything.",
     brand: BRAND,
-    offers: { "@type": "Offer", price: "640", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+    offers: { "@type": "Offer", price: "800", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
   },
 ];
 
@@ -58,6 +58,9 @@ export default async function ExperiencesPage() {
   // Single source of truth: the Product-prices singleton wins over the stored basePrice.
   const priceOf = (slug: string, entry: { basePrice?: number | null }) =>
     priceMap.get(slug) ?? entry.basePrice ?? 0;
+  // The Concierge Day ("Design your day") price, fed live into the "Start here"
+  // callout, the sticky bar and structured data so it never drifts.
+  const conciergeDayPrice = priceMap.get("design-your-day") ?? 800;
 
   const cmsItems: CmsExperienceItem[] = activeExperiences.map(({ slug, entry }) => ({
     // Medinet Habu lives at the top level; link straight there rather than
@@ -161,7 +164,7 @@ export default async function ExperiencesPage() {
       </div>
 
       <main className="wrap">
-        <ExperiencesClient cmsItems={cmsItems} />
+        <ExperiencesClient cmsItems={cmsItems} conciergeDayPrice={conciergeDayPrice} />
       </main>
 
       {/* HOW IT WORKS */}
@@ -216,7 +219,7 @@ export default async function ExperiencesPage() {
       </div>
 
       <StickyBar
-        name="From €640"
+        name={`From €${conciergeDayPrice}`}
         meta="a private day · free cancellation up to 7 days before"
         ctaHref="/concierge-day"
         ctaLabel="Design your day →"

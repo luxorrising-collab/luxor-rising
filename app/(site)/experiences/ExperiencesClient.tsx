@@ -110,7 +110,13 @@ function matches(item: Item, filter: string, locs: Set<string>) {
   return catOk && locs.has(item.loc ?? "luxor");
 }
 
-export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExperienceItem[] }) {
+export default function ExperiencesClient({
+  cmsItems = [],
+  conciergeDayPrice = 800,
+}: {
+  cmsItems?: CmsExperienceItem[];
+  conciergeDayPrice?: number;
+}) {
   const [filter, setFilter] = useState("all");
   // Both destinations on by default; you can toggle one off (never both).
   const [locs, setLocs] = useState<Set<string>>(() => new Set(["luxor", "hurghada"]));
@@ -165,7 +171,7 @@ export default function ExperiencesClient({ cmsItems = [] }: { cmsItems?: CmsExp
           </p>
           <div className={styles.conciergeMeta}>
             <span>
-              <b>From €640</b> / day
+              <b>From €{conciergeDayPrice}</b> / day
             </span>
             <span>Private · 1–8 guests</span>
             <span>Several experiences, one day</span>

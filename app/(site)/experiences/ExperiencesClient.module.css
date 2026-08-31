@@ -118,16 +118,13 @@
 .conciergeMeta b {
   color: var(--color-gold-deep);
 }
-/* Skewed "journey" strip — a one-line visual of a concierge day's arc,
-   echoing the design-your-day progress bar. Each panel is skewed; the
-   image and label are counter-skewed so only the panel edges angle. */
+/* "Journey" filmstrip — a one-line visual of a concierge day's arc: five
+   clean panels, each a real experience image with its step label. */
 .journey {
-  position: relative;
   display: flex;
   gap: 6px;
   overflow: hidden;
   border-radius: 8px;
-  background: var(--color-cream-deep);
   height: clamp(190px, 24vw, 240px);
 }
 .jSeg {
@@ -135,19 +132,11 @@
   flex: 1;
   overflow: hidden;
   border-radius: 4px;
-  transform: skewX(-9deg);
-}
-/* pull the outer panels past the frame so the angled ends fill the corners */
-.jSeg:first-child {
-  margin-left: -34px;
-}
-.jSeg:last-child {
-  margin-right: -34px;
+  background: var(--color-cream-deep);
 }
 .jSegImg {
   position: absolute;
   inset: 0;
-  transform: skewX(9deg) scale(1.18);
 }
 .jSegImg :global(img) {
   object-fit: cover;
@@ -158,7 +147,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, rgba(18, 11, 5, 0) 42%, rgba(18, 11, 5, 0.74) 100%);
+  background: linear-gradient(180deg, rgba(18, 11, 5, 0) 48%, rgba(18, 11, 5, 0.62) 100%);
 }
 .jSegLabel {
   position: absolute;
@@ -166,22 +155,22 @@
   right: 0;
   bottom: 0;
   z-index: 2;
-  transform: skewX(9deg);
-  padding: 0.7rem 0.6rem 0.7rem 0.85rem;
+  padding: 0.6rem 0.6rem 0.65rem 0.7rem;
   color: #fff;
 }
 .jNum {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   letter-spacing: 0.16em;
   color: var(--color-gold-soft);
   margin-bottom: 0.15rem;
 }
 .jName {
   font-family: var(--font-display);
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   line-height: 1.1;
   color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
 }
 @media (max-width: 720px) {
   .concierge {
@@ -202,11 +191,5 @@
   }
   .jName {
     font-size: 0.72rem;
-  }
-  .jSeg:first-child {
-    margin-left: -22px;
-  }
-  .jSeg:last-child {
-    margin-right: -22px;
   }
 }

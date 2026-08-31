@@ -37,6 +37,26 @@ in the singleton for one-place visibility.
 active product — the Egyptologist, generic transfers, the photo add-on — are
 flagged **"(estimate)"** next to the price.
 
+## Group & multi-day scaling
+
+Each **extra guest** adds a fixed supplement to the base (the party shares the
+fixed logistics, so the per-person rate falls as guests are added). The
+supplement is derived per product from which cost lines scale:
+
+- **Guide (Ahmed):** +20% per extra guest · **Meal & water:** base covers Ahmed
+  + one guest, +50% per extra guest · **Per-person entries** (temples, balloon
+  seats): × guests.
+- **Flat (don't scale):** Egyptologist, the car/transfer, whole-boat or
+  whole-group activities (felucca, yacht, desert table), tips.
+
+Applied in Keystatic as `groupSupplement`: **Design-your-day = +€155 / guest /
+day** (`content/pricing-rules`), and a per-experience value on each product
+(e.g. Valley of the Kings +€100, a balloon seat +€200, a whole-boat felucca
++€35). **Extra days** multiply the daily price, with the volume discount in
+`pricing-rules` (2 days −5.56%, 3 −11.11%, 4 −12.22%). The full guest×day grids
+live in the private chart's **"DYD price logic"** and **"Single exp — guests"**
+sheets.
+
 ---
 
 ## Price list

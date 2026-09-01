@@ -1,7 +1,7 @@
 # Luxor Rising — Product prices
 
 Current guest-facing prices for every product, and how the pricing system works.
-_Last updated: 2026-08-30._
+_Last updated: 2026-09-01._
 
 > These are the **sell prices only**. The internal cost model (Ahmed's rates, the
 > cost cascade, margins) lives in the private workbook at
@@ -75,16 +75,16 @@ sheets.
 | Medinet Habu, Before Anyone Else | €375 |
 | The Valley of the Kings, Tombs Chosen for You | €390 |
 | Karnak in the Quiet Hour | €380 |
-| Luxor Temple at Golden Hour | €360 |
-| Hatshepsut & the Cliffs of Deir el-Bahari | €360 |
+| Luxor Temple at Golden Hour | €375 |
+| Hatshepsut & the Cliffs of Deir el-Bahari | €375 |
 | Inside Tutankhamun's Tomb (VIP) | €430 |
 | Nefertari — Finest Painted Tomb on Earth | €350 |
-| Dendera & Abydos, the Drive Worth Taking | €500 |
+| Dendera & Abydos, the Drive Worth Taking | €525 |
 | Luxor by Night — Temples Illuminated | €370 |
-| The Ramesseum & the Valley of the Queens | €350 |
-| Deir el-Medina — Tomb-Builders' Village | €330 |
-| Deir el-Shelwit — Hidden Temple of Isis | €320 |
-| The Colossi of Memnon, on the Way | €290 |
+| The Ramesseum & the Valley of the Queens | €375 |
+| Deir el-Medina — Tomb-Builders' Village | €375 |
+| Deir el-Shelwit — Hidden Temple of Isis | €375 |
+| The Colossi of Memnon, on the Way | €350 |
 
 ### Nile & river
 
@@ -95,36 +95,36 @@ sheets.
 | Balloon & Valley of the Kings (per person) | €550 |
 | A Private Felucca at Golden Hour | €350 |
 | Dinner on the Nile, Just Your Table | €370 |
-| Banana Island by Felucca, with Lunch | €360 |
+| Banana Island by Felucca, with Lunch | €375 |
 | Sailing lesson on the Nile | €350 |
 
 ### Desert & wild
 
 | Product | Price |
 |---|--:|
-| Private 4x4 Sunset Safari & Bedouin Dinner | €400 |
-| The Private Desert Table (luxury picnic) | €600 |
-| Stargazing in the Dunes (per person) | €380 |
-| Camel & a Bedouin Breakfast | €360 |
-| Reality Hunting (local day) | €450 |
+| Private 4x4 Sunset Safari & Bedouin Dinner | €425 |
+| The Private Desert Table (luxury picnic) | €625 |
+| Stargazing in the Dunes (per person) | €400 |
+| Camel & a Bedouin Breakfast | €375 |
+| Reality Hunting (local day) | €475 |
 
 ### Hurghada — sea
 
 | Product | Price |
 |---|--:|
 | Private Speedboat & Snorkelling (group) | €750 |
-| Private Motor Yacht, Full Day (group) | €1,900 |
+| Private Motor Yacht, Full Day (group) | €1,950 |
 
 ### Transfers
 
 | Product | Price |
 |---|--:|
-| Hurghada → Luxor Private Transfer | €650 |
-| Full-Day Private Driver (disposal) | €425 |
-| Hurghada Airport Transfer | €225 |
+| Hurghada -> Luxor Private Transfer | €675 |
+| Full-Day Private Driver (disposal) | €450 |
+| Hurghada Airport Transfer | €250 |
 
 ### Add-ons & services
 
 | Product | Price |
 |---|--:|
-| Photoshoot — photographer + own camera & editing | €550 |
+| Photoshoot — photographer + OWN camera & editing | €575 |

@@ -1,4 +1,4 @@
-lastSyncedFromChart: "2026-08-30"
+lastSyncedFromChart: "2026-09-01"
 chartSource: "Luxor_Rising_Modely_naklady_ROAS.xlsx"
 products:
   - key: "design-your-day"
@@ -24,12 +24,12 @@ products:
   - key: "luxor-temple"
     name: "Luxor Temple at Golden Hour"
     category: "Temples & tombs"
-    finalPrice: 360
+    finalPrice: 375
     experienceSlug: "luxor-temple"
   - key: "hatshepsut-temple"
     name: "Hatshepsut & the Cliffs of Deir el-Bahari"
     category: "Temples & tombs"
-    finalPrice: 360
+    finalPrice: 375
     experienceSlug: "hatshepsut-temple"
   - key: "tutankhamun-tomb"
     name: "Inside Tutankhamun's Tomb (VIP)"
@@ -44,7 +44,7 @@ products:
   - key: "dendera-abydos"
     name: "Dendera & Abydos, the Drive Worth Taking"
     category: "Temples & tombs"
-    finalPrice: 500
+    finalPrice: 525
     experienceSlug: "dendera-abydos"
   - key: "luxor-by-night"
     name: "Luxor by Night — Temples Illuminated"
@@ -54,22 +54,22 @@ products:
   - key: "ramesseum-valley-of-queens"
     name: "The Ramesseum & the Valley of the Queens"
     category: "Temples & tombs"
-    finalPrice: 350
+    finalPrice: 375
     experienceSlug: "ramesseum-valley-of-queens"
   - key: "deir-el-medina"
     name: "Deir el-Medina — Tomb-Builders' Village"
     category: "Temples & tombs"
-    finalPrice: 330
+    finalPrice: 375
     experienceSlug: "deir-el-medina"
   - key: "deir-el-shelwit"
     name: "Deir el-Shelwit — Hidden Temple of Isis"
     category: "Temples & tombs"
-    finalPrice: 320
+    finalPrice: 375
     experienceSlug: "deir-el-shelwit"
   - key: "colossi-of-memnon"
     name: "The Colossi of Memnon, on the Way"
     category: "Temples & tombs"
-    finalPrice: 290
+    finalPrice: 350
     experienceSlug: "colossi-of-memnon"
   - key: "hot-air-balloon-luxor"
     name: "Sunrise Hot Air Balloon (per person)"
@@ -99,32 +99,32 @@ products:
   - key: "banana-island-felucca"
     name: "Banana Island by Felucca, with Lunch"
     category: "Nile & river"
-    finalPrice: 360
+    finalPrice: 375
     experienceSlug: "banana-island-felucca"
   - key: "private-desert-safari"
     name: "Private 4x4 Sunset Safari & Bedouin Dinner"
     category: "Desert & wild"
-    finalPrice: 400
+    finalPrice: 425
     experienceSlug: "private-desert-safari"
   - key: "the-private-desert-table-luxury-picnic"
     name: "The Private Desert Table (luxury picnic)"
     category: "Desert & wild"
-    finalPrice: 600
+    finalPrice: 625
     experienceSlug: ""
   - key: "desert-astronomy-night"
     name: "Stargazing in the Dunes (per person)"
     category: "Desert & wild"
-    finalPrice: 380
+    finalPrice: 400
     experienceSlug: "desert-astronomy-night"
   - key: "camel-bedouin-breakfast"
     name: "Camel & a Bedouin Breakfast"
     category: "Desert & wild"
-    finalPrice: 360
+    finalPrice: 375
     experienceSlug: "camel-bedouin-breakfast"
   - key: "reality-hunting"
     name: "Reality Hunting (local day)"
     category: "Desert & wild"
-    finalPrice: 450
+    finalPrice: 475
     experienceSlug: "reality-hunting"
   - key: "red-sea-boat-snorkelling"
     name: "Private Speedboat & Snorkelling (group)"
@@ -134,27 +134,27 @@ products:
   - key: "private-yacht-red-sea"
     name: "Private Motor Yacht, Full Day (group)"
     category: "Hurghada — sea"
-    finalPrice: 1900
+    finalPrice: 1950
     experienceSlug: "private-yacht-red-sea"
   - key: "hurghada-to-luxor-crossing"
     name: "Hurghada -> Luxor Private Transfer"
     category: "Transfers"
-    finalPrice: 650
+    finalPrice: 675
     experienceSlug: "hurghada-to-luxor-crossing"
   - key: "full-day-private-driver-disposal"
     name: "Full-Day Private Driver (disposal)"
     category: "Transfers"
-    finalPrice: 425
+    finalPrice: 450
     experienceSlug: ""
   - key: "hurghada-airport-transfer"
     name: "Hurghada Airport Transfer"
     category: "Transfers"
-    finalPrice: 225
+    finalPrice: 250
     experienceSlug: ""
   - key: "photoshoot-photographer-own-camera-editing"
     name: "Photoshoot — photographer + OWN camera & editing"
     category: "Add-ons & services"
-    finalPrice: 550
+    finalPrice: 575
     experienceSlug: ""
   - key: "sailing-lesson-nile"
     name: "Sailing lesson on the Nile"

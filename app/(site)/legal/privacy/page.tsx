@@ -30,13 +30,7 @@ export default function PrivacyPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Privacy Policy
           </h1>
-          <p className={styles.updated}>Last updated 12 August 2026</p>
-
-          <div className={styles.ph}>
-            <b>Before go-live:</b> fill the legal entity, registered address and a
-            dedicated privacy contact email, confirm the retention periods, and
-            have this reviewed by a lawyer for your jurisdiction.
-          </div>
+          <p className={styles.updated}>Last updated 1 September 2026</p>
 
           <p className={styles.lead}>
             We collect only what we need to arrange your trip and run the site, we

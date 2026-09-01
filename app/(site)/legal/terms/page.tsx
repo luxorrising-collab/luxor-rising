@@ -30,13 +30,7 @@ export default function TermsPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Terms &amp; Conditions
           </h1>
-          <p className={styles.updated}>Last updated 12 August 2026</p>
-
-          <div className={styles.ph}>
-            <b>Before go-live:</b> fill the bracketed values (legal entity,
-            registered address, governing law) and have this reviewed by a lawyer
-            for your jurisdiction (Egypt + the EU/UK markets you sell to).
-          </div>
+          <p className={styles.updated}>Last updated 1 September 2026</p>
 
           <p className={styles.lead}>
             These terms govern your booking with Luxor Rising. By reserving an
@@ -124,6 +118,18 @@ export default function TermsPage() {
             weather, crowds, site access or safety — without reducing the value of
             the experience. Descriptions and images are indicative.
           </p>
+          <p>
+            The experiences sold on this site are <strong>single-day experiences
+            without overnight accommodation</strong>. The parties intend that they
+            do not constitute a &ldquo;package&rdquo; or a &ldquo;linked travel
+            arrangement&rdquo; within Directive (EU) 2015/2302 or its national
+            implementations. Luxor Rising acts as a concierge and{" "}
+            <strong>intermediary</strong> that connects you with independent,
+            licensed local suppliers, who are responsible for the services they
+            perform. Any multi-day itinerary or accommodation is handled only as a
+            separate arrangement and is outside these terms unless we agree it in
+            writing.
+          </p>
 
           <h2>5. Changes, closures and events beyond our control</h2>
           <p>
@@ -198,7 +204,33 @@ export default function TermsPage() {
             here with its date.
           </p>
 
-          <h2>12. Governing law</h2>
+          <h2>12. How to raise a problem</h2>
+          <p>
+            If any part of your experience falls short, tell your concierge, guide
+            or host <strong>at the time</strong>, so we have a fair chance to put it
+            right on the spot. If a matter is not resolved, notify us in writing at{" "}
+            <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>{" "}
+            <strong>within 14 days</strong> of the experience. Raising concerns
+            promptly and giving us a reasonable opportunity to resolve them is a
+            condition of any claim or refund beyond your mandatory statutory rights.
+          </p>
+
+          <h2>13. General</h2>
+          <p>
+            If any provision of these terms is held to be invalid or unenforceable,
+            the remaining provisions continue in full force. Our not enforcing a term
+            on any occasion is not a waiver of it. You may not transfer your booking
+            or these terms to anyone else without our written consent; we may assign,
+            transfer or subcontract our rights and obligations, including to the
+            local partners who deliver your experience. These terms, together with
+            our <Link href="/legal/cancellation">Cancellation &amp; Refunds</Link>{" "}
+            and <Link href="/legal/privacy">Privacy</Link> policies, are the entire
+            agreement between us about your booking and replace any prior
+            discussions. Nothing in these terms gives any third party a right to
+            enforce them.
+          </p>
+
+          <h2>14. Governing law</h2>
           <p>
             These terms are governed by the laws of the{" "}
             <strong>Slovak Republic</strong>, and the courts of the{" "}

@@ -120,15 +120,7 @@ export default function CookiePolicyPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Cookie Policy
           </h1>
-          <p className={styles.updated}>Last updated 5 August 2026</p>
-
-          {/* Internal note for the owner — remove before go-live. */}
-          <div className={styles.ph}>
-            <b>Before go-live:</b> fill in your legal entity name, registered
-            address and a dedicated privacy contact email in the{" "}
-            <b>Contact</b> section below, and have this page reviewed by a lawyer
-            for your jurisdiction (Egypt + the EU/UK markets you sell to).
-          </div>
+          <p className={styles.updated}>Last updated 1 September 2026</p>
 
           <p className={styles.lead}>
             We keep tracking light and honest. This page explains exactly what
@@ -280,7 +272,7 @@ export default function CookiePolicyPage() {
             site. Questions or requests about cookies and your data:{" "}
             <a href="mailto:luxor.rising.com@gmail.com">luxor.rising.com@gmail.com</a>.
             This policy sits alongside our{" "}
-            <Link href="/legal">Privacy Policy</Link>, which covers personal
+            <Link href="/legal/privacy">Privacy Policy</Link>, which covers personal
             data more broadly.
           </p>
 

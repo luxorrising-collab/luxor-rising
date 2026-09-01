@@ -14,22 +14,22 @@ export const metadata: Metadata = {
 const SECTIONS: { h: string; p: string; href?: string }[] = [
   {
     h: "Terms & Conditions",
-    p: "Booking terms, our role as concierge and coordinator, the licensed local partners who deliver the experiences, limits of liability, and the single-day nature of the experiences — now written in full.",
+    p: "Booking terms, our role as concierge and coordinator, the licensed local partners who deliver the experiences, limits of liability, and the single-day nature of the experiences",
     href: "/legal/terms",
   },
   {
     h: "Cancellation & Refunds",
-    p: "Pay in full or a 50% deposit; free cancellation up to 7 days before (less non-refundable costs); the Concierge Day first-two-hours promise; how refunds are processed — now written in full.",
+    p: "Pay in full or a 50% deposit; free cancellation up to 7 days before (less non-refundable costs); the Concierge Day first-two-hours promise; how refunds are processed",
     href: "/legal/cancellation",
   },
   {
     h: "Privacy Policy",
-    p: "What personal data we collect, why, how long we keep it, who it is shared with (local partners, Stripe, and — only with consent — Google/Meta), and your rights under GDPR — now written in full.",
+    p: "What personal data we collect, why, how long we keep it, who it is shared with (local partners, Stripe, and — only with consent — Google/Meta), and your rights under GDPR",
     href: "/legal/privacy",
   },
   {
     h: "Cookie Policy",
-    p: "Exactly which cookies the site sets (essential, analytics, marketing), why, how long they last, and how you stay in control — now written in full.",
+    p: "Exactly which cookies the site sets (essential, analytics, marketing), why, how long they last, and how you stay in control",
     href: "/legal/cookies",
   },
   {
@@ -58,11 +58,6 @@ export default function LegalPage() {
           <h1 className="display" style={{ margin: ".3rem 0 1.4rem" }}>
             Policies &amp; help
           </h1>
-          <div className={styles.ph}>
-            <b>Placeholder.</b> Final legal copy (Terms, Privacy, Cookies) will be provided — ideally reviewed by
-            a lawyer — before live payments go on. Help pages (Safety, Payments &amp; Refunds, FAQ) can be written
-            in-house. In the full build each becomes its own page, editable in Keystatic.
-          </div>
           {SECTIONS.map((s) => (
             <div key={s.h}>
               <h2>{s.h}</h2>

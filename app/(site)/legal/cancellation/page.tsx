@@ -30,14 +30,7 @@ export default function CancellationPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Cancellation &amp; Refunds
           </h1>
-          <p className={styles.updated}>Last updated 12 August 2026</p>
-
-          <div className={styles.ph}>
-            <b>Before go-live:</b> confirm your legal entity name, the refund
-            processing window, and have this reviewed by a lawyer for your
-            jurisdiction (Egypt + the EU/UK markets you sell to). Bracketed values
-            below are placeholders to fill in.
-          </div>
+          <p className={styles.updated}>Last updated 1 September 2026</p>
 
           <p className={styles.lead}>
             We keep this fair and clear. In plain terms: you can pay in full or
@@ -57,7 +50,7 @@ export default function CancellationPage() {
             hours).
           </p>
 
-          <h2>2. Non-refundable costs (please read)</h2>
+          <h2>2. Non-refundable costs</h2>
           <p>
             The moment we begin arranging your experience, we commit real money on
             your behalf to third parties. These costs are{" "}

@@ -428,6 +428,18 @@ export default function DayConfigurator({
     }
     const name = `${days}-day Concierge Journey`;
     const slug = `concierge-day-${days}d`;
+    const eveningLabel =
+      water === "nile" ? "Sunset sail on the Nile" : water === "picnic" ? "Desert sunset picnic" : "Evening — client to choose";
+    const preferences = [
+      `${days} day${days > 1 ? "s" : ""}`,
+      `${group} guest${group > 1 ? "s" : ""}`,
+      `Journey: ${JOURNEY[journey].name} (first temple: ${JOURNEY[journey].temple.split(" — ")[0]})`,
+      `Evening: ${eveningLabel}`,
+      photo ? "Add-on: private photoshoot" : "",
+      hurg ? "Add-on: Hurghada round-trip transfer" : "",
+    ]
+      .filter(Boolean)
+      .join(" · ");
     trackBeginCheckout({
       value: total,
       currency: "EUR",
@@ -448,6 +460,7 @@ export default function DayConfigurator({
           guests: group,
           date: tripDate,
           cancelPath: "/concierge-day#build",
+          preferences,
         }),
       });
       const data = await res.json();

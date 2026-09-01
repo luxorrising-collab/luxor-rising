@@ -12,6 +12,7 @@ type Body = {
   guests?: number;
   date?: string;
   cancelPath?: string;
+  preferences?: string;
 };
 
 export async function POST(req: Request) {
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad request." }, { status: 400 });
   }
 
-  const { name, slug, amountCents, mode = "full", guests, date, cancelPath } = body;
+  const { name, slug, amountCents, mode = "full", guests, date, cancelPath, preferences } = body;
   if (!name || !slug || !amountCents || amountCents < 100) {
     return NextResponse.json({ error: "Missing or invalid booking details." }, { status: 400 });
   }
@@ -70,9 +71,11 @@ export async function POST(req: Request) {
       ],
       metadata: {
         slug,
+        product_name: name.slice(0, 480),
         guests: guests ? String(guests) : "",
         date: date || "",
         mode,
+        preferences: (preferences || "").slice(0, 480),
       },
       // {CHECKOUT_SESSION_ID} is substituted by Stripe on redirect — it lets the
       // confirmation page retrieve the real, paid amount server-side for analytics.

@@ -47,8 +47,11 @@ create table if not exists public.bookings (
   currency                   text default 'eur',
   pay_mode                   text,          -- 'full' | 'deposit'
   payment_status             text,          -- 'paid' | ...
+  notes                      text,          -- client's design-your-day preferences
   status                     text not null default 'confirmed'
 );
+-- If the bookings table already exists from an earlier run, add the column:
+alter table public.bookings add column if not exists notes text;
 
 create index if not exists enquiries_created_idx on public.enquiries (created_at desc);
 create index if not exists bookings_created_idx  on public.bookings  (created_at desc);

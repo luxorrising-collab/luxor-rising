@@ -5,17 +5,48 @@ import styles from "./EnquiryForm.module.css";
 
 export default function EnquiryForm({ note }: { note?: string }) {
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (loading) return;
     const form = e.currentTarget;
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-    // Prototype: no backend wired yet. In production this posts to an API
-    // route / email service. For now we confirm inline.
-    setSent(true);
+    setLoading(true);
+    setError("");
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get("name") ?? ""),
+      email: String(fd.get("email") ?? ""),
+      dates: String(fd.get("dates") ?? ""),
+      group: String(fd.get("group") ?? ""),
+      base: String(fd.get("base") ?? ""),
+      message: String(fd.get("message") ?? ""),
+    };
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        setSent(true);
+        return;
+      }
+      setError(
+        "We couldn't send that just now. Please email us at luxor.rising.com@gmail.com and we'll take care of it personally.",
+      );
+    } catch {
+      setError(
+        "We couldn't reach the server. Please check your connection, or email luxor.rising.com@gmail.com.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (sent) {
@@ -78,9 +109,19 @@ export default function EnquiryForm({ note }: { note?: string }) {
           placeholder="Temples, the Nile, a special occasion, travelling with kids — anything that helps us match you."
         />
       </div>
-      <button type="submit" className="btn btn-primary btn-lg" style={{ width: "100%" }}>
-        Send my request →
+      <button
+        type="submit"
+        className="btn btn-primary btn-lg"
+        style={{ width: "100%" }}
+        aria-disabled={loading}
+      >
+        {loading ? "Sending…" : "Send my request →"}
       </button>
+      {error && (
+        <p role="alert" className={styles.note} style={{ color: "var(--color-gold-deep)" }}>
+          {error}
+        </p>
+      )}
       {note && <p className={styles.note}>{note}</p>}
     </form>
   );

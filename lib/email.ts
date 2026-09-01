@@ -13,6 +13,8 @@ import { Resend } from "resend";
 const FROM = process.env.RESEND_FROM || "Luxor Rising <concierge@luxorrising.com>";
 const REPLY_TO = process.env.RESEND_REPLY_TO || "luxor.rising.com@gmail.com";
 const OWNER = process.env.ENQUIRY_NOTIFY_TO || "luxor.rising.com@gmail.com";
+// The local delivery partner's inbox. Unset → the Ahmed brief is skipped.
+const AHMED = process.env.AHMED_NOTIFY_TO || "";
 
 let _resend: Resend | null = null;
 function client(): Resend | null {
@@ -184,6 +186,55 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
     .filter(Boolean)
     .join("\n");
   await sendTo(b.email, "Your Luxor day is nearly here", text);
+}
+
+// ── Partner (Ahmed) job brief ──────────────────────────────────────────────
+export type AhmedBrief = {
+  clientName: string;
+  productName: string;
+  tripDate?: string;
+  guests?: number;
+  pickup?: string; // base / hotel / area
+  preferences?: string; // journey, water choice, add-ons, dietary, occasion, message…
+  clientContact?: string; // optional, for day-of coordination
+};
+
+/**
+ * The operational hand-off to the local delivery partner when a booking is
+ * confirmed: what to deliver, when, for whom, and their preferences. Payment
+ * follows the partnership agreement (advanced direct costs + day-rate + 20%
+ * commission within 48h of delivery) — deliberately no guest price or margin.
+ * Sent from the Stripe webhook. No-op if AHMED_NOTIFY_TO is unset.
+ */
+export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
+  if (!AHMED) return;
+  const text = [
+    "A booking is confirmed — please prepare to deliver it.",
+    "",
+    `· Experience: ${b.productName}`,
+    b.tripDate ? `· Date: ${b.tripDate}` : "",
+    b.guests ? `· Guests: ${b.guests}` : "",
+    b.pickup ? `· Pickup / base: ${b.pickup}` : "",
+    `· Client: ${b.clientName}${b.clientContact ? ` (${b.clientContact})` : ""}`,
+    "",
+    b.preferences ? `What they chose / preferences:\n${b.preferences}` : "",
+    "",
+    "Please deliver to the Luxor Rising standard (Schedule A) — punctual, private, unhurried, the sites timed against the crowds.",
+    "",
+    "Payment (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of delivery.",
+    "",
+    "Reply here to confirm you can cover this day, or if you'll send a vetted replacement.",
+    "",
+    "— Luxor Rising",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  await sendTo(
+    AHMED,
+    `New booking to deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`,
+    text,
+    REPLY_TO,
+  );
 }
 
 /** A day or two after — sent by a scheduled job. */

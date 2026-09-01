@@ -86,9 +86,9 @@ dayShapeTitle: Not a schedule. A day built around you.
 dayShapeSteps:
   - time: We start with you, not a route
     label: >-
-      Before a single ticket is booked, your concierge asks what actually
-      draws you here — the history, the photographs, the stillness, a milestone
-      you're marking. Everything after is arranged around that answer.
+      Before a single ticket is booked, your concierge asks what actually draws
+      you here — the history, the photographs, the stillness, a milestone you're
+      marking. Everything after is arranged around that answer.
   - time: The order is chosen for the day
     label: >-
       Which temple you walk into first depends on where it is genuinely empty
@@ -109,9 +109,8 @@ dreamText: >-
   great hall is almost empty — your Egyptologist unfolds three thousand years as
   the first light moves between the columns. Between temples, coffee and a meal
   at a table only a local would know. By late afternoon the Nile is yours alone,
-  a felucca tilting into the gold. You took no
-  decisions, stood in no queue, missed nothing. You simply arrived — and Egypt
-  did the rest.
+  a felucca tilting into the gold. You took no decisions, stood in no queue,
+  missed nothing. You simply arrived — and Egypt did the rest.
 dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
   - image: /images/concierge-day/experiences/0/image.jpg

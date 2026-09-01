@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { sendEnquiryEmails } from "@/lib/email";
 
 // Supabase JS needs the Node runtime (not Edge).
 export const runtime = "nodejs";
@@ -77,6 +78,10 @@ export async function POST(req: Request) {
     console.error("enquiry insert failed:", enquiryError.message);
     return NextResponse.json({ error: "save_failed" }, { status: 500 });
   }
+
+  // The lead is safely stored; email is a best-effort bonus (no-op until Resend
+  // is configured) and must never fail the request.
+  await sendEnquiryEmails({ name, email, dates, group, base, message: userMessage });
 
   return NextResponse.json({ ok: true });
 }

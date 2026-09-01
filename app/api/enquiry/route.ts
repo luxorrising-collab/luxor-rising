@@ -12,6 +12,15 @@ type Body = {
   group?: string;
   base?: string;
   message?: string;
+  topic?: string;
+};
+
+// Which page/kind of enquiry this came from — stored in enquiries.source and
+// shown in the owner's email subject so it's clear at a glance.
+const TOPIC_LABEL: Record<string, string> = {
+  "private-guide": "Private guide",
+  "private-villas": "Private villas",
+  "concierge-day": "Concierge day",
 };
 
 // Map the form's group label to an approximate party size.
@@ -50,6 +59,8 @@ export async function POST(req: Request) {
   const group = (body.group ?? "").trim();
   const base = (body.base ?? "").trim();
   const userMessage = (body.message ?? "").trim();
+  const topic = (body.topic ?? "").trim().toLowerCase();
+  const topicLabel = TOPIC_LABEL[topic] ?? "Website";
   const partySize = GROUP_SIZE[group] ?? null;
   const context = [group && `Group: ${group}`, base && `Staying: ${base}`]
     .filter(Boolean)
@@ -71,7 +82,7 @@ export async function POST(req: Request) {
     party_size: partySize,
     preferred_dates: dates || null,
     message: message || null,
-    source: "website",
+    source: topic || "website",
   });
 
   if (enquiryError) {
@@ -81,7 +92,7 @@ export async function POST(req: Request) {
 
   // The lead is safely stored; email is a best-effort bonus (no-op until Resend
   // is configured) and must never fail the request.
-  await sendEnquiryEmails({ name, email, dates, group, base, message: userMessage });
+  await sendEnquiryEmails({ name, email, dates, group, base, message: userMessage, topic: topicLabel });
 
   return NextResponse.json({ ok: true });
 }

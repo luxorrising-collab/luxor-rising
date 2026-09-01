@@ -196,7 +196,7 @@ export default async function PrivateGuidePage() {
               </Link>
             </p>
           </div>
-          <EnquiryForm note={page.formNote} />
+          <EnquiryForm note={page.formNote} topic="private-guide" />
         </Reveal>
       </section>
 

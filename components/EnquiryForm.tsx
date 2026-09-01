@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "./EnquiryForm.module.css";
 
-export default function EnquiryForm({ note }: { note?: string }) {
+export default function EnquiryForm({ note, topic }: { note?: string; topic?: string }) {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,6 +26,7 @@ export default function EnquiryForm({ note }: { note?: string }) {
       group: String(fd.get("group") ?? ""),
       base: String(fd.get("base") ?? ""),
       message: String(fd.get("message") ?? ""),
+      topic: topic ?? "",
     };
     try {
       const res = await fetch("/api/enquiry", {

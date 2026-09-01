@@ -228,7 +228,7 @@ export default async function PrivateVillasPage() {
               </Link>
             </p>
           </div>
-          <EnquiryForm note={page.formNote} />
+          <EnquiryForm note={page.formNote} topic="private-villas" />
         </Reveal>
       </section>
 

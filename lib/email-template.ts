@@ -5,9 +5,11 @@
 // clean sans to echo Inter.
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.luxorrising.com";
-// Full brand logo (emblem + wordmark), gold on transparent — sits on the dark
-// header, so the name lives in the logo and isn't repeated as text.
+// Full brand logo (emblem + wordmark) in its original dark colour on a
+// transparent background, centred on the gold header band — the name lives in
+// the logo, so it isn't repeated as text.
 const LOGO = `${SITE_URL}/images/logo-email.png`;
+const HEADER_BG = "#C89B56"; // matches the logo's own gold
 
 // Brand palette (from globals.css)
 const CREAM = "#FAF3E4";
@@ -144,12 +146,12 @@ export function renderEmail(c: EmailContent): string {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;border-collapse:collapse;">
         <!-- header -->
         <tr>
-          <td align="center" style="padding:34px 40px 30px;background:${ESPRESSO};border-radius:4px 4px 0 0;">
+          <td align="center" style="padding:32px 40px 28px;background:${HEADER_BG};border-radius:4px 4px 0 0;">
             <img src="${LOGO}" width="150" alt="Luxor Rising" style="display:block;border:0;width:150px;max-width:52%;height:auto;margin:0 auto;">
           </td>
         </tr>
-        <!-- gold rule -->
-        <tr><td style="height:3px;line-height:3px;font-size:0;background:${GOLD};">&nbsp;</td></tr>
+        <!-- rule -->
+        <tr><td style="height:3px;line-height:3px;font-size:0;background:${ESPRESSO};">&nbsp;</td></tr>
         <!-- body -->
         <tr>
           <td style="padding:40px 40px 36px;background:${PAPER};">

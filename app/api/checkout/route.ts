@@ -50,6 +50,9 @@ export async function POST(req: Request) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // Email is always collected by Checkout; also ask for a phone number so
+      // the concierge / delivery partner can coordinate on the day.
+      phone_number_collection: { enabled: true },
       line_items: [
         {
           quantity: 1,

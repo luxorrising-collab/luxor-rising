@@ -51,6 +51,7 @@ export async function POST(req: Request) {
   const md = session.metadata ?? {};
   const email = session.customer_details?.email?.toLowerCase() ?? null;
   const clientName = session.customer_details?.name || "Guest";
+  const phone = session.customer_details?.phone || null;
   const guests = md.guests ? parseInt(md.guests, 10) || null : null;
   const tripDate = md.date || null;
   const productName = md.product_name || md.slug || "Experience";
@@ -61,9 +62,17 @@ export async function POST(req: Request) {
   // Upsert the customer by email, then record the booking.
   let customerId: string | null = null;
   if (email) {
+    // Only include phone when Stripe actually returned one, so a repeat booking
+    // without a phone doesn't wipe a number captured earlier.
+    const customerRow: { email: string; name: string; source: string; phone?: string } = {
+      email,
+      name: clientName,
+      source: "booking",
+    };
+    if (phone) customerRow.phone = phone;
     const { data: cust } = await supabase
       .from("customers")
-      .upsert({ email, name: clientName, source: "booking" }, { onConflict: "email" })
+      .upsert(customerRow, { onConflict: "email" })
       .select("id")
       .single();
     customerId = cust?.id ?? null;
@@ -108,7 +117,7 @@ export async function POST(req: Request) {
     tripDate: tripDate ?? undefined,
     guests: guests ?? undefined,
     preferences: preferences || undefined,
-    clientContact: email ?? undefined,
+    clientContact: [email, phone].filter(Boolean).join(" · ") || undefined,
   });
 
   return new Response("ok", { status: 200 });

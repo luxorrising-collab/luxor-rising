@@ -140,6 +140,7 @@ export default function ExperienceConfigurator({
           name,
           slug,
           amountCents: amount * 100,
+          totalCents: total * 100,
           mode: pay,
           guests: group,
           date: tripDate,

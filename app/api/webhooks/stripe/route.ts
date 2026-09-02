@@ -58,6 +58,8 @@ export async function POST(req: Request) {
   const preferences = md.preferences || "";
   const payMode = md.mode || "full";
   const amountCents = session.amount_total ?? null;
+  const fullTotalCents = md.full_total_cents ? parseInt(md.full_total_cents, 10) || null : null;
+  const balanceCents = md.balance_cents ? parseInt(md.balance_cents, 10) || null : null;
 
   // Upsert the customer by email, then record the booking.
   let customerId: string | null = null;
@@ -100,6 +102,8 @@ export async function POST(req: Request) {
 
   // Emails are best-effort — never fail the webhook over them.
   const amountEur = amountCents != null ? Math.round(amountCents / 100) : undefined;
+  const totalEur = fullTotalCents != null ? Math.round(fullTotalCents / 100) : undefined;
+  const balanceEur = balanceCents != null ? Math.round(balanceCents / 100) : undefined;
   if (email) {
     await sendBookingConfirmation({
       name: clientName,
@@ -108,6 +112,8 @@ export async function POST(req: Request) {
       tripDate: tripDate ?? undefined,
       guests: guests ?? undefined,
       amountEur,
+      totalEur,
+      balanceEur,
       payMode,
     });
   }
@@ -118,6 +124,7 @@ export async function POST(req: Request) {
     guests: guests ?? undefined,
     preferences: preferences || undefined,
     clientContact: [email, phone].filter(Boolean).join(" · ") || undefined,
+    balanceEur: payMode === "deposit" ? balanceEur : undefined,
   });
 
   return new Response("ok", { status: 200 });

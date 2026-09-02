@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { renderEmail, SITE_URL, type SummaryRow } from "./email-template";
 
 // Transactional email via Resend. Everything is guarded: with no RESEND_API_KEY
 // set, every send is a silent no-op — so the site works fine before Resend is
@@ -24,7 +25,7 @@ function client(): Resend | null {
   return _resend;
 }
 
-const REVIEW_URL = process.env.GOOGLE_REVIEW_URL || "https://luxorrising.com/reviews";
+const REVIEW_URL = process.env.GOOGLE_REVIEW_URL || `${SITE_URL}/reviews`;
 
 export type EnquiryEmail = {
   name: string;
@@ -37,9 +38,32 @@ export type EnquiryEmail = {
 };
 
 const firstName = (name: string) => name.trim().split(/\s+/)[0] || "traveller";
-const SIGNOFF =
+const SIGNOFF_TEXT =
   "Warmly,\nThe Luxor Rising concierge team\n" +
   "Where reality meets tranquility and every moment becomes cherished.";
+
+async function send(opts: {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+  replyTo?: string;
+}): Promise<void> {
+  const resend = client();
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: opts.to,
+      replyTo: opts.replyTo ?? REPLY_TO,
+      subject: opts.subject,
+      text: opts.text,
+      html: opts.html,
+    });
+  } catch (err) {
+    console.error("Resend send failed:", err instanceof Error ? err.message : err);
+  }
+}
 
 /**
  * Notify the concierge of a new enquiry, and send the guest a warm auto-reply.
@@ -49,24 +73,56 @@ export async function sendEnquiryEmails(enq: EnquiryEmail): Promise<void> {
   const resend = client();
   if (!resend) return;
 
-  const lines: string[] = [`Name: ${enq.name}`, `Email: ${enq.email}`];
-  if (enq.group) lines.push(`Group: ${enq.group}`);
-  if (enq.base) lines.push(`Staying: ${enq.base}`);
-  if (enq.dates) lines.push(`Dates: ${enq.dates}`);
-  lines.push("", enq.message ? `Message:\n${enq.message}` : "(no message)");
-  const detail = lines.join("\n");
+  const rows: SummaryRow[] = [
+    { label: "Name", value: enq.name },
+    { label: "Email", value: enq.email },
+  ];
+  if (enq.group) rows.push({ label: "Group", value: enq.group });
+  if (enq.base) rows.push({ label: "Staying", value: enq.base });
+  if (enq.dates) rows.push({ label: "Dates", value: enq.dates });
+
+  const textLines = [
+    `Name: ${enq.name}`,
+    `Email: ${enq.email}`,
+    enq.group ? `Group: ${enq.group}` : "",
+    enq.base ? `Staying: ${enq.base}` : "",
+    enq.dates ? `Dates: ${enq.dates}` : "",
+    "",
+    enq.message ? `Message:\n${enq.message}` : "(no message)",
+  ].filter(Boolean);
+
+  const ownerHtml = renderEmail({
+    preheader: `New enquiry from ${enq.name}`,
+    eyebrow: enq.topic ? `New enquiry · ${enq.topic}` : "New enquiry",
+    heading: `New enquiry — ${enq.name}`,
+    intro: ["A new enquiry came in from the website. Reply to this email to reach the guest directly."],
+    summary: { title: "Enquiry", rows },
+    outro: enq.message ? [`Message:`, enq.message] : ["(No message left.)"],
+    signoff: ["— Luxor Rising"],
+  });
+
+  const guestHtml = renderEmail({
+    preheader: "Thank you — your concierge will reply within 24 hours.",
+    eyebrow: "Enquiry received",
+    heading: `Dear ${firstName(enq.name)},`,
+    intro: [
+      "Thank you for reaching out to Luxor Rising.",
+      "Your concierge will read this personally and reply within 24 hours — with who'd host you and a suggested shape for your days.",
+      "If anything changes in the meantime, just reply to this email.",
+    ],
+    cta: { text: "Explore the experiences", url: `${SITE_URL}/experiences` },
+  });
 
   try {
     await Promise.all([
-      // 1) Owner notification — reply goes straight to the guest.
       resend.emails.send({
         from: FROM,
         to: OWNER,
         replyTo: enq.email,
         subject: `New enquiry${enq.topic ? ` (${enq.topic})` : ""} — ${enq.name}`,
-        text: `A new enquiry came in from the website${enq.topic ? ` — ${enq.topic}` : ""}.\n\n${detail}\n`,
+        text: `A new enquiry came in from the website${enq.topic ? ` — ${enq.topic}` : ""}.\n\n${textLines.join("\n")}\n`,
+        html: ownerHtml,
       }),
-      // 2) Guest auto-reply — replies land in the concierge inbox.
       resend.emails.send({
         from: FROM,
         to: enq.email,
@@ -77,7 +133,8 @@ export async function sendEnquiryEmails(enq: EnquiryEmail): Promise<void> {
           `Thank you for reaching out to Luxor Rising. Your concierge will read this personally ` +
           `and reply within 24 hours — with who'd host you and a suggested shape for your days.\n\n` +
           `If anything changes in the meantime, just reply to this email.\n\n` +
-          SIGNOFF,
+          SIGNOFF_TEXT,
+        html: guestHtml,
       }),
     ]);
   } catch (err) {
@@ -96,26 +153,13 @@ export type BookingEmail = {
   productName: string;
   tripDate?: string;
   guests?: number;
-  amountEur?: number;
+  amountEur?: number; // amount actually charged
+  totalEur?: number; // full price of the experience
+  balanceEur?: number; // outstanding balance due on the day (deposit bookings)
   payMode?: string; // 'full' | 'deposit'
   pickup?: string;
   time?: string;
 };
-
-async function sendTo(
-  to: string,
-  subject: string,
-  text: string,
-  replyTo: string = REPLY_TO,
-): Promise<void> {
-  const resend = client();
-  if (!resend) return;
-  try {
-    await resend.emails.send({ from: FROM, to, replyTo, subject, text });
-  } catch (err) {
-    console.error("Resend send failed:", err instanceof Error ? err.message : err);
-  }
-}
 
 const WHAT_TO_BRING =
   "What to bring: your passport or ID (site security asks for it), comfortable shoes, " +
@@ -123,7 +167,39 @@ const WHAT_TO_BRING =
 
 /** After payment — sent from the Stripe webhook once a booking is confirmed. */
 export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
-  const mode = b.payMode === "deposit" ? "deposit" : "in full";
+  const isDeposit = b.payMode === "deposit";
+  const paidLabel = b.amountEur != null ? `€${b.amountEur}${isDeposit ? " (deposit)" : " (paid in full)"}` : undefined;
+
+  const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
+  if (b.tripDate) rows.push({ label: "Date", value: b.tripDate });
+  if (b.guests) rows.push({ label: "Guests", value: String(b.guests) });
+  if (b.totalEur != null) rows.push({ label: "Total", value: `€${b.totalEur}` });
+  if (paidLabel) rows.push({ label: "Paid now", value: paidLabel });
+  if (isDeposit && b.balanceEur != null)
+    rows.push({ label: "Balance on the day", value: `€${b.balanceEur}` });
+
+  const balanceNote = isDeposit
+    ? b.balanceEur != null
+      ? `The remaining €${b.balanceEur} is settled on the day — cash or card, whichever suits you.`
+      : "The remaining balance is settled on the day."
+    : "";
+
+  const html = renderEmail({
+    preheader: `Your ${b.productName} is confirmed.`,
+    eyebrow: "Booking confirmed",
+    heading: `Your journey is confirmed`,
+    intro: [
+      `Dear ${firstName(b.name)},`,
+      "Thank you — your booking with Luxor Rising is confirmed, and we're already looking forward to it.",
+    ],
+    summary: { title: "What you've reserved", rows },
+    outro: [
+      `Your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
+      "Anything at all — dietary needs, mobility, a special occasion — just reply to this email and we'll take care of it.",
+    ],
+    fineprint: "Free cancellation up to 7 days before, per our terms — luxorrising.com/legal/cancellation.",
+  });
+
   const text = [
     `Dear ${firstName(b.name)},`,
     "",
@@ -133,25 +209,48 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
     `· ${b.productName}`,
     b.tripDate ? `· Date: ${b.tripDate}` : "",
     b.guests ? `· Guests: ${b.guests}` : "",
-    b.amountEur != null ? `· Paid: €${b.amountEur} (${mode})` : "",
+    b.totalEur != null ? `· Total: €${b.totalEur}` : "",
+    paidLabel ? `· Paid now: ${paidLabel}` : "",
+    isDeposit && b.balanceEur != null ? `· Balance on the day: €${b.balanceEur}` : "",
     "",
-    "What happens next: your concierge will confirm the exact timing and pickup within 24 hours." +
-      (b.payMode === "deposit" ? " Any remaining balance is settled on the day." : ""),
+    `What happens next: your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
     "",
     "Anything at all — dietary needs, mobility, a special occasion — just reply to this email and we'll take care of it.",
     "",
     "Free cancellation up to 7 days before, per our terms (luxorrising.com/legal/cancellation).",
     "",
-    SIGNOFF,
+    SIGNOFF_TEXT,
   ]
     .filter(Boolean)
     .join("\n");
-  await sendTo(b.email, `Your Luxor Rising booking is confirmed — ${b.productName}`, text);
+
+  await send({
+    to: b.email,
+    subject: `Your Luxor Rising booking is confirmed — ${b.productName}`,
+    text,
+    html,
+  });
 }
 
 /** The concierge confirms the exact day/time and pickup. */
 export async function sendDateConfirmation(b: BookingEmail): Promise<void> {
   const when = [b.tripDate, b.time].filter(Boolean).join(", ");
+  const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
+  if (when) rows.push({ label: "When", value: when });
+  if (b.pickup) rows.push({ label: "Pickup", value: b.pickup });
+
+  const html = renderEmail({
+    preheader: `Your ${b.productName} is set${b.tripDate ? ` for ${b.tripDate}` : ""}.`,
+    eyebrow: "Your day is set",
+    heading: `Everything's arranged`,
+    intro: [
+      `Dear ${firstName(b.name)},`,
+      `Your ${b.productName} is confirmed${when ? ` for ${when}` : ""}.${b.pickup ? ` We'll collect you ${b.pickup}.` : ""}`,
+    ],
+    summary: { rows },
+    outro: [WHAT_TO_BRING, "If anything needs to change, just reply to this email and we'll rearrange it."],
+  });
+
   const text = [
     `Dear ${firstName(b.name)},`,
     "",
@@ -162,15 +261,32 @@ export async function sendDateConfirmation(b: BookingEmail): Promise<void> {
     "",
     "If anything needs to change, just reply to this email and we'll rearrange it.",
     "",
-    SIGNOFF,
+    SIGNOFF_TEXT,
   ]
     .filter(Boolean)
     .join("\n");
-  await sendTo(b.email, `Your day is set${b.tripDate ? ` — ${b.tripDate}` : ""}`, text);
+
+  await send({ to: b.email, subject: `Your day is set${b.tripDate ? ` — ${b.tripDate}` : ""}`, text, html });
 }
 
 /** A few days before — sent by a scheduled job. */
 export async function sendTripReminder(b: BookingEmail): Promise<void> {
+  const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
+  if (b.tripDate) rows.push({ label: "Date", value: b.tripDate });
+  if (b.pickup) rows.push({ label: "Pickup", value: `${b.pickup}${b.time ? ` at ${b.time}` : ""}` });
+
+  const html = renderEmail({
+    preheader: `A quick note before your ${b.productName}.`,
+    eyebrow: "Nearly here",
+    heading: "Your Luxor day is nearly here",
+    intro: [
+      `Dear ${firstName(b.name)},`,
+      `A quick note before your ${b.productName}${b.tripDate ? ` on ${b.tripDate}` : ""} — we can't wait to show you.`,
+    ],
+    summary: { rows },
+    outro: [WHAT_TO_BRING, "Your concierge is reachable throughout the day, so you never have a decision to make."],
+  });
+
   const text = [
     `Dear ${firstName(b.name)},`,
     "",
@@ -181,11 +297,47 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
     "",
     "Your concierge is reachable throughout the day, so you never have a decision to make.",
     "",
-    SIGNOFF,
+    SIGNOFF_TEXT,
   ]
     .filter(Boolean)
     .join("\n");
-  await sendTo(b.email, "Your Luxor day is nearly here", text);
+
+  await send({ to: b.email, subject: "Your Luxor day is nearly here", text, html });
+}
+
+/** A day or two after — sent by a scheduled job. */
+export async function sendReviewRequest(b: BookingEmail): Promise<void> {
+  const html = renderEmail({
+    preheader: "A short review would mean the world.",
+    eyebrow: "Thank you",
+    heading: "How was your day with us?",
+    intro: [
+      `Dear ${firstName(b.name)},`,
+      "Thank you for spending your day with Luxor Rising — it was a genuine pleasure.",
+      "If it was as special for you as it was for us, a short review would mean the world — and it helps other travellers find us.",
+    ],
+    cta: { text: "Leave a review", url: REVIEW_URL },
+    outro: [
+      "And if anything fell short of what we promised, please tell us directly by replying — we'd always rather hear it from you first.",
+    ],
+  });
+
+  const text = [
+    `Dear ${firstName(b.name)},`,
+    "",
+    "Thank you for spending your day with Luxor Rising — it was a genuine pleasure.",
+    "",
+    "If it was as special for you as it was for us, a short review would mean the world — and it helps other travellers find us:",
+    REVIEW_URL,
+    "",
+    "And if anything fell short of what we promised, please tell us directly by replying — we'd always rather hear it from you first.",
+    "",
+    SIGNOFF_TEXT,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  await send({ to: b.email, subject: "How was your day with us?", text, html });
 }
 
 // ── Partner (Ahmed) job brief ──────────────────────────────────────────────
@@ -197,6 +349,7 @@ export type AhmedBrief = {
   pickup?: string; // base / hotel / area
   preferences?: string; // journey, water choice, add-ons, dietary, occasion, message…
   clientContact?: string; // optional, for day-of coordination
+  balanceEur?: number; // balance to collect on the day (deposit bookings)
 };
 
 /**
@@ -208,6 +361,27 @@ export type AhmedBrief = {
  */
 export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
   if (!AHMED) return;
+
+  const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
+  if (b.tripDate) rows.push({ label: "Date", value: b.tripDate });
+  if (b.guests) rows.push({ label: "Guests", value: String(b.guests) });
+  if (b.pickup) rows.push({ label: "Pickup / base", value: b.pickup });
+  rows.push({ label: "Client", value: `${b.clientName}${b.clientContact ? ` — ${b.clientContact}` : ""}` });
+  if (b.balanceEur != null)
+    rows.push({ label: "Collect on the day", value: `€${b.balanceEur} (guest balance)` });
+
+  const html = renderEmail({
+    preheader: `New booking to deliver${b.tripDate ? ` — ${b.tripDate}` : ""}.`,
+    eyebrow: "Operations",
+    heading: "A booking is confirmed",
+    intro: ["Please prepare to deliver this booking to the Luxor Rising standard (Schedule A) — punctual, private, unhurried, the sites timed against the crowds."],
+    summary: { title: "Job brief", rows },
+    outro: b.preferences ? ["What they chose / preferences:", b.preferences] : [],
+    fineprint:
+      "Payment (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of delivery. Reply here to confirm you can cover this day, or if you'll send a vetted replacement.",
+    signoff: ["— Luxor Rising"],
+  });
+
   const text = [
     "A booking is confirmed — please prepare to deliver it.",
     "",
@@ -216,6 +390,7 @@ export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
     b.guests ? `· Guests: ${b.guests}` : "",
     b.pickup ? `· Pickup / base: ${b.pickup}` : "",
     `· Client: ${b.clientName}${b.clientContact ? ` (${b.clientContact})` : ""}`,
+    b.balanceEur != null ? `· Collect on the day: €${b.balanceEur} (guest balance)` : "",
     "",
     b.preferences ? `What they chose / preferences:\n${b.preferences}` : "",
     "",
@@ -229,29 +404,12 @@ export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
   ]
     .filter(Boolean)
     .join("\n");
-  await sendTo(
-    AHMED,
-    `New booking to deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`,
-    text,
-    REPLY_TO,
-  );
-}
 
-/** A day or two after — sent by a scheduled job. */
-export async function sendReviewRequest(b: BookingEmail): Promise<void> {
-  const text = [
-    `Dear ${firstName(b.name)},`,
-    "",
-    "Thank you for spending your day with Luxor Rising — it was a genuine pleasure.",
-    "",
-    `If it was as special for you as it was for us, a short review would mean the world — and it helps other travellers find us:`,
-    REVIEW_URL,
-    "",
-    "And if anything fell short of what we promised, please tell us directly by replying — we'd always rather hear it from you first.",
-    "",
-    SIGNOFF,
-  ]
-    .filter(Boolean)
-    .join("\n");
-  await sendTo(b.email, "How was your day with us?", text);
+  await send({
+    to: AHMED,
+    subject: `New booking to deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`,
+    text,
+    html,
+    replyTo: REPLY_TO,
+  });
 }

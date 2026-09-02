@@ -7,7 +7,8 @@ export const runtime = "nodejs";
 type Body = {
   name?: string;
   slug?: string;
-  amountCents?: number;
+  amountCents?: number; // amount charged now
+  totalCents?: number; // full price of the experience (for deposit recap)
   mode?: "full" | "deposit";
   guests?: number;
   date?: string;
@@ -33,10 +34,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad request." }, { status: 400 });
   }
 
-  const { name, slug, amountCents, mode = "full", guests, date, cancelPath, preferences } = body;
+  const { name, slug, amountCents, totalCents, mode = "full", guests, date, cancelPath, preferences } = body;
   if (!name || !slug || !amountCents || amountCents < 100) {
     return NextResponse.json({ error: "Missing or invalid booking details." }, { status: 400 });
   }
+
+  // Full price + balance still owed (for the deposit recap and the records).
+  const fullTotalCents = totalCents && totalCents >= amountCents ? Math.round(totalCents) : Math.round(amountCents);
+  const balanceCents = mode === "deposit" ? Math.max(0, fullTotalCents - Math.round(amountCents)) : 0;
+  const eur = (cents: number) => `€${Math.round(cents / 100)}`;
 
   const origin = req.headers.get("origin") || new URL(req.url).origin;
   // Only accept an internal, single-slash path for the cancel URL (no open
@@ -50,6 +56,8 @@ export async function POST(req: Request) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // "Book" reads better than "Pay" for a reservation.
+      submit_type: "book",
       // Email is always collected by Checkout; also ask for a phone number so
       // the concierge / delivery partner can coordinate on the day.
       phone_number_collection: { enabled: true },
@@ -61,10 +69,13 @@ export async function POST(req: Request) {
             unit_amount: Math.round(amountCents),
             product_data: {
               name: mode === "deposit" ? `${name} — deposit` : name,
+              // A concise order recap shown on the Stripe page.
               description: [
                 guests ? `${guests} guest${guests > 1 ? "s" : ""}` : null,
                 date || null,
-                mode === "deposit" ? "Deposit — balance paid on the day" : "Paid in full",
+                mode === "deposit"
+                  ? `Deposit of ${eur(amountCents)} of ${eur(fullTotalCents)} — ${eur(balanceCents)} balance due on the day`
+                  : "Paid in full",
               ]
                 .filter(Boolean)
                 .join(" · "),
@@ -72,12 +83,21 @@ export async function POST(req: Request) {
           },
         },
       ],
+      // Legal note shown right above the pay button.
+      custom_text: {
+        submit: {
+          message:
+            "Free cancellation up to 7 days before your date. By booking you agree to our Terms & Cancellation Policy at luxorrising.com/legal.",
+        },
+      },
       metadata: {
         slug,
         product_name: name.slice(0, 480),
         guests: guests ? String(guests) : "",
         date: date || "",
         mode,
+        full_total_cents: String(fullTotalCents),
+        balance_cents: String(balanceCents),
         preferences: (preferences || "").slice(0, 480),
       },
       // {CHECKOUT_SESSION_ID} is substituted by Stripe on redirect — it lets the

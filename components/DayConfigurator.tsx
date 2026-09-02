@@ -456,6 +456,7 @@ export default function DayConfigurator({
           name,
           slug,
           amountCents: amount * 100,
+          totalCents: total * 100,
           mode: pay,
           guests: group,
           date: tripDate,

@@ -5,7 +5,9 @@
 // clean sans to echo Inter.
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.luxorrising.com";
-const LOGO = `${SITE_URL}/images/logo-emblem.png`;
+// Full brand logo (emblem + wordmark), gold on transparent — sits on the dark
+// header, so the name lives in the logo and isn't repeated as text.
+const LOGO = `${SITE_URL}/images/logo-email.png`;
 
 // Brand palette (from globals.css)
 const CREAM = "#FAF3E4";
@@ -142,9 +144,8 @@ export function renderEmail(c: EmailContent): string {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;border-collapse:collapse;">
         <!-- header -->
         <tr>
-          <td align="center" style="padding:38px 40px 26px;background:${ESPRESSO};border-radius:4px 4px 0 0;">
-            <img src="${LOGO}" width="54" alt="Luxor Rising" style="display:block;border:0;width:54px;height:auto;margin:0 auto 14px;">
-            <div style="font-family:${SERIF};font-size:15px;letter-spacing:4px;text-transform:uppercase;color:${GOLD_SOFT};">Luxor Rising</div>
+          <td align="center" style="padding:34px 40px 30px;background:${ESPRESSO};border-radius:4px 4px 0 0;">
+            <img src="${LOGO}" width="150" alt="Luxor Rising" style="display:block;border:0;width:150px;max-width:52%;height:auto;margin:0 auto;">
           </td>
         </tr>
         <!-- gold rule -->

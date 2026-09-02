@@ -44,6 +44,13 @@ export async function POST(req: Request) {
   const balanceCents = mode === "deposit" ? Math.max(0, fullTotalCents - Math.round(amountCents)) : 0;
   const eur = (cents: number) => `€${Math.round(cents / 100)}`;
 
+  // The note above the pay button. For a deposit it doubles as the mandate for
+  // charging the balance off-session (required to save & reuse the card).
+  const submitMessage =
+    mode === "deposit"
+      ? `You're paying a deposit of ${eur(amountCents)} now. The remaining ${eur(balanceCents)} will be charged automatically to this card the day before your experience. If it can't be taken automatically we'll email you a secure link. Free cancellation up to 7 days before. By booking you agree to our Terms & Cancellation Policy at luxorrising.com/legal.`
+      : "Free cancellation up to 7 days before your date. By booking you agree to our Terms & Cancellation Policy at luxorrising.com/legal.";
+
   const origin = req.headers.get("origin") || new URL(req.url).origin;
   // Only accept an internal, single-slash path for the cancel URL (no open
   // redirects). Falls back to the product page.
@@ -61,6 +68,10 @@ export async function POST(req: Request) {
       // Email is always collected by Checkout; also ask for a phone number so
       // the concierge / delivery partner can coordinate on the day.
       phone_number_collection: { enabled: true },
+      // Create a Stripe customer for every booking; for a deposit, also save the
+      // card so the balance can be charged off-session the day before the trip.
+      customer_creation: "always",
+      payment_intent_data: mode === "deposit" ? { setup_future_usage: "off_session" } : undefined,
       line_items: [
         {
           quantity: 1,
@@ -83,12 +94,9 @@ export async function POST(req: Request) {
           },
         },
       ],
-      // Legal note shown right above the pay button.
+      // Legal note / balance mandate shown right above the pay button.
       custom_text: {
-        submit: {
-          message:
-            "Free cancellation up to 7 days before your date. By booking you agree to our Terms & Cancellation Policy at luxorrising.com/legal.",
-        },
+        submit: { message: submitMessage },
       },
       metadata: {
         slug,

@@ -1,9 +1,13 @@
 import Stripe from "stripe";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { sendBookingConfirmation, sendAhmedJobBrief } from "@/lib/email";
+import { sendBookingConfirmation, sendAhmedJobBrief, sendBalanceReceipt } from "@/lib/email";
 
 // Stripe SDK + raw-body signature verification need the Node runtime.
 export const runtime = "nodejs";
+
+type EmbeddedCustomer = { email: string | null; name: string | null };
+const oneCustomer = (c: EmbeddedCustomer | EmbeddedCustomer[] | null): EmbeddedCustomer | null =>
+  Array.isArray(c) ? (c[0] ?? null) : c;
 
 export async function POST(req: Request) {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -40,6 +44,40 @@ export async function POST(req: Request) {
     return new Response("db not configured", { status: 200 });
   }
 
+  const md = session.metadata ?? {};
+
+  // ── Branch 1: a balance top-up (the fallback payment link) completing.
+  // Mark the existing booking's balance paid; do NOT create a new booking.
+  if (md.kind === "balance" && md.booking_id) {
+    const { data: bk } = await supabase
+      .from("bookings")
+      .select("id, balance_status, product_name, trip_date, customers(email,name)")
+      .eq("id", md.booking_id)
+      .maybeSingle();
+    if (bk && bk.balance_status !== "paid") {
+      await supabase
+        .from("bookings")
+        .update({
+          balance_status: "paid",
+          balance_charged_at: new Date().toISOString(),
+          balance_last_error: null,
+        })
+        .eq("id", md.booking_id);
+      const cust = oneCustomer(bk.customers as EmbeddedCustomer | EmbeddedCustomer[] | null);
+      if (cust?.email) {
+        await sendBalanceReceipt({
+          name: cust.name || "Guest",
+          email: cust.email,
+          productName: bk.product_name || "your experience",
+          tripDate: bk.trip_date ?? undefined,
+          amountEur: session.amount_total != null ? Math.round(session.amount_total / 100) : undefined,
+        });
+      }
+    }
+    return new Response("balance recorded", { status: 200 });
+  }
+
+  // ── Branch 2: a new booking.
   // Idempotency — Stripe delivers at least once. Skip if already recorded.
   const { data: existing } = await supabase
     .from("bookings")
@@ -48,7 +86,6 @@ export async function POST(req: Request) {
     .maybeSingle();
   if (existing) return new Response("already recorded", { status: 200 });
 
-  const md = session.metadata ?? {};
   const email = session.customer_details?.email?.toLowerCase() ?? null;
   const clientName = session.customer_details?.name || "Guest";
   const phone = session.customer_details?.phone || null;
@@ -60,6 +97,21 @@ export async function POST(req: Request) {
   const amountCents = session.amount_total ?? null;
   const fullTotalCents = md.full_total_cents ? parseInt(md.full_total_cents, 10) || null : null;
   const balanceCents = md.balance_cents ? parseInt(md.balance_cents, 10) || null : null;
+
+  // For a deposit, capture the saved card + customer so the balance can be
+  // charged off-session the day before the trip.
+  const stripeCustomerId = typeof session.customer === "string" ? session.customer : null;
+  let paymentMethodId: string | null = null;
+  if (payMode === "deposit" && typeof session.payment_intent === "string") {
+    try {
+      const pi = await stripe.paymentIntents.retrieve(session.payment_intent);
+      paymentMethodId = typeof pi.payment_method === "string" ? pi.payment_method : null;
+    } catch (e) {
+      console.error("PI retrieve failed:", e instanceof Error ? e.message : e);
+    }
+  }
+  const scheduleBalance =
+    payMode === "deposit" && (balanceCents ?? 0) > 0 && !!stripeCustomerId && !!paymentMethodId;
 
   // Upsert the customer by email, then record the booking.
   let customerId: string | null = null;
@@ -94,6 +146,10 @@ export async function POST(req: Request) {
     pay_mode: payMode,
     payment_status: "paid",
     notes: preferences || null,
+    stripe_customer_id: stripeCustomerId,
+    stripe_payment_method_id: paymentMethodId,
+    balance_cents: balanceCents ?? 0,
+    balance_status: scheduleBalance ? "scheduled" : "none",
   });
   if (error) {
     console.error("booking insert failed:", error.message);
@@ -115,6 +171,8 @@ export async function POST(req: Request) {
       totalEur,
       balanceEur,
       payMode,
+      // Tell the guest the balance auto-charges only when we actually scheduled it.
+      balanceAutoCharge: scheduleBalance,
     });
   }
   await sendAhmedJobBrief({

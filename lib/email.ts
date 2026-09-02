@@ -156,6 +156,7 @@ export type BookingEmail = {
   amountEur?: number; // amount actually charged
   totalEur?: number; // full price of the experience
   balanceEur?: number; // outstanding balance due on the day (deposit bookings)
+  balanceAutoCharge?: boolean; // balance will be auto-charged the day before
   payMode?: string; // 'full' | 'deposit'
   pickup?: string;
   time?: string;
@@ -176,11 +177,16 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
   if (b.totalEur != null) rows.push({ label: "Total", value: `€${b.totalEur}` });
   if (paidLabel) rows.push({ label: "Paid now", value: paidLabel });
   if (isDeposit && b.balanceEur != null)
-    rows.push({ label: "Balance on the day", value: `€${b.balanceEur}` });
+    rows.push({
+      label: b.balanceAutoCharge ? "Balance (day before)" : "Balance on the day",
+      value: `€${b.balanceEur}`,
+    });
 
   const balanceNote = isDeposit
     ? b.balanceEur != null
-      ? `The remaining €${b.balanceEur} is settled on the day — cash or card, whichever suits you.`
+      ? b.balanceAutoCharge
+        ? `The remaining €${b.balanceEur} will be charged automatically to your card the day before your experience — we'll email a receipt. If it can't be taken automatically, we'll send you a secure link.`
+        : `The remaining €${b.balanceEur} is settled on the day — cash or card, whichever suits you.`
       : "The remaining balance is settled on the day."
     : "";
 
@@ -211,7 +217,9 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
     b.guests ? `· Guests: ${b.guests}` : "",
     b.totalEur != null ? `· Total: €${b.totalEur}` : "",
     paidLabel ? `· Paid now: ${paidLabel}` : "",
-    isDeposit && b.balanceEur != null ? `· Balance on the day: €${b.balanceEur}` : "",
+    isDeposit && b.balanceEur != null
+      ? `· ${b.balanceAutoCharge ? "Balance (day before)" : "Balance on the day"}: €${b.balanceEur}`
+      : "",
     "",
     `What happens next: your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
     "",
@@ -338,6 +346,91 @@ export async function sendReviewRequest(b: BookingEmail): Promise<void> {
     .join("\n");
 
   await send({ to: b.email, subject: "How was your day with us?", text, html });
+}
+
+// ── Balance emails (deposit auto-charge, day before) ───────────────────────
+
+/** After the balance is charged (off-session) or paid via the link. */
+export async function sendBalanceReceipt(b: {
+  name: string;
+  email: string;
+  productName: string;
+  tripDate?: string;
+  amountEur?: number;
+}): Promise<void> {
+  const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
+  if (b.tripDate) rows.push({ label: "Date", value: b.tripDate });
+  if (b.amountEur != null) rows.push({ label: "Balance paid", value: `€${b.amountEur}` });
+
+  const html = renderEmail({
+    preheader: "Your balance is paid — you're all set.",
+    eyebrow: "Balance settled",
+    heading: "You're all set",
+    intro: [
+      `Dear ${firstName(b.name)},`,
+      b.amountEur != null
+        ? `The remaining €${b.amountEur} for your ${b.productName} has been settled — thank you. Nothing else to do.`
+        : `The balance for your ${b.productName} has been settled — thank you. Nothing else to do.`,
+    ],
+    summary: { rows },
+    outro: ["Your concierge will confirm the final timing and pickup. We can't wait to host you."],
+  });
+
+  const text = [
+    `Dear ${firstName(b.name)},`,
+    "",
+    b.amountEur != null
+      ? `The remaining €${b.amountEur} for your ${b.productName} has been settled — thank you. Nothing else to do.`
+      : `The balance for your ${b.productName} has been settled — thank you.`,
+    "",
+    "Your concierge will confirm the final timing and pickup. We can't wait to host you.",
+    "",
+    SIGNOFF_TEXT,
+  ].join("\n");
+
+  await send({ to: b.email, subject: `Balance settled — ${b.productName}`, text, html });
+}
+
+/** Fallback when the automatic balance charge can't be taken — a secure link. */
+export async function sendBalancePaymentLink(b: {
+  name: string;
+  email: string;
+  productName: string;
+  tripDate?: string;
+  amountEur?: number;
+  url: string;
+}): Promise<void> {
+  const due = b.amountEur != null ? `€${b.amountEur}` : "your balance";
+  const html = renderEmail({
+    preheader: `One quick step — please settle ${due}.`,
+    eyebrow: "One quick step",
+    heading: "Please complete your balance",
+    intro: [
+      `Dear ${firstName(b.name)},`,
+      `We tried to take the remaining ${due} for your ${b.productName}${b.tripDate ? ` on ${b.tripDate}` : ""} automatically, but your bank needs you to confirm it.`,
+      "It takes a moment and any card works:",
+    ],
+    cta: { text: `Pay ${due} securely`, url: b.url },
+    outro: [
+      "This secures your booking ahead of the day. If you'd prefer to arrange it another way, just reply and we'll help.",
+    ],
+    fineprint: "This is a secure Stripe payment page — we never see your card details.",
+  });
+
+  const text = [
+    `Dear ${firstName(b.name)},`,
+    "",
+    `We tried to take the remaining ${due} for your ${b.productName}${b.tripDate ? ` on ${b.tripDate}` : ""} automatically, but your bank needs you to confirm it.`,
+    "",
+    "Please complete it securely here (any card works):",
+    b.url,
+    "",
+    "If you'd prefer to arrange it another way, just reply and we'll help.",
+    "",
+    SIGNOFF_TEXT,
+  ].join("\n");
+
+  await send({ to: b.email, subject: `Please complete your balance — ${b.productName}`, text, html });
 }
 
 // ── Partner (Ahmed) job brief ──────────────────────────────────────────────

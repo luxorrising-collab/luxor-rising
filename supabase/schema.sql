@@ -48,14 +48,30 @@ create table if not exists public.bookings (
   pay_mode                   text,          -- 'full' | 'deposit'
   payment_status             text,          -- 'paid' | ...
   notes                      text,          -- client's design-your-day preferences
+  -- Balance auto-charge (deposit bookings): the card is saved at checkout and
+  -- the remaining balance is charged off-session the day before the trip.
+  stripe_customer_id         text,
+  stripe_payment_method_id   text,
+  balance_cents              int  not null default 0,
+  balance_status             text not null default 'none', -- none|scheduled|charging|paid|failed|link_sent
+  balance_charged_at         timestamptz,
+  balance_last_error         text,
   status                     text not null default 'confirmed'
 );
--- If the bookings table already exists from an earlier run, add the column:
+-- If the bookings table already exists from an earlier run, add the columns:
 alter table public.bookings add column if not exists notes text;
+alter table public.bookings add column if not exists stripe_customer_id text;
+alter table public.bookings add column if not exists stripe_payment_method_id text;
+alter table public.bookings add column if not exists balance_cents int not null default 0;
+alter table public.bookings add column if not exists balance_status text not null default 'none';
+alter table public.bookings add column if not exists balance_charged_at timestamptz;
+alter table public.bookings add column if not exists balance_last_error text;
 
 create index if not exists enquiries_created_idx on public.enquiries (created_at desc);
 create index if not exists bookings_created_idx  on public.bookings  (created_at desc);
 create index if not exists bookings_customer_idx on public.bookings  (customer_id);
+-- Fast lookup for the balance-charging cron (due, still scheduled).
+create index if not exists bookings_balance_due_idx on public.bookings (balance_status, trip_date);
 
 -- ── Row Level Security ─────────────────────────────────────────────────────
 -- Lock everything down. There is no end-user login: all reads/writes happen

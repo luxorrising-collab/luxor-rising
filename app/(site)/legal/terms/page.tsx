@@ -30,7 +30,7 @@ export default function TermsPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Terms &amp; Conditions
           </h1>
-          <p className={styles.updated}>Last updated 1 September 2026</p>
+          <p className={styles.updated}>Last updated 2 September 2026</p>
 
           <p className={styles.lead}>
             These terms govern your booking with Luxor Rising. By reserving an
@@ -72,8 +72,17 @@ export default function TermsPage() {
               policy.
             </li>
             <li>
+              If you pay a deposit, you authorise us to charge the remaining
+              balance to the same card automatically on the day before your
+              experience; if that charge cannot be completed we email you a secure
+              link to settle it before the day. See our{" "}
+              <Link href="/legal/cancellation">Cancellation &amp; Refunds</Link>{" "}
+              policy for detail.
+            </li>
+            <li>
               Payments are processed by our payment provider (Stripe). We do not
-              store your card details.
+              store your card details; where you pay a deposit, Stripe securely
+              stores your card so the balance can be taken as above.
             </li>
             <li>
               A booking is confirmed only once we have received payment and

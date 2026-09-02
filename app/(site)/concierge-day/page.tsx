@@ -548,7 +548,7 @@ export default async function ConciergeDayPage() {
             </div>
             <div className={styles.gr}>
               <h4>Pay your way</h4>
-              <p>Pay in full, or a deposit now and the rest on the day.</p>
+              <p>Pay in full, or a deposit now — the balance is charged automatically the day before.</p>
             </div>
           </div>
         </Reveal>
@@ -612,7 +612,7 @@ export default async function ConciergeDayPage() {
               </div>
               <div className={styles.finalGr}>
                 <h4>Pay your way</h4>
-                <p>Pay in full, or a deposit now and the rest on the day.</p>
+                <p>Pay in full, or a deposit now — the balance is charged automatically the day before.</p>
               </div>
             </div>
           </div>

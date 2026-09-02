@@ -267,7 +267,7 @@ export default function ExperienceConfigurator({
             >
               <span className={styles.payRec}>Easiest</span>
               <b>{euro(deposit)}</b>
-              <span>to reserve · rest on the day</span>
+              <span>to reserve · balance the day before</span>
             </button>
             <button
               type="button"

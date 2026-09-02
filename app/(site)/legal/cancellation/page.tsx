@@ -30,7 +30,7 @@ export default function CancellationPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Cancellation &amp; Refunds
           </h1>
-          <p className={styles.updated}>Last updated 1 September 2026</p>
+          <p className={styles.updated}>Last updated 2 September 2026</p>
 
           <p className={styles.lead}>
             We keep this fair and clear. In plain terms: you can pay in full or
@@ -44,10 +44,19 @@ export default function CancellationPage() {
           <p>
             To reserve a date you pay either the <strong>full price</strong> or a{" "}
             <strong>50% deposit</strong>, through our secure payment provider
-            (Stripe). If you pay a deposit, the remaining balance is due on or
-            before the day of your experience. Your booking is confirmed once
-            payment is received and we confirm availability (normally within 24
-            hours).
+            (Stripe). Your booking is confirmed once payment is received and we
+            confirm availability (normally within 24 hours).
+          </p>
+          <p>
+            If you pay a deposit, you authorise us to charge the remaining balance
+            to the same card <strong>automatically on the day before</strong> your
+            experience. Your card details are held securely by Stripe — we never
+            see or store them — and we email you a receipt once the balance is
+            taken. If the automatic charge cannot be completed (for example, your
+            bank asks you to confirm it), we email you a{" "}
+            <strong>secure link</strong> to pay the balance, which must be settled
+            before your experience begins. You can ask us to arrange payment
+            another way at any time by replying to your confirmation email.
           </p>
 
           <h2>2. Non-refundable costs</h2>

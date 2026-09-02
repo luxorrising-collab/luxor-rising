@@ -37,6 +37,9 @@ export type EmailContent = {
   intro?: string[];
   /** Optional "order summary" style card. */
   summary?: { title?: string; rows: SummaryRow[]; footnote?: string };
+  /** Titled lists after the summary — e.g. "Your choices", "Everything's handled".
+   *  check:true renders gold ticks; otherwise gold bullets. */
+  sections?: { title: string; items: string[]; check?: boolean }[];
   cta?: Cta;
   /** Paragraphs after the CTA / summary. */
   outro?: string[];
@@ -96,6 +99,32 @@ function summaryBlock(summary?: EmailContent["summary"]): string {
     </div>`;
 }
 
+function sectionsBlock(sections?: EmailContent["sections"]): string {
+  if (!sections || !sections.length) return "";
+  return sections
+    .map((s) => {
+      const items = s.items
+        .filter(Boolean)
+        .map((it) => {
+          const bullet = s.check
+            ? `<span style="color:${GOLD};font-weight:700;">&#10003;</span>`
+            : `<span style="color:${GOLD};">&bull;</span>`;
+          return `<tr>
+            <td style="padding:5px 12px 5px 0;font-family:${SANS};font-size:15px;line-height:1.5;vertical-align:top;width:14px;">${bullet}</td>
+            <td style="padding:5px 0;font-family:${SANS};font-size:15px;line-height:1.5;color:${ESPRESSO};">${esc(
+              it,
+            )}</td>
+          </tr>`;
+        })
+        .join("");
+      return `<div style="margin:0 0 26px;">
+        <div style="font-family:${SERIF};font-size:19px;color:${INK};margin:0 0 10px;">${esc(s.title)}</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${items}</table>
+      </div>`;
+    })
+    .join("");
+}
+
 function ctaBlock(cta?: Cta): string {
   if (!cta) return "";
   return `
@@ -146,8 +175,8 @@ export function renderEmail(c: EmailContent): string {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;border-collapse:collapse;">
         <!-- header -->
         <tr>
-          <td align="center" style="padding:32px 40px 28px;background:${HEADER_BG};border-radius:4px 4px 0 0;">
-            <img src="${LOGO}" width="150" alt="Luxor Rising" style="display:block;border:0;width:150px;max-width:52%;height:auto;margin:0 auto;">
+          <td align="center" style="padding:26px 40px 22px;background:${HEADER_BG};border-radius:4px 4px 0 0;">
+            <img src="${LOGO}" width="112" alt="Luxor Rising" style="display:block;border:0;width:112px;max-width:40%;height:auto;margin:0 auto;">
           </td>
         </tr>
         <!-- rule -->
@@ -161,6 +190,7 @@ export function renderEmail(c: EmailContent): string {
             )}</h1>
             ${paragraphs(c.intro)}
             ${summaryBlock(c.summary)}
+            ${sectionsBlock(c.sections)}
             ${ctaBlock(c.cta)}
             ${paragraphs(c.outro)}
             ${signoffHtml}

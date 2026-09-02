@@ -160,7 +160,31 @@ export type BookingEmail = {
   payMode?: string; // 'full' | 'deposit'
   pickup?: string;
   time?: string;
+  preferences?: string; // the guest's design-your-day choices (" · " joined)
 };
+
+// What every Luxor Rising booking includes — stated up front to remove doubt
+// and the need to hunt through the FAQ.
+const INCLUDED: string[] = [
+  "Private to your group — never shared with strangers",
+  "A licensed Egyptologist / expert host with you throughout",
+  "All entry tickets, permits and logistics arranged for you",
+  "Hotel or villa pickup and drop-off",
+  "Water, shade and an unhurried pace — no rushing between sites",
+  "Your concierge reachable all day, so you never have a decision to make",
+  "Free cancellation up to 7 days before",
+];
+
+// Turn the "1 days · 2 guests · Journey: … · Evening: …" preferences string into
+// clean bullet items, dropping the day/guest counts already shown in the summary.
+function choiceItems(preferences?: string): string[] {
+  if (!preferences) return [];
+  return preferences
+    .split("·")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter((s) => !/^\d+\s+(day|days|guest|guests)$/i.test(s));
+}
 
 const WHAT_TO_BRING =
   "What to bring: your passport or ID (site security asks for it), comfortable shoes, " +
@@ -190,6 +214,11 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
       : "The remaining balance is settled on the day."
     : "";
 
+  const choices = choiceItems(b.preferences);
+  const sections: { title: string; items: string[]; check?: boolean }[] = [];
+  if (choices.length) sections.push({ title: "Your day, as you shaped it", items: choices });
+  sections.push({ title: "Everything's handled", items: INCLUDED, check: true });
+
   const html = renderEmail({
     preheader: `Your ${b.productName} is confirmed.`,
     eyebrow: "Booking confirmed",
@@ -199,6 +228,7 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
       "Thank you — your booking with Luxor Rising is confirmed, and we're already looking forward to it.",
     ],
     summary: { title: "What you've reserved", rows },
+    sections,
     outro: [
       `Your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
       "Anything at all — dietary needs, mobility, a special occasion — just reply to this email and we'll take care of it.",
@@ -220,6 +250,10 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
     isDeposit && b.balanceEur != null
       ? `· ${b.balanceAutoCharge ? "Balance (day before)" : "Balance on the day"}: €${b.balanceEur}`
       : "",
+    "",
+    ...(choices.length ? ["Your day, as you shaped it:", ...choices.map((c) => `· ${c}`), ""] : []),
+    "Everything's handled:",
+    ...INCLUDED.map((i) => `· ${i}`),
     "",
     `What happens next: your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
     "",

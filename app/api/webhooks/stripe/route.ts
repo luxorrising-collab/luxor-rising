@@ -171,6 +171,7 @@ export async function POST(req: Request) {
       totalEur,
       balanceEur,
       payMode,
+      preferences: preferences || undefined,
       // Tell the guest the balance auto-charges only when we actually scheduled it.
       balanceAutoCharge: scheduleBalance,
     });

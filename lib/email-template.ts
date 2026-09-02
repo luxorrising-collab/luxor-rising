@@ -175,8 +175,8 @@ export function renderEmail(c: EmailContent): string {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;border-collapse:collapse;">
         <!-- header -->
         <tr>
-          <td align="center" style="padding:26px 40px 22px;background:${HEADER_BG};border-radius:4px 4px 0 0;">
-            <img src="${LOGO}" width="112" alt="Luxor Rising" style="display:block;border:0;width:112px;max-width:40%;height:auto;margin:0 auto;">
+          <td align="center" style="padding:48px 40px 44px;background:${HEADER_BG};border-radius:4px 4px 0 0;">
+            <img src="${LOGO}" width="84" alt="Luxor Rising" style="display:block;border:0;width:84px;max-width:30%;height:auto;margin:0 auto;">
           </td>
         </tr>
         <!-- rule -->

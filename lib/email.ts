@@ -226,6 +226,106 @@ export async function sendOrderNotification(o: {
   }
 }
 
+/** Alert the owner when an automatic balance charge fails and a link was sent. */
+export async function sendOwnerBalanceAlert(a: {
+  productName: string;
+  tripDate?: string;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  amountEur?: number;
+  reason?: string;
+}): Promise<void> {
+  const resend = client();
+  if (!resend) return;
+  const rows: SummaryRow[] = [{ label: "Experience", value: a.productName }];
+  if (a.tripDate) rows.push({ label: "Date", value: a.tripDate });
+  if (a.amountEur != null) rows.push({ label: "Balance due", value: `€${a.amountEur}` });
+  rows.push({
+    label: "Guest",
+    value: [a.customerName, a.customerEmail, a.customerPhone].filter(Boolean).join(" · ") || "—",
+  });
+  if (a.reason) rows.push({ label: "Reason", value: a.reason });
+
+  const html = renderEmail({
+    preheader: `Balance auto-charge failed — ${a.productName}`,
+    eyebrow: "Heads up",
+    heading: "A balance couldn't be auto-charged",
+    intro: [
+      "The automatic balance charge didn't go through, so we've emailed the guest a secure payment link. Keep an eye on whether they complete it before the day.",
+      "Reply to reach the guest directly.",
+    ],
+    summary: { title: "Balance", rows },
+    signoff: ["— Luxor Rising"],
+  });
+  const text = [
+    `Balance auto-charge failed — ${a.productName}`,
+    a.tripDate ? `Date: ${a.tripDate}` : "",
+    a.amountEur != null ? `Balance due: €${a.amountEur}` : "",
+    `Guest: ${[a.customerName, a.customerEmail, a.customerPhone].filter(Boolean).join(" · ")}`,
+    a.reason ? `Reason: ${a.reason}` : "",
+    "",
+    "We emailed the guest a secure link. Watch for completion.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: OWNER,
+      replyTo: a.customerEmail || REPLY_TO,
+      subject: `⚠ Balance auto-charge failed — ${a.productName}`,
+      text,
+      html,
+    });
+  } catch (err) {
+    console.error("Resend owner balance alert failed:", err instanceof Error ? err.message : err);
+  }
+}
+
+/** Daily summary of the balance-charging run (only sent when there was activity). */
+export async function sendOwnerCronSummary(s: {
+  charged: number;
+  linkSent: number;
+  reminders: number;
+  reviews: number;
+}): Promise<void> {
+  const resend = client();
+  if (!resend) return;
+  const rows: SummaryRow[] = [
+    { label: "Balances charged", value: String(s.charged) },
+    { label: "Payment links sent", value: String(s.linkSent) },
+    { label: "Trip reminders", value: String(s.reminders) },
+    { label: "Review requests", value: String(s.reviews) },
+  ];
+  const html = renderEmail({
+    preheader: `Daily run: ${s.charged} charged, ${s.linkSent} link(s), ${s.reminders} reminder(s)`,
+    eyebrow: "Daily automations",
+    heading: "Today's automated run",
+    intro: ["Here's what the daily run just did."],
+    summary: { title: "Summary", rows },
+    signoff: ["— Luxor Rising"],
+  });
+  const text = [
+    "Today's automated run",
+    `Balances charged: ${s.charged}`,
+    `Payment links sent: ${s.linkSent}`,
+    `Trip reminders: ${s.reminders}`,
+    `Review requests: ${s.reviews}`,
+  ].join("\n");
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: OWNER,
+      subject: `Daily run — ${s.charged} charged, ${s.linkSent} link(s), ${s.reminders} reminder(s)`,
+      text,
+      html,
+    });
+  } catch (err) {
+    console.error("Resend owner cron summary failed:", err instanceof Error ? err.message : err);
+  }
+}
+
 // ── Customer booking-journey emails ────────────────────────────────────────
 // All guarded (no-op without RESEND_API_KEY) and best-effort (never throw).
 // Wiring: booking confirmation → the Stripe webhook; date confirmation → the

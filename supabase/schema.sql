@@ -56,6 +56,9 @@ create table if not exists public.bookings (
   balance_status             text not null default 'none', -- none|scheduled|charging|paid|failed|link_sent
   balance_charged_at         timestamptz,
   balance_last_error         text,
+  -- Lifecycle automations (sent once each, guarded by these timestamps).
+  reminder_sent_at           timestamptz,
+  review_request_sent_at     timestamptz,
   status                     text not null default 'confirmed'
 );
 -- If the bookings table already exists from an earlier run, add the columns:
@@ -66,6 +69,8 @@ alter table public.bookings add column if not exists balance_cents int not null 
 alter table public.bookings add column if not exists balance_status text not null default 'none';
 alter table public.bookings add column if not exists balance_charged_at timestamptz;
 alter table public.bookings add column if not exists balance_last_error text;
+alter table public.bookings add column if not exists reminder_sent_at timestamptz;
+alter table public.bookings add column if not exists review_request_sent_at timestamptz;
 
 create index if not exists enquiries_created_idx on public.enquiries (created_at desc);
 create index if not exists bookings_created_idx  on public.bookings  (created_at desc);

@@ -318,6 +318,12 @@ export default function ExperienceConfigurator({
             </div>
           )}
           <div className={styles.sumReassure2}>
+            {pay === "deposit" && (
+              <div className={styles.rrow}>
+                <span className={styles.ric} aria-hidden>💳</span>
+                <span>Balance charged automatically the day before — or a secure link if your bank needs to confirm</span>
+              </div>
+            )}
             <div className={`${styles.rrow} ${styles.rrowGuar}`}>
               <span className={styles.ric} aria-hidden>🛡</span>
               <span>

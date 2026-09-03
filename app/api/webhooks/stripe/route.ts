@@ -6,6 +6,7 @@ import {
   sendBalanceReceipt,
   sendOrderNotification,
 } from "@/lib/email";
+import { SITE_URL } from "@/lib/email-template";
 
 // Stripe SDK + raw-body signature verification need the Node runtime.
 export const runtime = "nodejs";
@@ -181,14 +182,21 @@ export async function POST(req: Request) {
       balanceAutoCharge: scheduleBalance,
     });
   }
+  const productUrl = md.slug
+    ? md.slug.startsWith("concierge-day")
+      ? `${SITE_URL}/concierge-day`
+      : `${SITE_URL}/experiences/${md.slug}`
+    : undefined;
   await sendAhmedJobBrief({
     clientName,
+    clientEmail: email ?? undefined,
+    clientPhone: phone ?? undefined,
     productName,
+    productUrl,
     tripDate: tripDate ?? undefined,
     guests: guests ?? undefined,
     preferences: preferences || undefined,
-    clientContact: [email, phone].filter(Boolean).join(" · ") || undefined,
-    balanceEur: payMode === "deposit" ? balanceEur : undefined,
+    payMode,
   });
 
   // Owner notification — so the master accounts hear about every order.

@@ -11,17 +11,6 @@ import { renderEmail, SITE_URL, type SummaryRow } from "./email-template";
 //   RESEND_REPLY_TO    = luxor.rising.com@gmail.com                  (optional)
 //   ENQUIRY_NOTIFY_TO  = luxor.rising.com@gmail.com                  (optional)
 
-const FROM = process.env.RESEND_FROM || "Luxor Rising <concierge@luxorrising.com>";
-const REPLY_TO = process.env.RESEND_REPLY_TO || "luxor.rising.com@gmail.com";
-// Owner inbox(es) — every new order and enquiry is copied here. Comma-separate
-// ENQUIRY_NOTIFY_TO to override; defaults to both master accounts.
-const OWNER = (process.env.ENQUIRY_NOTIFY_TO || "luxor.rising.com@gmail.com,manofknowledge.sk@gmail.com")
-  .split(",")
-  .map((s) => s.trim())
-  .filter(Boolean);
-// The local delivery partner's inbox. Unset → the Ahmed brief is skipped.
-const AHMED = process.env.AHMED_NOTIFY_TO || "";
-
 let _resend: Resend | null = null;
 function client(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -30,7 +19,50 @@ function client(): Resend | null {
   return _resend;
 }
 
-const REVIEW_URL = process.env.GOOGLE_REVIEW_URL || `${SITE_URL}/reviews`;
+// Recipient/sender config. Managed in Keystatic (Service emails), with env
+// fallbacks so nothing breaks if the content isn't present. Cached per process.
+export type ServiceConfig = {
+  from: string;
+  replyTo: string;
+  owners: string[];
+  ahmed: string;
+  reviewUrl: string;
+};
+let _cfg: ServiceConfig | null = null;
+export async function serviceConfig(): Promise<ServiceConfig> {
+  if (_cfg) return _cfg;
+  let s: {
+    ownerEmails?: string | null;
+    ahmedEmail?: string | null;
+    replyTo?: string | null;
+    fromEmail?: string | null;
+    reviewUrl?: string | null;
+  } | null = null;
+  try {
+    // Lazy import so the module can be used (e.g. buildAhmedBrief in previews)
+    // without pulling in the Keystatic reader.
+    const { reader } = await import("@/lib/keystatic-reader");
+    s = await reader.singletons.serviceEmails.read();
+  } catch {
+    /* content not present — fall back to env */
+  }
+  const owners = (
+    s?.ownerEmails ||
+    process.env.ENQUIRY_NOTIFY_TO ||
+    "luxor.rising.com@gmail.com,manofknowledge.sk@gmail.com"
+  )
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+  _cfg = {
+    from: s?.fromEmail || process.env.RESEND_FROM || "Luxor Rising <concierge@luxorrising.com>",
+    replyTo: s?.replyTo || process.env.RESEND_REPLY_TO || "luxor.rising.com@gmail.com",
+    owners,
+    ahmed: s?.ahmedEmail || process.env.AHMED_NOTIFY_TO || "",
+    reviewUrl: s?.reviewUrl || process.env.GOOGLE_REVIEW_URL || `${SITE_URL}/reviews`,
+  };
+  return _cfg;
+}
 
 export type EnquiryEmail = {
   name: string;
@@ -56,11 +88,12 @@ async function send(opts: {
 }): Promise<void> {
   const resend = client();
   if (!resend) return;
+  const c = await serviceConfig();
   try {
     await resend.emails.send({
-      from: FROM,
+      from: c.from,
       to: opts.to,
-      replyTo: opts.replyTo ?? REPLY_TO,
+      replyTo: opts.replyTo ?? c.replyTo,
       subject: opts.subject,
       text: opts.text,
       html: opts.html,
@@ -77,6 +110,7 @@ async function send(opts: {
 export async function sendEnquiryEmails(enq: EnquiryEmail): Promise<void> {
   const resend = client();
   if (!resend) return;
+  const c = await serviceConfig();
 
   const rows: SummaryRow[] = [
     { label: "Name", value: enq.name },
@@ -121,17 +155,17 @@ export async function sendEnquiryEmails(enq: EnquiryEmail): Promise<void> {
   try {
     await Promise.all([
       resend.emails.send({
-        from: FROM,
-        to: OWNER,
+        from: c.from,
+        to: c.owners,
         replyTo: enq.email,
         subject: `New enquiry${enq.topic ? ` (${enq.topic})` : ""} — ${enq.name}`,
         text: `A new enquiry came in from the website${enq.topic ? ` — ${enq.topic}` : ""}.\n\n${textLines.join("\n")}\n`,
         html: ownerHtml,
       }),
       resend.emails.send({
-        from: FROM,
+        from: c.from,
         to: enq.email,
-        replyTo: REPLY_TO,
+        replyTo: c.replyTo,
         subject: "We've got your enquiry — Luxor Rising",
         text:
           `Dear ${firstName(enq.name)},\n\n` +
@@ -167,6 +201,7 @@ export async function sendOrderNotification(o: {
 }): Promise<void> {
   const resend = client();
   if (!resend) return;
+  const c = await serviceConfig();
 
   const isDeposit = o.payMode === "deposit";
   const rows: SummaryRow[] = [{ label: "Experience", value: o.productName }];
@@ -214,9 +249,9 @@ export async function sendOrderNotification(o: {
 
   try {
     await resend.emails.send({
-      from: FROM,
-      to: OWNER,
-      replyTo: o.customerEmail || REPLY_TO,
+      from: c.from,
+      to: c.owners,
+      replyTo: o.customerEmail || c.replyTo,
       subject: `New booking — ${o.productName}${o.tripDate ? ` · ${o.tripDate}` : ""}`,
       text,
       html,
@@ -238,6 +273,7 @@ export async function sendOwnerBalanceAlert(a: {
 }): Promise<void> {
   const resend = client();
   if (!resend) return;
+  const c = await serviceConfig();
   const rows: SummaryRow[] = [{ label: "Experience", value: a.productName }];
   if (a.tripDate) rows.push({ label: "Date", value: a.tripDate });
   if (a.amountEur != null) rows.push({ label: "Balance due", value: `€${a.amountEur}` });
@@ -271,9 +307,9 @@ export async function sendOwnerBalanceAlert(a: {
     .join("\n");
   try {
     await resend.emails.send({
-      from: FROM,
-      to: OWNER,
-      replyTo: a.customerEmail || REPLY_TO,
+      from: c.from,
+      to: c.owners,
+      replyTo: a.customerEmail || c.replyTo,
       subject: `⚠ Balance auto-charge failed — ${a.productName}`,
       text,
       html,
@@ -293,6 +329,7 @@ export async function sendOwnerCronSummary(s: {
 }): Promise<void> {
   const resend = client();
   if (!resend) return;
+  const c = await serviceConfig();
   const rows: SummaryRow[] = [
     { label: "Balances charged", value: String(s.charged) },
     { label: "Payment links sent", value: String(s.linkSent) },
@@ -317,8 +354,8 @@ export async function sendOwnerCronSummary(s: {
   ].join("\n");
   try {
     await resend.emails.send({
-      from: FROM,
-      to: OWNER,
+      from: c.from,
+      to: c.owners,
       subject: `Daily run — ${s.charged} charged, ${s.linkSent} link(s), ${s.reminders} reminder(s)`,
       text,
       html,
@@ -535,6 +572,7 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
 
 /** A day or two after — sent by a scheduled job. */
 export async function sendReviewRequest(b: BookingEmail): Promise<void> {
+  const c = await serviceConfig();
   const html = renderEmail({
     preheader: "A short review would mean the world.",
     eyebrow: "Thank you",
@@ -544,7 +582,7 @@ export async function sendReviewRequest(b: BookingEmail): Promise<void> {
       "Thank you for spending your day with Luxor Rising — it was a genuine pleasure.",
       "If it was as special for you as it was for us, a short review would mean the world — and it helps other travellers find us.",
     ],
-    cta: { text: "Leave a review", url: REVIEW_URL },
+    cta: { text: "Leave a review", url: c.reviewUrl },
     outro: [
       "And if anything fell short of what we promised, please tell us directly by replying — we'd always rather hear it from you first.",
     ],
@@ -556,7 +594,7 @@ export async function sendReviewRequest(b: BookingEmail): Promise<void> {
     "Thank you for spending your day with Luxor Rising — it was a genuine pleasure.",
     "",
     "If it was as special for you as it was for us, a short review would mean the world — and it helps other travellers find us:",
-    REVIEW_URL,
+    c.reviewUrl,
     "",
     "And if anything fell short of what we promised, please tell us directly by replying — we'd always rather hear it from you first.",
     "",
@@ -656,73 +694,105 @@ export async function sendBalancePaymentLink(b: {
 // ── Partner (Ahmed) job brief ──────────────────────────────────────────────
 export type AhmedBrief = {
   clientName: string;
+  clientEmail?: string;
+  clientPhone?: string;
   productName: string;
-  tripDate?: string;
+  productUrl?: string; // link to the product page — Ahmed's reference "manual"
+  tripDate?: string; // start date (nástup)
+  time?: string; // start / pickup time, if known
   guests?: number;
-  pickup?: string; // base / hotel / area
-  preferences?: string; // journey, water choice, add-ons, dietary, occasion, message…
-  clientContact?: string; // optional, for day-of coordination
-  balanceEur?: number; // balance to collect on the day (deposit bookings)
+  pickup?: string; // hotel / base / area, if known
+  ordered?: string[]; // explicit list of what was ordered; else derived from preferences
+  preferences?: string; // raw design-your-day string (fallback for `ordered`)
+  payMode?: string; // 'full' | 'deposit'
+  notes?: string; // any extra concierge notes
 };
 
+const TRANSFER_RE = /transfer|transport|airport|hurghada|shuttle|drive|pick[\s-]?up from/i;
+
 /**
- * The operational hand-off to the local delivery partner when a booking is
- * confirmed: what to deliver, when, for whom, and their preferences. Payment
- * follows the partnership agreement (advanced direct costs + day-rate + 20%
- * commission within 48h of delivery) — deliberately no guest price or margin.
- * Sent from the Stripe webhook. No-op if AHMED_NOTIFY_TO is unset.
+ * Build Ahmed's operational run sheet: everything he needs to deliver the day —
+ * what was booked, when, for whom, how to reach the client, and the full list
+ * of what they ordered. Deliberately no guest price or margin; payment follows
+ * the partnership agreement. Separated from sending so a preview can reuse it.
  */
-export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
-  if (!AHMED) return;
+export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string; text: string } {
+  const ordered = b.ordered && b.ordered.length ? b.ordered : choiceItems(b.preferences);
+  const transferItems = ordered.filter((i) => TRANSFER_RE.test(i));
+  const isDeposit = b.payMode === "deposit";
 
   const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
-  if (b.tripDate) rows.push({ label: "Date", value: b.tripDate });
+  if (b.tripDate) rows.push({ label: "Start date", value: `${b.tripDate}${b.time ? ` · ${b.time}` : ""}` });
   if (b.guests) rows.push({ label: "Guests", value: String(b.guests) });
-  if (b.pickup) rows.push({ label: "Pickup / base", value: b.pickup });
-  rows.push({ label: "Client", value: `${b.clientName}${b.clientContact ? ` — ${b.clientContact}` : ""}` });
-  if (b.balanceEur != null)
-    rows.push({ label: "Collect on the day", value: `€${b.balanceEur} (guest balance)` });
+  rows.push({ label: "Pickup / base", value: b.pickup || "To be confirmed by concierge" });
+  if (transferItems.length) rows.push({ label: "Transfer", value: transferItems.join(" · ") });
+  rows.push({ label: "Client", value: b.clientName });
+  if (b.clientPhone) rows.push({ label: "Call the client", value: b.clientPhone });
+  if (b.clientEmail) rows.push({ label: "Email", value: b.clientEmail });
+  if (b.productUrl) rows.push({ label: "Product page", value: b.productUrl });
+
+  const sections: { title: string; items: string[]; check?: boolean }[] = [];
+  if (ordered.length) sections.push({ title: "What the client ordered", items: ordered, check: true });
+  if (b.notes) sections.push({ title: "Notes", items: [b.notes] });
+
+  const paidLine = isDeposit
+    ? "The client has paid their deposit to Luxor Rising; the remaining balance is auto-charged before the day — you collect nothing from the guest."
+    : "The client has paid in full to Luxor Rising — you collect nothing from the guest.";
 
   const html = renderEmail({
-    preheader: `New booking to deliver${b.tripDate ? ` — ${b.tripDate}` : ""}.`,
-    eyebrow: "Operations",
-    heading: "A booking is confirmed",
-    intro: ["Please prepare to deliver this booking to the Luxor Rising standard (Schedule A) — punctual, private, unhurried, the sites timed against the crowds."],
-    summary: { title: "Job brief", rows },
-    outro: b.preferences ? ["What they chose / preferences:", b.preferences] : [],
+    preheader: `Deliver: ${b.productName}${b.tripDate ? ` — ${b.tripDate}` : ""}`,
+    eyebrow: "Operations · job brief",
+    heading: "A booking is confirmed — please deliver it",
+    intro: [
+      "A client has booked and paid. Everything you need is below — treat it as your run sheet for the day.",
+      "Please call the client to introduce yourself and confirm the pickup point and time.",
+    ],
+    summary: { title: "Booking", rows },
+    sections,
+    outro: [
+      paidLine,
+      "Deliver to the Luxor Rising standard (Schedule A) — punctual, private, unhurried, the sites timed against the crowds.",
+    ],
     fineprint:
-      "Payment (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of delivery. Reply here to confirm you can cover this day, or if you'll send a vetted replacement.",
+      "Your settlement (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of successful delivery. Reply here to confirm you can cover this day, or if you'll send a vetted replacement.",
     signoff: ["— Luxor Rising"],
   });
 
   const text = [
-    "A booking is confirmed — please prepare to deliver it.",
+    "A booking is confirmed — please deliver it. Call the client to confirm pickup.",
     "",
-    `· Experience: ${b.productName}`,
-    b.tripDate ? `· Date: ${b.tripDate}` : "",
-    b.guests ? `· Guests: ${b.guests}` : "",
-    b.pickup ? `· Pickup / base: ${b.pickup}` : "",
-    `· Client: ${b.clientName}${b.clientContact ? ` (${b.clientContact})` : ""}`,
-    b.balanceEur != null ? `· Collect on the day: €${b.balanceEur} (guest balance)` : "",
+    `Experience: ${b.productName}`,
+    b.productUrl ? `Product page: ${b.productUrl}` : "",
+    b.tripDate ? `Start date: ${b.tripDate}${b.time ? ` · ${b.time}` : ""}` : "",
+    b.guests ? `Guests: ${b.guests}` : "",
+    `Pickup / base: ${b.pickup || "To be confirmed by concierge"}`,
+    transferItems.length ? `Transfer: ${transferItems.join(" · ")}` : "",
+    `Client: ${b.clientName}`,
+    b.clientPhone ? `Call the client: ${b.clientPhone}` : "",
+    b.clientEmail ? `Email: ${b.clientEmail}` : "",
     "",
-    b.preferences ? `What they chose / preferences:\n${b.preferences}` : "",
+    ordered.length ? "What the client ordered:" : "",
+    ...ordered.map((i) => `· ${i}`),
+    b.notes ? `\nNotes: ${b.notes}` : "",
     "",
-    "Please deliver to the Luxor Rising standard (Schedule A) — punctual, private, unhurried, the sites timed against the crowds.",
+    paidLine,
     "",
-    "Payment (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of delivery.",
-    "",
-    "Reply here to confirm you can cover this day, or if you'll send a vetted replacement.",
+    "Your settlement (per our agreement): direct costs advanced before the day; day-rate + 20% commission within 48h of successful delivery.",
+    "Reply to confirm you can cover this day, or if you'll send a vetted replacement.",
     "",
     "— Luxor Rising",
   ]
     .filter(Boolean)
     .join("\n");
 
-  await send({
-    to: AHMED,
-    subject: `New booking to deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`,
-    text,
-    html,
-    replyTo: REPLY_TO,
-  });
+  const subject = `Deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`;
+  return { subject, html, text };
+}
+
+/** Send Ahmed's brief. No-op until the partner email is set (Keystatic / env). */
+export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
+  const c = await serviceConfig();
+  if (!c.ahmed) return;
+  const { subject, html, text } = buildAhmedBrief(b);
+  await send({ to: c.ahmed, subject, text, html });
 }

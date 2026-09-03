@@ -1416,6 +1416,34 @@ export default config({
         }),
       },
     }),
+    serviceEmails: singleton({
+      label: "Service emails (notifications)",
+      path: "content/service-emails/",
+      schema: {
+        ownerEmails: fields.text({
+          label: "Owner notification inbox(es)",
+          description:
+            "Where every new order and enquiry is sent. Separate multiple addresses with commas.",
+        }),
+        ahmedEmail: fields.text({
+          label: "Delivery partner (Ahmed) email",
+          description:
+            "Job briefs are sent here when a booking is paid. Leave blank to pause partner briefs.",
+        }),
+        replyTo: fields.text({
+          label: "Reply-to address (guest emails)",
+          description: "Where guest replies land, e.g. luxor.rising.com@gmail.com.",
+        }),
+        fromEmail: fields.text({
+          label: "From (sender)",
+          description: 'e.g. "Luxor Rising <concierge@luxorrising.com>". Must be on your verified domain.',
+        }),
+        reviewUrl: fields.url({
+          label: "Review link",
+          description: "Google review link used in the after-trip review request.",
+        }),
+      },
+    }),
     pricing: singleton({
       label: "Product prices",
       path: "content/pricing/",

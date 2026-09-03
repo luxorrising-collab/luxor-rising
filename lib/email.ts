@@ -705,10 +705,37 @@ export type AhmedBrief = {
   ordered?: string[]; // explicit list of what was ordered; else derived from preferences
   preferences?: string; // raw design-your-day string (fallback for `ordered`)
   payMode?: string; // 'full' | 'deposit'
+  days?: number; // concierge journeys: number of days (drives the menu below)
   notes?: string; // any extra concierge notes
 };
 
 const TRANSFER_RE = /transfer|transport|airport|hurghada|shuttle|drive|pick[\s-]?up from/i;
+
+// The full Concierge Day menu (from the Day configurator) — shown on multi-day
+// journeys, where the exact sites/activities and their order are agreed with
+// the client rather than fully chosen at checkout.
+const CONCIERGE_TEMPLES: string[] = [
+  "Karnak Temple (at dawn)",
+  "Luxor Temple",
+  "Medinet Habu — temple of Ramesses III",
+  "Hatshepsut Temple (Deir el-Bahari)",
+  "Valley of the Kings",
+  "Valley of the Workers (Deir el-Medina)",
+  "Deir el-Shelwit",
+  "Colossi of Memnon",
+];
+const CONCIERGE_ACTIVITIES: string[] = [
+  "Hot-air balloon at dawn over the West Bank",
+  "Felucca / sunset sail on the Nile",
+  "Desert sunset picnic",
+  "Desert rally",
+  "Sailing lesson on the Nile",
+  "Private photoshoot",
+  "A night out in Luxor",
+  "Licensed Egyptologist guiding",
+  "Air-conditioned private transfers",
+  "Hurghada round-trip transfer",
+];
 
 /**
  * Build Ahmed's operational run sheet: everything he needs to deliver the day —
@@ -731,8 +758,25 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   if (b.clientEmail) rows.push({ label: "Email", value: b.clientEmail });
   if (b.productUrl) rows.push({ label: "Product page", value: b.productUrl });
 
+  const multiDay = (b.days ?? 0) >= 2;
   const sections: { title: string; items: string[]; check?: boolean }[] = [];
-  if (ordered.length) sections.push({ title: "What the client ordered", items: ordered, check: true });
+  if (ordered.length)
+    sections.push({
+      title: multiDay ? "What the client has chosen so far" : "What the client ordered",
+      items: ordered,
+      check: true,
+    });
+  if (multiDay) {
+    sections.push({ title: "Temples & sites on the menu", items: CONCIERGE_TEMPLES });
+    sections.push({ title: "Activities on the menu", items: CONCIERGE_ACTIVITIES });
+    if ((b.days ?? 0) >= 3)
+      sections.push({
+        title: "Signature bonuses — included, on us",
+        items: [
+          `Two signature moments come included on this ${b.days}-day journey — decide which together with the client.`,
+        ],
+      });
+  }
   if (b.notes) sections.push({ title: "Notes", items: [b.notes] });
 
   const paidLine = isDeposit
@@ -749,17 +793,20 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     heading: "Wonderful — a new guest to look after",
     intro: [
       "Great news: another Luxor Rising guest is coming your way, and they're in the very best hands with you. 🎉",
-      "Here's your run sheet for the day. Please give them a warm call to say hello and confirm the pickup point and time.",
+      multiDay
+        ? `This is a ${b.days}-day concierge journey — the exact temples, activities and their order you'll shape together with the client. The full menu they can choose from is below.`
+        : "Here's your run sheet for the day.",
+      "Please give them a warm call to say hello and confirm the pickup point and time.",
     ],
     summary: { title: "Booking", rows },
     sections,
     outro: [
       paidLine,
       "Unless we hear otherwise, we'll take this as confirmed within 24 hours. If anything about it doesn't work for you — the date, the transfer, anything at all — just contact us straight away and we'll make it right.",
-      "Thank you for the care you give our guests — please deliver it to the Luxor Rising standard (Schedule A): punctual, private, unhurried, the sites timed against the crowds.",
+      "Every guest you delight can become a returning traveller and a warm recommendation — real long-term value for both of us. Thank you for looking after them; it's how we keep building this together.",
     ],
     fineprint:
-      "Your settlement (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of successful delivery.",
+      "Your costs for this booking are calculated per our agreement, and settled per our agreement — direct costs advanced before the day; your day-rate and 20% commission within 48 hours of successful delivery.",
     signoff: ["— The Luxor Rising concierge team"],
   });
 
@@ -768,6 +815,9 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     bannerTitle,
     "",
     "Great news — another guest to look after, and they're in the very best hands with you! Give them a warm call to say hello and confirm the pickup point and time.",
+    multiDay
+      ? `\nThis is a ${b.days}-day concierge journey — you'll shape the exact temples, activities and their order together with the client. The full menu is below.`
+      : "",
     "",
     `Experience: ${b.productName}`,
     b.productUrl ? `Product page: ${b.productUrl}` : "",
@@ -779,15 +829,30 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     b.clientPhone ? `Call the client: ${b.clientPhone}` : "",
     b.clientEmail ? `Email: ${b.clientEmail}` : "",
     "",
-    ordered.length ? "What the client ordered:" : "",
+    ordered.length ? (multiDay ? "What the client has chosen so far:" : "What the client ordered:") : "",
     ...ordered.map((i) => `· ${i}`),
+    ...(multiDay
+      ? [
+          "",
+          "Temples & sites on the menu:",
+          ...CONCIERGE_TEMPLES.map((i) => `· ${i}`),
+          "",
+          "Activities on the menu:",
+          ...CONCIERGE_ACTIVITIES.map((i) => `· ${i}`),
+          ...((b.days ?? 0) >= 3
+            ? ["", `Signature bonuses — included, on us: two signature moments come included on this ${b.days}-day journey; decide which together with the client.`]
+            : []),
+        ]
+      : []),
     b.notes ? `\nNotes: ${b.notes}` : "",
     "",
     paidLine,
     "",
     "Unless we hear otherwise, we'll take this as confirmed within 24 hours. If anything about it doesn't work for you — date, transfer, anything — contact us straight away and we'll make it right.",
     "",
-    "Your settlement (per our agreement): direct costs advanced before the day; day-rate + 20% commission within 48h of successful delivery.",
+    "Every guest you delight can become a returning traveller and a warm recommendation — real long-term value for both of us. Thank you for looking after them; it's how we keep building this together.",
+    "",
+    "Your costs for this booking are calculated per our agreement, and settled per our agreement — direct costs advanced before the day; day-rate + 20% commission within 48h of successful delivery.",
     "",
     "— The Luxor Rising concierge team",
   ]

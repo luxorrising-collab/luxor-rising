@@ -182,10 +182,15 @@ export async function POST(req: Request) {
       balanceAutoCharge: scheduleBalance,
     });
   }
+  const isConcierge = (md.slug || "").startsWith("concierge-day");
   const productUrl = md.slug
-    ? md.slug.startsWith("concierge-day")
+    ? isConcierge
       ? `${SITE_URL}/concierge-day`
       : `${SITE_URL}/experiences/${md.slug}`
+    : undefined;
+  // Concierge journeys encode the day count in the slug (e.g. concierge-day-3d).
+  const conciergeDays = isConcierge
+    ? parseInt((md.slug || "").match(/concierge-day-(\d+)d/)?.[1] || "", 10) || undefined
     : undefined;
   await sendAhmedJobBrief({
     clientName,
@@ -197,6 +202,7 @@ export async function POST(req: Request) {
     guests: guests ?? undefined,
     preferences: preferences || undefined,
     payMode,
+    days: conciergeDays,
   });
 
   // Owner notification — so the master accounts hear about every order.

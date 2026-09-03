@@ -13,7 +13,12 @@ import { renderEmail, SITE_URL, type SummaryRow } from "./email-template";
 
 const FROM = process.env.RESEND_FROM || "Luxor Rising <concierge@luxorrising.com>";
 const REPLY_TO = process.env.RESEND_REPLY_TO || "luxor.rising.com@gmail.com";
-const OWNER = process.env.ENQUIRY_NOTIFY_TO || "luxor.rising.com@gmail.com";
+// Owner inbox(es) — every new order and enquiry is copied here. Comma-separate
+// ENQUIRY_NOTIFY_TO to override; defaults to both master accounts.
+const OWNER = (process.env.ENQUIRY_NOTIFY_TO || "luxor.rising.com@gmail.com,manofknowledge.sk@gmail.com")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 // The local delivery partner's inbox. Unset → the Ahmed brief is skipped.
 const AHMED = process.env.AHMED_NOTIFY_TO || "";
 
@@ -139,6 +144,85 @@ export async function sendEnquiryEmails(enq: EnquiryEmail): Promise<void> {
     ]);
   } catch (err) {
     console.error("Resend send failed:", err instanceof Error ? err.message : err);
+  }
+}
+
+/**
+ * Notify the owner inbox(es) of a new paid booking. Reply goes to the guest.
+ * Best-effort — never throws (must not fail the webhook).
+ */
+export async function sendOrderNotification(o: {
+  productName: string;
+  tripDate?: string;
+  guests?: number;
+  amountEur?: number;
+  totalEur?: number;
+  balanceEur?: number;
+  payMode?: string;
+  balanceAutoCharge?: boolean;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  preferences?: string;
+}): Promise<void> {
+  const resend = client();
+  if (!resend) return;
+
+  const isDeposit = o.payMode === "deposit";
+  const rows: SummaryRow[] = [{ label: "Experience", value: o.productName }];
+  if (o.tripDate) rows.push({ label: "Date", value: o.tripDate });
+  if (o.guests) rows.push({ label: "Guests", value: String(o.guests) });
+  if (o.totalEur != null) rows.push({ label: "Total", value: `€${o.totalEur}` });
+  if (o.amountEur != null)
+    rows.push({ label: "Paid now", value: `€${o.amountEur}${isDeposit ? " (deposit)" : " (full)"}` });
+  if (isDeposit && o.balanceEur != null)
+    rows.push({
+      label: o.balanceAutoCharge ? "Balance (auto, day before)" : "Balance",
+      value: `€${o.balanceEur}`,
+    });
+  rows.push({
+    label: "Guest",
+    value: [o.customerName, o.customerEmail, o.customerPhone].filter(Boolean).join(" · ") || "—",
+  });
+
+  const sections = choiceItems(o.preferences).length
+    ? [{ title: "Their choices", items: choiceItems(o.preferences) }]
+    : undefined;
+
+  const html = renderEmail({
+    preheader: `New booking — ${o.productName}${o.tripDate ? ` · ${o.tripDate}` : ""}`,
+    eyebrow: "New booking",
+    heading: `New booking — ${o.productName}`,
+    intro: ["A new booking was paid on the website. Reply to reach the guest."],
+    summary: { title: "Order", rows },
+    sections,
+    signoff: ["— Luxor Rising"],
+  });
+
+  const text = [
+    `New booking — ${o.productName}`,
+    o.tripDate ? `Date: ${o.tripDate}` : "",
+    o.guests ? `Guests: ${o.guests}` : "",
+    o.totalEur != null ? `Total: €${o.totalEur}` : "",
+    o.amountEur != null ? `Paid now: €${o.amountEur}${isDeposit ? " (deposit)" : " (full)"}` : "",
+    isDeposit && o.balanceEur != null ? `Balance: €${o.balanceEur}` : "",
+    `Guest: ${[o.customerName, o.customerEmail, o.customerPhone].filter(Boolean).join(" · ")}`,
+    o.preferences ? `\nTheir choices:\n${o.preferences}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: OWNER,
+      replyTo: o.customerEmail || REPLY_TO,
+      subject: `New booking — ${o.productName}${o.tripDate ? ` · ${o.tripDate}` : ""}`,
+      text,
+      html,
+    });
+  } catch (err) {
+    console.error("Resend owner order notification failed:", err instanceof Error ? err.message : err);
   }
 }
 

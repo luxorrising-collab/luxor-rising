@@ -1,6 +1,11 @@
 import Stripe from "stripe";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { sendBookingConfirmation, sendAhmedJobBrief, sendBalanceReceipt } from "@/lib/email";
+import {
+  sendBookingConfirmation,
+  sendAhmedJobBrief,
+  sendBalanceReceipt,
+  sendOrderNotification,
+} from "@/lib/email";
 
 // Stripe SDK + raw-body signature verification need the Node runtime.
 export const runtime = "nodejs";
@@ -184,6 +189,22 @@ export async function POST(req: Request) {
     preferences: preferences || undefined,
     clientContact: [email, phone].filter(Boolean).join(" · ") || undefined,
     balanceEur: payMode === "deposit" ? balanceEur : undefined,
+  });
+
+  // Owner notification — so the master accounts hear about every order.
+  await sendOrderNotification({
+    productName,
+    tripDate: tripDate ?? undefined,
+    guests: guests ?? undefined,
+    amountEur,
+    totalEur,
+    balanceEur,
+    payMode,
+    balanceAutoCharge: scheduleBalance,
+    customerName: clientName,
+    customerEmail: email ?? undefined,
+    customerPhone: phone ?? undefined,
+    preferences: preferences || undefined,
   });
 
   return new Response("ok", { status: 200 });

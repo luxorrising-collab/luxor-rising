@@ -707,6 +707,7 @@ export type AhmedBrief = {
   payMode?: string; // 'full' | 'deposit'
   days?: number; // concierge journeys: number of days (drives the menu below)
   notes?: string; // any extra concierge notes
+  sample?: boolean; // a clearly-labelled sample (not a real booking)
 };
 
 const TRANSFER_RE = /transfer|transport|airport|hurghada|shuttle|drive|pick[\s-]?up from/i;
@@ -824,11 +825,20 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     b.guests ? ` · ${b.guests} guest${b.guests > 1 ? "s" : ""}` : ""
   }${b.tripDate ? ` · ${b.tripDate}` : ""}`;
 
+  const sample = b.sample === true;
   const html = renderEmail({
-    preheader: `New booking for you — ${bannerTitle}`,
-    banner: { kicker: "New reservation · Luxor Rising", title: bannerTitle },
-    heading: "Wonderful — a new guest to look after",
+    preheader: sample ? `Sample brief — this is how bookings will look` : `New booking for you — ${bannerTitle}`,
+    banner: {
+      kicker: sample ? "Sample · not a real booking" : "New reservation · Luxor Rising",
+      title: bannerTitle,
+    },
+    heading: sample ? "A quick sample for you" : "Wonderful — a new guest to look after",
     intro: [
+      ...(sample
+        ? [
+            "Hello Ahmed! This is a sample so you can see exactly what a Luxor Rising booking will look like — there is nothing to deliver here, it isn't a real booking. The real ones will arrive the same way, and we'll be in touch.",
+          ]
+        : []),
       "Great news: another Luxor Rising guest is coming your way, and they're in the very best hands with you. 🎉",
       isConcierge
         ? `This is a ${b.days}-day concierge journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
@@ -848,9 +858,12 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   });
 
   const text = [
-    "NEW RESERVATION · LUXOR RISING",
+    sample ? "SAMPLE · NOT A REAL BOOKING" : "NEW RESERVATION · LUXOR RISING",
     bannerTitle,
     "",
+    sample
+      ? "Hello Ahmed! This is a sample so you can see what a Luxor Rising booking will look like — there is nothing to deliver here, it isn't a real booking. The real ones will arrive the same way."
+      : "",
     "Great news — another guest to look after, and they're in the very best hands with you! Give them a warm call to say hello and confirm the pickup point and time.",
     isConcierge
       ? `\nThis is a ${b.days}-day concierge journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
@@ -907,7 +920,9 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     .filter(Boolean)
     .join("\n");
 
-  const subject = `Deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`;
+  const subject = sample
+    ? `[SAMPLE — not a real booking] ${b.productName}`
+    : `Deliver${b.tripDate ? ` — ${b.tripDate}` : ""} · ${b.productName}`;
   return { subject, html, text };
 }
 

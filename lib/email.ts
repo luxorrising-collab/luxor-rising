@@ -739,27 +739,35 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     ? "The client has paid their deposit to Luxor Rising; the remaining balance is auto-charged before the day — you collect nothing from the guest."
     : "The client has paid in full to Luxor Rising — you collect nothing from the guest.";
 
+  const bannerTitle = `${b.productName}${
+    b.guests ? ` · ${b.guests} guest${b.guests > 1 ? "s" : ""}` : ""
+  }${b.tripDate ? ` · ${b.tripDate}` : ""}`;
+
   const html = renderEmail({
-    preheader: `Deliver: ${b.productName}${b.tripDate ? ` — ${b.tripDate}` : ""}`,
-    eyebrow: "Operations · job brief",
-    heading: "A booking is confirmed — please deliver it",
+    preheader: `New booking for you — ${bannerTitle}`,
+    banner: { kicker: "New reservation · Luxor Rising", title: bannerTitle },
+    heading: "Wonderful — a new guest to look after",
     intro: [
-      "A client has booked and paid. Everything you need is below — treat it as your run sheet for the day.",
-      "Please call the client to introduce yourself and confirm the pickup point and time.",
+      "Great news: another Luxor Rising guest is coming your way, and they're in the very best hands with you. 🎉",
+      "Here's your run sheet for the day. Please give them a warm call to say hello and confirm the pickup point and time.",
     ],
     summary: { title: "Booking", rows },
     sections,
     outro: [
       paidLine,
-      "Deliver to the Luxor Rising standard (Schedule A) — punctual, private, unhurried, the sites timed against the crowds.",
+      "Unless we hear otherwise, we'll take this as confirmed within 24 hours. If anything about it doesn't work for you — the date, the transfer, anything at all — just contact us straight away and we'll make it right.",
+      "Thank you for the care you give our guests — please deliver it to the Luxor Rising standard (Schedule A): punctual, private, unhurried, the sites timed against the crowds.",
     ],
     fineprint:
-      "Your settlement (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of successful delivery. Reply here to confirm you can cover this day, or if you'll send a vetted replacement.",
-    signoff: ["— Luxor Rising"],
+      "Your settlement (per our agreement): direct costs are advanced before the day; your day-rate and 20% commission are settled within 48 hours of successful delivery.",
+    signoff: ["— The Luxor Rising concierge team"],
   });
 
   const text = [
-    "A booking is confirmed — please deliver it. Call the client to confirm pickup.",
+    "NEW RESERVATION · LUXOR RISING",
+    bannerTitle,
+    "",
+    "Great news — another guest to look after, and they're in the very best hands with you! Give them a warm call to say hello and confirm the pickup point and time.",
     "",
     `Experience: ${b.productName}`,
     b.productUrl ? `Product page: ${b.productUrl}` : "",
@@ -777,10 +785,11 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     "",
     paidLine,
     "",
-    "Your settlement (per our agreement): direct costs advanced before the day; day-rate + 20% commission within 48h of successful delivery.",
-    "Reply to confirm you can cover this day, or if you'll send a vetted replacement.",
+    "Unless we hear otherwise, we'll take this as confirmed within 24 hours. If anything about it doesn't work for you — date, transfer, anything — contact us straight away and we'll make it right.",
     "",
-    "— Luxor Rising",
+    "Your settlement (per our agreement): direct costs advanced before the day; day-rate + 20% commission within 48h of successful delivery.",
+    "",
+    "— The Luxor Rising concierge team",
   ]
     .filter(Boolean)
     .join("\n");

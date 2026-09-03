@@ -31,6 +31,8 @@ export type Cta = { text: string; url: string };
 
 export type EmailContent = {
   preheader: string; // hidden inbox-preview line
+  /** Optional bold banner strip under the logo — e.g. "New reservation". */
+  banner?: { kicker: string; title: string };
   eyebrow?: string; // small gold label above the heading
   heading: string;
   /** Intro paragraphs (plain text; rendered as styled <p>). */
@@ -156,6 +158,16 @@ export function renderEmail(c: EmailContent): string {
         c.fineprint,
       )}</div>`
     : "";
+  const banner = c.banner
+    ? `<tr><td style="padding:18px 40px;background:${ESPRESSO};text-align:center;">
+        <div style="font-family:${SANS};font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${GOLD};">${esc(
+          c.banner.kicker,
+        )}</div>
+        <div style="font-family:${SERIF};font-size:21px;line-height:1.25;color:${CREAM};margin-top:5px;">${esc(
+          c.banner.title,
+        )}</div>
+      </td></tr>`
+    : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -181,6 +193,8 @@ export function renderEmail(c: EmailContent): string {
         </tr>
         <!-- rule -->
         <tr><td style="height:3px;line-height:3px;font-size:0;background:${ESPRESSO};">&nbsp;</td></tr>
+        <!-- banner -->
+        ${banner}
         <!-- body -->
         <tr>
           <td style="padding:40px 40px 36px;background:${PAPER};">

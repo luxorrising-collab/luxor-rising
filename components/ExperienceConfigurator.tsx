@@ -99,6 +99,19 @@ export default function ExperienceConfigurator({
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
 
+  // The balance is auto-charged the day before, so a deposit only makes sense
+  // when the date is at least ~2 days out. Closer than that → full payment only.
+  const depositAllowed = useMemo(() => {
+    if (!tripDate) return true;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const trip = new Date(`${tripDate}T00:00:00`);
+    return Math.round((trip.getTime() - today.getTime()) / 86400000) >= 2;
+  }, [tripDate]);
+  useEffect(() => {
+    if (!depositAllowed && pay === "deposit") setPay("full");
+  }, [depositAllowed, pay]);
+
   const includes = useMemo<{ title: string; note?: string }[]>(() => {
     if (includeItems?.length) return includeItems;
     // Legacy: older products still describe this as a "·"-separated line.
@@ -259,16 +272,18 @@ export default function ExperienceConfigurator({
           />
           <div className={styles.sumSub}>How you&apos;d like to pay</div>
           <div className={styles.payOpts}>
-            <button
-              type="button"
-              className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
-              onClick={() => setPay("deposit")}
-              aria-pressed={pay === "deposit"}
-            >
-              <span className={styles.payRec}>Easiest</span>
-              <b>{euro(deposit)}</b>
-              <span>to reserve · balance the day before</span>
-            </button>
+            {depositAllowed && (
+              <button
+                type="button"
+                className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
+                onClick={() => setPay("deposit")}
+                aria-pressed={pay === "deposit"}
+              >
+                <span className={styles.payRec}>Easiest</span>
+                <b>{euro(deposit)}</b>
+                <span>to reserve · balance the day before</span>
+              </button>
+            )}
             <button
               type="button"
               className={`${styles.pay} ${pay === "full" ? styles.sel : ""}`}
@@ -279,6 +294,11 @@ export default function ExperienceConfigurator({
               <span>Pay in full</span>
             </button>
           </div>
+          {!depositAllowed && tripDate && (
+            <div className={styles.sumSub} style={{ opacity: 0.7 }}>
+              A deposit isn&apos;t available this close to your date — pay in full to confirm.
+            </div>
+          )}
           <label className={styles.sumConsent}>
             <input
               type="checkbox"

@@ -39,6 +39,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing or invalid booking details." }, { status: 400 });
   }
 
+  // A deposit relies on the day-before balance auto-charge, which can't run this
+  // close to the date — require full payment instead. The client already hides
+  // the deposit option for near dates; this guards against tampering.
+  if (mode === "deposit") {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const daysUntil = date
+      ? Math.round((new Date(`${date}T00:00:00`).getTime() - today.getTime()) / 86400000)
+      : -1;
+    if (daysUntil < 2) {
+      return NextResponse.json(
+        { error: "A deposit isn't available this close to your date — please pay in full." },
+        { status: 400 },
+      );
+    }
+  }
+
   // Full price + balance still owed (for the deposit recap and the records).
   const fullTotalCents = totalCents && totalCents >= amountCents ? Math.round(totalCents) : Math.round(amountCents);
   const balanceCents = mode === "deposit" ? Math.max(0, fullTotalCents - Math.round(amountCents)) : 0;

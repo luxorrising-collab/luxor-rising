@@ -40,8 +40,9 @@ export type EmailContent = {
   /** Optional "order summary" style card. */
   summary?: { title?: string; rows: SummaryRow[]; footnote?: string };
   /** Titled lists after the summary — e.g. "Your choices", "Everything's handled".
-   *  check:true renders gold ticks; otherwise gold bullets. */
-  sections?: { title: string; items: string[]; check?: boolean }[];
+   *  check:true renders gold ticks; otherwise gold bullets. small:true renders
+   *  a more compact, smaller-font list (for long service menus). */
+  sections?: { title: string; items: string[]; check?: boolean; small?: boolean }[];
   cta?: Cta;
   /** Paragraphs after the CTA / summary. */
   outro?: string[];
@@ -105,6 +106,8 @@ function sectionsBlock(sections?: EmailContent["sections"]): string {
   if (!sections || !sections.length) return "";
   return sections
     .map((s) => {
+      const fs = s.small ? 13 : 15;
+      const pad = s.small ? "3px" : "5px";
       const items = s.items
         .filter(Boolean)
         .map((it) => {
@@ -112,15 +115,17 @@ function sectionsBlock(sections?: EmailContent["sections"]): string {
             ? `<span style="color:${GOLD};font-weight:700;">&#10003;</span>`
             : `<span style="color:${GOLD};">&bull;</span>`;
           return `<tr>
-            <td style="padding:5px 12px 5px 0;font-family:${SANS};font-size:15px;line-height:1.5;vertical-align:top;width:14px;">${bullet}</td>
-            <td style="padding:5px 0;font-family:${SANS};font-size:15px;line-height:1.5;color:${ESPRESSO};">${esc(
+            <td style="padding:${pad} 12px ${pad} 0;font-family:${SANS};font-size:${fs}px;line-height:1.5;vertical-align:top;width:14px;">${bullet}</td>
+            <td style="padding:${pad} 0;font-family:${SANS};font-size:${fs}px;line-height:1.5;color:${ESPRESSO};">${esc(
               it,
             )}</td>
           </tr>`;
         })
         .join("");
-      return `<div style="margin:0 0 26px;">
-        <div style="font-family:${SERIF};font-size:19px;color:${INK};margin:0 0 10px;">${esc(s.title)}</div>
+      return `<div style="margin:0 0 ${s.small ? "22px" : "26px"};">
+        <div style="font-family:${SERIF};font-size:${s.small ? 17 : 19}px;color:${INK};margin:0 0 ${s.small ? "8px" : "10px"};">${esc(
+          s.title,
+        )}</div>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${items}</table>
       </div>`;
     })

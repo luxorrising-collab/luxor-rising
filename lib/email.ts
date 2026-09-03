@@ -737,6 +737,25 @@ const CONCIERGE_ACTIVITIES: string[] = [
   "Hurghada round-trip transfer",
 ];
 
+// The concierge journey scope — what the guest has paid for and must receive,
+// exactly as promised on the page (food, transfers, tickets, guiding, photos).
+function conciergeIncluded(days: number, hasTransfer: boolean, guests?: number): string[] {
+  const g = guests ? `${guests} guest${guests > 1 ? "s" : ""}` : "the guests";
+  return [
+    "A full meal plus up to three hand-picked local food & coffee stops each day — where locals actually eat",
+    "Your own licensed Egyptologist — every day",
+    `All monument entry tickets for ${g}`,
+    hasTransfer ? "Hurghada hotel pickup & private desert crossing" : "",
+    days >= 4
+      ? "Private, air-conditioned transfers throughout — upgraded to VIP on the unhurried days"
+      : "Private, air-conditioned transfers throughout",
+    "Every reservation, timing & fast-track entry, arranged in advance",
+    "The day photographed on the guest's own phone — same day, before dinner",
+    "No hassle — nobody follows, sells, or asks for a tip; the guards know us",
+    "Concierge reachable on WhatsApp all day",
+  ].filter(Boolean);
+}
+
 /**
  * Build Ahmed's operational run sheet: everything he needs to deliver the day —
  * what was booked, when, for whom, how to reach the client, and the full list
@@ -758,17 +777,35 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   if (b.clientEmail) rows.push({ label: "Email", value: b.clientEmail });
   if (b.productUrl) rows.push({ label: "Product page", value: b.productUrl });
 
+  const isConcierge = (b.days ?? 0) >= 1;
   const multiDay = (b.days ?? 0) >= 2;
-  const sections: { title: string; items: string[]; check?: boolean }[] = [];
+  const firstTemple = b.preferences?.match(/first temple:\s*([^)]+)\)/i)?.[1]?.trim();
+
+  const sections: { title: string; items: string[]; check?: boolean; small?: boolean }[] = [];
   if (ordered.length)
     sections.push({
-      title: multiDay ? "What the client has chosen so far" : "What the client ordered",
+      title: isConcierge ? "What the client has chosen so far" : "What the client ordered",
       items: ordered,
       check: true,
     });
+  if (isConcierge) {
+    sections.push({
+      title: "How the journey works",
+      items: [
+        `Day 1 opens with the first temple at dawn${firstTemple ? ` — ${firstTemple}` : ""}, before the crowds; then the day flows, shaped around the guest.`,
+        "Across the journey you cover the temples and activities below — the order and priority you decide together with the guest, and that's yours to run.",
+      ],
+    });
+    sections.push({
+      title: "Included — paid for, and to be delivered in full",
+      items: conciergeIncluded(b.days ?? 1, transferItems.length > 0, b.guests),
+      check: true,
+      small: true,
+    });
+  }
   if (multiDay) {
-    sections.push({ title: "Temples & sites on the menu", items: CONCIERGE_TEMPLES });
-    sections.push({ title: "Activities on the menu", items: CONCIERGE_ACTIVITIES });
+    sections.push({ title: "Temples & sites on the menu", items: CONCIERGE_TEMPLES, small: true });
+    sections.push({ title: "Activities on the menu", items: CONCIERGE_ACTIVITIES, small: true });
     if ((b.days ?? 0) >= 3)
       sections.push({
         title: "Signature bonuses — included, on us",
@@ -793,8 +830,8 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     heading: "Wonderful — a new guest to look after",
     intro: [
       "Great news: another Luxor Rising guest is coming your way, and they're in the very best hands with you. 🎉",
-      multiDay
-        ? `This is a ${b.days}-day concierge journey — the exact temples, activities and their order you'll shape together with the client. The full menu they can choose from is below.`
+      isConcierge
+        ? `This is a ${b.days}-day concierge journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
         : "Here's your run sheet for the day.",
       "Please give them a warm call to say hello and confirm the pickup point and time.",
     ],
@@ -815,8 +852,8 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     bannerTitle,
     "",
     "Great news — another guest to look after, and they're in the very best hands with you! Give them a warm call to say hello and confirm the pickup point and time.",
-    multiDay
-      ? `\nThis is a ${b.days}-day concierge journey — you'll shape the exact temples, activities and their order together with the client. The full menu is below.`
+    isConcierge
+      ? `\nThis is a ${b.days}-day concierge journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
       : "",
     "",
     `Experience: ${b.productName}`,
@@ -829,8 +866,19 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     b.clientPhone ? `Call the client: ${b.clientPhone}` : "",
     b.clientEmail ? `Email: ${b.clientEmail}` : "",
     "",
-    ordered.length ? (multiDay ? "What the client has chosen so far:" : "What the client ordered:") : "",
+    ordered.length ? (isConcierge ? "What the client has chosen so far:" : "What the client ordered:") : "",
     ...ordered.map((i) => `· ${i}`),
+    ...(isConcierge
+      ? [
+          "",
+          "How the journey works:",
+          `· Day 1 opens with the first temple at dawn${firstTemple ? ` — ${firstTemple}` : ""}, before the crowds; then the day flows, shaped around the guest.`,
+          "· Across the journey you cover the temples and activities below — the order and priority you decide together with the guest, and that's yours to run.",
+          "",
+          "Included — paid for, and to be delivered in full:",
+          ...conciergeIncluded(b.days ?? 1, transferItems.length > 0, b.guests).map((i) => `· ${i}`),
+        ]
+      : []),
     ...(multiDay
       ? [
           "",

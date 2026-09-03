@@ -289,12 +289,14 @@ export async function sendOwnerCronSummary(s: {
   linkSent: number;
   reminders: number;
   reviews: number;
+  dateConfirmations: number;
 }): Promise<void> {
   const resend = client();
   if (!resend) return;
   const rows: SummaryRow[] = [
     { label: "Balances charged", value: String(s.charged) },
     { label: "Payment links sent", value: String(s.linkSent) },
+    { label: "Date confirmations", value: String(s.dateConfirmations) },
     { label: "Trip reminders", value: String(s.reminders) },
     { label: "Review requests", value: String(s.reviews) },
   ];

@@ -7,6 +7,7 @@ import {
   sendOwnerCronSummary,
   sendTripReminder,
   sendReviewRequest,
+  sendDateConfirmation,
 } from "@/lib/email";
 import { SITE_URL } from "@/lib/email-template";
 
@@ -48,18 +49,28 @@ export async function GET(req: Request) {
   }
   const stripe = new Stripe(key);
 
-  const result = { due: 0, charged: 0, linkSent: 0, skipped: 0, reminders: 0, reviews: 0 };
+  const result = {
+    due: 0,
+    charged: 0,
+    linkSent: 0,
+    skipped: 0,
+    reminders: 0,
+    reviews: 0,
+    dateConfirmations: 0,
+  };
 
   await chargeBalances(stripe, supabase, result);
+  await sendDateConfirmations(supabase, result);
   await sendReminders(supabase, result);
   await sendReviews(supabase, result);
 
-  if (result.charged || result.linkSent || result.reminders || result.reviews) {
+  if (result.charged || result.linkSent || result.reminders || result.reviews || result.dateConfirmations) {
     await sendOwnerCronSummary({
       charged: result.charged,
       linkSent: result.linkSent,
       reminders: result.reminders,
       reviews: result.reviews,
+      dateConfirmations: result.dateConfirmations,
     });
   }
 
@@ -211,6 +222,42 @@ async function sendReviews(supabase: Supa, result: { reviews: number }) {
         tripDate: b.trip_date ?? undefined,
       });
       result.reviews++;
+    }
+  }
+}
+
+// Concierge date confirmation: the concierge sets confirmed_time / confirmed_pickup
+// and flips date_confirmed=true in Supabase; this emails the guest once.
+async function sendDateConfirmations(supabase: Supa, result: { dateConfirmations: number }) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("id, product_name, trip_date, confirmed_time, confirmed_pickup, customers(email,name,phone)")
+    .eq("date_confirmed", true)
+    .is("date_confirmation_sent_at", null)
+    .eq("payment_status", "paid");
+  if (error) {
+    console.error("date-confirmation query failed:", error.message);
+    return;
+  }
+  for (const b of data ?? []) {
+    const { data: claimed } = await supabase
+      .from("bookings")
+      .update({ date_confirmation_sent_at: new Date().toISOString() })
+      .eq("id", b.id)
+      .is("date_confirmation_sent_at", null)
+      .select("id");
+    if (!claimed || claimed.length === 0) continue;
+    const cust = oneCustomer(b.customers as EmbeddedCustomer | EmbeddedCustomer[] | null);
+    if (cust?.email) {
+      await sendDateConfirmation({
+        name: cust.name || "Guest",
+        email: cust.email,
+        productName: b.product_name || "your experience",
+        tripDate: b.trip_date ?? undefined,
+        time: b.confirmed_time ?? undefined,
+        pickup: b.confirmed_pickup ?? undefined,
+      });
+      result.dateConfirmations++;
     }
   }
 }

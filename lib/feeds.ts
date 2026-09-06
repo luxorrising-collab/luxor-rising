@@ -22,9 +22,28 @@ export type FeedProduct = {
   link: string;
   image: string;
   category: string;
+  region: string;
 };
 
 const clean = (s?: string | null) => String(s ?? "").replace(/\s+/g, " ").trim();
+
+// City/region for the title + segmentation label, from the slug + hero eyebrow.
+const regionOf = (slug: string, eyebrow?: string | null): string =>
+  /red[\s-]?sea|hurghada|snorkel|yacht/i.test(`${slug} ${eyebrow ?? ""}`)
+    ? "Red Sea, Egypt"
+    : "Luxor, Egypt";
+
+// Best-practice Meta title: the clean product NAME first, plus the city — natural,
+// under ~65 chars, no promotional/poetic copy (that stays in the description).
+const feedTitle = (name: string, region: string): string => {
+  const n = clean(name);
+  return /luxor|hurghada|red sea|egypt/i.test(n)
+    ? `${n} — private experience`
+    : `${n} — private experience in ${region}`;
+};
+
+const priceBand = (v: number): string =>
+  v < 350 ? "Under €350" : v < 600 ? "€350–599" : v < 1000 ? "€600–999" : "€1000+";
 
 export async function getFeedProducts(): Promise<FeedProduct[]> {
   const [all, priceMap] = await Promise.all([
@@ -42,21 +61,25 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
       link: `${SITE}/concierge-day`,
       image: CONCIERGE_IMAGE,
       category: "Concierge day",
+      region: "Luxor, Egypt",
     },
   ];
 
   for (const { slug, entry } of all) {
-    if (!entry.isActive || !entry.title) continue;
+    const name = entry.name || entry.title;
+    if (!entry.isActive || !name) continue;
     const price = priceMap.get(slug) ?? entry.basePrice ?? 0;
     if (!price) continue;
+    const region = regionOf(slug, entry.heroEyebrow);
     products.push({
       id: slug,
-      title: clean(entry.title),
+      title: feedTitle(name, region),
       description: clean(entry.metaDescription || entry.hook),
       price,
       link: slug === "medinet-habu" ? `${SITE}/medinet-habu` : `${SITE}/experiences/${slug}`,
       image: entry.heroImage ? `${SITE}${entry.heroImage}` : "",
       category: entry.category || "Experience",
+      region,
     });
   }
   return products;
@@ -74,6 +97,7 @@ export async function buildMetaCsv(): Promise<string> {
   const cols = [
     "id", "title", "description", "availability", "condition",
     "price", "link", "image_link", "brand", "product_type",
+    "custom_label_0", "custom_label_1",
   ];
   const rows = [cols.join(",")];
   for (const p of products) {
@@ -82,6 +106,7 @@ export async function buildMetaCsv(): Promise<string> {
       [
         p.id, p.title, p.description, "in stock", "new",
         `${p.price}.00 EUR`, p.link, p.image, BRAND, p.category,
+        priceBand(p.price), p.region,
       ].map(esc).join(","),
     );
   }

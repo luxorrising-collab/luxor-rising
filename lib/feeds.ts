@@ -7,7 +7,9 @@ import { getFinalPriceMap } from "@/lib/pricing";
 //    services/experiences business (no physical SKUs → not Merchant Center
 //    Shopping); attached to PMax for final-URL expansion.
 
-const SITE = "https://luxorrising.com";
+// Canonical host with www — the apex 301-redirects, and Meta flags feed links
+// that redirect as "invalid values", so always emit the final URL.
+const SITE = "https://www.luxorrising.com";
 const BRAND = "Luxor Rising";
 // A dependable static hero for the Concierge Day card.
 const CONCIERGE_IMAGE = `${SITE}/images/experiences/karnak-at-dawn/heroImage.jpg`;
@@ -75,6 +77,7 @@ export async function buildMetaCsv(): Promise<string> {
   ];
   const rows = [cols.join(",")];
   for (const p of products) {
+    if (!p.image) continue; // Meta rejects an item with no image_link
     rows.push(
       [
         p.id, p.title, p.description, "in stock", "new",

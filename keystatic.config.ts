@@ -291,7 +291,7 @@ export default config({
         // Hero
         heroEyebrow: fields.text({
           label: "Hero eyebrow",
-          description: 'e.g. "A single experience · Medinet Habu · Luxor West Bank"',
+          description: 'e.g. "Medinet Habu · Luxor, Egypt · A single experience"',
         }),
         heroImage: fields.image({
           label: "Hero image",

@@ -6,6 +6,7 @@ import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
+import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 
@@ -72,6 +73,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const data = await getData(slug);
   if (!data) notFound();
   const { entry, globals, pricingRules, basePrice, showAssembledTotal } = data;
+  // Enquiry-only products (e.g. a bespoke multi-week retreat) reuse the standard
+  // product page, but swap Stripe checkout for the enquiry form and drop the
+  // fixed-price / "reserve" language.
+  const isEnquiry = entry.bookingType === "enquiry";
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -130,13 +135,20 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         category: "Private guided experience",
         ...reviewJsonLd,
         areaServed: "Luxor, Egypt",
-        offers: {
-          "@type": "Offer",
-          price: String(basePrice),
-          priceCurrency: "EUR",
-          availability: "https://schema.org/InStock",
-          url: `https://luxorrising.com/experiences/${slug}#book`,
-        },
+        offers: isEnquiry
+          ? {
+              "@type": "Offer",
+              priceSpecification: { "@type": "PriceSpecification", priceCurrency: "EUR" },
+              availability: "https://schema.org/LimitedAvailability",
+              url: `https://luxorrising.com/experiences/${slug}#book`,
+            }
+          : {
+              "@type": "Offer",
+              price: String(basePrice),
+              priceCurrency: "EUR",
+              availability: "https://schema.org/InStock",
+              url: `https://luxorrising.com/experiences/${slug}#book`,
+            },
       },
       {
         "@type": "FAQPage",
@@ -152,9 +164,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav ctaHref="#book" ctaLabel="Reserve" />
+      <Nav ctaHref="#book" ctaLabel={isEnquiry ? "Enquire" : "Reserve"} />
 
       <ExperienceTemplate
+        isEnquiry={isEnquiry}
         title={entry.title}
         hook={entry.hook}
         heroEyebrow={entry.heroEyebrow}
@@ -172,24 +185,51 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         bookLead={entry.bookLead}
         bookNote={entry.bookNote || undefined}
         configurator={
-          <ExperienceConfigurator
-            name={entry.name || entry.title}
-            slug={slug}
-            basePrice={basePrice}
-            maxGuests={entry.maxGuests ?? 4}
-            groupSupplement={entry.groupSupplement.map((t) => ({
-              minGuests: t.minGuests ?? 0,
-              extraPerGuest: t.extraPerGuest ?? 0,
-            }))}
-            depositPercent={pricingRules?.depositPercent ?? 50}
-            glanceIncludes={entry.glanceIncludes}
-            includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
-            feelText={entry.glanceIncludes}
-            reviewAverage={reviewAverage}
-            reviewCount={reviewCount}
-            image={entry.heroImage || undefined}
-            title={entry.title || undefined}
-          />
+          isEnquiry ? (
+            <div className="wrap-narrow" style={{ paddingTop: "1.5rem" }}>
+              {entry.takenCareOf.length > 0 && (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                    gap: "1.1rem 2rem",
+                    margin: "0 0 2.5rem",
+                    textAlign: "left",
+                  }}
+                >
+                  {entry.takenCareOf.map((t) => (
+                    <div key={t.title} style={{ display: "flex", gap: ".8rem" }}>
+                      <span aria-hidden style={{ color: "var(--color-gold)", fontFamily: "var(--font-display)", lineHeight: 1.3 }}>✦</span>
+                      <div>
+                        <b style={{ display: "block", color: "var(--color-ink)", fontWeight: 500 }}>{t.title}</b>
+                        {t.note && <span style={{ color: "var(--color-muted)", fontSize: ".92rem", lineHeight: 1.55 }}>{t.note}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <EnquiryForm topic={entry.name || entry.title} note={entry.bookNote || undefined} />
+            </div>
+          ) : (
+            <ExperienceConfigurator
+              name={entry.name || entry.title}
+              slug={slug}
+              basePrice={basePrice}
+              maxGuests={entry.maxGuests ?? 4}
+              groupSupplement={entry.groupSupplement.map((t) => ({
+                minGuests: t.minGuests ?? 0,
+                extraPerGuest: t.extraPerGuest ?? 0,
+              }))}
+              depositPercent={pricingRules?.depositPercent ?? 50}
+              glanceIncludes={entry.glanceIncludes}
+              includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
+              feelText={entry.glanceIncludes}
+              reviewAverage={reviewAverage}
+              reviewCount={reviewCount}
+              image={entry.heroImage || undefined}
+              title={entry.title || undefined}
+            />
+          )
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}
         valueStackTotal={entry.valueStackTotal}
@@ -221,10 +261,14 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         reviewsVerified={globals?.reviewsVerified ?? false}
         reviewAverage={reviewAverage}
         reviewCount={reviewCount}
-        finalTitle={`Reserve ${entry.title}`}
-        finalText={`Private, certified-guided, and arranged end to end — from €${basePrice}.`}
+        finalTitle={isEnquiry ? "Begin a private conversation" : `Reserve ${entry.title}`}
+        finalText={
+          isEnquiry
+            ? "Fully bespoke and arranged end to end. Tell us what you’re carrying — we reply personally, within 24 hours."
+            : `Private, certified-guided, and arranged end to end — from €${basePrice}.`
+        }
         finalCtaHref="#book"
-        finalCtaLabel="Reserve this experience →"
+        finalCtaLabel={isEnquiry ? "Request an invitation →" : "Reserve this experience →"}
       />
 
       <FullFooter columns={FOOTER_COLUMNS} />

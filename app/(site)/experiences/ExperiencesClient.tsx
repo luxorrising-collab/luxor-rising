@@ -36,7 +36,7 @@ const SINGLE_DAY: Item[] = [];
 const ENQUIRY: Item[] = [
   {
     cat: ["desert", "signature"],
-    href: "/thirty-days-in-the-desert",
+    href: "/experiences/thirty-days-in-the-desert",
     src: "/images/desert-dune-milky-way_jimmy-larry-7uvixXrQkfw-unsplash.jpg",
     alt: "Desert dunes beneath the Milky Way at night near Luxor",
     meta: "Desert & wild · Luxor, Egypt",

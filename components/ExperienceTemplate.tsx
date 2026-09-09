@@ -42,6 +42,8 @@ export type ExperienceTemplateProps = {
   bookTitle: string;
   bookLead: string;
   bookNote?: string;
+  /** Enquiry-only product: swap checkout price/CTAs for a "request an invitation" flow. */
+  isEnquiry?: boolean;
   configurator: React.ReactNode;
   valueStackRows: ValueStackRow[];
   valueStackTotal: string;
@@ -94,6 +96,7 @@ export default function ExperienceTemplate({
   bookTitle,
   bookLead,
   bookNote,
+  isEnquiry = false,
   configurator,
   valueStackRows,
   valueStackTotal,
@@ -140,14 +143,16 @@ export default function ExperienceTemplate({
           <span className="eyebrow">{heroEyebrow}</span>
           <h1 className="display">{title}</h1>
           <div className={styles.heroSub}>{hook}</div>
-          <div className={styles.priceRow}>
-            <span className="from">From</span>
-            <span className="amt">€{basePrice}</span>
-            <span className="per">{priceNote}</span>
-          </div>
+          {!isEnquiry && (
+            <div className={styles.priceRow}>
+              <span className="from">From</span>
+              <span className="amt">€{basePrice}</span>
+              <span className="per">{priceNote}</span>
+            </div>
+          )}
           <div className={styles.heroCta}>
             <Link href="#book" className="btn btn-primary btn-lg">
-              Reserve this experience →
+              {isEnquiry ? "Request an invitation →" : "Reserve this experience →"}
             </Link>
             <Link href="#content" className="btn btn-ghost btn-lg">
               Why it matters
@@ -178,10 +183,12 @@ export default function ExperienceTemplate({
               {bestTime}
             </div>
             <div className={styles.gf}>
-              <span>From</span>€{basePrice}
+              <span>{isEnquiry ? "Format" : "From"}</span>
+              {isEnquiry ? "Fully bespoke" : <>€{basePrice}</>}
             </div>
             <div className={styles.gf}>
-              <span>Cancellation</span>Free, up to 7 days
+              <span>{isEnquiry ? "Places" : "Cancellation"}</span>
+              {isEnquiry ? "By invitation" : "Free, up to 7 days"}
             </div>
           </div>
           {/* Only the feel of the day here — "What we take care of" lives once,

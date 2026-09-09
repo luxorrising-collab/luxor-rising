@@ -55,6 +55,9 @@ export default async function ExperiencesPage() {
     getFinalPriceMap(),
   ]);
   const activeExperiences = allExperiences.filter(({ entry }) => entry.isActive && entry.title);
+  // "Thirty Days in the Desert" is a by-invitation enquiry product shown in the
+  // "Long experiences" section (below), so keep it out of the single-day grid.
+  const gridExperiences = activeExperiences.filter(({ slug }) => slug !== "thirty-days-in-the-desert");
   // Single source of truth: the Product-prices singleton wins over the stored basePrice.
   const priceOf = (slug: string, entry: { basePrice?: number | null }) =>
     priceMap.get(slug) ?? entry.basePrice ?? 0;
@@ -62,7 +65,7 @@ export default async function ExperiencesPage() {
   // callout, the sticky bar and structured data so it never drifts.
   const conciergeDayPrice = priceMap.get("design-your-day") ?? 800;
 
-  const cmsItems: CmsExperienceItem[] = activeExperiences.map(({ slug, entry }) => ({
+  const cmsItems: CmsExperienceItem[] = gridExperiences.map(({ slug, entry }) => ({
     // Medinet Habu lives at the top level; link straight there rather than
     // bouncing through the /experiences/[slug] redirect.
     href: slug === "medinet-habu" ? "/medinet-habu" : `/experiences/${slug}`,

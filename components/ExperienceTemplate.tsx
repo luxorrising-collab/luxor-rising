@@ -10,6 +10,12 @@ import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
 
+// The per-item "price anchor" value stack is hidden for now: it exposed the
+// component costs we pay on the ground, and the breakdown no longer earns its
+// place. Content (valueStackRows/Total) is kept in Keystatic so we can remake
+// and re-enable this section later — flip this flag to bring it back.
+const SHOW_VALUE_STACK = false;
+
 export type ExperienceHighlight = { title: string; description: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
 export type ValueStackRow = { label: string; price: string };
@@ -278,8 +284,8 @@ export default function ExperienceTemplate({
         </div>
       </section>
 
-      {/* VALUE STACK */}
-      {valueStackRows.length > 0 && (
+      {/* VALUE STACK — price anchor, hidden for now (see SHOW_VALUE_STACK) */}
+      {SHOW_VALUE_STACK && valueStackRows.length > 0 && (
         <section>
           <Reveal className="wrap-narrow center">
             <span className="eyebrow">What&apos;s handled for you</span>

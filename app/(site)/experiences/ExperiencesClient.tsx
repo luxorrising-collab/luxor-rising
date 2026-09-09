@@ -35,53 +35,19 @@ const SINGLE_DAY: Item[] = [];
 
 const ENQUIRY: Item[] = [
   {
-    cat: ["sky"],
-    href: "/concierge-day",
-    src: "/images/nile-cruise-boats-docked-mountains_nile cruise (5).jpg",
-    alt: "Traditional sailing boats moored on the Nile beneath the Theban mountains",
-    meta: "Sky & river",
-    title: "Dahabiya — two nights under sail",
-    hook: "A wooden sailing boat, six cabins, no engine noise and no buffet queue. You moor where the cruise ships cannot, and eat dinner on deck with the bank ten metres away.",
-    facts: [<><b>3 days</b>, 2 nights</>, <>Up to <b>8</b> guests</>, <><b>Full board</b></>],
-    badge: "2 nights aboard",
-    priceLabel: "From",
-    priceValue: "€1,480",
-    priceNote: "/ person",
-    ctaLabel: "Request a proposal",
-    ctaVariant: "secondary",
-  },
-  {
-    cat: ["desert"],
-    href: "/concierge-day",
-    src: "/images/desert-camp-carpet-aisle-lanterns_pexels-francesco-ungaro-998634.jpg",
-    alt: "Desert camp at night with lanterns lighting a carpeted path",
-    meta: "Desert & wild",
-    title: "The Multi-Day Journey",
-    hook: "Four days built for someone at a turning point. Temples in the morning, desert at night, and long conversations with people who have spent their lives listening to travellers decide things.",
-    facts: [<><b>4 days</b></>, <><b>1–4</b> guests</>, <>Concierge <b>throughout</b></>],
-    badge: "Hero journey",
-    badgeVariant: "signature",
-    priceLabel: "From",
-    priceValue: "€1,850",
-    priceNote: "/ person",
-    ctaLabel: "Request a proposal",
-    ctaVariant: "secondary",
-  },
-  {
     cat: ["desert", "signature"],
-    href: "/concierge-day",
-    src: "/images/hatshepsut-temple-terrace-valley-view_IMG_20251009_110715.jpg",
-    alt: "View over the Theban valley from the Hatshepsut temple terrace at dawn",
-    meta: "Desert & wild",
-    title: "The Return",
-    hook: "A week. No itinerary published, because it is written for one person. If you already know why you want to come back to Egypt, you will understand what this is.",
-    facts: [<><b>7 days</b></>, <><b>1–2</b> guests</>, <><b>Written</b> for you</>],
+    href: "/thirty-days-in-the-desert",
+    src: "/images/desert-dune-milky-way_jimmy-larry-7uvixXrQkfw-unsplash.jpg",
+    alt: "Desert dunes beneath the Milky Way at night near Luxor",
+    meta: "Desert & wild · Luxor, Egypt",
+    title: "Thirty Days in the Desert",
+    hook: "Disappear for one month into one of the oldest ritual grounds on Earth, and return changed. A fully bespoke retreat for leaders and visionaries — every day built around your question, arranged end to end, connected to the world only when you choose.",
+    facts: [<><b>30 days</b></>, <><b>One</b> guest or party</>, <><b>Fully</b> bespoke</>],
     badge: "By invitation",
     badgeVariant: "signature",
-    priceLabel: "From",
-    priceValue: "€2,450",
-    priceNote: "/ person",
-    ctaLabel: "Begin a conversation",
+    priceLabel: "Investment",
+    priceValue: "By application",
+    ctaLabel: "Request an invitation",
     ctaVariant: "secondary",
   },
 ];
@@ -251,18 +217,18 @@ export default function ExperiencesClient({
       {visibleEnquiry.length > 0 && (
         <Reveal className={styles.sec}>
           <div className={styles.secHead}>
-            <h2>The long journeys</h2>
-            <span className={styles.tag}>By arrangement</span>
+            <h2>Long experiences</h2>
+            <span className={styles.tag}>By invitation</span>
           </div>
           <p className={styles.secSub}>
-            Journeys with nights in them — a boat, a house, a week. These aren&apos;t sold from a
-            cart. We speak first, then we build it around you.
+            The rare, longer undertakings — measured in weeks, not hours. Nothing here is sold from
+            a cart. We speak first, then build the entire experience around one person.
           </p>
           <div className={styles.enqNote}>
-            <b>Why these aren&apos;t a &quot;buy now&quot; button.</b> Anything with accommodation
-            is arranged personally, with a written proposal and a contract — so you know exactly
-            who is responsible for what, and so are we. Tell us what you have in mind and we&apos;ll
-            come back within 24 hours.
+            <b>Why this isn&apos;t a &quot;buy now&quot; button.</b> Anything at this scale is
+            arranged personally — a private conversation, a written bespoke plan, and a contract —
+            before a single thing is booked. Tell us what you have in mind and we&apos;ll come back
+            within 24 hours.
           </div>
           <div className={styles.grid}>
             {visibleEnquiry.map((item) => (

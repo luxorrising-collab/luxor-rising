@@ -105,7 +105,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-gold-deep);
-  margin: -0.15rem 0 0.7rem;
+  margin: 0 0 0.5rem;
 }
 .hook {
   color: var(--color-muted);

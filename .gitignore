@@ -48,3 +48,6 @@ next-env.d.ts
 # Handover: private/secret documents — keep on disk, never commit (README stays)
 /docs/handover/_local-private/*
 !/docs/handover/_local-private/README.md
+
+# Internal ROAS / margins workbook exported to the main directory — never commit
+/Luxor_Rising_Modely_naklady_ROAS.xlsx

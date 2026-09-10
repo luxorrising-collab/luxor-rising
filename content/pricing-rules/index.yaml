@@ -8,9 +8,9 @@ volumeDiscount:
     discountPercent: 12.22
 groupSupplement:
   - minGuests: 2
-    extraPerDay: 155
+    extraPerDay: 195
   - minGuests: 3
-    extraPerDay: 155
+    extraPerDay: 245
   - minGuests: 4
-    extraPerDay: 155
+    extraPerDay: 295
 depositPercent: 50

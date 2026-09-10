@@ -33,13 +33,19 @@ const regionOf = (slug: string, eyebrow?: string | null): string =>
     ? "Red Sea, Egypt"
     : "Luxor, Egypt";
 
-// Best-practice Meta title: the clean product NAME first, plus the city — natural,
-// under ~65 chars, no promotional/poetic copy (that stays in the description).
-const feedTitle = (name: string, region: string): string => {
+// Meta title: product NAME first (front-loaded for search), then our charm
+// subtitle (the page's poetic line), then a plain "private experience + city"
+// tail so location and category stay explicit — e.g.
+//   "Medinet Habu — Begin where the world began. Private experience in Luxor, Egypt"
+const feedTitle = (name: string, charm: string, region: string): string => {
   const n = clean(name);
-  return /luxor|hurghada|red sea|egypt/i.test(n)
-    ? `${n} — private experience`
-    : `${n} — private experience in ${region}`;
+  const c = clean(charm);
+  const place = /luxor|hurghada|red sea|egypt/i.test(n) ? "" : ` in ${region}`;
+  if (c && c.toLowerCase() !== n.toLowerCase()) {
+    const charmSentence = /[.!?…]$/.test(c) ? c : `${c}.`;
+    return `${n} — ${charmSentence} Private experience${place}`;
+  }
+  return `${n} — private experience${place}`;
 };
 
 const priceBand = (v: number): string =>
@@ -73,7 +79,7 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
     const region = regionOf(slug, entry.heroEyebrow);
     products.push({
       id: slug,
-      title: feedTitle(name, region),
+      title: feedTitle(name, entry.title, region),
       description: clean(entry.metaDescription || entry.hook),
       price,
       link: slug === "medinet-habu" ? `${SITE}/medinet-habu` : `${SITE}/experiences/${slug}`,

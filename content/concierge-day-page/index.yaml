@@ -1,10 +1,10 @@
 heroEyebrow: Private concierge · Luxor & the West Bank
 heroTitle: The one day in Egypt you'll never stop talking about.
 heroSubtitle: >-
-  One concierge arranges the whole day — empty temples at dawn, your own
+  One concierge arranges the whole day. Empty temples at dawn, your own
   Egyptologist, the Nile at golden hour. You decide nothing, carry nothing, and
   miss nothing.
-heroTrustLine: 4.9 · 60+ private days arranged · trusted by travellers in Hurghada & Luxor
+heroTrustLine: 4.9 · 28+ private days arranged · trusted by travellers in Hurghada & Luxor.
 startingPrice: 800
 priceNote: / day · ≤4 guests, private
 heroImages:
@@ -45,10 +45,10 @@ contrastTitle: You came for the wonder. Not for a queue.
 contrastLead: >-
   Most visitors meet Luxor through a packed coach, twenty rushed minutes per
   temple, the midday heat, and a guide they share with forty strangers. The real
-  Egypt — the quiet, the colour, the awe — passes them by. And here is the part
+  Egypt the quiet, the colour, the awe passes them by. And here is the part
   nobody says out loud: you flew four thousand kilometres to a place that has
-  stood for three and a half thousand years, and you will probably stand here
-  once. That is the whole argument for doing it properly.
+  stood for thousands years, and you will probably stand here once. That is the
+  whole argument for doing it properly.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples at midday, shoulder to shoulder
@@ -68,13 +68,14 @@ goodWayItems:
 mechanismEyebrow: Why we can actually do this
 mechanismTitle: Every site has quiet hours. Almost nobody knows when they are.
 mechanismText: >-
-  The quiet hour is not simply "early". It moves — with the day of the week, the
+  The quiet hour is not simply "early". It moves with the day of the week, the
   season, which cruise boats have just docked, which coach circuit is running
-  that morning. Ahmed has spent years watching it move, so he knows when each
-  site actually empties. Sometimes that is first light. Sometimes it is late
-  afternoon, when the light is better anyway. Occasionally it is the middle of
-  the day, when the heat clears a site completely and only a few people can take
-  it — and if you are one of them, you get somewhere extraordinary to yourself.
+  that morning. Your concierge has spent years watching it move, so he knows
+  when each site actually empties. Sometimes that is first light. Sometimes it
+  is late afternoon, when the light is better anyway. Occasionally it is the
+  middle of the day, when the heat clears a site completely and only a few
+  people can take it and if you are one of them, you get somewhere extraordinary
+  to yourself.
 mechanismNote: >-
   Then he goes further than a schedule: a call ahead to the guards who know him,
   and the Egyptologist you want booked before someone else takes them — not
@@ -87,30 +88,29 @@ dayShapeSteps:
   - time: We start with you, not a route
     label: >-
       Before a single ticket is booked, your concierge asks what actually draws
-      you here — the history, the photographs, the stillness, a milestone you're
+      you here the history, the photographs, the stillness, a milestone you're
       marking. Everything after is arranged around that answer.
   - time: The order is chosen for the day
     label: >-
       Which temple you walk into first depends on where it is genuinely empty
-      that morning — and that moves with the season and the boats. We sequence
-      the day so you are always somewhere quiet, never in the crush.
+      that morning and that moves with the season and the boats. We sequence the
+      day so you are always somewhere quiet, never in the crush.
   - time: The open middle is deliberate
     label: >-
-      A long breakfast, shade, the river — while everyone else queues in the
-      heat. The empty hours in the middle aren't a gap in the plan. They are the
-      plan.
+      A long breakfast, shade, the river while everyone else queues in the heat.
+      The empty hours in the middle aren't a gap in the plan. They are the plan.
   - time: You never touch the logistics
     label: >-
-      Entries, timing, the private car, the guards, the Egyptologist — all held
+      Entries, timing, the private car, the guards, the Egyptologist, all held
       in the background by one person. You experience the day; your concierge
       carries everything underneath it.
 dreamText: >-
   You wake before the heat. A private car is already waiting. At Karnak, the
-  great hall is almost empty — your Egyptologist unfolds three thousand years as
-  the first light moves between the columns. Between temples, coffee and a meal
-  at a table only a local would know. By late afternoon the Nile is yours alone,
-  a felucca tilting into the gold. You took no decisions, stood in no queue,
-  missed nothing. You simply arrived — and Egypt did the rest.
+  great hall is almost empty your Egyptologist unfolds thousand years as the
+  first light moves between the columns. Between temples, coffee and a meal at a
+  table only a local would know. By late afternoon the Nile is yours to sail, a
+  felucca tilting into the gold. You took no decisions, stood in no queue,
+  missed nothing. You simply arrived and Egypt did the rest.
 dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
   - image: /images/concierge-day/experiences/0/image.jpg
@@ -229,8 +229,8 @@ faq:
   - question: How do you actually get the temples empty?
     answer: >-
       Every site has quiet hours — but they move, with the day of the week, the
-      season, and which cruise boats have just docked. Ahmed has spent years
-      watching that pattern, so he knows when each place actually empties.
+      season, and which cruise boats have just docked. Your concierge has spent
+      years watching that pattern, so he knows when each place actually empties.
       Sometimes it's first light; sometimes late afternoon, when the light is
       better anyway; occasionally the middle of the day, when the heat clears a
       site completely. Then he goes further than any schedule: a word with the
@@ -263,8 +263,7 @@ faq:
   - question: What if my plans change?
     answer: >-
       Cancel up to 7 days before for a full refund, no questions asked. Closer
-      to the day, talk to your concierge — we'll do everything we can to move
-      it.
+      to the day, talk to your concierge we'll do everything we can to move it.
   - question: Who actually guides and drives?
     answer: >-
       Licensed local specialists — a licensed Egyptologist for the monuments,

@@ -6,24 +6,10 @@ import Reveal from "./Reveal";
 import Faq from "./Faq";
 import Gallery from "./Gallery";
 import ConsigliereSection from "./ConsigliereSection";
+import { VALUE_LINES } from "@/lib/value-lines";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
-
-// The value anchor, reframed: instead of exposing line-item costs, it names
-// what a private day here is really worth. The euro figures live only in the
-// final payoff row (the real price). Emotional, "priceless"-style value.
-const VALUE_LINES: [string, string][] = [
-  ["Everything arranged, so you just flow", "priceless"],
-  ["A companion who shares the road with you", "priceless"],
-  ["A guide who understands your journey", "priceless"],
-  ["Being welcomed in Luxor as if you were home", "priceless"],
-  ["Standing where the ancients stood, with reverence", "powerful"],
-  ["The great chambers, yours alone in the quiet hour", "moving"],
-  ["Doing Luxor properly — the once, done right", "unforgettable"],
-  ["Sailing the Nile as the sun goes down", "bucket list"],
-  ["Your private moments, captured to keep", "timeless"],
-];
 
 export type ExperienceHighlight = { title: string; description: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };

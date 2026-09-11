@@ -16,6 +16,7 @@ import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPriceMap } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
+import { VALUE_LINES } from "@/lib/value-lines";
 import styles from "./ConciergeDayPage.module.css";
 
 export const metadata: Metadata = {
@@ -181,27 +182,31 @@ export default async function ConciergeDayPage() {
     price: priceBySlug(slug),
     subtitle: brandBySlug(slug),
   });
+  // Mirrors the builder's "see full breakdown" (default Medinet journey) so the
+  // price anchor and the checkout breakdown always compare the same products,
+  // named the same and priced from the live catalogue.
   // [day 1, day-2 additions, day-3 additions, day-4 additions]
   const experiencePlan = [
     [
-      named("Karnak at dawn", "karnak-at-dawn"),
-      named("Valley of the Kings", "valley-of-the-kings"),
-      named("A private felucca at golden hour", "felucca-sunset-sail"),
-    ],
-    [
-      named("Medinet Habu — your signature", "medinet-habu"),
+      named("Medinet Habu", "medinet-habu"),
       named("Hatshepsut Temple", "hatshepsut-temple"),
-      named("A sunset in the dunes", "private-desert-safari"),
+      named("Sunset sail on the Nile", "felucca-sunset-sail"),
     ],
     [
-      named("Luxor by night", "luxor-by-night"),
-      named("A private Nile dinner cruise", "nile-dinner-cruise"),
+      named("Valley of the Kings", "valley-of-the-kings"),
+      named("Karnak at dawn", "karnak-at-dawn"),
+      named("Luxor Temple", "luxor-temple"),
+      named("Desert sunset picnic", "private-desert-safari"),
+    ],
+    [
+      named("Colossi of Memnon", "colossi-of-memnon"),
+      named("A night in Luxor city", "luxor-by-night"),
+      named("Deir el-Shelwit — hidden temple of Isis", "deir-el-shelwit"),
+    ],
+    [
+      named("Valley of the Workers — Deir el-Medina", "deir-el-medina"),
       named("Hot-air balloon at dawn", "hot-air-balloon-luxor"),
-    ],
-    [
-      named("Dawn camel ride & Bedouin breakfast", "camel-bedouin-breakfast"),
-      named("Banana Island by felucca", "banana-island-felucca"),
-      named("A night under desert stars", "desert-astronomy-night"),
+      named("Sailing lesson on the Nile", "sailing-lesson-nile"),
     ],
   ];
   // "Everything handled for you" — shown as priceless/timeless value, never a
@@ -215,6 +220,8 @@ export default async function ConciergeDayPage() {
   ];
   const oneOffServices = [
     { name: "Personal trip design & every reservation made", worth: "priceless" },
+    // The same "priceless" value lines shown on single-experience pages.
+    ...VALUE_LINES.map(([name, worth]) => ({ name, worth })),
   ];
 
   // Images are CMS-editable via the Concierge Day page singleton, with the

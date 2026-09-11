@@ -15,6 +15,8 @@ type Pay = "full" | "deposit";
 
 export type VolumeDiscountTier = { minDays: number; discountPercent: number };
 export type GroupSupplementTier = { minGuests: number; extraPerDay: number };
+// Per-guest supplement, as the single-experience products define it.
+export type ExpSupplementTier = { minGuests: number; extraPerGuest: number };
 
 const WATER: Record<Water, string> = {
   nile: "Sunset sail on the Nile",
@@ -40,7 +42,7 @@ const JOURNEY: Record<
   },
   balloon: {
     name: "Fly like an eagle",
-    temple: "Hot-air balloon at dawn — up over the West Bank like an eagle",
+    temple: "Hot-air balloon at dawn — up over Luxor like an eagle",
     companion: "Then the day flows, decided with your concierge",
   },
 };
@@ -214,6 +216,9 @@ type DayConfiguratorProps = {
   /** Brand titles (substring → poetic product title) for signature experiences,
    *  shown as a small italic subtitle under the place name in the breakdown. */
   brandTable?: [string, string][];
+  /** Each experience's real per-guest supplement (substring → its groupSupplement),
+   *  so the à-la-carte breakdown prices the party exactly like the product pages. */
+  supplementTable?: [string, ExpSupplementTier[]][];
   /** Main social-proof line (from Site settings), shown next to ★★★★★. */
   socialProof?: string;
 };
@@ -234,6 +239,7 @@ export default function DayConfigurator({
   images = {},
   priceTable,
   brandTable,
+  supplementTable,
   socialProof = "4.9 · 28+ private days arranged",
 }: DayConfiguratorProps) {
   // Prices come from the live catalogue when supplied (keeps the breakdown in
@@ -242,6 +248,20 @@ export default function DayConfigurator({
   const priceOf = (nm: string) => {
     for (const [k, v] of table) if (nm.indexOf(k) >= 0) return v;
     return 0;
+  };
+  // The matching experience's own per-guest supplement, and the extra it adds
+  // for a party of `g` (same formula the single-experience pages use).
+  const supplementOf = (nm: string): ExpSupplementTier[] => {
+    if (supplementTable) for (const [k, s] of supplementTable) if (nm.indexOf(k) >= 0) return s;
+    return [];
+  };
+  const perGuestExtra = (g: number, supp: ExpSupplementTier[]) => {
+    let s = 0;
+    for (let i = 2; i <= g; i++) {
+      const tier = supp.find((t) => t.minGuests === i);
+      if (tier) s += tier.extraPerGuest;
+    }
+    return s;
   };
   // A price is an estimate when it isn't a standalone active à-la-carte product
   // (e.g. the Egyptologist, generic transfers, the photo add-on, a bonus).
@@ -345,7 +365,7 @@ export default function DayConfigurator({
     }
     if (days >= 4) {
       pool.push("Valley of the Workers — Deir el-Medina");
-      if (journey !== "balloon") pool.push("Hot-air balloon at dawn over the West Bank");
+      if (journey !== "balloon") pool.push("Hot-air balloon at dawn over Luxor");
       bonus.push({
         t: "Sailing lesson on the Nile — take the tiller yourself (€140), included",
         sig: true,
@@ -392,8 +412,11 @@ export default function DayConfigurator({
   [plan.start, plan.pool, plan.bonus, plan.handled].forEach((arr) => {
     arr.forEach((it) => {
       const nm = itemText(it);
-      const pr = priceOf(nm);
-      if (pr > 0) {
+      const base = priceOf(nm);
+      if (base > 0) {
+        // Booked separately, each experience adds its own real per-guest
+        // supplement (the same figure its product page charges for a party).
+        const pr = base + perGuestExtra(group, supplementOf(nm));
         const place = nm.split(" — ")[0];
         const brand = brandOf(nm);
         priced.push({
@@ -518,8 +541,9 @@ export default function DayConfigurator({
                       {d} {d > 1 ? "days" : "day"}
                     </div>
                     <div className={styles.dp}>{euro(tot)}</div>
-                    <div className={styles.dper}>{euro(Math.round(tot / d))} / day</div>
-                    <div className={styles.dsave}>{sv > 0 ? "save " + euro(sv) : ""}</div>
+                    <div className={styles.dsave}>
+                      {sv > 0 ? "save " + euro(sv) : " "}
+                    </div>
                   </div>
                 );
               })}
@@ -673,7 +697,7 @@ export default function DayConfigurator({
                     </div>
                   </div>
                   <div className={styles.jcBody}>
-                    <p>Rise over the West Bank at first light — then go with the flow, and decide what follows together with your concierge.</p>
+                    <p>Rise over Luxor at first light — then go with the flow, and decide what follows together with your concierge.</p>
                     <div className={styles.jcPair}>
                       <span className={styles.jcPairLbl}>then</span>
                       <span className={styles.jcPairName}>You &amp; your concierge</span>

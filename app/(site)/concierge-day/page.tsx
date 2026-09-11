@@ -7,7 +7,7 @@ import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import Faq from "@/components/Faq";
-import DayConfigurator from "@/components/DayConfigurator";
+import DayConfigurator, { type ExpSupplementTier } from "@/components/DayConfigurator";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
@@ -22,7 +22,7 @@ import styles from "./ConciergeDayPage.module.css";
 export const metadata: Metadata = {
   title: "The Signature Concierge Day",
   description:
-    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and not one decision to make. From €800.",
+    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing for you to arrange. From €800.",
 };
 
 const EXPERIENCES = [
@@ -54,7 +54,7 @@ const EXPERIENCES = [
   {
     src: "/images/experiences/balloon-hero.jpg",
     h: "Hot-air balloon at dawn",
-    p: "Float over the West Bank at sunrise — we'll arrange it on request.",
+    p: "Float over Luxor at sunrise — we'll arrange it on request.",
   },
 ];
 
@@ -80,7 +80,7 @@ const GALLERY = [
   { image: "/images/experiences/felucca-sunset-sail-hero.jpg", caption: "The Nile at golden hour" },
   { image: "/images/desert-dinner-table.jpg", caption: "A private table in the dunes" },
   { image: "/images/experiences/medinet-habu-hero.jpg", caption: "Colour still on the walls" },
-  { image: "/images/experiences/balloon-hero.jpg", caption: "Dawn over the West Bank" },
+  { image: "/images/experiences/balloon-hero.jpg", caption: "Dawn over Luxor" },
   { image: "/images/experiences/nile-dinner-cruise-hero.jpg", caption: "Dinner on the river" },
   { image: "/images/experiences/camel-bedouin-breakfast-hero.jpg", caption: "Breakfast at the desert's edge" },
 ];
@@ -176,6 +176,33 @@ export default async function ConciergeDayPage() {
     ["night in Luxor", brandBySlug("luxor-by-night")],
     ["balloon", brandBySlug("hot-air-balloon-luxor")],
     ["Sailing lesson", brandBySlug("sailing-lesson-nile")],
+  ];
+  // Each experience's REAL per-guest supplement, from its own product — so the
+  // à-la-carte breakdown prices the party exactly as the single-experience pages do.
+  const supBySlug = (slug: string): ExpSupplementTier[] =>
+    (experiences.find((e) => e.slug === slug)?.entry.groupSupplement ?? []).map((t) => ({
+      minGuests: t.minGuests ?? 0,
+      extraPerGuest: t.extraPerGuest ?? 0,
+    }));
+  const alaCarteSupplements: [string, ExpSupplementTier[]][] = [
+    ["Medinet", supBySlug("medinet-habu")],
+    ["Karnak", supBySlug("karnak-at-dawn")],
+    ["Hatshepsut", supBySlug("hatshepsut-temple")],
+    ["Luxor Temple", supBySlug("luxor-temple")],
+    ["Valley of the Kings", supBySlug("valley-of-the-kings")],
+    ["Deir el-Shelwit", supBySlug("deir-el-shelwit")],
+    ["Colossi", supBySlug("colossi-of-memnon")],
+    ["Valley of the Workers", supBySlug("deir-el-medina")],
+    ["felucca", supBySlug("felucca-sunset-sail")],
+    ["sail on the Nile", supBySlug("felucca-sunset-sail")],
+    ["Sunset sail", supBySlug("felucca-sunset-sail")],
+    ["picnic", supBySlug("private-desert-safari")],
+    ["choosing", supBySlug("private-desert-safari")],
+    ["Desert rally", supBySlug("private-desert-safari")],
+    ["night in Luxor", supBySlug("luxor-by-night")],
+    ["balloon", supBySlug("hot-air-balloon-luxor")],
+    ["Sailing lesson", supBySlug("sailing-lesson-nile")],
+    ["Hurghada", supBySlug("hurghada-to-luxor-crossing")],
   ];
   const named = (name: string, slug: string) => ({
     name,
@@ -485,6 +512,7 @@ export default async function ConciergeDayPage() {
             images={builderImages}
             priceTable={alaCartePrices}
             brandTable={alaCarteBrands}
+            supplementTable={alaCarteSupplements}
             socialProof={socialProof}
           />
         </div>
@@ -688,7 +716,7 @@ export default async function ConciergeDayPage() {
           <div className={styles.heroFacts}>
             <div className={styles.f}>
               <b>Zero</b>
-              <span>Decisions for you</span>
+              <span>Friction for you</span>
             </div>
             <div className={styles.f}>
               <b>≤4</b>

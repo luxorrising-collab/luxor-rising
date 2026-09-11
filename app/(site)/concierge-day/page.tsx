@@ -182,6 +182,11 @@ export default async function ConciergeDayPage() {
     price: priceBySlug(slug),
     subtitle: brandBySlug(slug),
   });
+  // A free signature bonus (counted like the builder: priced into the "assemble
+  // it yourself" total, but not counted in the "N experiences" headline).
+  const bonusOf = (name: string, slug: string) => ({ ...named(name, slug), bonus: true });
+  // A counted experience with no standalone price (mirrors the builder's plan).
+  const freeExp = (name: string, subtitle: string) => ({ name, price: 0, subtitle });
   // Mirrors the builder's "see full breakdown" (default Medinet journey) so the
   // price anchor and the checkout breakdown always compare the same products,
   // named the same and priced from the live catalogue.
@@ -201,12 +206,13 @@ export default async function ConciergeDayPage() {
     [
       named("Colossi of Memnon", "colossi-of-memnon"),
       named("A night in Luxor city", "luxor-by-night"),
-      named("Deir el-Shelwit — hidden temple of Isis", "deir-el-shelwit"),
+      freeExp("Authentic local contacts", "Hosts, artisans & storytellers, introduced for you"),
+      bonusOf("Deir el-Shelwit — hidden temple of Isis", "deir-el-shelwit"),
     ],
     [
       named("Valley of the Workers — Deir el-Medina", "deir-el-medina"),
       named("Hot-air balloon at dawn", "hot-air-balloon-luxor"),
-      named("Sailing lesson on the Nile", "sailing-lesson-nile"),
+      bonusOf("Sailing lesson on the Nile", "sailing-lesson-nile"),
     ],
   ];
   // "Everything handled for you" — shown as priceless/timeless value, never a

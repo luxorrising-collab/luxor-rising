@@ -841,20 +841,6 @@
   color: var(--color-gold-deep);
   font-weight: 600;
 }
-.bdPricelessHead {
-  margin-top: 0.5rem;
-  padding-top: 0.4rem;
-  border-top: 1px dashed var(--color-gold-soft);
-  font-size: 0.62rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--color-gold-deep);
-}
-.bdPricelessV {
-  font-style: italic;
-  color: var(--color-gold-deep);
-  white-space: nowrap;
-}
 .sumMeta {
   margin: 0.55rem 0 0;
   font-size: 0.82rem;

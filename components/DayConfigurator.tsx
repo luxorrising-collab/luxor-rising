@@ -7,7 +7,6 @@ import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
 import { useDayCount } from "./DayCount";
 import { trackBeginCheckout } from "@/lib/analytics";
-import { VALUE_LINES } from "@/lib/value-lines";
 
 type DayCount = 1 | 2 | 3 | 4;
 type Journey = "medinet" | "karnak" | "balloon";
@@ -871,15 +870,6 @@ export default function DayConfigurator({
                   <span>Your concierge day</span>
                   <span>{euro(total)}</span>
                 </div>
-                <div className={styles.bdPricelessHead}>And handled for you — priceless</div>
-                {VALUE_LINES.map(([name, worth]) => (
-                  <div className={styles.bdRow} key={name}>
-                    <span className={styles.bdName}>
-                      <span>{name}</span>
-                    </span>
-                    <span className={styles.bdPricelessV}>{worth}</span>
-                  </div>
-                ))}
               </div>
             )}
 

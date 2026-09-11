@@ -15,6 +15,7 @@ import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPriceMap } from "@/lib/pricing";
+import { getSocialProof } from "@/lib/social-proof";
 import styles from "./ConciergeDayPage.module.css";
 
 export const metadata: Metadata = {
@@ -102,12 +103,13 @@ const SECTION_FALLBACK = [
 ];
 
 export default async function ConciergeDayPage() {
-  const [page, pricingRules, experiences, product, priceMap] = await Promise.all([
+  const [page, pricingRules, experiences, product, priceMap, socialProof] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
     reader.singletons.pricingRules.read(),
     reader.collections.experiences.all(),
     reader.singletons.productPageSettings.read(),
     getFinalPriceMap(),
+    getSocialProof(),
   ]);
 
   const FAQ_ITEMS = (page?.faq ?? []).map((f) => ({ q: f.question, a: f.answer }));
@@ -465,6 +467,7 @@ export default async function ConciergeDayPage() {
             images={builderImages}
             priceTable={alaCartePrices}
             brandTable={alaCarteBrands}
+            socialProof={socialProof}
           />
         </div>
       </section>
@@ -654,7 +657,7 @@ export default async function ConciergeDayPage() {
           <h1 className="display">{page?.heroTitle}</h1>
           <div className={styles.oneline}>{page?.heroSubtitle}</div>
           <div className={styles.raterow}>
-            <span className="stars">★ ★ ★ ★ ★</span> {page?.heroTrustLine}
+            <span className="stars">★ ★ ★ ★ ★</span> {socialProof}
           </div>
           <div className={styles.priceRow}>
             <span className="from">From</span>

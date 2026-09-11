@@ -1387,6 +1387,11 @@ export default config({
           label: "Tagline",
           description: 'e.g. "Your private consigliere in Egypt — we arrange, you arrive."',
         }),
+        socialProof: fields.text({
+          label: "Social proof claim (main)",
+          description:
+            'The one social-proof line shown site-wide next to ★★★★★ (stars are added automatically). e.g. "4.9 · 28+ private days arranged"',
+        }),
         defaultMetaDescription: fields.text({
           label: "Default meta description",
           multiline: true,

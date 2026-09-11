@@ -6,6 +6,7 @@ import JsonLd from "@/components/JsonLd";
 import DestinationTemplate from "@/components/DestinationTemplate";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import { reader } from "@/lib/keystatic-reader";
+import { getSocialProof } from "@/lib/social-proof";
 
 async function getEntry(slug: string) {
   const entry = await reader.collections.destinations.read(slug, { resolveLinkedFiles: true });
@@ -44,7 +45,7 @@ export default async function DestinationPage({
   params: Promise<{ destination: string }>;
 }) {
   const { destination } = await params;
-  const entry = await getEntry(destination);
+  const [entry, socialProof] = await Promise.all([getEntry(destination), getSocialProof()]);
   if (!entry) notFound();
 
   const data = {
@@ -52,7 +53,7 @@ export default async function DestinationPage({
     heroTitle: entry.heroTitle,
     heroSubtitle: entry.heroSubtitle,
     heroImage: entry.heroImage ?? "",
-    heroTrustLine: entry.heroTrustLine,
+    heroTrustLine: socialProof,
     primaryCtaLabel: entry.primaryCtaLabel,
     primaryCtaHref: entry.primaryCtaHref,
     secondaryCtaLabel: entry.secondaryCtaLabel,

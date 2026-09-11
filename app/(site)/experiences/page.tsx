@@ -9,6 +9,7 @@ import StickyBar from "@/components/StickyBar";
 import ExperiencesClient, { type CmsExperienceItem } from "./ExperiencesClient";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPriceMap } from "@/lib/pricing";
+import { getSocialProof } from "@/lib/social-proof";
 import styles from "./ExperiencesPage.module.css";
 
 export const metadata: Metadata = {
@@ -50,9 +51,10 @@ const CURATED_PRODUCTS = [
 ];
 
 export default async function ExperiencesPage() {
-  const [allExperiences, priceMap] = await Promise.all([
+  const [allExperiences, priceMap, socialProof] = await Promise.all([
     reader.collections.experiences.all(),
     getFinalPriceMap(),
+    getSocialProof(),
   ]);
   const activeExperiences = allExperiences.filter(({ entry }) => entry.isActive && entry.title);
   // "Thirty Days in the Desert" is a by-invitation enquiry product shown in the
@@ -161,7 +163,7 @@ export default async function ExperiencesPage() {
           </div>
           <div className={styles.trustItem}>
             <span className={styles.dot} />
-            <b>4.9/5</b> from early guests
+            <b>★</b> {socialProof}
           </div>
         </div>
       </div>

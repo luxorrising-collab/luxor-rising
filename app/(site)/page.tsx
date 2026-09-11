@@ -8,10 +8,14 @@ import Reveal from "@/components/Reveal";
 import StickyBar from "@/components/StickyBar";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import { reader } from "@/lib/keystatic-reader";
+import { getSocialProof } from "@/lib/social-proof";
 import styles from "./HomePage.module.css";
 
 export default async function HomePage() {
-  const page = await reader.singletons.homePage.read();
+  const [page, socialProof] = await Promise.all([
+    reader.singletons.homePage.read(),
+    getSocialProof(),
+  ]);
   const heroTitleLines = (page?.heroTitle ?? "").split("\n");
   const positioningTitleLines = (page?.positioningTitle ?? "").split("\n");
 
@@ -47,7 +51,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className={styles.heroTrust}>
-            <span className="stars">★ ★ ★ ★ ★</span> {page?.heroTrustLine}
+            <span className="stars">★ ★ ★ ★ ★</span> {socialProof}
           </div>
         </div>
         <div className={styles.scrollHint}>Scroll</div>

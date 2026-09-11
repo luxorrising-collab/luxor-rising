@@ -9,13 +9,15 @@ import ExperienceTemplate from "@/components/ExperienceTemplate";
 import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
+import { getSocialProof } from "@/lib/social-proof";
 
 async function getData(slug: string) {
-  const [entry, globals, pricingRules, finalPrice] = await Promise.all([
+  const [entry, globals, pricingRules, finalPrice, socialProof] = await Promise.all([
     reader.collections.experiences.read(slug, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
     getFinalPrice(slug),
+    getSocialProof(),
   ]);
   // Inactive experiences 404 rather than render at their direct URL.
   if (!entry || !entry.isActive) return null;
@@ -26,7 +28,7 @@ async function getData(slug: string) {
   // Only show the struck-through "assembled separately" total while it stays
   // above our price — otherwise it reads as crossing out a smaller number.
   const showAssembledTotal = vst != null && vst > basePrice;
-  return { entry, globals, pricingRules, basePrice, showAssembledTotal };
+  return { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof };
 }
 
 export async function generateMetadata({
@@ -72,7 +74,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
 
   const data = await getData(slug);
   if (!data) notFound();
-  const { entry, globals, pricingRules, basePrice, showAssembledTotal } = data;
+  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof } = data;
   // Enquiry-only products (e.g. a bespoke multi-week retreat) reuse the standard
   // product page, but swap Stripe checkout for the enquiry form and drop the
   // fixed-price / "reserve" language.
@@ -168,6 +170,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
 
       <ExperienceTemplate
         isEnquiry={isEnquiry}
+        socialProof={socialProof}
         title={entry.title}
         hook={entry.hook}
         heroEyebrow={entry.heroEyebrow}

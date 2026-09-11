@@ -8,21 +8,23 @@ import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
+import { getSocialProof } from "@/lib/social-proof";
 
 const SLUG = "medinet-habu";
 
 async function getData() {
-  const [entry, globals, pricingRules, finalPrice] = await Promise.all([
+  const [entry, globals, pricingRules, finalPrice, socialProof] = await Promise.all([
     reader.collections.experiences.read(SLUG, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
     getFinalPrice(SLUG),
+    getSocialProof(),
   ]);
   if (!entry) return null;
   const basePrice = finalPrice ?? entry.basePrice ?? 0;
   const vst = parseEuro(entry.valueStackTotal);
   const showAssembledTotal = vst != null && vst > basePrice;
-  return { entry, globals, pricingRules, basePrice, showAssembledTotal };
+  return { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof };
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -59,7 +61,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MedinetHabuPage() {
   const data = await getData();
   if (!data) notFound();
-  const { entry, globals, pricingRules, basePrice, showAssembledTotal } = data;
+  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof } = data;
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -164,6 +166,7 @@ export default async function MedinetHabuPage() {
       <Nav ctaHref="#book" ctaLabel="Reserve" />
 
       <ExperienceTemplate
+        socialProof={socialProof}
         title={entry.title}
         hook={entry.hook}
         heroEyebrow={entry.heroEyebrow}

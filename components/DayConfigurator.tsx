@@ -29,7 +29,7 @@ const JOURNEY: Record<
   { name: string; temple: string; companion: string }
 > = {
   medinet: {
-    name: "Where it began",
+    name: "Initiation to power",
     temple: "Medinet Habu — your first temple",
     companion: "Hatshepsut Temple at Deir el-Bahari",
   },
@@ -101,7 +101,7 @@ const PRICE_TABLE: [string, number][] = [
   ["choosing", 150],
   ["Desert rally", 160],
   ["night in Luxor", 130],
-  ["photoshoot", 120],
+  ["photographer", 460],
   ["balloon", 230],
   ["Sailing lesson", 140],
   ["Egyptologist", 140],
@@ -214,6 +214,8 @@ type DayConfiguratorProps = {
   /** Brand titles (substring → poetic product title) for signature experiences,
    *  shown as a small italic subtitle under the place name in the breakdown. */
   brandTable?: [string, string][];
+  /** Main social-proof line (from Site settings), shown next to ★★★★★. */
+  socialProof?: string;
 };
 
 export default function DayConfigurator({
@@ -232,6 +234,7 @@ export default function DayConfigurator({
   images = {},
   priceTable,
   brandTable,
+  socialProof = "4.9 · 28+ private days arranged",
 }: DayConfiguratorProps) {
   // Prices come from the live catalogue when supplied (keeps the breakdown in
   // sync with real product prices); the built-in table is only a fallback.
@@ -275,8 +278,9 @@ export default function DayConfigurator({
   const dateFieldRef = useRef<HTMLDivElement>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
-  const photoIncluded = days >= 3;
-  const photoActive = photoIncluded || photo;
+  // Mobile-phone photography is always included and free; the paid finishing
+  // touch is a professional photographer/videographer (a flat premium package).
+  const PHOTO_PRO = 460;
 
   // Hurghada → Luxor transfer upsell — real price pulled from the
   // hurghada-to-luxor-crossing product via the Keystatic-fed price table.
@@ -284,7 +288,7 @@ export default function DayConfigurator({
 
   function addonsCost() {
     let c = 0;
-    if (photo && days < 3) c += 120;
+    if (photo) c += PHOTO_PRO;
     if (hurg) c += hurgPrice;
     return c;
   }
@@ -313,7 +317,7 @@ export default function DayConfigurator({
     start.push({ t: j.temple, sig: journey === "medinet" });
     start.push({ t: j.companion, follows: true });
     start.push({ t: WATER[water] });
-    if (photo && days < 3) start.push("Private photoshoot of your day");
+    if (photo) start.push("Private photographer / videographer for your day");
 
     const pool: PlanItem[] = [];
     const bonus: PlanItem[] = [];
@@ -448,7 +452,7 @@ export default function DayConfigurator({
       `${group} guest${group > 1 ? "s" : ""}`,
       `Journey: ${JOURNEY[journey].name} (first temple: ${JOURNEY[journey].temple.split(" — ")[0]})`,
       `Evening: ${eveningLabel}`,
-      photo ? "Add-on: private photoshoot" : "",
+      photo ? "Add-on: private photographer / videographer" : "",
       hurg ? "Add-on: Hurghada round-trip transfer" : "",
     ]
       .filter(Boolean)
@@ -725,21 +729,35 @@ export default function DayConfigurator({
 
             <div className={styles.pref}>
               <div className={styles.prefQ}>Add the finishing touches</div>
+              <div className={`${styles.addon} ${styles.sel}`} style={{ cursor: "default" }}>
+                <span className={styles.chk}>✓</span>
+                <div>
+                  <b style={{ fontWeight: 500 }}>
+                    Photographed on your phone, throughout
+                  </b>
+                  <div className="muted" style={{ fontSize: ".76rem" }}>
+                    We capture your private moments as they happen and never leave
+                    your side — sent the same day, in full beauty, as timeless
+                    memories.
+                  </div>
+                </div>
+                <span className={styles.ax}>Included</span>
+              </div>
               <div
-                className={`${styles.addon} ${photoActive ? styles.sel : ""}`}
-                onClick={() => {
-                  if (days >= 3) return;
-                  setPhoto((p) => !p);
-                }}
+                className={`${styles.addon} ${photo ? styles.sel : ""}`}
+                style={{ marginTop: ".6rem" }}
+                onClick={() => setPhoto((p) => !p)}
               >
                 <span className={styles.chk}>✓</span>
                 <div>
-                  <b style={{ fontWeight: 500 }}>Private photoshoot</b>
+                  <b style={{ fontWeight: 500 }}>Private photographer or videographer</b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
-                    A photographer captures your day
+                    A professional captures your day — a vlog or film for social,
+                    marketing and promo, shot at the locations and moments you
+                    choose.
                   </div>
                 </div>
-                <span className={styles.ax}>{days >= 3 ? "Included" : "+€120"}</span>
+                <span className={styles.ax}>+€{PHOTO_PRO}</span>
               </div>
               <div
                 className={`${styles.addon} ${hurg ? styles.sel : ""}`}
@@ -749,13 +767,13 @@ export default function DayConfigurator({
                 <span className={styles.chk}>✓</span>
                 <div>
                   <b style={{ fontWeight: 500 }}>
-                    Hurghada ⇄ Luxor day trip{" "}
+                    Hurghada ⇄ Luxor round trip{" "}
                     <span className={styles.addonRec}>Recommended</span>
                   </b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
-                    Coming from the Red Sea? The original private round-trip —
-                    collected door-to-door, an unhurried day in Luxor, home the
-                    same night, timed with your concierge.{" "}
+                    Coming from the Red Sea? A private round trip of up to 48
+                    hours — collected door-to-door, and in Luxor the car waits
+                    and drives you wherever your day goes.{" "}
                     <Link
                       href="/experiences/hurghada-to-luxor-crossing"
                       className={styles.addonLink}
@@ -800,7 +818,7 @@ export default function DayConfigurator({
 
             {/* social proof — a high-ticket day needs trust up front */}
             <div className={styles.sumStars}>
-              <span className={styles.stars}>★★★★★</span> 4.9 · 60+ private days arranged in Luxor
+              <span className={styles.stars}>★★★★★</span> {socialProof}
             </div>
 
             {/* price */}

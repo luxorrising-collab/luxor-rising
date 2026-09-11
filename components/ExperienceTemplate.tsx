@@ -10,11 +10,20 @@ import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
 
-// The per-item "price anchor" value stack is hidden for now: it exposed the
-// component costs we pay on the ground, and the breakdown no longer earns its
-// place. Content (valueStackRows/Total) is kept in Keystatic so we can remake
-// and re-enable this section later — flip this flag to bring it back.
-const SHOW_VALUE_STACK = false;
+// The value anchor, reframed: instead of exposing line-item costs, it names
+// what a private day here is really worth. The euro figures live only in the
+// final payoff row (the real price). Emotional, "priceless"-style value.
+const VALUE_LINES: [string, string][] = [
+  ["Everything arranged, so you just flow", "priceless"],
+  ["A companion who shares the road with you", "priceless"],
+  ["A guide who understands your journey", "priceless"],
+  ["Being welcomed in Luxor as if you were home", "priceless"],
+  ["Standing where the ancients stood, with reverence", "powerful"],
+  ["The great chambers, yours alone in the quiet hour", "moving"],
+  ["Doing Luxor properly — the once, done right", "unforgettable"],
+  ["Sailing the Nile as the sun goes down", "bucket list"],
+  ["Your private moments, captured to keep", "timeless"],
+];
 
 export type ExperienceHighlight = { title: string; description: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
@@ -44,6 +53,8 @@ export type ExperienceTemplateProps = {
   bookNote?: string;
   /** Enquiry-only product: swap checkout price/CTAs for a "request an invitation" flow. */
   isEnquiry?: boolean;
+  /** Main social-proof line (from Site settings), shown next to ★★★★★ in the hero. */
+  socialProof?: string;
   configurator: React.ReactNode;
   valueStackRows: ValueStackRow[];
   valueStackTotal: string;
@@ -97,10 +108,8 @@ export default function ExperienceTemplate({
   bookLead,
   bookNote,
   isEnquiry = false,
+  socialProof = "4.9 · 28+ private days arranged",
   configurator,
-  valueStackRows,
-  valueStackTotal,
-  showAssembledTotal = true,
   basePrice,
   priceNote,
   pricePerPerson,
@@ -121,8 +130,6 @@ export default function ExperienceTemplate({
   testimonialsTitle,
   testimonials,
   reviewsVerified = false,
-  reviewAverage,
-  reviewCount = 0,
   finalTitle,
   finalText,
   finalCtaHref,
@@ -158,13 +165,9 @@ export default function ExperienceTemplate({
               Why it matters
             </Link>
           </div>
-          {reviewCount > 0 && (
-            <div className={styles.heroTrust}>
-              <span className="stars">★ ★ ★ ★ ★</span>{" "}
-              {reviewAverage ? `${reviewAverage} · ` : ""}
-              {reviewCount} guest {reviewCount === 1 ? "review" : "reviews"}
-            </div>
-          )}
+          <div className={styles.heroTrust}>
+            <span className="stars">★ ★ ★ ★ ★</span> {socialProof}
+          </div>
         </div>
       </section>
 
@@ -291,35 +294,32 @@ export default function ExperienceTemplate({
         </div>
       </section>
 
-      {/* VALUE STACK — price anchor, hidden for now (see SHOW_VALUE_STACK) */}
-      {SHOW_VALUE_STACK && valueStackRows.length > 0 && (
-        <section>
-          <Reveal className="wrap-narrow center">
-            <span className="eyebrow">What&apos;s handled for you</span>
-            <h2 className="display">The entry ticket is the cheap part.</h2>
-            <div className={styles.stack}>
-              {valueStackRows.map((row, i) => (
-                <div className={styles.stackRow} key={row.label || i}>
-                  <span>{row.label}</span>
-                  <span className="v">{row.price}</span>
-                </div>
-              ))}
-              {valueStackTotal && showAssembledTotal && (
-                <div className={`${styles.stackRow} ${styles.tot}`}>
-                  <span>Assembled separately</span>
-                  <span className="v">
-                    <s>{valueStackTotal}</s>
-                  </span>
-                </div>
-              )}
+      {/* VALUE ANCHOR — what a private day here is really worth */}
+      <section>
+        <Reveal className="wrap-narrow center">
+          <span className="eyebrow">What&apos;s handled for you</span>
+          <h2 className="display">Some of it has a price. The best of it doesn&apos;t.</h2>
+          <div className={styles.stack}>
+            {VALUE_LINES.map(([label, worth]) => (
+              <div className={styles.stackRow} key={label}>
+                <span>{label}</span>
+                <span
+                  className="v"
+                  style={{ fontStyle: "italic", color: "var(--color-gold-deep)" }}
+                >
+                  {worth}
+                </span>
+              </div>
+            ))}
+            {!isEnquiry && (
               <div className={`${styles.stackRow} ${styles.fin}`}>
                 <span>Your private experience, from</span>
                 <span className="v">€{basePrice}</span>
               </div>
-            </div>
-          </Reveal>
-        </section>
-      )}
+            )}
+          </div>
+        </Reveal>
+      </section>
 
       {/* GUARANTEE */}
       <section className={styles.guarantee}>

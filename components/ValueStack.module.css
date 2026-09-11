@@ -64,7 +64,8 @@
   color: var(--color-espresso);
 }
 .l {
-  color: var(--color-espresso);
+  color: var(--color-ink);
+  font-weight: 500;
 }
 .per {
   color: var(--color-muted);

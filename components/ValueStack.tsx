@@ -80,6 +80,7 @@ export default function ValueStack({
                   style={{
                     display: "block",
                     fontStyle: "italic",
+                    fontWeight: 400,
                     fontSize: ".82em",
                     color: "var(--color-muted)",
                     marginTop: "1px",

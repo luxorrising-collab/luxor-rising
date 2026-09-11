@@ -152,8 +152,8 @@ export default async function ConciergeDayPage() {
     ["photoshoot", 120, true],
     ["balloon", priceBySlug("hot-air-balloon-luxor")],
     ["Sailing lesson", priceBySlug("sailing-lesson-nile")],
-    ["Egyptologist", 140, true],
-    ["air-conditioned transfers", 90, true],
+    // Egyptologist and private car/driver are deliberately NOT priced — they're
+    // part of the "handled, priceless" layer, never a declared line-item cost.
     ["Hurghada", priceBySlug("hurghada-to-luxor-crossing")],
   ];
 
@@ -211,17 +211,15 @@ export default async function ConciergeDayPage() {
   ];
   // "Everything handled for you" — shown as priceless/timeless value, never a
   // euro figure, so we never publish what a guide, guard or car actually costs.
-  const perDayServices = [
+  // The shared single-experience value lines lead, then the operational layer.
+  const perDayServices = VALUE_LINES.map(([name, worth]) => ({ name, worth }));
+  const oneOffServices = [
     { name: "A concierge managing every hour of it", worth: "priceless" },
     { name: "Temple guards opening doors a coach never gets", worth: "priceless" },
     { name: "Private air-conditioned car & driver", worth: "effortless" },
     { name: "Monument entries, timed before the crowds", worth: "seamless" },
     { name: "A licensed Egyptologist too, at the monuments", worth: "priceless" },
-  ];
-  const oneOffServices = [
     { name: "Personal trip design & every reservation made", worth: "priceless" },
-    // The same "priceless" value lines shown on single-experience pages.
-    ...VALUE_LINES.map(([name, worth]) => ({ name, worth })),
   ];
 
   // Images are CMS-editable via the Concierge Day page singleton, with the

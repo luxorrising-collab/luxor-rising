@@ -176,7 +176,11 @@ export default async function ConciergeDayPage() {
     ["balloon", brandBySlug("hot-air-balloon-luxor")],
     ["Sailing lesson", brandBySlug("sailing-lesson-nile")],
   ];
-  const named = (name: string, slug: string) => ({ name, price: priceBySlug(slug) });
+  const named = (name: string, slug: string) => ({
+    name,
+    price: priceBySlug(slug),
+    subtitle: brandBySlug(slug),
+  });
   // [day 1, day-2 additions, day-3 additions, day-4 additions]
   const experiencePlan = [
     [
@@ -200,15 +204,18 @@ export default async function ConciergeDayPage() {
       named("A night under desert stars", "desert-astronomy-night"),
     ],
   ];
-  // Consigliere leads; temple guards are on your side; the Egyptologist is an addition.
+  // "Everything handled for you" — shown as priceless/timeless value, never a
+  // euro figure, so we never publish what a guide, guard or car actually costs.
   const perDayServices = [
-    { name: "A concierge managing every hour of it", price: 90 },
-    { name: "Temple guards opening doors a coach never gets", price: 70 },
-    { name: "Private air-conditioned car & driver", price: 90 },
-    { name: "Monument entries, timed before the crowds", price: 60 },
-    { name: "A licensed Egyptologist too, at the monuments", price: 140 },
+    { name: "A concierge managing every hour of it", worth: "priceless" },
+    { name: "Temple guards opening doors a coach never gets", worth: "priceless" },
+    { name: "Private air-conditioned car & driver", worth: "effortless" },
+    { name: "Monument entries, timed before the crowds", worth: "seamless" },
+    { name: "A licensed Egyptologist too, at the monuments", worth: "priceless" },
   ];
-  const oneOffServices = [{ name: "Personal trip design & every reservation made", price: 120 }];
+  const oneOffServices = [
+    { name: "Personal trip design & every reservation made", worth: "priceless" },
+  ];
 
   // Images are CMS-editable via the Concierge Day page singleton, with the
   // original hardcoded sets kept as fallbacks so nothing breaks if a field is empty.

@@ -59,34 +59,21 @@ guaranteeItems:
       before, say so and it's on us. Tell your concierge on the day — no
       form, no argument, refunded in full.
 testimonialsEyebrow: From recent guests
-testimonialsTitle: The temple they didn't expect to love most.
-# SAMPLE reviews below, so the section can be previewed. reviewsVerified stays
-# false → they render with a visible "sample" note and emit NO star-rating
-# structured data to Google. Replace with real, attributable guest reviews and
-# only then set reviewsVerified: true.
-reviewsVerified: false
+testimonialsTitle: The moment they didn't expect to love most.
+# Real, verified guest reviews — powerful excerpts pulled from our Google
+# reviews. reviewsVerified: true → shown as real (no "sample" note) and eligible
+# for star structured data. Edit the excerpts here; keep them short and punchy.
+reviewsVerified: true
 testimonials:
   - quote: >-
-      We've done the big-bus version of Egypt before. This wasn't that. We had
-      Medinet Habu almost to ourselves for the first hour, coffee in hand, and
-      Ahmed knew exactly which wall to stand us in front of as the light came up.
-      I didn't want to leave.
-    author: Lena & Tomáš, Vienna
+      Four days in Luxor were some of the most powerful of my life. Arriving, it
+      felt like I was not coming to a new place, but returning home.
+    author: Man of Knowledge
     rating: 5
-    date: "2026-03-14"
+    date: "2026-09-12"
   - quote: >-
-      What sold us afterwards was everything we never had to think about — no
-      tickets, no tipping at gates, no wondering if we were being overcharged.
-      Someone we trusted just handled the whole day. The photos he took on my own
-      phone are the ones now framed at home.
-    author: Priya R., London
+      Luxor Rising arranged my whole trip in Egypt end to end, and it was
+      flawless.
+    author: TFK
     rating: 5
-    date: "2026-02-02"
-  - quote: >-
-      I was worried it would feel like a rushed history lesson. It was the
-      opposite — unhurried, personal, and our Egyptologist answered questions for
-      as long as we had them. Worth every euro, and I'm not someone who says that
-      lightly.
-    author: Michael D., Toronto
-    rating: 5
-    date: "2026-01-19"
+    date: "2026-09-08"

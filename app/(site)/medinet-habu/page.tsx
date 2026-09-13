@@ -197,8 +197,7 @@ export default async function MedinetHabuPage() {
             glanceIncludes={entry.glanceIncludes}
             includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
             feelText={entry.glanceIncludes}
-            reviewAverage={reviewAverage}
-            reviewCount={reviewCount}
+            socialProof={socialProof}
             image={entry.heroImage || undefined}
             title={entry.title || undefined}
           />

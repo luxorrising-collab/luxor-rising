@@ -50,9 +50,9 @@ export default async function HomePage() {
               {page?.heroSecondaryCtaLabel ?? "Explore experiences"}
             </Link>
           </div>
-          <div className={styles.heroTrust}>
-            <span className="stars">★ ★ ★ ★ ★</span> {socialProof}
-          </div>
+          <Link href="/reviews" className={styles.heroTrust} title="Read our reviews">
+            <span className="stars">★ ★ ★ ★ ★</span> {socialProof} ↗
+          </Link>
         </div>
         <div className={styles.scrollHint}>Scroll</div>
       </section>

@@ -86,9 +86,9 @@ export default function DestinationTemplate({ data }: { data: DestinationData })
             )}
           </div>
           {data.heroTrustLine && (
-            <div className={styles.heroTrust}>
-              <span className="stars">★ ★ ★ ★ ★</span> {data.heroTrustLine}
-            </div>
+            <Link href="/reviews" className={styles.heroTrust} title="Read our reviews">
+              <span className="stars">★ ★ ★ ★ ★</span> {data.heroTrustLine} ↗
+            </Link>
           )}
         </div>
       </header>

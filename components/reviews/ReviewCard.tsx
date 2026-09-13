@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./reviews.module.css";
 import { SOURCE_LABELS, type Review } from "@/lib/reviews";
+import ExpandableQuote from "./ExpandableQuote";
 
 function Stars({ rating }: { rating: number }) {
   const full = Math.round(rating);
@@ -51,7 +52,7 @@ export default function ReviewCard({ review }: { review: Review }) {
         )}
       </div>
 
-      <blockquote className={styles.quote}>{review.quote}</blockquote>
+      <ExpandableQuote text={review.quote} />
 
       <figcaption className={styles.by}>
         {review.avatar ? (

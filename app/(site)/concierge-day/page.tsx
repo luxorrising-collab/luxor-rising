@@ -702,9 +702,9 @@ export default async function ConciergeDayPage() {
           <span className="eyebrow">{page?.heroEyebrow}</span>
           <h1 className="display">{page?.heroTitle}</h1>
           <div className={styles.oneline}>{page?.heroSubtitle}</div>
-          <div className={styles.raterow}>
-            <span className="stars">★ ★ ★ ★ ★</span> {socialProof}
-          </div>
+          <Link href="/reviews" className={styles.raterow} title="Read our reviews">
+            <span className="stars">★ ★ ★ ★ ★</span> {socialProof} ↗
+          </Link>
           <div className={styles.priceRow}>
             <span className="from">From</span>
             <span className="amt">€{page?.startingPrice ?? 800}</span>

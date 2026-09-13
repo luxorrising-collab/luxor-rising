@@ -54,9 +54,12 @@ type ExperienceConfiguratorProps = {
   includeItems?: { title: string; note?: string }[];
   /** How the day feels — shown above the list, so it sells before it reassures. */
   feelText?: string;
-  /** Aggregate review summary — shown as a star line on the price card. */
+  /** Aggregate review summary (kept for compatibility; the card now shows the
+   *  uniform social-proof claim instead). */
   reviewAverage?: string;
   reviewCount?: number;
+  /** Main social-proof line (from Site settings), shown on the price card. */
+  socialProof?: string;
   /** A photo of the place, shown as a banner at the top of the summary card. */
   image?: string;
   /** The evocative experience title (e.g. "Begin where the world began.") shown
@@ -78,8 +81,7 @@ export default function ExperienceConfigurator({
   glanceIncludes,
   includeItems,
   feelText,
-  reviewAverage,
-  reviewCount = 0,
+  socialProof = "4.9 · 28+ private days arranged",
   image,
   title,
 }: ExperienceConfiguratorProps) {
@@ -246,13 +248,9 @@ export default function ExperienceConfigurator({
               <div className={styles.sumName}>{cardTitle}</div>
             </>
           )}
-          {reviewCount > 0 && (
-            <div className={styles.sumStars}>
-              <span className={styles.stars}>★★★★★</span>
-              {reviewAverage ? ` ${reviewAverage}` : ""} · {reviewCount}{" "}
-              {reviewCount === 1 ? "review" : "reviews"}
-            </div>
-          )}
+          <a href="/reviews" className={styles.sumStars} title="Read our reviews">
+            <span className={styles.stars}>★★★★★</span> {socialProof} ↗
+          </a>
           <div className={styles.sumProof}>Private &amp; fully arranged</div>
           <div className={styles.sumPrice}>{euro(total)}</div>
           <div className={styles.sumPer}>

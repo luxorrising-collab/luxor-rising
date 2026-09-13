@@ -163,6 +163,22 @@
   color: var(--color-espresso);
   flex: 1;
 }
+.readMore {
+  display: inline;
+  margin-left: 0.35rem;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--color-gold-deep);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.readMore:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
 .by {
   display: flex;
   align-items: center;

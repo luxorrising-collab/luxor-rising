@@ -6,9 +6,10 @@ import styles from "./TestimonialsCarousel.module.css";
 
 export type Moment = { quote: string; author?: string | null; rating?: number | null };
 
-/** A carousel of powerful review excerpts. The author repeats (mostly one guest
- *  for now) so it's kept quiet here; full attribution + verification live on the
- *  reviews page, which this links to. Auto-advances, pauses on hover/focus, and
+/** A 3-D "coverflow" carousel of powerful review excerpts: one moment in focus,
+ *  neighbours scaled back and faded for depth. The author repeats (mostly one
+ *  guest for now) so it's kept quiet here — full attribution + verification live
+ *  on the reviews page, linked below. Auto-advances, pauses on hover/focus, and
  *  respects prefers-reduced-motion. */
 export default function TestimonialsCarousel({
   items,
@@ -34,6 +35,22 @@ export default function TestimonialsCarousel({
   if (!n) return null;
   const go = (i: number) => setIdx(((i % n) + n) % n);
 
+  // Position each slide by its signed distance from the focused one.
+  function place(i: number): React.CSSProperties {
+    let off = (((i - idx) % n) + n) % n;
+    if (off > n / 2) off -= n;
+    const a = Math.abs(off);
+    const dir = off < 0 ? -1 : 1;
+    const base = "translate(-50%, -50%)";
+    if (off === 0)
+      return { left: "50%", transform: `${base} scale(1)`, opacity: 1, filter: "none", zIndex: 4, pointerEvents: "auto" };
+    if (a === 1)
+      return { left: `${50 + dir * 31}%`, transform: `${base} scale(0.84)`, opacity: 0.5, filter: "blur(0.7px)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
+    if (a === 2)
+      return { left: `${50 + dir * 55}%`, transform: `${base} scale(0.7)`, opacity: 0.16, filter: "blur(1.6px)", zIndex: 2, pointerEvents: "none" };
+    return { left: `${50 + dir * 82}%`, transform: `${base} scale(0.6)`, opacity: 0, filter: "blur(2px)", zIndex: 1, pointerEvents: "none" };
+  }
+
   return (
     <div
       className={styles.wrap}
@@ -42,20 +59,25 @@ export default function TestimonialsCarousel({
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className={styles.viewport}>
-        <div className={styles.track} style={{ transform: `translateX(-${idx * 100}%)` }}>
-          {items.map((t, i) => {
-            const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
-            return (
-              <figure className={styles.slide} key={i} aria-hidden={i !== idx}>
-                <div className={styles.stars} aria-label={`${stars} out of 5`}>
-                  {"★".repeat(stars)}
-                </div>
-                <blockquote className={styles.quote}>&ldquo;{t.quote}&rdquo;</blockquote>
-              </figure>
-            );
-          })}
-        </div>
+      <div className={styles.stage}>
+        {items.map((t, i) => {
+          const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
+          const isCenter = (((i - idx) % n) + n) % n === 0;
+          return (
+            <figure
+              key={i}
+              className={styles.slide}
+              style={place(i)}
+              aria-hidden={!isCenter}
+              onClick={!isCenter ? () => go(i) : undefined}
+            >
+              <div className={styles.stars} aria-label={`${stars} out of 5`}>
+                {"★".repeat(stars)}
+              </div>
+              <blockquote className={styles.quote}>&ldquo;{t.quote}&rdquo;</blockquote>
+            </figure>
+          );
+        })}
 
         {n > 1 && (
           <>

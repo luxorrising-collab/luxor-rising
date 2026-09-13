@@ -262,6 +262,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           signature: t.signature || undefined,
           signatureSub: t.signatureSub || undefined,
           signatureHref: t.signatureHref || undefined,
+          image: t.image || undefined,
         }))}
         reviewsVerified={globals?.reviewsVerified ?? false}
         reviewAverage={reviewAverage}

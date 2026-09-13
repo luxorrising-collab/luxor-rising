@@ -11,6 +11,7 @@ export type Moment = {
   signature?: string | null;
   signatureSub?: string | null;
   signatureHref?: string | null;
+  image?: string | null;
 };
 
 /** A 3-D "coverflow" carousel of powerful review excerpts: one moment in focus,
@@ -52,10 +53,10 @@ export default function TestimonialsCarousel({
     if (off === 0)
       return { left: "50%", transform: `${base} scale(1)`, opacity: 1, filter: "none", zIndex: 4, pointerEvents: "auto" };
     if (a === 1)
-      return { left: `${50 + dir * 31}%`, transform: `${base} scale(0.84)`, opacity: 0.5, filter: "blur(0.7px)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
+      return { left: `${50 + dir * 33}%`, transform: `${base} scale(0.82)`, opacity: 0.62, filter: "brightness(0.7) blur(0.4px)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
     if (a === 2)
-      return { left: `${50 + dir * 55}%`, transform: `${base} scale(0.7)`, opacity: 0.16, filter: "blur(1.6px)", zIndex: 2, pointerEvents: "none" };
-    return { left: `${50 + dir * 82}%`, transform: `${base} scale(0.6)`, opacity: 0, filter: "blur(2px)", zIndex: 1, pointerEvents: "none" };
+      return { left: `${50 + dir * 57}%`, transform: `${base} scale(0.66)`, opacity: 0.28, filter: "brightness(0.5) blur(1.3px)", zIndex: 2, pointerEvents: "none" };
+    return { left: `${50 + dir * 82}%`, transform: `${base} scale(0.58)`, opacity: 0, filter: "blur(2px)", zIndex: 1, pointerEvents: "none" };
   }
 
   return (
@@ -78,14 +79,27 @@ export default function TestimonialsCarousel({
               aria-hidden={!isCenter}
               onClick={!isCenter ? () => go(i) : undefined}
             >
-              <div className={styles.stars} aria-label={`${stars} out of 5`}>
-                {"★".repeat(stars)}
+              {t.image && (
+                <img
+                  className={styles.img}
+                  src={t.image}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  draggable={false}
+                />
+              )}
+              <div className={styles.tint} aria-hidden="true" />
+              <div className={styles.body}>
+                <div className={styles.stars} aria-label={`${stars} out of 5`}>
+                  {"★".repeat(stars)}
+                </div>
+                <blockquote className={styles.quote}>&ldquo;{t.quote}&rdquo;</blockquote>
               </div>
-              <blockquote className={styles.quote}>&ldquo;{t.quote}&rdquo;</blockquote>
               {t.signature && (
                 <figcaption className={styles.sig}>
                   {t.signatureHref && isCenter ? (
-                    <Link href={t.signatureHref} className={styles.sigLink} tabIndex={isCenter ? 0 : -1}>
+                    <Link href={t.signatureHref} className={styles.sigLink}>
                       {t.signature}
                     </Link>
                   ) : (

@@ -745,6 +745,11 @@ export default config({
               label: "Signature link (optional)",
               description: 'Links the signature to a page, e.g. "/medinet-habu" or "/concierge-day".',
             }),
+            image: fields.text({
+              label: "Background image path (optional)",
+              description:
+                'Cinematic backdrop for the card, e.g. "/images/experiences/medinet-habu/heroImage.jpg". Reuse an experience\'s hero so the moment matches the place.',
+            }),
           }),
           {
             label: "Guest reviews",

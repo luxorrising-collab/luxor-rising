@@ -27,6 +27,7 @@ export type Testimonial = {
   signature?: string;
   signatureSub?: string;
   signatureHref?: string;
+  image?: string;
 };
 
 export type ExperienceTemplateProps = {

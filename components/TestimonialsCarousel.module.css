@@ -5,7 +5,7 @@
 }
 .stage {
   position: relative;
-  height: clamp(230px, 32vw, 280px);
+  height: clamp(290px, 36vw, 340px);
   overflow: hidden;
 }
 .slide {
@@ -41,6 +41,36 @@
   line-height: 1.42;
   color: var(--color-ink);
   text-wrap: balance;
+}
+.sig {
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+.sigName,
+.sigLink {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+.sigLink {
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.sigLink:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sigSub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--color-ink-soft, #6b5844);
 }
 .arrow {
   position: absolute;

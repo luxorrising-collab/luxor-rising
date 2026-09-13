@@ -732,10 +732,24 @@ export default config({
               label: "Date (YYYY-MM-DD)",
               description: "When they travelled — used for review rich results in Google.",
             }),
+            signature: fields.text({
+              label: "Signature — service / place",
+              description:
+                'Shown on the card instead of the guest name, e.g. "The Concierge Day, Luxor" or "Medinet Habu".',
+            }),
+            signatureSub: fields.text({
+              label: "Signature subtitle (optional)",
+              description: 'A second, quieter line — e.g. "Begin where the world began · Luxor".',
+            }),
+            signatureHref: fields.text({
+              label: "Signature link (optional)",
+              description: 'Links the signature to a page, e.g. "/medinet-habu" or "/concierge-day".',
+            }),
           }),
           {
             label: "Guest reviews",
-            itemLabel: (props) => props.fields.author.value || "Review",
+            itemLabel: (props) =>
+              props.fields.signature.value || props.fields.author.value || "Review",
             description:
               "Star ratings Google shows come from here. Keep 'Reviews are real & verified' OFF until every entry is a genuine, attributable guest — sample copy is fine to preview, it just won't emit structured data.",
           }

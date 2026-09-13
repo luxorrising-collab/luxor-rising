@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./TestimonialsCarousel.module.css";
 
-export type Moment = { quote: string; author?: string | null; rating?: number | null };
+export type Moment = {
+  quote: string;
+  author?: string | null;
+  rating?: number | null;
+  signature?: string | null;
+  signatureSub?: string | null;
+  signatureHref?: string | null;
+};
 
 /** A 3-D "coverflow" carousel of powerful review excerpts: one moment in focus,
  *  neighbours scaled back and faded for depth. The author repeats (mostly one
@@ -75,6 +82,18 @@ export default function TestimonialsCarousel({
                 {"★".repeat(stars)}
               </div>
               <blockquote className={styles.quote}>&ldquo;{t.quote}&rdquo;</blockquote>
+              {t.signature && (
+                <figcaption className={styles.sig}>
+                  {t.signatureHref && isCenter ? (
+                    <Link href={t.signatureHref} className={styles.sigLink} tabIndex={isCenter ? 0 : -1}>
+                      {t.signature}
+                    </Link>
+                  ) : (
+                    <span className={styles.sigName}>{t.signature}</span>
+                  )}
+                  {t.signatureSub && <span className={styles.sigSub}>{t.signatureSub}</span>}
+                </figcaption>
+              )}
             </figure>
           );
         })}

@@ -228,6 +228,9 @@ export default async function MedinetHabuPage() {
           author: t.author,
           rating: t.rating ?? undefined,
           date: t.date || undefined,
+          signature: t.signature || undefined,
+          signatureSub: t.signatureSub || undefined,
+          signatureHref: t.signatureHref || undefined,
         }))}
         reviewsVerified={globals?.reviewsVerified ?? false}
         reviewAverage={reviewAverage}

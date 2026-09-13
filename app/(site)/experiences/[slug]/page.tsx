@@ -259,6 +259,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           author: t.author,
           rating: t.rating ?? undefined,
           date: t.date || undefined,
+          signature: t.signature || undefined,
+          signatureSub: t.signatureSub || undefined,
+          signatureHref: t.signatureHref || undefined,
         }))}
         reviewsVerified={globals?.reviewsVerified ?? false}
         reviewAverage={reviewAverage}

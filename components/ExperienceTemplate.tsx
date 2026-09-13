@@ -19,7 +19,15 @@ export type FaqItemData = { q: string; a: string };
 export type HowItWorksStep = { title: string; description: string };
 export type GuaranteeItem = { title: string; description: string };
 export type ConsigliereePoint = { title: string; description: string };
-export type Testimonial = { quote: string; author: string; rating?: number; date?: string };
+export type Testimonial = {
+  quote: string;
+  author: string;
+  rating?: number;
+  date?: string;
+  signature?: string;
+  signatureSub?: string;
+  signatureHref?: string;
+};
 
 export type ExperienceTemplateProps = {
   title: string;

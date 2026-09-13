@@ -63,17 +63,49 @@ testimonialsTitle: The moment they didn't expect to love most.
 # Real, verified guest reviews — powerful excerpts pulled from our Google
 # reviews. reviewsVerified: true → shown as real (no "sample" note) and eligible
 # for star structured data. Edit the excerpts here; keep them short and punchy.
+# Powerful moments — excerpts pulled from our verified Google reviews, shown as
+# a carousel. The author repeats (mostly one guest for now), so it's kept quiet
+# here; full attribution + verification live on the /reviews page. Edit freely.
 reviewsVerified: true
 testimonials:
-  - quote: >-
-      Four days in Luxor were some of the most powerful of my life. Arriving, it
-      felt like I was not coming to a new place, but returning home.
+  - quote: 4 days in Luxor were some of the most powerful in my life.
     author: Man of Knowledge
     rating: 5
-    date: "2026-09-12"
+  - quote: >-
+      Arriving there, it felt like I was not coming to a new place, but
+      returning home.
+    author: Man of Knowledge
+    rating: 5
+  - quote: >-
+      At Medinet Habu I felt electricity, and the power of a kingdom within. It
+      felt like a rebirth within this life.
+    author: Man of Knowledge
+    rating: 5
+  - quote: >-
+      In the Valley of the Kings I felt peace and piety — like someone I have
+      loved deeply for many lifetimes rests there in peace.
+    author: Man of Knowledge
+    rating: 5
+  - quote: >-
+      The air was resonating with mantras — it made me dance under the full pink
+      moon on the rooftop.
+    author: Man of Knowledge
+    rating: 5
+  - quote: >-
+      Karnak is the greatest temple ever built on the planet — a place of
+      continuous worship for at least 3,000 years.
+    author: Man of Knowledge
+    rating: 5
+  - quote: Having him by my side through this experience was priceless.
+    author: Man of Knowledge
+    rating: 5
+  - quote: >-
+      There is not a day, even after over a year, when I do not think of or feel
+      my days in Luxor.
+    author: Man of Knowledge
+    rating: 5
   - quote: >-
       Luxor Rising arranged my whole trip in Egypt end to end, and it was
       flawless.
     author: TFK
     rating: 5
-    date: "2026-09-08"

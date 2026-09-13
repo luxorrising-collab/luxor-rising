@@ -1,0 +1,106 @@
+.wrap {
+  position: relative;
+  max-width: 760px;
+  margin: 1.6rem auto 0;
+}
+.viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.slide {
+  flex: 0 0 100%;
+  margin: 0;
+  padding: 2.2rem 3.2rem;
+  text-align: center;
+}
+.stars {
+  color: var(--color-gold);
+  letter-spacing: 0.14em;
+  font-size: 0.95rem;
+  margin-bottom: 0.9rem;
+}
+.quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  line-height: 1.4;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold-soft);
+  background: var(--color-cream);
+  color: var(--color-gold-deep);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.arrow:hover {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+.prev {
+  left: -6px;
+}
+.next {
+  right: -6px;
+}
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.2rem 0 0;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--color-gold-soft);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.dot.on {
+  background: var(--color-gold-deep);
+  transform: scale(1.25);
+}
+.foot {
+  display: block;
+  text-align: center;
+  margin: 1.1rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-gold-deep);
+}
+.foot:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+@media (max-width: 560px) {
+  .slide {
+    padding: 1.8rem 2.4rem;
+  }
+  .prev {
+    left: 0;
+  }
+  .next {
+    right: 0;
+  }
+}

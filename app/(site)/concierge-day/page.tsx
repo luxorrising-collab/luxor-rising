@@ -11,6 +11,7 @@ import DayConfigurator, { type ExpSupplementTier } from "@/components/DayConfigu
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
 import { reader } from "@/lib/keystatic-reader";
@@ -559,21 +560,7 @@ export default async function ConciergeDayPage() {
                 Sample reviews — shown for layout only, to be replaced with real guest words.
               </p>
             )}
-            <div className="tposts">
-              {reviews.map((t, i) => {
-                const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
-                return (
-                  <div className="tp" key={t.author || i}>
-                    <div className="st" aria-label={`${stars} out of 5`}>
-                      {"★".repeat(stars)}
-                      {"☆".repeat(5 - stars)}
-                    </div>
-                    <blockquote>&quot;{t.quote}&quot;</blockquote>
-                    <div className="who">— {t.author}</div>
-                  </div>
-                );
-              })}
-            </div>
+            <TestimonialsCarousel items={reviews} />
           </Reveal>
         </section>
       ) : null,

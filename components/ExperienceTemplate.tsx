@@ -6,6 +6,7 @@ import Reveal from "./Reveal";
 import Faq from "./Faq";
 import Gallery from "./Gallery";
 import ConsigliereSection from "./ConsigliereSection";
+import TestimonialsCarousel from "./TestimonialsCarousel";
 import { VALUE_LINES } from "@/lib/value-lines";
 import styles from "./ExperienceTemplate.module.css";
 
@@ -336,21 +337,7 @@ export default function ExperienceTemplate({
                 Sample reviews — shown for layout only, to be replaced with real guest words.
               </p>
             )}
-            <div className="tposts">
-              {testimonials.map((t, i) => {
-                const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
-                return (
-                  <div className="tp" key={t.author || i}>
-                    <div className="st" aria-label={`${stars} out of 5`}>
-                      {"★".repeat(stars)}
-                      {"☆".repeat(5 - stars)}
-                    </div>
-                    <blockquote>&quot;{t.quote}&quot;</blockquote>
-                    <div className="who">— {t.author}</div>
-                  </div>
-                );
-              })}
-            </div>
+            <TestimonialsCarousel items={testimonials} />
           </Reveal>
         </section>
       )}

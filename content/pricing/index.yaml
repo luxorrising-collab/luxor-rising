@@ -1,4 +1,4 @@
-lastSyncedFromChart: "2026-09-01"
+lastSyncedFromChart: "2026-09-14"
 chartSource: "Luxor_Rising_Modely_naklady_ROAS.xlsx"
 products:
   - key: "design-your-day"
@@ -9,7 +9,7 @@ products:
   - key: "medinet-habu"
     name: "Medinet Habu, Before Anyone Else"
     category: "Temples & tombs"
-    finalPrice: 375
+    finalPrice: 400
     experienceSlug: "medinet-habu"
   - key: "valley-of-the-kings"
     name: "The Valley of the Kings, Tombs Chosen for You"
@@ -89,7 +89,7 @@ products:
   - key: "felucca-sunset-sail"
     name: "A Private Felucca at Golden Hour"
     category: "Nile & river"
-    finalPrice: 350
+    finalPrice: 450
     experienceSlug: "felucca-sunset-sail"
   - key: "nile-dinner-cruise"
     name: "Dinner on the Nile, Just Your Table"
@@ -159,5 +159,5 @@ products:
   - key: "sailing-lesson-nile"
     name: "Sailing lesson on the Nile"
     category: "Nile & river"
-    finalPrice: 350
+    finalPrice: 450
     experienceSlug: "sailing-lesson-nile"

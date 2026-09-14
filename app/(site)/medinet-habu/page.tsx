@@ -13,18 +13,27 @@ import { getSocialProof } from "@/lib/social-proof";
 const SLUG = "medinet-habu";
 
 async function getData() {
-  const [entry, globals, pricingRules, finalPrice, socialProof] = await Promise.all([
+  const [entry, globals, pricingRules, finalPrice, crossingPrice, socialProof] = await Promise.all([
     reader.collections.experiences.read(SLUG, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
     getFinalPrice(SLUG),
+    getFinalPrice("hurghada-to-luxor-crossing"),
     getSocialProof(),
   ]);
   if (!entry) return null;
   const basePrice = finalPrice ?? entry.basePrice ?? 0;
   const vst = parseEuro(entry.valueStackTotal);
   const showAssembledTotal = vst != null && vst > basePrice;
-  return { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof };
+  return {
+    entry,
+    globals,
+    pricingRules,
+    basePrice,
+    showAssembledTotal,
+    socialProof,
+    crossingPrice: crossingPrice ?? 675,
+  };
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -61,7 +70,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MedinetHabuPage() {
   const data = await getData();
   if (!data) notFound();
-  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof } = data;
+  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof, crossingPrice } = data;
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -200,6 +209,8 @@ export default async function MedinetHabuPage() {
             socialProof={socialProof}
             image={entry.heroImage || undefined}
             title={entry.title || undefined}
+            region="Luxor"
+            hurghadaTransfer={crossingPrice}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

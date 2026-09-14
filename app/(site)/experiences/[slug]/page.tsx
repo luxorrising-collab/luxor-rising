@@ -12,11 +12,12 @@ import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
 
 async function getData(slug: string) {
-  const [entry, globals, pricingRules, finalPrice, socialProof] = await Promise.all([
+  const [entry, globals, pricingRules, finalPrice, crossingPrice, socialProof] = await Promise.all([
     reader.collections.experiences.read(slug, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
     reader.singletons.pricingRules.read(),
     getFinalPrice(slug),
+    getFinalPrice("hurghada-to-luxor-crossing"),
     getSocialProof(),
   ]);
   // Inactive experiences 404 rather than render at their direct URL.
@@ -28,7 +29,15 @@ async function getData(slug: string) {
   // Only show the struck-through "assembled separately" total while it stays
   // above our price — otherwise it reads as crossing out a smaller number.
   const showAssembledTotal = vst != null && vst > basePrice;
-  return { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof };
+  return {
+    entry,
+    globals,
+    pricingRules,
+    basePrice,
+    showAssembledTotal,
+    socialProof,
+    crossingPrice: crossingPrice ?? 675,
+  };
 }
 
 export async function generateMetadata({
@@ -74,11 +83,18 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
 
   const data = await getData(slug);
   if (!data) notFound();
-  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof } = data;
+  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof, crossingPrice } = data;
   // Enquiry-only products (e.g. a bespoke multi-week retreat) reuse the standard
   // product page, but swap Stripe checkout for the enquiry form and drop the
   // fixed-price / "reserve" language.
   const isEnquiry = entry.bookingType === "enquiry";
+
+  // Where the experience happens — labels the included door-to-door transfer,
+  // and decides whether to offer the Hurghada ⇄ Luxor crossing add-on (it makes
+  // no sense on the Red Sea / Hurghada experiences, or on the crossing itself).
+  const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
+  const region = isRedSea ? "Hurghada" : "Luxor";
+  const hurghadaTransfer = isRedSea ? 0 : crossingPrice;
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -230,6 +246,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
               socialProof={socialProof}
               image={entry.heroImage || undefined}
               title={entry.title || undefined}
+              region={region}
+              hurghadaTransfer={hurghadaTransfer}
             />
           )
         }

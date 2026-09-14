@@ -65,6 +65,11 @@ type ExperienceConfiguratorProps = {
   /** The evocative experience title (e.g. "Begin where the world began.") shown
    *  prominently, with `name` as the place label above it — mirrors the hero. */
   title?: string;
+  /** Where this experience happens — labels the included door-to-door transfer. */
+  region?: string;
+  /** Price of the optional Hurghada ⇄ Luxor round-trip crossing add-on. Pass 0
+   *  (or omit for Hurghada/Red-Sea products) to hide the upsell. */
+  hurghadaTransfer?: number;
 };
 
 export default function ExperienceConfigurator({
@@ -84,12 +89,15 @@ export default function ExperienceConfigurator({
   socialProof = "4.9 · 28+ private days arranged",
   image,
   title,
+  region = "Luxor",
+  hurghadaTransfer = 150,
 }: ExperienceConfiguratorProps) {
   // The evocative title leads (uniqueness); the place name labels it (clarity).
   const hasTitle = Boolean(title && title.trim() && title.trim() !== name.trim());
   const cardLabel = hasTitle ? name : "You're reserving";
   const cardTitle = hasTitle ? title! : name;
   const [group, setGroup] = useState(2);
+  const [hurg, setHurg] = useState(false);
   const [pay, setPay] = useState<Pay>("deposit");
   const [tripDate, setTripDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -97,7 +105,9 @@ export default function ExperienceConfigurator({
   const [agreed, setAgreed] = useState(false);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
-  const total = basePrice + extra(group, groupSupplement);
+  const offerHurghada = Boolean(hurghadaTransfer && hurghadaTransfer > 0);
+  const hurgAdd = offerHurghada && hurg ? hurghadaTransfer : 0;
+  const total = basePrice + extra(group, groupSupplement) + hurgAdd;
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
 
@@ -115,11 +125,22 @@ export default function ExperienceConfigurator({
   }, [depositAllowed, pay]);
 
   const includes = useMemo<{ title: string; note?: string }[]>(() => {
-    if (includeItems?.length) return includeItems;
+    // The included transfer is local — spell out the city on any "door to door"
+    // line, so it's clear the Hurghada crossing is the separate add-on below.
+    const localise = (items: { title: string; note?: string }[]) =>
+      items.map((it) =>
+        /door.to.door/i.test(it.title) &&
+        !/crossing|round trip|intercity/i.test(it.title) &&
+        !new RegExp(region, "i").test(it.title)
+          ? { ...it, title: `${it.title} in ${region}` }
+          : it,
+      );
+    if (includeItems?.length) return localise(includeItems);
     // Legacy: older products still describe this as a "·"-separated line.
     const parsed = parseIncludes(glanceIncludes);
-    return (parsed.length ? parsed : FALLBACK_INCLUDES).map((title) => ({ title }));
-  }, [includeItems, glanceIncludes]);
+    const base = (parsed.length ? parsed : FALLBACK_INCLUDES).map((title) => ({ title }));
+    return localise(base);
+  }, [includeItems, glanceIncludes, region]);
 
   useEffect(() => {
     if (dateInputRef.current) {
@@ -159,6 +180,9 @@ export default function ExperienceConfigurator({
           mode: pay,
           guests: group,
           date: tripDate,
+          preferences: hurgAdd
+            ? `Add-on: Hurghada ⇄ Luxor round-trip transfer (+€${hurghadaTransfer})`
+            : undefined,
         }),
       });
       const data = await res.json();
@@ -228,6 +252,48 @@ export default function ExperienceConfigurator({
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {/* Optional intercity crossing — the included transfer is door-to-door
+              within {region}; this adds the Hurghada ⇄ Luxor desert crossing. */}
+          {offerHurghada && (
+            <div className={styles.step}>
+              <div className={styles.careHead}>Coming from the Red Sea?</div>
+              <div
+                className={`${styles.addon} ${hurg ? styles.sel : ""}`}
+                onClick={() => setHurg((h) => !h)}
+                role="button"
+                aria-pressed={hurg}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setHurg((h) => !h);
+                  }
+                }}
+              >
+                <span className={styles.ck} aria-hidden>
+                  ✓
+                </span>
+                <div>
+                  <b className={styles.an}>Hurghada ⇄ Luxor round trip</b>
+                  <div className={styles.ad}>
+                    A private round trip with your concierge, Hurghada to Luxor
+                    and back — the desert crossing shared start to finish, on a
+                    flexible schedule of up to 48 hours. In Luxor the car stays
+                    with you, wherever the day goes.{" "}
+                    <Link
+                      href="/experiences/hurghada-to-luxor-crossing"
+                      className={styles.addonLink}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      See details →
+                    </Link>
+                  </div>
+                </div>
+                <span className={styles.ax}>+€{hurghadaTransfer}</span>
+              </div>
             </div>
           )}
         </div>

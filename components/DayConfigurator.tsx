@@ -795,9 +795,11 @@ export default function DayConfigurator({
                     <span className={styles.addonRec}>Recommended</span>
                   </b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
-                    Coming from the Red Sea? A private round trip of up to 48
-                    hours — collected door-to-door, and in Luxor the car waits
-                    and drives you wherever your day goes.{" "}
+                    Coming from the Red Sea? A private round trip with your
+                    concierge, Hurghada to Luxor and back — the desert crossing
+                    shared start to finish, on a flexible schedule of up to 48
+                    hours. In Luxor the car stays with you, wherever the day
+                    goes.{" "}
                     <Link
                       href="/experiences/hurghada-to-luxor-crossing"
                       className={styles.addonLink}

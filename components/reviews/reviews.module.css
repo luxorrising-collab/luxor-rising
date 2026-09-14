@@ -1,8 +1,282 @@
 /* Reviews page + cards */
 
+/* Plain hero — text on the page ground. */
 .hero {
-  padding: 7rem 0 2.4rem;
+  padding: 7rem 0 2.6rem;
   text-align: center;
+}
+.heroLead {
+  max-width: 620px;
+  margin: 1rem auto 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-espresso);
+}
+/* One quiet proof line — the central social-proof claim, understated. */
+.heroProof {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+  font-size: 0.95rem;
+  color: var(--color-espresso);
+}
+.heroProof .stars {
+  font-size: 0.9rem;
+}
+.heroProofText {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.heroProofLink {
+  font-size: 0.85rem;
+  color: var(--color-gold-deep);
+}
+.heroProofLink:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+
+/* ---- Guest-stories carousel: one cinematic story shown at a time ---- */
+.storyCarousel {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.storyViewport {
+  position: relative;
+}
+/* Closing teaser card — reuses the story-card layout; link to the blog. */
+.storyTeaserLink {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-gold-deep);
+}
+.storyTeaserLink:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+.storyNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+.storyArrow {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold-soft);
+  background: var(--color-cream);
+  color: var(--color-gold-deep);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.storyArrow:hover {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+.storyDots {
+  display: flex;
+  gap: 8px;
+}
+.storyDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--color-gold-soft);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.storyDotOn {
+  background: var(--color-gold-deep);
+  transform: scale(1.3);
+}
+.storyEyebrow {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+/* ---- Guest stories: long-form, editorial ---- */
+.storiesSection {
+  padding-top: 3rem;
+  padding-bottom: 1rem;
+}
+.stories {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.story {
+  position: relative;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  background: var(--color-cream);
+  border: 1px solid var(--color-gold-soft);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(58, 40, 24, 0.09);
+  overflow: hidden;
+}
+/* Alternate the image side for editorial rhythm. */
+.story:nth-child(even) .storyMedia {
+  order: 2;
+}
+.story:nth-child(even) .storyText {
+  order: 1;
+}
+/* Cinematic image panel — the product-card look, beside the story. */
+.storyMedia {
+  position: relative;
+  min-height: 360px;
+  display: flex;
+  background: #1a120a;
+  overflow: hidden;
+}
+.storyImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+.storyTint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      180deg,
+      rgba(20, 13, 6, 0.32) 0%,
+      rgba(20, 13, 6, 0.46) 45%,
+      rgba(18, 11, 5, 0.86) 100%
+    ),
+    radial-gradient(120% 90% at 50% 30%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.3) 100%);
+}
+.storySource {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--color-gold-deep);
+  align-self: baseline;
+}
+.storySource:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+.storyMediaBody {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  padding: 2.4rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+.storyStars {
+  color: var(--color-gold);
+  letter-spacing: 0.18em;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.storyPull {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+  line-height: 1.3;
+  color: #fbf3e6;
+  text-wrap: balance;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+}
+/* Signature — the service, as on the product-page moment cards. */
+.storySignature {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  transition: color 0.2s;
+}
+.storySignature:hover {
+  color: #fff;
+}
+.storySignatureSub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: rgba(251, 243, 230, 0.82);
+}
+/* Full story, read beside the image panel. */
+.storyText {
+  padding: 2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.storyBody {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.78;
+  color: var(--color-espresso);
+}
+.storyBy {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-gold-soft);
+}
+.storyBy .author {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.storyBy .meta {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+}
+
+/* ---- Receipts band: partner track record, set apart as evidence ---- */
+.receipts {
+  margin-top: 2.4rem;
+  padding: 1rem 0 4rem;
+  background: var(--color-sand);
+  border-top: 1px solid var(--color-cream-deep);
+}
+.asof {
+  color: var(--color-muted);
+  font-size: 0.82rem;
 }
 .aggregate {
   display: inline-flex;
@@ -353,4 +627,35 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.2rem;
   margin-top: 1.2rem;
+}
+
+@media (max-width: 760px) {
+  .story {
+    grid-template-columns: 1fr;
+    border-radius: 16px;
+  }
+  /* Image always on top when stacked, whatever the alternation order. */
+  .story:nth-child(even) .storyMedia,
+  .storyMedia {
+    order: 0;
+  }
+  .story:nth-child(even) .storyText,
+  .storyText {
+    order: 1;
+  }
+  .storyMedia {
+    min-height: 210px;
+  }
+  .storyText {
+    padding: 1.6rem 1.5rem 1.7rem;
+  }
+  .storyMediaBody {
+    padding: 1.8rem 1.3rem;
+  }
+  .heroInner {
+    padding-top: 7rem;
+  }
+  .heroLead {
+    font-size: 0.98rem;
+  }
 }

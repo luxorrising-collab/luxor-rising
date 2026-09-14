@@ -7,15 +7,19 @@ import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import StickyBar from "@/components/StickyBar";
 import GalleryMosaic from "@/components/GalleryMosaic";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { reader } from "@/lib/keystatic-reader";
 import { getSocialProof } from "@/lib/social-proof";
 import styles from "./HomePage.module.css";
 
 export default async function HomePage() {
-  const [page, socialProof] = await Promise.all([
+  const [page, productSettings, socialProof] = await Promise.all([
     reader.singletons.homePage.read(),
+    reader.singletons.productPageSettings.read(),
     getSocialProof(),
   ]);
+  // The cinematic moment carousel — the same reviews shown on product pages.
+  const moments = (productSettings?.testimonials ?? []).filter((t) => t.quote && t.author);
   const heroTitleLines = (page?.heroTitle ?? "").split("\n");
   const positioningTitleLines = (page?.positioningTitle ?? "").split("\n");
 
@@ -197,22 +201,20 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section style={{ background: "var(--color-paper)" }}>
-        <Reveal className="wrap center">
-          <span className="eyebrow">{page?.testimonialsEyebrow}</span>
-          <h2 className="display">{page?.testimonialsTitle}</h2>
-          <div className="tposts">
-            {(page?.testimonials ?? []).map((t) => (
-              <div className="tp" key={t.author}>
-                <div className="st">★★★★★</div>
-                <blockquote>&quot;{t.quote}&quot;</blockquote>
-                <div className="who">— {t.author}</div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </section>
+      {/* TESTIMONIALS — the cinematic moment carousel, shared with product pages. */}
+      {moments.length > 0 && (
+        <section style={{ background: "var(--color-paper)" }}>
+          <Reveal className="wrap center">
+            <span className="eyebrow">
+              {productSettings?.testimonialsEyebrow || page?.testimonialsEyebrow}
+            </span>
+            <h2 className="display">
+              {productSettings?.testimonialsTitle || page?.testimonialsTitle}
+            </h2>
+            <TestimonialsCarousel items={moments} />
+          </Reveal>
+        </section>
+      )}
 
       {/* VILLAS */}
       <section id="villas">

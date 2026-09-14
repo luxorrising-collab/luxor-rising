@@ -4,10 +4,11 @@ import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import PartnersTrackRecord from "@/components/reviews/PartnersTrackRecord";
-import { featuredFor } from "@/lib/reviews";
+import GuestStoriesCarousel from "@/components/reviews/GuestStoriesCarousel";
 import { sourceStats } from "@/lib/partners";
 import { getReviews } from "@/lib/reviews-server";
 import { getPartners } from "@/lib/partners-server";
+import { getSocialProof } from "@/lib/social-proof";
 import styles from "@/components/reviews/reviews.module.css";
 
 export const metadata: Metadata = {
@@ -25,64 +26,62 @@ function fmtMonth(d: string | null) {
     : p.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
 }
 
-function SectionRating({
-  stats,
-}: {
-  stats: { average: number; count: number; asOf: string | null };
-}) {
-  return (
-    <div className={styles.sectionRating}>
-      <span className={styles.stars}>{"★".repeat(Math.round(stats.average))}</span>
-      <b>{stats.average.toFixed(1)}</b>
-      <span>
-        · {stats.count} {stats.count === 1 ? "review" : "reviews"}
-      </span>
-      {stats.asOf && <span className={styles.asof}>· as of {fmtMonth(stats.asOf)}</span>}
-    </div>
-  );
-}
-
 export default async function ReviewsPage() {
-  const [reviews, partners] = await Promise.all([getReviews(), getPartners()]);
-  const featured = featuredFor(reviews, "reviews-hero");
+  const [reviews, partners, socialProof] = await Promise.all([
+    getReviews(),
+    getPartners(),
+    getSocialProof(),
+  ]);
 
   const directSources = partners.filter((p) => p.channel === "direct");
   const partnerSources = partners.filter((p) => p.channel !== "direct");
-  const directStats = sourceStats(directSources);
   const partnerStats = sourceStats(partnerSources);
 
+  // Our own Google Business Profile — the one link that proves the stories below.
+  const ourProfile = directSources.find((p) => p.profileUrl) ?? null;
+
+  // The long-form guest stories: our own verified reviews. Featured first,
+  // then explicit order, then the fullest account.
+  const stories = reviews
+    .filter((r) => r.verified && directSources.some((s) => s.slug === r.partner))
+    .sort(
+      (a, b) =>
+        Number(b.featured) - Number(a.featured) ||
+        a.order - b.order ||
+        b.quote.length - a.quote.length,
+    );
+
   // Structured data (Luxor Rising's own AggregateRating) is emitted ONLY from
-  // our own verified channels — never from a partner's reviews, which belong to
-  // the partner, not us. Nothing is claimed until our direct reviews are real.
-  const directVerified = reviews.filter(
-    (r) => r.verified && directSources.some((s) => s.slug === r.partner),
-  );
-  const structuredData =
-    directStats && directVerified.length
-      ? {
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          name: "Luxor Rising",
-          url: "https://luxorrising.com",
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: String(directStats.average),
-            reviewCount: String(directStats.count),
+  // our own verified reviews — never a partner's, which belong to the partner,
+  // not us. Kept consistent with the stories actually shown on the page.
+  const storyAvg = stories.length
+    ? Math.round((stories.reduce((s, r) => s + r.rating, 0) / stories.length) * 10) / 10
+    : 0;
+  const structuredData = stories.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: "Luxor Rising",
+        url: "https://luxorrising.com",
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: String(storyAvg),
+          reviewCount: String(stories.length),
+          bestRating: "5",
+        },
+        review: stories.map((r) => ({
+          "@type": "Review",
+          author: { "@type": "Person", name: r.author },
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: String(r.rating),
             bestRating: "5",
           },
-          review: directVerified.map((r) => ({
-            "@type": "Review",
-            author: { "@type": "Person", name: r.author },
-            reviewRating: {
-              "@type": "Rating",
-              ratingValue: String(r.rating),
-              bestRating: "5",
-            },
-            ...(r.date ? { datePublished: r.date } : {}),
-            reviewBody: r.quote,
-          })),
-        }
-      : null;
+          ...(r.date ? { datePublished: r.date } : {}),
+          reviewBody: r.quote,
+        })),
+      }
+    : null;
 
   return (
     <>
@@ -90,87 +89,78 @@ export default async function ReviewsPage() {
       <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       <section className={`wrap ${styles.hero}`}>
-        <span className="eyebrow">Reviews</span>
+        <span className="eyebrow">Guest stories</span>
         <h1 className="display" style={{ margin: ".3rem 0 0" }}>
           The day people don&apos;t stop talking about.
         </h1>
-
-        {featured && (
-          <figure className={styles.featured}>
-            <span className={styles.stars}>{"★".repeat(Math.round(featured.rating))}</span>
-            <blockquote className={styles.featuredQuote}>
-              &ldquo;{featured.quote}&rdquo;
-            </blockquote>
-            <figcaption className={styles.featuredBy}>
-              <b>{featured.author}</b>
-              {featured.location ? ` · ${featured.location}` : ""}
-              {featured.verified && featured.sourceUrl ? (
-                <>
-                  {" · "}
-                  <a
-                    href={featured.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    className={styles.sourceLink}
-                  >
-                    ✓ Verified ↗
-                  </a>
-                </>
-              ) : null}
-            </figcaption>
-          </figure>
-        )}
+        <p className={styles.heroLead}>
+          A private day in Luxor has a way of staying with people. Here are a
+          few of those days, told in full — in the words guests reached for
+          afterwards.
+        </p>
+        <div className={styles.heroProof}>
+          <span className={styles.stars}>★★★★★</span>
+          <span className={styles.heroProofText}>{socialProof}</span>
+          {ourProfile?.profileUrl && (
+            <a
+              className={styles.heroProofLink}
+              href={ourProfile.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              on Google ↗
+            </a>
+          )}
+        </div>
       </section>
 
-      {/* Section 1 — our own channels (Google Business Profile etc.). */}
-      {directSources.length > 0 && (
-        <section className="wrap">
-          <div className={styles.sectionHead}>
-            <span className="eyebrow">On our own channels</span>
-            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
-              Reviewed directly for Luxor Rising.
-            </h2>
-            <p>
-              Reviews guests leave us directly — on our Google Business Profile
-              and to our team. We&apos;re new, and building these the honest way.
-            </p>
-            {directStats ? (
-              <SectionRating stats={directStats} />
-            ) : (
-              <span className={styles.sampleNote}>
-                Template reviews shown — real ones appear here as guests post
-                them, with no rating claimed until then.
-              </span>
-            )}
-          </div>
-          <PartnersTrackRecord partners={directSources} reviews={reviews} />
+      {/* A few guest days, told in full — shown one at a time as a carousel. */}
+      {stories.length > 0 && (
+        <section className={`wrap ${styles.storiesSection}`}>
+          <GuestStoriesCarousel stories={stories} />
         </section>
       )}
 
-      {/* Section 2 — our hand-picked partners' track record. */}
+      {/* The receipts — the public track record of the specialists we hand-pick. */}
       {partnerSources.length > 0 && (
-        <section className="wrap">
-          <div className={styles.sectionHead}>
-            <span className="eyebrow">Our partners&apos; track record</span>
-            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
-              We hand-pick specialists who already have a name.
-            </h2>
-            <p>
-              We don&apos;t do everything ourselves — we choose the best local
-              driver, guide and boatman, each with their own public reputation.
-              Here&apos;s the receipts, straight from their profiles.
-            </p>
-            {partnerStats && <SectionRating stats={partnerStats} />}
-            <span className={styles.vetBadge}>
-              <span aria-hidden>🤝</span>
-              <span>
-                <strong>Every partner is hand-picked and personally tested</strong>{" "}
-                — we work alongside them, for up to 30 days, before they ever
-                touch your trip.
+        <section className={styles.receipts}>
+          <div className="wrap">
+            <div className={styles.sectionHead}>
+              <span className="eyebrow">The receipts</span>
+              <h2 className="display" style={{ margin: ".2rem 0 0" }}>
+                The specialists we hand-pick already have a name.
+              </h2>
+              <p>
+                We don&apos;t do it all ourselves — we choose the best local
+                driver, guide and boatman, each with their own public record.
+                Straight from their profiles, unedited.
+              </p>
+              {partnerStats && (
+                <div className={styles.sectionRating}>
+                  <span className={styles.stars}>
+                    {"★".repeat(Math.round(partnerStats.average))}
+                  </span>
+                  <b>{partnerStats.average.toFixed(1)}</b>
+                  <span>
+                    · {partnerStats.count}{" "}
+                    {partnerStats.count === 1 ? "review" : "reviews"} on Google
+                  </span>
+                  {partnerStats.asOf && (
+                    <span className={styles.asof}>· as of {fmtMonth(partnerStats.asOf)}</span>
+                  )}
+                </div>
+              )}
+              <span className={styles.vetBadge}>
+                <span aria-hidden>🤝</span>
+                <span>
+                  <strong>Hand-picked and personally tested</strong> — we work
+                  alongside every partner, for up to 30 days, before they ever
+                  touch your trip.
+                </span>
               </span>
-            </span>
+            </div>
+            <PartnersTrackRecord partners={partnerSources} reviews={reviews} />
           </div>
-          <PartnersTrackRecord partners={partnerSources} reviews={reviews} />
         </section>
       )}
 

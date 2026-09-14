@@ -7,6 +7,8 @@ export type Review = {
   author: string;
   location: string;
   quote: string;
+  pullQuote: string | null;
+  heroImage: string | null;
   rating: number;
   date: string | null;
   source: string;

@@ -90,6 +90,17 @@ export default config({
           description: 'e.g. "Vienna, Austria" — shown under the name.',
         }),
         quote: fields.text({ label: "Review", multiline: true }),
+        pullQuote: fields.text({
+          label: "Pull-quote (optional)",
+          multiline: true,
+          description:
+            "The one powerful line shown large over the image on the reviews page. Leave empty to use the review's opening line.",
+        }),
+        heroImage: fields.text({
+          label: "Story image path (optional)",
+          description:
+            'Cinematic image behind the pull-quote on the reviews page, e.g. "/images/experiences/karnak-at-dawn/heroImage.jpg".',
+        }),
         rating: fields.number({
           label: "Rating out of 5",
           validation: { min: 1, max: 5 },

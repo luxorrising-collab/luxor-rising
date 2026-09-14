@@ -10,6 +10,8 @@ export async function getReviews(): Promise<Review[]> {
       author: entry.author,
       location: entry.location,
       quote: entry.quote,
+      pullQuote: entry.pullQuote || null,
+      heroImage: entry.heroImage || null,
       rating: entry.rating ?? 5,
       date: entry.date,
       source: entry.source,

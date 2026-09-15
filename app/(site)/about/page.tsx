@@ -170,22 +170,59 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* FOUNDER — brief credibility, in service of the visitor */}
+      {/* FOUNDER — credibility + the personal story, in service of the visitor */}
       <section className={styles.founderWrap}>
-        <Reveal className={`wrap-narrow ${styles.founder}`}>
-          <div className={styles.founderMark} aria-hidden>✦</div>
-          <span className="eyebrow">Who&apos;s behind it</span>
-          <h3 className={styles.founderName}>Built by someone who works with people like you.</h3>
-          <p>
-            Luxor Rising is led by a performance strategist who works directly with masters of
-            their craft — more than sixty leaders across their segments — helping them reach
-            their goals in the brutal reality of e-commerce, alongside some of the best in
-            Central Europe.
-          </p>
-          <p className={styles.founderKicker}>
-            So the person arranging your days already understands the pressure you carry — and
-            exactly why stepping out of it, properly, changes everything.
-          </p>
+        <Reveal className={`wrap ${styles.founderGrid}`}>
+          <figure className={styles.founderPhoto}>
+            <Image
+              src="/images/about/founder.jpg"
+              alt="Luxor Rising's founder"
+              width={760}
+              height={950}
+              sizes="(max-width: 820px) 88vw, 460px"
+            />
+            <figcaption className={styles.founderCap}>
+              <span className={styles.founderCapName}>Marian of Luxor Rising</span>
+              <span className={styles.founderCapRole}>
+                Performance strategist · Breathwork guide
+              </span>
+              <a
+                href="https://www.linkedin.com/in/marian-dufala-mok/"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className={styles.founderCta}
+              >
+                Connect with me on LinkedIn — talk to me directly ↗
+              </a>
+            </figcaption>
+          </figure>
+          <div className={styles.founderText}>
+            <span className="eyebrow">Who&apos;s behind it</span>
+            <h3 className={styles.founderName}>Built by someone who works with leaders like you.</h3>
+            <p>
+              Luxor Rising is led by Marian — a performance strategist with more than a decade
+              inside Central Europe&apos;s leading performance-marketing agencies — over sixty projects
+              for founders and market leaders, in some of the most competitive arenas there are:
+              construction, tax and legal, e-commerce and local service brands. His craft is
+              helping visionaries turn ambition into real results, with the steady hand of a
+              seasoned project manager behind every move.
+            </p>
+            <p>
+              He is also a certified breathwork instructor and guide — because the other half of
+              the work is stillness. After a demanding year, he travelled to Africa to set a new
+              direction for his own life, and Luxor became one of the most powerful and beautiful
+              places he had ever stood in. Ahmed was beside him from the first moment to the last,
+              and invited him to stay and build something here — a way to bring others to this
+              ground with the care and reverence it asks for.
+            </p>
+            <p className={styles.founderKicker}>
+              So this is who arranges your days: someone who knows the pressure you carry, and the
+              stillness that answers it. We serve leaders and visionaries with deep respect — for
+              you, and for one of the oldest ritual grounds on earth — so that, in the quiet, you
+              find your own voice and authority again, the answers you came for, and return more
+              grounded, confident, powerful and still.
+            </p>
+          </div>
         </Reveal>
       </section>
 

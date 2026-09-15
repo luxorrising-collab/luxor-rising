@@ -177,8 +177,8 @@ export default function AboutPage() {
             <Image
               src="/images/about/founder.jpg"
               alt="Marian, founder of Luxor Rising"
-              width={780}
-              height={975}
+              width={800}
+              height={1082}
               sizes="(max-width: 820px) 88vw, 460px"
             />
             <figcaption className={styles.founderCap}>

@@ -183,9 +183,7 @@ export default function AboutPage() {
             />
             <figcaption className={styles.founderCap}>
               <span className={styles.founderCapName}>Marian of Luxor Rising</span>
-              <span className={styles.founderCapRole}>
-                Performance strategist · Breathwork guide
-              </span>
+              <span className={styles.founderCapRole}>Founder</span>
               <a
                 href="https://www.linkedin.com/in/marian-dufala-mok/"
                 target="_blank"

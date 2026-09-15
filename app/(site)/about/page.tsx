@@ -37,7 +37,7 @@ export default function AboutPage() {
       {/* HERO — the visitor is the hero; the sell is quiet and already here */}
       <header className={styles.hero}>
         <div className={styles.heroBg}>
-          <Image src="/images/desert-sunset-silhouette.jpg" alt="" fill priority sizes="100vw" />
+          <Image src="/images/desert-dunes-dusk-red.jpg" alt="" fill priority sizes="100vw" />
         </div>
         <div className={styles.heroScrim} />
         <Reveal className={`wrap ${styles.heroIn}`}>
@@ -176,9 +176,9 @@ export default function AboutPage() {
           <figure className={styles.founderPhoto}>
             <Image
               src="/images/about/founder.jpg"
-              alt="Luxor Rising's founder"
-              width={760}
-              height={950}
+              alt="Marian, founder of Luxor Rising"
+              width={780}
+              height={975}
               sizes="(max-width: 820px) 88vw, 460px"
             />
             <figcaption className={styles.founderCap}>
@@ -192,7 +192,10 @@ export default function AboutPage() {
                 rel="noopener noreferrer nofollow"
                 className={styles.founderCta}
               >
-                Connect with me on LinkedIn — talk to me directly ↗
+                <svg className={styles.liIcon} viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+                </svg>
+                Connect with me on LinkedIn
               </a>
             </figcaption>
           </figure>

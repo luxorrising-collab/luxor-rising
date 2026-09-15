@@ -148,7 +148,24 @@ function dayTotal(
   groupSupplement: GroupSupplementTier[]
 ) {
   const discount = discountForDays(d, volumeDiscount);
-  return Math.round(dayRate * d * (1 - discount / 100)) + d * extraPerDay(g, groupSupplement);
+  // The multi-day discount applies to the WHOLE day price (day rate + the
+  // per-guest supplement), so the saving grows with both days and guests.
+  const perDay = dayRate + extraPerDay(g, groupSupplement);
+  return Math.round(perDay * d * (1 - discount / 100));
+}
+// The Design Your Day product's own saving: what the volume discount takes off
+// the full multi-day price. Used uniformly for the day tiles and the gold pill.
+function daySaving(
+  d: DayCount,
+  g: number,
+  dayRate: number,
+  volumeDiscount: VolumeDiscountTier[],
+  groupSupplement: GroupSupplementTier[]
+) {
+  return (
+    dayTotal(1, g, dayRate, volumeDiscount, groupSupplement) * d -
+    dayTotal(d, g, dayRate, volumeDiscount, groupSupplement)
+  );
 }
 function fmtDate(iso: string) {
   if (!iso) return "";
@@ -313,6 +330,10 @@ export default function DayConfigurator({
     return c;
   }
   const total = dayTotal(days, group, dayRate, volumeDiscount, groupSupplement) + addonsCost();
+  // The gold "Save" badge shows the Design Your Day product's own saving (the
+  // multi-day volume discount, scaling with days + guests) — not the à-la-carte
+  // comparison, which stays below as a separate angle.
+  const dydSaving = daySaving(days, group, dayRate, volumeDiscount, groupSupplement);
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
 
@@ -529,7 +550,7 @@ export default function DayConfigurator({
             <div className={styles.daysGrid}>
               {([1, 2, 3, 4] as DayCount[]).map((d) => {
                 const tot = dayTotal(d, group, dayRate, volumeDiscount, groupSupplement);
-                const sv = dayTotal(1, group, dayRate, volumeDiscount, groupSupplement) * d - tot;
+                const sv = daySaving(d, group, dayRate, volumeDiscount, groupSupplement);
                 return (
                   <div
                     key={d}
@@ -850,8 +871,8 @@ export default function DayConfigurator({
             {/* price */}
             <div className={styles.sumPriceblock}>
               <div className={styles.sumPrice}>{euro(total)}</div>
-              {showSavings && (
-                <span className={styles.sumSavepill}>Save {euro(sepTotal - total)}</span>
+              {dydSaving > 0 && (
+                <span className={styles.sumSavepill}>Save {euro(dydSaving)}</span>
               )}
             </div>
             {group > 1 && (

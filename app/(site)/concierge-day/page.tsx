@@ -8,6 +8,7 @@ import { FOOTER_COLUMNS } from "@/components/mainNav";
 import Reveal from "@/components/Reveal";
 import Faq from "@/components/Faq";
 import DayConfigurator, { type ExpSupplementTier } from "@/components/DayConfigurator";
+import JsonLd from "@/components/JsonLd";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
@@ -105,13 +106,14 @@ const SECTION_FALLBACK = [
 ];
 
 export default async function ConciergeDayPage() {
-  const [page, pricingRules, experiences, product, priceMap, socialProof] = await Promise.all([
+  const [page, pricingRules, experiences, product, priceMap, socialProof, settings] = await Promise.all([
     reader.singletons.conciergeDayPage.read(),
     reader.singletons.pricingRules.read(),
     reader.collections.experiences.all(),
     reader.singletons.productPageSettings.read(),
     getFinalPriceMap(),
     getSocialProof(),
+    reader.singletons.siteSettings.read(),
   ]);
 
   const FAQ_ITEMS = (page?.faq ?? []).map((f) => ({ q: f.question, a: f.answer }));
@@ -515,6 +517,7 @@ export default async function ConciergeDayPage() {
             brandTable={alaCarteBrands}
             supplementTable={alaCarteSupplements}
             socialProof={socialProof}
+            whatsappNumber={settings?.whatsappNumber || ""}
           />
         </div>
       </section>
@@ -671,8 +674,28 @@ export default async function ConciergeDayPage() {
     ),
   };
 
+  // Product/Service structured data for the money page. AggregateOffer carries
+  // the honest "from €X" floor; no review markup here (see reviewsVerified).
+  const conciergeJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "The Signature Concierge Day",
+    description:
+      "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing for you to arrange.",
+    brand: { "@type": "Brand", name: "Luxor Rising" },
+    image: "https://luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
+    offers: {
+      "@type": "AggregateOffer",
+      lowPrice: page?.startingPrice ?? 800,
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      url: "https://luxorrising.com/concierge-day",
+    },
+  };
+
   return (
     <>
+      <JsonLd data={conciergeJsonLd} />
       <Nav ctaHref="#design" ctaLabel="Design your day" />
 
       {/* HERO */}

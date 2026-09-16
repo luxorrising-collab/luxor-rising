@@ -25,6 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/private-villas", priority: 0.6 },
     { path: "/about", priority: 0.5 },
     { path: "/legal", priority: 0.3 },
+    { path: "/legal/terms", priority: 0.3 },
+    { path: "/legal/privacy", priority: 0.3 },
+    { path: "/legal/cancellation", priority: 0.3 },
     { path: "/legal/cookies", priority: 0.3 },
   ];
 

@@ -162,7 +162,6 @@ export default function ExperienceConfigurator({
     }
     setError("");
     setLoading(true);
-    const amount = pay === "full" ? total : deposit;
     trackBeginCheckout({
       value: total,
       currency: "EUR",
@@ -175,10 +174,9 @@ export default function ExperienceConfigurator({
         body: JSON.stringify({
           name,
           slug,
-          amountCents: amount * 100,
-          totalCents: total * 100,
           mode: pay,
           guests: group,
+          hurg: !!hurgAdd,
           date: tripDate,
           preferences: hurgAdd
             ? `Add-on: Hurghada ⇄ Luxor round-trip transfer (+€${hurghadaTransfer})`

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,30 @@ import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { reader } from "@/lib/keystatic-reader";
 import { getSocialProof } from "@/lib/social-proof";
 import styles from "./HomePage.module.css";
+
+export const metadata: Metadata = {
+  // Absolute so the home page keeps the full brand title, not the "%s | …" template.
+  title: { absolute: "Luxor Rising — Your private concierge in Egypt" },
+  description:
+    "Private, unhurried days in ancient Egypt — arranged one experience at a time, for no more than four guests, by people who live here. From €800.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Luxor Rising",
+    title: "Luxor Rising — Your private concierge in Egypt",
+    description:
+      "Private, unhurried days in ancient Egypt — the temples before the crowds, the Nile at golden hour, arranged end to end.",
+    images: [
+      {
+        url: "/images/heroImage.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Luxor Rising — private days in ancient Egypt",
+      },
+    ],
+  },
+};
 
 export default async function HomePage() {
   const [page, productSettings, socialProof] = await Promise.all([

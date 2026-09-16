@@ -7,6 +7,7 @@ import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
 import { useDayCount } from "./DayCount";
 import { trackBeginCheckout } from "@/lib/analytics";
+import { dayTotal, PHOTO_PRO } from "@/lib/pricing-math";
 
 type DayCount = 1 | 2 | 3 | 4;
 type Journey = "medinet" | "karnak" | "balloon";
@@ -125,34 +126,9 @@ const IMG_POOL = [
 function euro(n: number) {
   return "€" + n.toLocaleString("en-US");
 }
-function extraPerDay(g: number, groupSupplement: GroupSupplementTier[]) {
-  let s = 0;
-  for (let i = 2; i <= g; i++) {
-    const tier = groupSupplement.find((t) => t.minGuests === i);
-    if (tier) s += tier.extraPerDay;
-  }
-  return s;
-}
-function discountForDays(d: number, volumeDiscount: VolumeDiscountTier[]) {
-  let best: VolumeDiscountTier | null = null;
-  for (const t of volumeDiscount) {
-    if (d >= t.minDays && (!best || t.minDays > best.minDays)) best = t;
-  }
-  return best ? best.discountPercent : 0;
-}
-function dayTotal(
-  d: DayCount,
-  g: number,
-  dayRate: number,
-  volumeDiscount: VolumeDiscountTier[],
-  groupSupplement: GroupSupplementTier[]
-) {
-  const discount = discountForDays(d, volumeDiscount);
-  // The multi-day discount applies to the WHOLE day price (day rate + the
-  // per-guest supplement), so the saving grows with both days and guests.
-  const perDay = dayRate + extraPerDay(g, groupSupplement);
-  return Math.round(perDay * d * (1 - discount / 100));
-}
+// dayTotal / extraPerDay / discountForDays are imported from lib/pricing-math —
+// the SAME functions the server uses to compute the authoritative price, so the
+// figure shown here and the figure charged at checkout can never drift.
 // The Design Your Day product's own saving: what the volume discount takes off
 // the full multi-day price. Used uniformly for the day tiles and the gold pill.
 function daySaving(
@@ -238,6 +214,9 @@ type DayConfiguratorProps = {
   supplementTable?: [string, ExpSupplementTier[]][];
   /** Main social-proof line (from Site settings), shown next to ★★★★★. */
   socialProof?: string;
+  /** WhatsApp number (from Site settings) for the "ask us" link. Falls back to
+   *  the enquiry form when unset, so the CTA is never a dead link. */
+  whatsappNumber?: string;
 };
 
 export default function DayConfigurator({
@@ -258,7 +237,14 @@ export default function DayConfigurator({
   brandTable,
   supplementTable,
   socialProof = "4.9 · 28+ private days arranged",
+  whatsappNumber = "",
 }: DayConfiguratorProps) {
+  // Build the WhatsApp link from the configured number (digits only, no leading
+  // 00). If none is set, the CTA points at the enquiry form — never a dead link.
+  const waDigits = whatsappNumber.replace(/\D/g, "").replace(/^00/, "");
+  const askHref = waDigits
+    ? `https://wa.me/${waDigits}?text=${encodeURIComponent("Hi, I have a question about a concierge day")}`
+    : "/private-guide#request";
   // Prices come from the live catalogue when supplied (keeps the breakdown in
   // sync with real product prices); the built-in table is only a fallback.
   const table = priceTable && priceTable.length ? priceTable : PRICE_TABLE;
@@ -316,8 +302,8 @@ export default function DayConfigurator({
   const dateInputRef = useRef<HTMLInputElement>(null);
 
   // Mobile-phone photography is always included and free; the paid finishing
-  // touch is a professional photographer/videographer (a flat premium package).
-  const PHOTO_PRO = 460;
+  // touch is a professional photographer/videographer (PHOTO_PRO — a flat
+  // premium package, imported from lib/pricing-math so the server agrees).
 
   // Hurghada → Luxor transfer upsell — real price pulled from the
   // hurghada-to-luxor-crossing product via the Keystatic-fed price table.
@@ -508,7 +494,6 @@ export default function DayConfigurator({
     });
     setError("");
     setLoading(true);
-    const amount = pay === "full" ? total : deposit;
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -516,10 +501,10 @@ export default function DayConfigurator({
         body: JSON.stringify({
           name,
           slug,
-          amountCents: amount * 100,
-          totalCents: total * 100,
           mode: pay,
           guests: group,
+          photo,
+          hurg,
           date: tripDate,
           cancelPath: "/concierge-day#build",
           preferences,
@@ -1108,11 +1093,10 @@ export default function DayConfigurator({
               </ul>
               <a
                 className={styles.sumAsk}
-                href="https://wa.me/0000000000?text=Hi%2C%20I%20have%20a%20question%20about%20a%20concierge%20day"
-                target="_blank"
-                rel="noopener"
+                href={askHref}
+                {...(waDigits ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
-                Questions? Ask us on WhatsApp →
+                {waDigits ? "Questions? Ask us on WhatsApp →" : "Questions? Send us a note →"}
               </a>
             </div>
           </div>

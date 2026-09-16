@@ -22,6 +22,44 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 90],
   },
+  async headers() {
+    const dev = process.env.NODE_ENV === "development";
+    // CSP scoped to what the site actually loads: Google Fonts, GA/GTM, Meta
+    // Pixel, and GitHub (Keystatic admin). Stripe is a full redirect to
+    // checkout.stripe.com, so no Stripe origins are needed here. Inline scripts
+    // (the consent-mode bootstrap, GA config) require 'unsafe-inline'; 'unsafe-
+    // eval' + ws: are added in dev only, for React Fast Refresh.
+    const csp = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'self'",
+      "form-action 'self' https://github.com",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://connect.facebook.net`,
+      `connect-src 'self'${dev ? " ws:" : ""} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.facebook.com https://api.github.com https://github.com`,
+      "frame-src 'self' https://www.googletagmanager.com https://*.facebook.com",
+      "worker-src 'self' blob:",
+      "manifest-src 'self'",
+      "upgrade-insecure-requests",
+    ].join("; ");
+
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: csp },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

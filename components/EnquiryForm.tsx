@@ -27,6 +27,7 @@ export default function EnquiryForm({ note, topic }: { note?: string; topic?: st
       base: String(fd.get("base") ?? ""),
       message: String(fd.get("message") ?? ""),
       topic: topic ?? "",
+      company: String(fd.get("company") ?? ""), // honeypot — left blank by humans
     };
     try {
       const res = await fetch("/api/enquiry", {
@@ -64,6 +65,15 @@ export default function EnquiryForm({ note, topic }: { note?: string; topic?: st
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
+      {/* Honeypot: hidden from people, catches bots. Not a real field. */}
+      <input
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+      />
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="eq-name">

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { quoteBooking } from "@/lib/quote";
 
 // Stripe's SDK needs the Node runtime (not Edge).
 export const runtime = "nodejs";
@@ -7,10 +8,10 @@ export const runtime = "nodejs";
 type Body = {
   name?: string;
   slug?: string;
-  amountCents?: number; // amount charged now
-  totalCents?: number; // full price of the experience (for deposit recap)
   mode?: "full" | "deposit";
   guests?: number;
+  photo?: boolean; // concierge photographer add-on
+  hurg?: boolean; // Hurghada ⇄ Luxor crossing add-on
   date?: string;
   cancelPath?: string;
   preferences?: string;
@@ -34,9 +35,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad request." }, { status: 400 });
   }
 
-  const { name, slug, amountCents, totalCents, mode = "full", guests, date, cancelPath, preferences } = body;
-  if (!name || !slug || !amountCents || amountCents < 100) {
-    return NextResponse.json({ error: "Missing or invalid booking details." }, { status: 400 });
+  const { name, slug, mode = "full", guests, date, cancelPath, preferences, photo, hurg } = body;
+  if (!name || !slug) {
+    return NextResponse.json({ error: "Missing booking details." }, { status: 400 });
+  }
+
+  // Authoritative price: recomputed on the server from the product + chosen
+  // options. The browser's amount is never trusted — this is what prevents a
+  // tampered request from paying less than the real price.
+  const quote = await quoteBooking({ slug, guests: guests ?? 1, photo: !!photo, hurg: !!hurg });
+  if (!quote) {
+    return NextResponse.json(
+      { error: "That option isn't available to book online. Please send us an enquiry." },
+      { status: 400 },
+    );
   }
 
   // A deposit relies on the day-before balance auto-charge, which can't run this
@@ -56,9 +68,14 @@ export async function POST(req: Request) {
     }
   }
 
-  // Full price + balance still owed (for the deposit recap and the records).
-  const fullTotalCents = totalCents && totalCents >= amountCents ? Math.round(totalCents) : Math.round(amountCents);
-  const balanceCents = mode === "deposit" ? Math.max(0, fullTotalCents - Math.round(amountCents)) : 0;
+  // Amounts derived from the authoritative quote (euro-cents throughout).
+  const fullTotalCents = quote.totalCents;
+  const depositCents = Math.round((fullTotalCents / 100) * (quote.depositPercent / 100)) * 100;
+  const amountCents = mode === "deposit" ? depositCents : fullTotalCents;
+  const balanceCents = mode === "deposit" ? Math.max(0, fullTotalCents - depositCents) : 0;
+  if (amountCents < 100) {
+    return NextResponse.json({ error: "This booking can't be processed. Please contact us." }, { status: 400 });
+  }
   const eur = (cents: number) => `€${Math.round(cents / 100)}`;
 
   // The note above the pay button. For a deposit it doubles as the mandate for

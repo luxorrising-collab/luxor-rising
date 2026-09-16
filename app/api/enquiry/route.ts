@@ -13,6 +13,7 @@ type Body = {
   base?: string;
   message?: string;
   topic?: string;
+  company?: string; // honeypot — see below
 };
 
 // Which page/kind of enquiry this came from — stored in enquiries.source and
@@ -39,6 +40,12 @@ export async function POST(req: Request) {
     body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
+  }
+
+  // Honeypot: humans never fill the hidden "company" field; bots do. Accept the
+  // request so the bot sees success, but drop it silently — nothing is stored.
+  if ((body.company ?? "").trim()) {
+    return NextResponse.json({ ok: true });
   }
 
   const name = (body.name ?? "").trim();

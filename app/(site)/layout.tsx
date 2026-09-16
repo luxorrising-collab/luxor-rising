@@ -47,6 +47,10 @@ export const metadata: Metadata = {
     ],
   },
   twitter: { card: "summary_large_image" },
+  // Google Search Console "HTML tag" verification. Set GOOGLE_SITE_VERIFICATION
+  // in the environment to the token Search Console gives you; when unset,
+  // nothing is rendered. (A DNS "Domain property" needs no code at all.)
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined },
 };
 
 export default async function RootLayout({

@@ -54,13 +54,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       })
     : null;
 
+  // The brand byline "Luxor Rising" maps to an Organization; a named person → Person.
+  const authorLd =
+    author.name === "Luxor Rising"
+      ? { "@type": "Organization", name: author.name }
+      : { "@type": "Person", name: author.name };
+
   const JSON_LD = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: entry.title,
     description: entry.excerpt,
     image: entry.heroImage ? [`https://luxorrising.com${entry.heroImage}`] : undefined,
-    author: { "@type": "Person", name: author.name },
+    author: authorLd,
     publisher: { "@type": "Organization", name: "Luxor Rising" },
     datePublished: entry.publishedAt,
     dateModified: entry.publishedAt,

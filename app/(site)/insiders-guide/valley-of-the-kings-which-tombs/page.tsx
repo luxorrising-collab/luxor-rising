@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Is Tutankhamun's tomb worth the extra ticket?",
-    a: "Architecturally, no — it is small and modest, and the famous treasures are in Cairo, not in the tomb. Emotionally, for some people, yes. If you're choosing between the extra ticket for Tutankhamun and the one for Seti I, we would send you to Seti I every time.",
+    a: "Architecturally, no — it is small and modest, and the famous treasures are now at the Grand Egyptian Museum near Giza, not in the tomb. Emotionally, for some people, yes. If you're choosing between the extra ticket for Tutankhamun and the one for Seti I, we would send you to Seti I every time.",
   },
   {
     q: "Which tombs are open right now?",
@@ -154,6 +154,18 @@ export default async function ValleyOfTheKingsArticle() {
   );
   const renderMd = (nodes: RenderableTreeNode[]) => Markdoc.renderers.react(nodes, React, {});
 
+  // The byline "Luxor Rising" is the brand itself → schema.org Organization;
+  // a named person author would be a Person.
+  const authorLd =
+    author.name === "Luxor Rising"
+      ? { "@type": "Organization", name: author.name }
+      : {
+          "@type": "Person",
+          name: author.name,
+          jobTitle: "Concierge, Luxor Rising",
+          knowsAbout: ["Valley of the Kings", "Luxor", "Ancient Egypt"],
+        };
+
   const JSON_LD = {
     "@context": "https://schema.org",
     "@graph": [
@@ -162,12 +174,7 @@ export default async function ValleyOfTheKingsArticle() {
         headline: entry.title,
         description: entry.excerpt,
         image: entry.heroImage ? [`https://luxorrising.com${entry.heroImage}`] : undefined,
-        author: {
-          "@type": "Person",
-          name: author.name,
-          jobTitle: "Concierge, Luxor Rising",
-          knowsAbout: ["Valley of the Kings", "Luxor", "Ancient Egypt"],
-        },
+        author: authorLd,
         reviewedBy: { "@type": "Person", name: "Dr. Nour", jobTitle: "Licensed Egyptologist" },
         publisher: { "@type": "Organization", name: "Luxor Rising" },
         datePublished: entry.publishedAt,
@@ -388,7 +395,7 @@ export default async function ValleyOfTheKingsArticle() {
         {/* AUTHOR */}
         <AuthorBox
           name={author.name}
-          bio="Born on the west bank of Luxor, twenty minutes from the Valley gate. He has spent twenty years opening doors in this city — for archaeologists, film crews, and people who simply wanted to see it properly. He is our concierge: he does not carry the flag, he decides the order of the day."
+          bio="Luxor Rising is a private concierge in Luxor. Our days are shaped on the ground by people who live here — led by Ahmed, born on the west bank twenty minutes from the Valley gate — and every guide we publish is fact-checked by a licensed Egyptologist before it goes out."
           href="/insiders-guide"
           ctaLabel="More from the guide →"
         />

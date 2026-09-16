@@ -14,11 +14,6 @@ const EXPERIENCE_CATEGORIES = [
   { label: "Signature", value: "signature" },
 ] as const;
 
-const AUTHORS = [
-  { label: "Ahmed", value: "ahmed" },
-  { label: "Dr. Nour", value: "dr-nour" },
-] as const;
-
 const REVIEW_SOURCES = [
   { label: "Google", value: "google" },
   { label: "Meta / Facebook", value: "facebook" },
@@ -257,10 +252,11 @@ export default config({
           options: ARTICLE_CATEGORIES,
           defaultValue: ARTICLE_CATEGORIES[0].value,
         }),
-        author: fields.select({
+        author: fields.text({
           label: "Author",
-          options: AUTHORS,
-          defaultValue: AUTHORS[0].value,
+          defaultValue: "Luxor Rising",
+          description:
+            'Byline shown on the article — e.g. "Luxor Rising", "Ahmed", or any new author you want to credit. Type any name.',
         }),
         readingTime: fields.text({
           label: "Reading time",

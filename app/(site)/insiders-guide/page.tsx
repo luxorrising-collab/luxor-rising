@@ -26,24 +26,6 @@ export const metadata: Metadata = {
   },
 };
 
-// The other two entries here are placeholder posts with no page behind them
-// yet (same as before this migration) — only the first, CMS-backed article
-// is built dynamically below.
-const PLACEHOLDER_BLOG_POSTS = [
-  {
-    "@type": "BlogPosting",
-    headline: "The best month to come — and the one everyone gets wrong",
-    author: { "@type": "Person", name: "Ahmed" },
-    datePublished: "2026-06-18",
-  },
-  {
-    "@type": "BlogPosting",
-    headline: "Why Medinet Habu is the temple nobody tells you about",
-    author: { "@type": "Person", name: "Dr. Nour" },
-    datePublished: "2026-06-04",
-  },
-];
-
 export default async function InsidersGuidePage() {
   const [allArticles, page] = await Promise.all([
     reader.collections.articles.all(),
@@ -92,7 +74,6 @@ export default async function InsidersGuidePage() {
             },
           ]
         : []),
-      ...PLACEHOLDER_BLOG_POSTS,
     ],
   };
 
@@ -157,7 +138,7 @@ export default async function InsidersGuidePage() {
           </Reveal>
         )}
 
-        <GuideClient cmsPosts={cmsPosts} />
+        {cmsPosts.length > 0 && <GuideClient cmsPosts={cmsPosts} />}
       </main>
 
       {/* NEWSLETTER */}

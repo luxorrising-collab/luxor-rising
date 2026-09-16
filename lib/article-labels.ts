@@ -9,6 +9,10 @@ export const ARTICLE_CATEGORY_LABELS: Record<string, string> = {
 };
 
 export const ARTICLE_AUTHORS: Record<string, { name: string; bio: string }> = {
+  "Luxor Rising": {
+    name: "Luxor Rising",
+    bio: "Written on the ground in Luxor by our concierge team, and fact-checked by a licensed Egyptologist before we publish.",
+  },
   ahmed: {
     name: "Ahmed",
     bio: "Our consigliere in Luxor. Born on the west bank, twenty minutes from the Valley gate.",

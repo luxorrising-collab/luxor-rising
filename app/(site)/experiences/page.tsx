@@ -36,20 +36,6 @@ const HURGHADA_SLUGS = new Set([
   "hurghada-to-luxor-crossing",
 ]);
 
-// The hand-curated signature / concierge-day products. CMS experiences are
-// appended to these at render time so the ItemList structured data always
-// reflects the full, live catalogue (better SEO + answer-engine coverage).
-const CURATED_PRODUCTS = [
-  {
-    "@type": "Product",
-    name: "The Concierge Day",
-    description:
-      "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one concierge handling everything.",
-    brand: BRAND,
-    offers: { "@type": "Offer", price: "800", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
-  },
-];
-
 export default async function ExperiencesPage() {
   const [allExperiences, priceMap, socialProof] = await Promise.all([
     reader.collections.experiences.all(),
@@ -66,6 +52,27 @@ export default async function ExperiencesPage() {
   // The Concierge Day ("Design your day") price, fed live into the "Start here"
   // callout, the sticky bar and structured data so it never drifts.
   const conciergeDayPrice = priceMap.get("design-your-day") ?? 800;
+
+  // The hand-curated Concierge Day product for the ItemList structured data —
+  // with a real image (required by Google for Product), a canonical URL, and the
+  // live "from" price so it never drifts. CMS experiences are appended after it.
+  const conciergeProduct = {
+    "@type": "Product",
+    name: "The Concierge Day",
+    description:
+      "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one concierge handling everything.",
+    brand: BRAND,
+    category: "Concierge day",
+    url: "https://luxorrising.com/concierge-day",
+    image: "https://luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
+    offers: {
+      "@type": "Offer",
+      price: String(conciergeDayPrice),
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      url: "https://luxorrising.com/concierge-day",
+    },
+  };
 
   const cmsItems: CmsExperienceItem[] = gridExperiences.map(({ slug, entry }) => ({
     // Medinet Habu lives at the top level; link straight there rather than
@@ -102,7 +109,9 @@ export default async function ExperiencesPage() {
     brand: BRAND,
     category: entry.category,
     url: `https://luxorrising.com/experiences/${slug}`,
-    image: entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined,
+    // Always emit an image (Google requires it for Product) — fall back to a
+    // dependable static hero when an entry has none.
+    image: `https://luxorrising.com${entry.heroImage || "/images/medinet-habu-facade.jpg"}`,
     offers: {
       "@type": "Offer",
       price: String(priceOf(slug, entry)),
@@ -117,7 +126,7 @@ export default async function ExperiencesPage() {
     "@type": "ItemList",
     name: "Luxor Rising Experiences",
     description: "Private, single-day curated experiences in Luxor, Egypt.",
-    itemListElement: [...CURATED_PRODUCTS, ...cmsProducts].map((item, i) => ({
+    itemListElement: [conciergeProduct, ...cmsProducts].map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item,

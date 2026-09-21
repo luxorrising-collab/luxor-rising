@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
       "font-src 'self' https://fonts.gstatic.com data:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://connect.facebook.net`,
-      `connect-src 'self'${dev ? " ws:" : ""} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.facebook.com https://api.github.com https://github.com`,
+      `connect-src 'self'${dev ? " ws:" : ""} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.facebook.com https://api.github.com https://github.com https://raw.githubusercontent.com`,
       "frame-src 'self' https://www.googletagmanager.com https://*.facebook.com",
       "worker-src 'self' blob:",
       "manifest-src 'self'",

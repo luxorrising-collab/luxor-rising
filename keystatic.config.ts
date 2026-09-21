@@ -752,10 +752,12 @@ export default config({
               label: "Signature link (optional)",
               description: 'Links the signature to a page, e.g. "/medinet-habu" or "/concierge-day".',
             }),
-            image: fields.text({
-              label: "Background image path (optional)",
+            image: fields.image({
+              label: "Card background image (optional)",
+              directory: "public/images",
+              publicPath: "/images/",
               description:
-                'Cinematic backdrop for the card, e.g. "/images/experiences/medinet-habu/heroImage.jpg". Reuse an experience\'s hero so the moment matches the place.',
+                "Cinematic backdrop for the card. Upload a photo, or leave empty for a plain card. Landscape images look best — it sits behind the quote.",
             }),
           }),
           {

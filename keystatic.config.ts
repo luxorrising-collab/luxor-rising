@@ -754,8 +754,8 @@ export default config({
             }),
             image: fields.image({
               label: "Card background image (optional)",
-              directory: "public/images",
-              publicPath: "/images/",
+              directory: "public/images/review-cards",
+              publicPath: "/images/review-cards/",
               description:
                 "Cinematic backdrop for the card. Upload a photo, or leave empty for a plain card. Landscape images look best — it sits behind the quote.",
             }),

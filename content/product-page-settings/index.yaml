@@ -74,7 +74,7 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/concierge-day/dreamImage.jpg
+    image: /images/review-cards/dream.jpg
   - quote: >-
       I was met at the airport late at night and made to feel at home from the
       very first moment.
@@ -83,28 +83,28 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/hosts/ahmed.jpg
+    image: /images/review-cards/ahmed.jpg
   - quote: Everything felt tranquil and powerful at once.
     author: TFK
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/concierge-day/builderSunsetNileImage.jpg
+    image: /images/review-cards/sunset-nile.jpg
   - quote: There was never any friction — I could just be present.
     author: TFK
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/hosts/temple-guards.jpg
+    image: /images/review-cards/temple-guards.jpg
   - quote: It was one of the most powerful hours of my life.
     author: Man of Knowledge
     rating: 5
     signature: Medinet Habu
     signatureSub: Begin where the world began.
     signatureHref: /medinet-habu
-    image: /images/experiences/medinet-habu/heroImage.jpg
+    image: /images/review-cards/medinet-habu.jpg
   - quote: >-
       The scale of Karnak and Luxor Temple is amazing; I felt deep silence and
       peace there.
@@ -113,7 +113,7 @@ testimonials:
     signature: Karnak at Dawn
     signatureSub: Stand in the largest temple ever built — before anyone else arrives.
     signatureHref: /experiences/karnak-at-dawn
-    image: /images/experiences/karnak-at-dawn/heroImage.jpg
+    image: /images/review-cards/karnak-at-dawn.jpg
   - quote: >-
       The most moving chambers aren't the most photographed ones, but the ones
       more hidden.
@@ -122,28 +122,28 @@ testimonials:
     signature: Valley of the Kings
     signatureSub: Walk into the tombs that were built to be hidden forever.
     signatureHref: /experiences/valley-of-the-kings
-    image: /images/experiences/valley-of-the-kings/heroImage.jpg
+    image: /images/review-cards/valley-of-the-kings.jpg
   - quote: Sailing the Nile at sunset; I don't remember ever feeling so light.
     author: Man of Knowledge
     rating: 5
     signature: Sunset Felucca Sail
     signatureSub: Let the Nile carry you into the gold.
     signatureHref: /experiences/felucca-sunset-sail
-    image: /images/experiences/felucca-sunset-sail/heroImage.jpg
+    image: /images/review-cards/felucca-sunset-sail.jpg
   - quote: I've never found a better place for a morning coffee.
     author: Man of Knowledge
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/hot-air-balloons-luxor-sunrise_joe-desousa-v4HHLOyNK0k-unsplash.jpg
+    image: /images/review-cards/balloon-sunrise.jpg
   - quote: Each day flowed naturally and easily, like travelling with an old friend.
     author: Man of Knowledge
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/hosts/ahmed-nile-sunset.jpg
+    image: /images/review-cards/ahmed-nile-sunset.jpg
   - quote: >-
       Almost a year later, the feeling hasn't left me. Luxor quietly changed the
       direction of my life.
@@ -152,7 +152,7 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/felucca-deck-nile-sunset-harbor_IMG_20251009_175004.jpg
+    image: /images/review-cards/felucca-deck.jpg
   - quote: >-
       If you want Luxor and the Nile done privately, unhurried and beautifully,
       from the airport to the last temple, I can't recommend Luxor Rising enough.
@@ -161,4 +161,4 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/concierge-day/builderSunsetCustomImage.jpg
+    image: /images/review-cards/sunset-custom.jpg

@@ -72,6 +72,19 @@ export const ACCEPT_ALL: ConsentChoices = {
   marketing: true,
 };
 
+// Testing switch — set to `false` to restore the banner + denied-by-default.
+// When true: no cookie banner, and analytics + marketing are granted by default
+// so GA4 and the Meta Pixel fire immediately. An explicit saved choice still wins.
+export const CONSENT_DEFAULT_GRANTED = true;
+
+/** The choice to act on: an explicit saved cookie wins; otherwise, in testing
+ *  mode, everything is granted by default; otherwise nothing (banner decides). */
+export function effectiveConsent(): ConsentChoices | null {
+  const stored = getStoredConsent();
+  if (stored) return stored;
+  return CONSENT_DEFAULT_GRANTED ? ACCEPT_ALL : null;
+}
+
 /** Read the saved choice, or null if none / from an outdated version. */
 export function getStoredConsent(): StoredConsent | null {
   if (typeof document === "undefined") return null;

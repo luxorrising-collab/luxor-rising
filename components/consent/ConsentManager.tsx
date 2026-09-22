@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 import {
   CONSENT_COOKIE,
   CONSENT_VERSION,
+  CONSENT_DEFAULT_GRANTED,
   applyConsent,
-  getStoredConsent,
+  effectiveConsent,
   isTrackingEnabled,
 } from "@/lib/consent";
 import { useConsentConfig } from "./ConsentProvider";
@@ -29,21 +30,22 @@ export default function ConsentManager() {
   const { gtmId, ga4Id } = config;
   const pathname = usePathname();
 
-  // On mount, re-apply the saved choice so Meta loads for returning opt-ins.
+  // On mount, apply the effective choice so Meta loads for returning opt-ins
+  // (and, in testing mode, for everyone by default).
   useEffect(() => {
-    const stored = getStoredConsent();
-    if (stored) applyConsent(stored);
+    const c = effectiveConsent();
+    if (c) applyConsent(c);
   }, []);
 
   // SPA page views: Next client navigations don't reload the page, so fire a
   // page_view / PageView on route change for whichever service is consented.
   useEffect(() => {
-    const stored = getStoredConsent();
-    if (!stored) return;
-    if (stored.analytics && ga4Id) {
+    const c = effectiveConsent();
+    if (!c) return;
+    if (c.analytics && ga4Id) {
       window.gtag?.("event", "page_view", { page_path: pathname });
     }
-    if (stored.marketing) {
+    if (c.marketing) {
       window.fbq?.("track", "PageView");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +60,8 @@ export default function ConsentManager() {
         {`(function(){
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function(){ dataLayer.push(arguments); };
-  var a=false, m=false;
+  var dg=${CONSENT_DEFAULT_GRANTED ? "true" : "false"};
+  var a=dg, m=dg;
   try {
     var x = document.cookie.match(/(?:^|; )${CONSENT_COOKIE}=([^;]*)/);
     if (x) { var c = JSON.parse(decodeURIComponent(x[1])); if (c && c.v===${CONSENT_VERSION}) { a=!!c.analytics; m=!!c.marketing; } }

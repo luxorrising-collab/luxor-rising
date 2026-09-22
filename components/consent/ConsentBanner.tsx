@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./consent.module.css";
 import {
   ACCEPT_ALL,
+  CONSENT_DEFAULT_GRANTED,
   CONSENT_OPEN_EVENT,
   REJECT_ALL,
   applyConsent,
@@ -26,7 +27,8 @@ export default function ConsentBanner() {
   useEffect(() => {
     if (!trackingEnabled) return; // tracking off → no banner
     const stored = getStoredConsent();
-    if (!stored) setView("banner");
+    // Testing mode: consent is granted by default, so never auto-show the banner.
+    if (!stored && !CONSENT_DEFAULT_GRANTED) setView("banner");
 
     const open = () => {
       const s = getStoredConsent();

@@ -12,26 +12,27 @@ howItWorksSteps:
       assigned to you on the morning.
   - title: You just enjoy the flow
     description: >-
-      Nothing to organise, decide or carry. You arrive — and three
-      thousand years unfold around you.
+      Nothing to organise, decide or carry. You arrive — and three thousand
+      years unfold around you.
 disclosureText: >-
-  Luxor Rising is your private concierge & advisor. We arrange and
-  coordinate; transfers, hosting and — at the monuments — guiding by a
-  certified Egyptologist are delivered by our licensed local partners. This
-  is a single daytime experience with no overnight stay.
+  Luxor Rising is your private concierge & advisor. We arrange and coordinate;
+  transfers, hosting and — at the monuments — guiding by a certified
+  Egyptologist are delivered by our licensed local partners. This is a single
+  daytime experience with no overnight stay.
 consigliereEyebrow: The person at the heart of it
 consigliereTitle: What is a Luxor Rising concierge?
 consigliereLead: >-
   Not a guide with a flag and a script. A concierge is one trusted person who
   understands where you are in your own journey, shares the road with you, and
   quietly arranges every last detail — the car, the tickets, the right hour, the
-  doors — so all you have to do is be present. You manage nothing. You just flow.
-consigliereImage: /images/hosts/ahmed-nile-sunset.jpg
+  doors — so all you have to do is be present. You manage nothing. You just
+  flow.
+consigliereImage: /images/hosts/consigliereImage.jpg
 consiglierePoints:
   - title: A guide who understands your journey
     description: >-
-      Someone who listens first — who grasps what this trip really means to you —
-      and then reads three thousand years in a way that speaks to it. Never a
+      Someone who listens first — who grasps what this trip really means to you
+      — and then reads three thousand years in a way that speaks to it. Never a
       memorised tour repeated to everyone.
   - title: A companion who shares the road
     description: >-
@@ -39,16 +40,14 @@ consiglierePoints:
       beside you through every day. Someone — never a call centre or a voucher.
   - title: Everything arranged, so you just flow
     description: >-
-      Cars, tickets, timing, translation, the quiet hour ahead of the crowds, and
-      the doors that never open for a coach — all handled invisibly. You never
-      touch a single logistic.
+      Cars, tickets, timing, translation, the quiet hour ahead of the crowds,
+      and the doors that never open for a coach — all handled invisibly. You
+      never touch a single logistic.
 guaranteeEyebrow: Our promise
 guaranteeTitle: Reserved with confidence — or we make it right.
 guaranteeItems:
   - title: Cancel freely
-    description: >-
-      Plans change. Cancel up to 7 days before for a full refund, no fine
-      print.
+    description: Plans change. Cancel up to 7 days before for a full refund, no fine print.
   - title: Pay your way
     description: >-
       Settle in full, or place a deposit now and the balance is charged
@@ -56,14 +55,10 @@ guaranteeItems:
   - title: The first hour is on us if we're wrong
     description: >-
       If the first hour doesn't feel different from any tour you've been on
-      before, say so and it's on us. Tell your concierge on the day — no
-      form, no argument, refunded in full.
+      before, say so and it's on us. Tell your concierge on the day — no form,
+      no argument, refunded in full.
 testimonialsEyebrow: From recent guests
 testimonialsTitle: The moment they didn't expect to love most.
-# Powerful moments — near-verbatim excerpts from our verified Google reviews,
-# shown as a coverflow carousel. reviewsVerified: true → no "sample" note. The
-# author repeats (mostly one guest for now), so it's kept quiet here; full
-# attribution + verification live on the /reviews page. Edit the excerpts freely.
 reviewsVerified: true
 testimonials:
   - quote: >-
@@ -74,7 +69,7 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/dream.jpg
+    image: /images/review-cards/testimonials/0/image.jpg
   - quote: >-
       I was met at the airport late at night and made to feel at home from the
       very first moment.
@@ -83,28 +78,28 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/ahmed.jpg
+    image: /images/review-cards/testimonials/1/image.jpg
   - quote: Everything felt tranquil and powerful at once.
     author: TFK
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/sunset-nile.jpg
+    image: /images/review-cards/testimonials/2/image.jpg
   - quote: There was never any friction — I could just be present.
     author: TFK
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/temple-guards.jpg
+    image: /images/review-cards/testimonials/3/image.jpg
   - quote: It was one of the most powerful hours of my life.
     author: Man of Knowledge
     rating: 5
     signature: Medinet Habu
     signatureSub: Begin where the world began.
     signatureHref: /medinet-habu
-    image: /images/review-cards/medinet-habu.jpg
+    image: /images/review-cards/testimonials/4/image.jpg
   - quote: >-
       The scale of Karnak and Luxor Temple is amazing; I felt deep silence and
       peace there.
@@ -113,7 +108,7 @@ testimonials:
     signature: Karnak at Dawn
     signatureSub: Stand in the largest temple ever built — before anyone else arrives.
     signatureHref: /experiences/karnak-at-dawn
-    image: /images/review-cards/karnak-at-dawn.jpg
+    image: /images/review-cards/testimonials/5/image.jpg
   - quote: >-
       The most moving chambers aren't the most photographed ones, but the ones
       more hidden.
@@ -122,28 +117,28 @@ testimonials:
     signature: Valley of the Kings
     signatureSub: Walk into the tombs that were built to be hidden forever.
     signatureHref: /experiences/valley-of-the-kings
-    image: /images/review-cards/valley-of-the-kings.jpg
+    image: /images/review-cards/testimonials/6/image.jpg
   - quote: Sailing the Nile at sunset; I don't remember ever feeling so light.
     author: Man of Knowledge
     rating: 5
     signature: Sunset Felucca Sail
     signatureSub: Let the Nile carry you into the gold.
     signatureHref: /experiences/felucca-sunset-sail
-    image: /images/review-cards/felucca-sunset-sail.jpg
+    image: /images/review-cards/testimonials/7/image.jpg
   - quote: I've never found a better place for a morning coffee.
     author: Man of Knowledge
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/balloon-sunrise.jpg
+    image: /images/review-cards/testimonials/8/image.jpg
   - quote: Each day flowed naturally and easily, like travelling with an old friend.
     author: Man of Knowledge
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/ahmed-nile-sunset.jpg
+    image: /images/review-cards/testimonials/9/image.jpg
   - quote: >-
       Almost a year later, the feeling hasn't left me. Luxor quietly changed the
       direction of my life.
@@ -152,13 +147,14 @@ testimonials:
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/felucca-deck.jpg
+    image: /images/review-cards/testimonials/10/image.jpg
   - quote: >-
       If you want Luxor and the Nile done privately, unhurried and beautifully,
-      from the airport to the last temple, I can't recommend Luxor Rising enough.
+      from the airport to the last temple, I can't recommend Luxor Rising
+      enough.
     author: Man of Knowledge
     rating: 5
     signature: Luxor Rising Concierge Day
     signatureSub: Luxor, Egypt
     signatureHref: /concierge-day
-    image: /images/review-cards/sunset-custom.jpg
+    image: /images/review-cards/testimonials/11/image.jpg

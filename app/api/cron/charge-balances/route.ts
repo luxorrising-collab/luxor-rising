@@ -42,6 +42,14 @@ type Supa = NonNullable<ReturnType<typeof getSupabaseAdmin>>;
 export async function GET(req: Request) {
   if (!authorized(req)) return new Response("Unauthorized", { status: 401 });
 
+  // Global pause switch. While AUTOMATIONS_PAUSED=1 the daily run does nothing —
+  // no balance charges, reminders, review requests or date confirmations are
+  // sent. Unset it (or set to 0) to resume. The schedule itself is currently
+  // removed from vercel.json too, so nothing runs until both are restored.
+  if (process.env.AUTOMATIONS_PAUSED === "1") {
+    return Response.json({ ok: true, paused: true }, { status: 200 });
+  }
+
   const key = process.env.STRIPE_SECRET_KEY;
   const supabase = getSupabaseAdmin();
   if (!key || !supabase) {

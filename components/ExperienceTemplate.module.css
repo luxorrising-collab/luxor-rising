@@ -177,11 +177,17 @@
   .glanceFacts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.4rem 0.5rem;
+    gap: 1.4rem 1rem;
   }
   .gf {
     border-left: none;
-    padding: 0;
+    padding: 0 0.3rem;
+    /* Let long values (e.g. "Late afternoon into the night") wrap instead of
+       bleeding past the edges. */
+    white-space: normal;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
   }
 }
 

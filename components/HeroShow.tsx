@@ -11,6 +11,9 @@ export type HeroShowItem = {
       mobile / data-saver, so the slideshow still runs without the download. */
   poster?: string;
   alt?: string;
+  /** object-position for the cover crop, e.g. "38% 50%" — point the crop at the
+      subject so a tall mobile frame keeps the face/hero in view. */
+  position?: string;
 };
 
 /**
@@ -94,6 +97,7 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
                 muted
                 playsInline
                 preload="auto"
+                style={it.position ? { objectPosition: it.position } : undefined}
               >
                 <source src={it.src} type="video/mp4" />
               </video>
@@ -105,6 +109,7 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
                 priority={i === 0}
                 sizes="100vw"
                 quality={90}
+                style={it.position ? { objectPosition: it.position } : undefined}
               />
             )}
           </div>

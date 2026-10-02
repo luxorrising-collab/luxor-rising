@@ -103,12 +103,12 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const g = (i: number) => `/images/experiences/${slug}/gallery/${i}/image.jpg`;
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
     "private-desert-safari": [
-      { type: "image", src: entry.heroImage ?? "", alt: entry.title },
-      { type: "video", src: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg" },
-      { type: "image", src: g(5), alt: "Red sand dunes at sunset" },
-      { type: "image", src: g(6), alt: "The desert camp, lanterns and carpets" },
-      { type: "video", src: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg" },
-      { type: "image", src: g(8), alt: "The Milky Way over the dunes" },
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "60% 50%" },
+      { type: "video", src: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", position: "38% 45%" },
+      { type: "image", src: g(5), alt: "Red sand dunes at sunset", position: "50% 55%" },
+      { type: "image", src: g(6), alt: "The desert camp, lanterns and carpets", position: "50% 45%" },
+      { type: "video", src: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", position: "36% 45%" },
+      { type: "image", src: g(8), alt: "The Milky Way over the dunes", position: "50% 55%" },
     ],
   };
   const heroMedia = HERO_MEDIA[slug];

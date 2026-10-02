@@ -6,6 +6,7 @@ import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
+import type { HeroShowItem } from "@/components/HeroShow";
 import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
@@ -95,6 +96,42 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
   const region = isRedSea ? "Hurghada" : "Luxor";
   const hurghadaTransfer = isRedSea ? 0 : crossingPrice;
+
+  // Cinematic hero slideshow, per product. Starts on the product's own hero
+  // image (so first paint is unchanged / LCP-safe), then crossfades through
+  // short muted desert clips (cut from the brand film) and real gallery photos.
+  const g = (i: number) => `/images/experiences/${slug}/gallery/${i}/image.jpg`;
+  const HERO_MEDIA: Record<string, HeroShowItem[]> = {
+    "private-desert-safari": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title },
+      { type: "video", src: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg" },
+      { type: "image", src: g(5), alt: "Red sand dunes at sunset" },
+      { type: "image", src: g(6), alt: "The desert camp, lanterns and carpets" },
+      { type: "video", src: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg" },
+      { type: "image", src: g(8), alt: "The Milky Way over the dunes" },
+    ],
+  };
+  const heroMedia = HERO_MEDIA[slug];
+
+  // Short "feel" clips shown as their own tiles inside the gallery mosaic.
+  const GALLERY_VIDEOS: Record<
+    string,
+    { video: string; poster: string; caption: string; alt?: string }[]
+  > = {
+    "private-desert-safari": [
+      {
+        video: "/videos/desert/desert-stars.mp4",
+        poster: "/videos/desert/desert-stars-poster.jpg",
+        caption: "Under the Milky Way — a glimpse of the night.",
+      },
+      {
+        video: "/videos/desert/desert-camp.mp4",
+        poster: "/videos/desert/desert-camp-poster.jpg",
+        caption: "Golden hour into starlight — the evening's arc.",
+      },
+    ],
+  };
+  const galleryVideos = GALLERY_VIDEOS[slug];
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -191,6 +228,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         hook={entry.hook}
         heroEyebrow={entry.heroEyebrow}
         heroImage={entry.heroImage ?? ""}
+        heroMedia={heroMedia}
         glanceLead={entry.glanceLead}
         bestTime={entry.bestTime}
         duration={entry.duration}
@@ -198,7 +236,13 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         highlights={entry.highlights.map((h) => ({ title: h.title, description: h.description }))}
         contentNode={entry.content.node}
         momentQuote={entry.momentQuote || undefined}
+        momentImage={
+          slug === "private-desert-safari"
+            ? "/images/experiences/private-desert-safari/moment.jpg"
+            : undefined
+        }
         gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
+        galleryVideos={galleryVideos}
         bookEyebrow={entry.bookEyebrow}
         bookTitle={entry.bookTitle}
         bookLead={entry.bookLead}

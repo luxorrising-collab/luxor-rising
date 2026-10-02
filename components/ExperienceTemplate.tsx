@@ -4,13 +4,50 @@ import Link from "next/link";
 import Markdoc, { Tag, type Node } from "@markdoc/markdoc";
 import Reveal from "./Reveal";
 import Faq from "./Faq";
-import Gallery from "./Gallery";
+import Gallery, { type GalleryImage } from "./Gallery";
 import ConsigliereSection from "./ConsigliereSection";
+import HeroShow, { type HeroShowItem } from "./HeroShow";
 import TestimonialsCarousel from "./TestimonialsCarousel";
 import { VALUE_LINES } from "@/lib/value-lines";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
+
+/** Compose the gallery mosaic: the "feel" clips lead (the first as the feature
+    tile, a second as a wide tile mid-grid), the deduplicated photos fill in. */
+function buildGalleryTiles(
+  gallery: ExperienceGalleryItem[],
+  videos?: { video: string; poster: string; caption: string; alt?: string }[],
+): GalleryImage[] {
+  const imgs: GalleryImage[] = gallery.map((g) => ({
+    src: g.src,
+    alt: g.alt || g.caption,
+    caption: g.caption,
+    width: 1600,
+    height: 1000,
+  }));
+  if (!videos || videos.length === 0) {
+    if (imgs[0]) imgs[0].span = "feat";
+    return imgs;
+  }
+  const vids: GalleryImage[] = videos.map((v) => ({
+    src: v.poster,
+    poster: v.poster,
+    video: v.video,
+    alt: v.alt || v.caption,
+    caption: v.caption,
+    width: 1600,
+    height: 1000,
+  }));
+  // The 2×2 feature leaves exactly 4 cells open beside it across the first two
+  // rows of the 4-column grid; filling those with 4 single photos before the
+  // 2-wide video drops it cleanly onto the next row with no gap.
+  const beforeWide = Math.min(4, imgs.length);
+  const tiles: GalleryImage[] = [{ ...vids[0], span: "feat" }, ...imgs.slice(0, beforeWide)];
+  if (vids[1]) tiles.push({ ...vids[1], span: "wide" });
+  tiles.push(...imgs.slice(beforeWide));
+  return tiles;
+}
 
 export type ExperienceHighlight = { title: string; description: string };
 export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
@@ -35,6 +72,9 @@ export type ExperienceTemplateProps = {
   hook: string;
   heroEyebrow: string;
   heroImage: string;
+  /** Optional cinematic hero slideshow (images + muted video clips). When set
+      with 2+ items it replaces the single hero image, starting on the first. */
+  heroMedia?: HeroShowItem[];
   glanceLead: string;
   bestTime: string;
   duration: string;
@@ -42,7 +82,11 @@ export type ExperienceTemplateProps = {
   highlights: ExperienceHighlight[];
   contentNode: Node;
   momentQuote?: string;
+  /** Background for the full-bleed quote band; defaults to the hero image. */
+  momentImage?: string;
   gallery: ExperienceGalleryItem[];
+  /** Optional short "feel" video clips shown as their own tiles in the gallery. */
+  galleryVideos?: { video: string; poster: string; caption: string; alt?: string }[];
   bookEyebrow: string;
   bookTitle: string;
   bookLead: string;
@@ -91,6 +135,7 @@ export default function ExperienceTemplate({
   hook,
   heroEyebrow,
   heroImage,
+  heroMedia,
   glanceLead,
   bestTime,
   duration,
@@ -98,7 +143,9 @@ export default function ExperienceTemplate({
   highlights,
   contentNode,
   momentQuote,
+  momentImage,
   gallery,
+  galleryVideos,
   bookEyebrow,
   bookTitle,
   bookLead,
@@ -139,7 +186,11 @@ export default function ExperienceTemplate({
       {/* HERO */}
       <section className={styles.hero}>
         <div className={styles.heroBg}>
-          <Image src={heroImage} alt="" fill priority sizes="100vw" />
+          {heroMedia && heroMedia.length > 1 ? (
+            <HeroShow items={heroMedia} />
+          ) : (
+            <Image src={heroImage} alt="" fill priority sizes="100vw" />
+          )}
         </div>
         <div className={styles.heroScrim} />
         <div className={`wrap ${styles.heroContent}`}>
@@ -206,7 +257,7 @@ export default function ExperienceTemplate({
       {/* MOMENT (optional dramatic break) */}
       {momentQuote && (
         <section className={styles.moment}>
-          <Image src={heroImage} alt="" fill sizes="100vw" />
+          <Image src={momentImage || heroImage} alt="" fill sizes="100vw" />
           <div className={styles.momentScrim} />
           <Reveal className={`wrap ${styles.momentIn}`}>
             <p>{momentQuote}</p>
@@ -238,23 +289,14 @@ export default function ExperienceTemplate({
       )}
 
       {/* GALLERY */}
-      {gallery.length > 0 && (
+      {(gallery.length > 0 || (galleryVideos?.length ?? 0) > 0) && (
         <section id="gallery">
           <div className="wrap">
             <div className="center" style={{ marginBottom: "1.8rem" }}>
               <span className="eyebrow">A closer look</span>
               <h2 className="display">Moments from this experience</h2>
             </div>
-            <Gallery
-              tiles={gallery.map((g, i) => ({
-                src: g.src,
-                alt: g.alt || g.caption,
-                caption: g.caption,
-                width: 1600,
-                height: 1000,
-                span: i === 0 ? "feat" : undefined,
-              }))}
-            />
+            <Gallery tiles={buildGalleryTiles(gallery, galleryVideos)} />
           </div>
         </section>
       )}

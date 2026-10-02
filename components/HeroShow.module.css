@@ -1,0 +1,26 @@
+/* Crossfading hero slideshow — images + muted video clips.
+   Layers stack and fade by opacity; the active one sits on top. */
+.show {
+  position: absolute;
+  inset: 0;
+}
+.layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+  will-change: opacity;
+}
+.media,
+.layer :global(img),
+.layer :global(video) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    transition: none;
+  }
+}

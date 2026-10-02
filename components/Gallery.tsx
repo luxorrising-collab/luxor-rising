@@ -11,6 +11,9 @@ export type GalleryImage = {
   width: number;
   height: number;
   span?: "feat" | "wide";
+  /** When set, this tile is a muted looping video (src is used as its poster). */
+  video?: string;
+  poster?: string;
 };
 
 export type GalleryPlaceholder = {
@@ -24,6 +27,11 @@ type Tile = GalleryImage | GalleryPlaceholder;
 export default function Gallery({ tiles }: { tiles: Tile[] }) {
   const photos = tiles.filter((t): t is GalleryImage => !("placeholder" in t));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    setReduced(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
+  }, []);
 
   const close = useCallback(() => setOpenIndex(null), []);
   const step = useCallback(
@@ -78,12 +86,23 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
               className={`${styles.tile} ${t.span ? styles[t.span] : ""}`}
               onClick={() => setOpenIndex(idx)}
             >
-              <Image
-                src={t.src}
-                alt={t.alt}
-                fill
-                sizes="(max-width: 680px) 50vw, 25vw"
-              />
+              {t.video ? (
+                <>
+                  <video
+                    poster={t.poster ?? t.src}
+                    muted
+                    loop
+                    playsInline
+                    autoPlay={!reduced}
+                    preload="metadata"
+                  >
+                    <source src={t.video} type="video/mp4" />
+                  </video>
+                  <span className={styles.playBadge}>Film</span>
+                </>
+              ) : (
+                <Image src={t.src} alt={t.alt} fill sizes="(max-width: 680px) 50vw, 25vw" />
+              )}
               <figcaption className={styles.caption}>{t.caption}</figcaption>
             </figure>
           );
@@ -110,13 +129,26 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
         <figure className={styles.lbFig}>
           {active && (
             <div className={styles.lbImgWrap}>
-              <Image
-                src={active.src}
-                alt={active.alt}
-                fill
-                sizes="90vw"
-                style={{ objectFit: "contain" }}
-              />
+              {active.video ? (
+                <video
+                  src={active.video}
+                  poster={active.poster ?? active.src}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
+              ) : (
+                <Image
+                  src={active.src}
+                  alt={active.alt}
+                  fill
+                  sizes="90vw"
+                  style={{ objectFit: "contain" }}
+                />
+              )}
             </div>
           )}
           <figcaption>{active?.caption}</figcaption>

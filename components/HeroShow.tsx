@@ -21,8 +21,8 @@ export type HeroShowItem = {
  *
  * Perf & accessibility, mirroring BackgroundVideo:
  *  - prefers-reduced-motion → the first item only, no cycling.
- *  - small screens / Data-Saver → it still crossfades, but video items show
- *    their poster image instead of downloading the clip.
+ *  - Data-Saver → it still crossfades, but video items show their poster image
+ *    instead of downloading the clip. (Mobile plays the clips, cropped to fill.)
  */
 export default function HeroShow({ items }: { items: HeroShowItem[] }) {
   const [active, setActive] = useState(0);
@@ -37,7 +37,9 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
       ?.saveData;
     if (mq("(prefers-reduced-motion: reduce)")) return; // stay on the first item
     setCycle(true);
-    setEnableVideo(!mq("(max-width: 768px)") && !saveData);
+    // Play the clips on mobile too (cropped to fill); only Data-Saver falls
+    // back to posters.
+    setEnableVideo(!saveData);
   }, []);
 
   // Advance through the slides. Clips get ~their length; images dwell longer.

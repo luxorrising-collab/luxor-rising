@@ -292,12 +292,28 @@
 .stackRow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   padding: 0.85rem 1.4rem;
   border-bottom: 1px solid var(--color-cream-deep);
   font-size: 0.92rem;
 }
-.stackRow .v {
+.stackRow .label {
+  color: var(--color-ink);
+  line-height: 1.4;
+}
+/* The "worth" word reads as a distinct value stamp, never loose inline text. */
+.stackRow .worth {
+  flex: none;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1;
   color: var(--color-gold-deep);
+  background: var(--color-cream-deep);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  white-space: nowrap;
 }
 .stackRow.tot {
   background: var(--color-cream-deep);
@@ -310,8 +326,30 @@
   font-weight: 600;
   color: var(--color-ink);
 }
-.stackRow.fin .v {
+/* The final price is the big figure, not a chip. */
+.stackRow.fin .worth {
+  font-size: 1.3rem;
   color: var(--color-ink);
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 560px) {
+  .stackRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.85rem 1.1rem;
+  }
+  .stackRow .worth {
+    align-self: flex-start;
+  }
+  .stackRow.fin {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
 }
 
 /* guarantee */

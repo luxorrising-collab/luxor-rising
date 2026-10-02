@@ -340,19 +340,14 @@ export default function ExperienceTemplate({
           <div className={styles.stack}>
             {VALUE_LINES.map(([label, worth]) => (
               <div className={styles.stackRow} key={label}>
-                <span>{label}</span>
-                <span
-                  className="v"
-                  style={{ fontStyle: "italic", color: "var(--color-gold-deep)" }}
-                >
-                  {worth}
-                </span>
+                <span className={styles.label}>{label}</span>
+                <span className={styles.worth}>{worth}</span>
               </div>
             ))}
             {!isEnquiry && (
               <div className={`${styles.stackRow} ${styles.fin}`}>
-                <span>Your private experience, from</span>
-                <span className="v">€{basePrice}</span>
+                <span className={styles.label}>Your private experience, from</span>
+                <span className={styles.worth}>€{basePrice}</span>
               </div>
             )}
           </div>

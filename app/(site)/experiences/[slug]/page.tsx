@@ -176,6 +176,31 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("nile", "felucca"), position: "50% 45%" },
     ],
+    // Desert products.
+    "desert-astronomy-night": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
+      { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
+      { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "desert-camp"), position: "36% 45%" },
+    ],
+    "camel-bedouin-breakfast": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "desert-camp"), position: "36% 45%" },
+      { type: "image", src: g(2), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
+      { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "driven"), position: "62% 45%" },
+    ],
+    "reality-hunting": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "driven"), position: "62% 45%" },
+      { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
+      { type: "image", src: g(4), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
+    ],
   };
   const heroMedia = HERO_MEDIA[slug];
 
@@ -207,6 +232,18 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "banana-island-felucca": nileGallery,
     "sailing-lesson-nile": nileGallery,
     "nile-dinner-cruise": nileGallery,
+    "desert-astronomy-night": [
+      { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out, past the last of the light." },
+    ],
+    "camel-bedouin-breakfast": [
+      { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "A slow start, before the heat." },
+      { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "Breakfast laid out at the desert's edge." },
+    ],
+    "reality-hunting": [
+      { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set, somewhere real." },
+      { video: "/videos/nile/nile.mp4", poster: "/videos/nile/nile-poster.jpg", caption: "An hour by the river, doing nothing." },
+    ],
   };
   const galleryVideos = GALLERY_VIDEOS[slug];
 
@@ -226,6 +263,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "banana-island-felucca": g(3),
     "sailing-lesson-nile": g(3),
     "nile-dinner-cruise": g(2),
+    "desert-astronomy-night": g(3),
+    "camel-bedouin-breakfast": g(0),
+    "reality-hunting": g(4),
   };
   const momentImage = MOMENT_IMAGE[slug];
 

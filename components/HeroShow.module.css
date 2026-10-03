@@ -7,8 +7,9 @@
 .layer {
   position: absolute;
   inset: 0;
+  z-index: 0;
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 1.1s ease;
   will-change: opacity;
 }
 .media,
@@ -25,10 +26,12 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
+  /* Always above every media layer (image or playing video), so the headline
+     stays readable and the darkening never flickers mid-clip. */
+  z-index: 5;
   background:
-    linear-gradient(180deg, rgba(8, 6, 3, 0.34) 0%, rgba(8, 6, 3, 0.05) 36%, rgba(8, 6, 3, 0.62) 100%),
-    linear-gradient(90deg, rgba(8, 6, 3, 0.28) 0%, rgba(8, 6, 3, 0) 58%);
+    linear-gradient(180deg, rgba(8, 6, 3, 0.46) 0%, rgba(8, 6, 3, 0.14) 34%, rgba(8, 6, 3, 0.74) 100%),
+    linear-gradient(90deg, rgba(8, 6, 3, 0.38) 0%, rgba(8, 6, 3, 0) 60%);
 }
 @media (prefers-reduced-motion: reduce) {
   .layer {

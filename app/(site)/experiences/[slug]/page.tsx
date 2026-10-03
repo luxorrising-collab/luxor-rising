@@ -190,7 +190,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     ],
     "felucca-sunset-sail": nileHero(1, 3),
     "banana-island-felucca": nileHero(0, 2),
-    "sailing-lesson-nile": nileHero(3, 0),
+    "sailing-lesson-nile": nileHero(3, 2),
     // Dinner cruise leads the hero with the table on the water.
     "nile-dinner-cruise": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
@@ -273,7 +273,11 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     ],
     "felucca-sunset-sail": nileGallery,
     "banana-island-felucca": nileGallery,
-    "sailing-lesson-nile": nileGallery,
+    // Sailing lesson: keep a sailing clip in the gallery too.
+    "sailing-lesson-nile": [
+      { video: "/videos/nile/sailing.mp4", poster: "/videos/nile/sailing-poster.jpg", caption: "Out on the water, the sail full." },
+      { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "An hour on deck, doing nothing at all." },
+    ],
     "nile-dinner-cruise": nileGallery,
     "desert-astronomy-night": [
       { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },

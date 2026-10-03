@@ -164,11 +164,13 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
     "private-desert-safari": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "60% 50%" },
-      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
+      { type: "video", ...clip("desert", "couple-stars"), position: "44% 46%" },
       { type: "image", src: g(5), alt: "Red sand dunes at sunset", position: "50% 55%" },
-      { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
-      { type: "image", src: g(8), alt: "The Milky Way over the dunes", position: "50% 55%" },
+      // The last two clips, kept separate: the woman in the golden desert,
+      // then the portrait under the stars.
       { type: "video", ...clip("desert", "desert-camp"), position: "36% 45%" },
+      { type: "image", src: g(8), alt: "The Milky Way over the dunes", position: "50% 55%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
     ],
     "karnak-at-dawn": templeHero(0, 3),
     "luxor-temple": templeHero(0, 1),

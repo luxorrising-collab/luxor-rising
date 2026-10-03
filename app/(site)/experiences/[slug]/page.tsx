@@ -122,6 +122,21 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
   ];
 
+  // Nile products: a private sail, dinner on the water, and a slow Nile hour,
+  // alternating with serene river photos. a/b are two photos from the gallery.
+  const nileHero = (a: number, b: number): HeroShowItem[] => [
+    { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("nile", "felucca"), position: "50% 45%" },
+    { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("nile", "dinner"), position: "50% 45%" },
+    { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+  ];
+  const nileGallery = [
+    { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time on the water to think it over." },
+    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive down to the river." },
+  ];
+
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
     "private-desert-safari": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "60% 50%" },
@@ -148,6 +163,18 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
       { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("temple", "table"), position: "50% 50%" },
+    ],
+    "felucca-sunset-sail": nileHero(2, 1),
+    "banana-island-felucca": nileHero(0, 2),
+    "sailing-lesson-nile": nileHero(4, 2),
+    // Dinner cruise leads the hero with the table on the water.
+    "nile-dinner-cruise": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("nile", "dinner"), position: "50% 45%" },
+      { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+      { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("nile", "felucca"), position: "50% 45%" },
     ],
   };
   const heroMedia = HERO_MEDIA[slug];
@@ -176,6 +203,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { video: "/videos/temple/yoga.mp4", poster: "/videos/temple/yoga-poster.jpg", caption: "A quiet hour, somewhere along the way." },
       { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
     ],
+    "felucca-sunset-sail": nileGallery,
+    "banana-island-felucca": nileGallery,
+    "sailing-lesson-nile": nileGallery,
+    "nile-dinner-cruise": nileGallery,
   };
   const galleryVideos = GALLERY_VIDEOS[slug];
 
@@ -191,6 +222,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "ramesseum-valley-of-queens": g(1),
     "luxor-by-night": g(3),
     "hurghada-to-luxor-crossing": g(3),
+    "felucca-sunset-sail": g(3),
+    "banana-island-felucca": g(3),
+    "sailing-lesson-nile": g(3),
+    "nile-dinner-cruise": g(2),
   };
   const momentImage = MOMENT_IMAGE[slug];
 

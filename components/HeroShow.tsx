@@ -45,43 +45,38 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
     setEnableVideo(!saveData);
   }, []);
 
-  // Advance through the slides. Clips get ~their length; images dwell longer.
-  // The timer is armed FIRST, so nothing about video playback can stall the
-  // slideshow — the show always moves on even if a clip fails to play.
+  // Advance through the slides. The timer is armed FIRST, so nothing about
+  // video playback can stall the slideshow. A clip is left ~0.9s before its
+  // final frame and keeps playing through the crossfade, so it fades out in
+  // motion rather than freezing on a full-stop last frame.
   useEffect(() => {
     if (!cycle || items.length < 2) return;
     const isVideo = items[active].type === "video" && enableVideo;
-    // The opening still paints instantly (it carries LCP) but only holds
-    // briefly, so the first clip starts quickly and keeps attention.
-    const dwell = active === 0 ? 2200 : isVideo ? 3400 : 5000;
+    const el = isVideo ? videoRefs.current[active] : null;
+    const dur = el && isFinite(el.duration) ? el.duration : 0;
+    const dwell = isVideo
+      ? dur > 1
+        ? Math.max(1400, Math.round((dur - 0.9) * 1000))
+        : 2300 // duration not known yet (first play) — a safe short hold
+      : active === 0
+        ? 2200 // opening still carries LCP but only holds briefly
+        : 5000;
     const t = window.setTimeout(() => setActive((a) => (a + 1) % items.length), dwell);
-    if (isVideo) {
-      const el = videoRefs.current[active];
-      if (el) {
-        try {
-          el.currentTime = 0;
-          const p = el.play();
-          if (p && typeof p.catch === "function") p.catch(() => {});
-        } catch {
-          /* autoplay may be blocked — the poster shows, which is fine */
-        }
+    if (el) {
+      try {
+        el.currentTime = 0;
+        const p = el.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      } catch {
+        /* autoplay may be blocked — the poster shows, which is fine */
       }
     }
     return () => window.clearTimeout(t);
   }, [active, cycle, enableVideo, items]);
 
-  // Keep only the active clip playing.
-  useEffect(() => {
-    videoRefs.current.forEach((v, i) => {
-      if (v && i !== active) {
-        try {
-          v.pause();
-        } catch {
-          /* ignore */
-        }
-      }
-    });
-  }, [active]);
+  // A leaving clip keeps playing through its fade-out, then stops once it ends;
+  // it's reset to the first frame whenever it becomes active again. Since clips
+  // alternate with photos, only one is ever on screen at a time.
 
   return (
     <div className={styles.show} aria-hidden="true">

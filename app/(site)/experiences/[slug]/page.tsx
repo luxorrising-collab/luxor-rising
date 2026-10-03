@@ -174,9 +174,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "luxor-temple": templeHero(0, 1),
     "hatshepsut-temple": templeHero(0, 1),
     "valley-of-the-kings": templeHero(0, 2),
-    "colossi-of-memnon": templeHero(2, 3),
+    "colossi-of-memnon": templeHero(2, 0),
     "deir-el-medina": templeHero(0, 3),
-    "dendera-abydos": templeHero(0, 3),
+    "dendera-abydos": templeHero(0, 2),
     "ramesseum-valley-of-queens": templeHero(1, 0),
     "luxor-by-night": templeHero(2, 3),
     // The Red Sea → Luxor crossing leads with the drive.
@@ -188,9 +188,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("temple", "table"), position: "50% 50%" },
     ],
-    "felucca-sunset-sail": nileHero(2, 1),
+    "felucca-sunset-sail": nileHero(1, 3),
     "banana-island-felucca": nileHero(0, 2),
-    "sailing-lesson-nile": nileHero(4, 2),
+    "sailing-lesson-nile": nileHero(3, 0),
     // Dinner cruise leads the hero with the table on the water.
     "nile-dinner-cruise": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
@@ -222,15 +222,15 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "video", ...clip("temple", "driven"), position: "62% 45%" },
       { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
-      { type: "image", src: g(4), alt: entry.title, position: "50% 50%" },
+      { type: "image", src: g(1), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
     ],
     // Balloon.
-    "hot-air-balloon-luxor": balloonHero(0, 3),
+    "hot-air-balloon-luxor": balloonHero(2, 3),
     "hot-air-balloon-private-vip": balloonHero(1, 3),
     // Red Sea.
     "private-yacht-red-sea": seaHero(2, 1),
-    "red-sea-boat-snorkelling": seaHero(0, 3),
+    "red-sea-boat-snorkelling": seaHero(3, 1),
     // No gallery photos — hero image plus clips only.
     "deir-el-shelwit": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
@@ -306,9 +306,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "ramesseum-valley-of-queens": g(1),
     "luxor-by-night": g(3),
     "hurghada-to-luxor-crossing": g(3),
-    "felucca-sunset-sail": g(3),
-    "banana-island-felucca": g(3),
-    "sailing-lesson-nile": g(3),
+    "felucca-sunset-sail": g(0),
+    "banana-island-felucca": g(1),
+    "sailing-lesson-nile": g(2),
     "nile-dinner-cruise": g(2),
     "desert-astronomy-night": g(3),
     "camel-bedouin-breakfast": g(0),

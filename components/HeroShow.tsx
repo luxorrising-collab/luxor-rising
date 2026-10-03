@@ -51,7 +51,9 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
   useEffect(() => {
     if (!cycle || items.length < 2) return;
     const isVideo = items[active].type === "video" && enableVideo;
-    const dwell = isVideo ? 3400 : 5000;
+    // The opening still paints instantly (it carries LCP) but only holds
+    // briefly, so the first clip starts quickly and keeps attention.
+    const dwell = active === 0 ? 2200 : isVideo ? 3400 : 5000;
     const t = window.setTimeout(() => setActive((a) => (a + 1) % items.length), dwell);
     if (isVideo) {
       const el = videoRefs.current[active];
@@ -115,6 +117,9 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
           </div>
         );
       })}
+      {/* A darkening layer over every slide so bright clips never wash out the
+          headline (the hero's own scrim then adds the directional gradient). */}
+      <div className={styles.tint} />
     </div>
   );
 }

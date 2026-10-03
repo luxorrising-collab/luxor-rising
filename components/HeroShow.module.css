@@ -19,6 +19,17 @@
   object-fit: cover;
   object-position: center;
 }
+/* Baked-in tint so bright clips keep the headline legible — bottom-weighted
+   (where the hero copy sits) plus a soft wash from the left. */
+.tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(8, 6, 3, 0.34) 0%, rgba(8, 6, 3, 0.05) 36%, rgba(8, 6, 3, 0.62) 100%),
+    linear-gradient(90deg, rgba(8, 6, 3, 0.28) 0%, rgba(8, 6, 3, 0) 58%);
+}
 @media (prefers-reduced-motion: reduce) {
   .layer {
     transition: none;

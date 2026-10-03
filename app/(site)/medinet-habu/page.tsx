@@ -87,7 +87,7 @@ export default async function MedinetHabuPage() {
     { type: "video", src: "/videos/medinet/entering.mp4", poster: "/videos/medinet/entering-poster.jpg", position: "40% 45%" },
     { type: "image", src: gi(0), alt: "A ceiling of winged sun-disks", position: "50% 50%" },
     { type: "video", src: "/videos/medinet/yoga.mp4", poster: "/videos/medinet/yoga-poster.jpg", position: "50% 40%" },
-    { type: "image", src: gi(10), alt: "A painted column that kept its colour", position: "50% 50%" },
+    { type: "image", src: gi(12), alt: "Colour and carving together, overhead and around", position: "50% 50%" },
     { type: "video", src: "/videos/medinet/table.mp4", poster: "/videos/medinet/table-poster.jpg", position: "50% 50%" },
   ];
   // Gallery "feel" clips — the remaining two, used nowhere else.

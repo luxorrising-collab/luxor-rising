@@ -101,15 +101,40 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   // image (so first paint is unchanged / LCP-safe), then crossfades through
   // short muted desert clips (cut from the brand film) and real gallery photos.
   const g = (i: number) => `/images/experiences/${slug}/gallery/${i}/image.jpg`;
+  const clip = (dir: string, name: string) => ({
+    src: `/videos/${dir}/${name}.mp4`,
+    poster: `/videos/${dir}/${name}-poster.jpg`,
+  });
+
+  // Temple products share one clip set (model welcomed in, a slow morning, a
+  // local table in the hero; the drive and writing in the gallery). a/b are two
+  // serene, people-free detail photos from this product's own gallery.
+  const templeHero = (a: number, b: number): HeroShowItem[] => [
+    { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+    { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "yoga"), position: "50% 40%" },
+    { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "table"), position: "50% 50%" },
+  ];
+  const templeGallery = [
+    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out, before the day begins." },
+    { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+  ];
+
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
     "private-desert-safari": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "60% 50%" },
-      { type: "video", src: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", position: "38% 45%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
       { type: "image", src: g(5), alt: "Red sand dunes at sunset", position: "50% 55%" },
       { type: "image", src: g(6), alt: "The desert camp, lanterns and carpets", position: "50% 45%" },
-      { type: "video", src: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", position: "36% 45%" },
+      { type: "video", ...clip("desert", "desert-camp"), position: "36% 45%" },
       { type: "image", src: g(8), alt: "The Milky Way over the dunes", position: "50% 55%" },
     ],
+    "karnak-at-dawn": templeHero(0, 3),
+    "luxor-temple": templeHero(0, 1),
+    "hatshepsut-temple": templeHero(0, 1),
+    "valley-of-the-kings": templeHero(0, 2),
   };
   const heroMedia = HERO_MEDIA[slug];
 
@@ -119,19 +144,24 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     { video: string; poster: string; caption: string; alt?: string }[]
   > = {
     "private-desert-safari": [
-      {
-        video: "/videos/desert/desert-stars.mp4",
-        poster: "/videos/desert/desert-stars-poster.jpg",
-        caption: "Under the Milky Way — a glimpse of the night.",
-      },
-      {
-        video: "/videos/desert/desert-camp.mp4",
-        poster: "/videos/desert/desert-camp-poster.jpg",
-        caption: "Golden hour into starlight — the evening's arc.",
-      },
+      { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "Under the Milky Way — a glimpse of the night." },
+      { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Golden hour into starlight — the evening's arc." },
     ],
+    "karnak-at-dawn": templeGallery,
+    "luxor-temple": templeGallery,
+    "hatshepsut-temple": templeGallery,
+    "valley-of-the-kings": templeGallery,
   };
   const galleryVideos = GALLERY_VIDEOS[slug];
+
+  const MOMENT_IMAGE: Record<string, string> = {
+    "private-desert-safari": "/images/experiences/private-desert-safari/moment.jpg",
+    "karnak-at-dawn": g(1),
+    "luxor-temple": g(3),
+    "hatshepsut-temple": g(0),
+    "valley-of-the-kings": g(2),
+  };
+  const momentImage = MOMENT_IMAGE[slug];
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -236,11 +266,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         highlights={entry.highlights.map((h) => ({ title: h.title, description: h.description }))}
         contentNode={entry.content.node}
         momentQuote={entry.momentQuote || undefined}
-        momentImage={
-          slug === "private-desert-safari"
-            ? "/images/experiences/private-desert-safari/moment.jpg"
-            : undefined
-        }
+        momentImage={momentImage}
         gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
         galleryVideos={galleryVideos}
         bookEyebrow={entry.bookEyebrow}

@@ -6,6 +6,7 @@ import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
+import type { HeroShowItem } from "@/components/HeroShow";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
@@ -74,6 +75,26 @@ export default async function MedinetHabuPage() {
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
+
+  // Cinematic hero: the temple image, then short temple clips alternating with
+  // real gallery photos. object-position keeps each subject in frame when the
+  // landscape media is cropped into a tall mobile hero.
+  const gi = (i: number) => `/images/experiences/medinet-habu/gallery/${i}/image.jpg`;
+  // Alternating serene detail (no people) / clip — each clip used once across
+  // the hero and gallery, with the quiet "feel" clips leading the hero.
+  const heroMedia: HeroShowItem[] = [
+    { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+    { type: "video", src: "/videos/medinet/entering.mp4", poster: "/videos/medinet/entering-poster.jpg", position: "40% 45%" },
+    { type: "image", src: gi(0), alt: "A ceiling of winged sun-disks", position: "50% 50%" },
+    { type: "video", src: "/videos/medinet/yoga.mp4", poster: "/videos/medinet/yoga-poster.jpg", position: "50% 40%" },
+    { type: "image", src: gi(10), alt: "A painted column that kept its colour", position: "50% 50%" },
+    { type: "video", src: "/videos/medinet/table.mp4", poster: "/videos/medinet/table-poster.jpg", position: "50% 50%" },
+  ];
+  // Gallery "feel" clips — the remaining two, used nowhere else.
+  const galleryVideos = [
+    { video: "/videos/medinet/driven.mp4", poster: "/videos/medinet/driven-poster.jpg", caption: "The drive out, before the day begins." },
+    { video: "/videos/medinet/reading.mp4", poster: "/videos/medinet/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+  ];
 
   // Guest reviews also power star ratings in search results. Emitted ONLY once
   // reviewsVerified is true — i.e. every review is a real, attributable guest.
@@ -180,6 +201,7 @@ export default async function MedinetHabuPage() {
         hook={entry.hook}
         heroEyebrow={entry.heroEyebrow}
         heroImage={entry.heroImage ?? ""}
+        heroMedia={heroMedia}
         glanceLead={entry.glanceLead}
         bestTime={entry.bestTime}
         duration={entry.duration}
@@ -187,7 +209,9 @@ export default async function MedinetHabuPage() {
         highlights={entry.highlights.map((h) => ({ title: h.title, description: h.description }))}
         contentNode={entry.content.node}
         momentQuote={entry.momentQuote || undefined}
+        momentImage={gi(7)}
         gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
+        galleryVideos={galleryVideos}
         bookEyebrow={entry.bookEyebrow}
         bookTitle={entry.bookTitle}
         bookLead={entry.bookLead}

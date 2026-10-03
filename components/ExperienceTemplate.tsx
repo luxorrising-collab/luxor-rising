@@ -39,13 +39,21 @@ function buildGalleryTiles(
     width: 1600,
     height: 1000,
   }));
-  // The 2×2 feature leaves exactly 4 cells open beside it across the first two
-  // rows of the 4-column grid; filling those with 4 single photos before the
-  // 2-wide video drops it cleanly onto the next row with no gap.
-  const beforeWide = Math.min(4, imgs.length);
-  const tiles: GalleryImage[] = [{ ...vids[0], span: "feat" }, ...imgs.slice(0, beforeWide)];
-  if (vids[1]) tiles.push({ ...vids[1], span: "wide" });
-  tiles.push(...imgs.slice(beforeWide));
+  // First clip is the 2×2 feature; the rest are spread through the photos as
+  // 2-wide tiles. grid-auto-flow:dense backfills any cell a span would leave
+  // empty, so the mosaic stays gap-free for any count.
+  const rest = vids.slice(1);
+  const tiles: GalleryImage[] = [{ ...vids[0], span: "feat" }];
+  const step = Math.max(1, Math.floor(imgs.length / (rest.length + 1)));
+  let vi = 0;
+  imgs.forEach((img, i) => {
+    tiles.push(img);
+    if (vi < rest.length && (i + 1) % step === 0 && i < imgs.length - 1) {
+      tiles.push({ ...rest[vi], span: "wide" });
+      vi++;
+    }
+  });
+  while (vi < rest.length) tiles.push({ ...rest[vi++], span: "wide" });
   return tiles;
 }
 

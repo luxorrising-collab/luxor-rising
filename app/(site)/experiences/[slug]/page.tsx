@@ -137,6 +137,30 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive down to the river." },
   ];
 
+  // Balloon products: the dawn ascent, the monuments you float over, and the
+  // breakfast after. Sea products use the brand's quiet-luxury "feel" clips,
+  // since there is no Red Sea footage — the sea is carried by the photos.
+  const balloonHero = (a: number, b: number): HeroShowItem[] => [
+    { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("sky", "balloon"), position: "50% 45%" },
+    { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+    { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "table"), position: "50% 50%" },
+  ];
+  const seaHero = (a: number, b: number): HeroShowItem[] => [
+    { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+    { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
+    { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
+    { type: "video", ...clip("temple", "driven"), position: "62% 45%" },
+  ];
+  const seaGallery = [
+    { video: "/videos/desert/yoga.mp4", poster: "/videos/desert/yoga-poster.jpg", caption: "A quiet hour to yourself." },
+    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set, just for you." },
+  ];
+
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
     "private-desert-safari": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "60% 50%" },
@@ -201,6 +225,25 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "image", src: g(4), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
     ],
+    // Balloon.
+    "hot-air-balloon-luxor": balloonHero(0, 3),
+    "hot-air-balloon-private-vip": balloonHero(1, 3),
+    // Red Sea.
+    "private-yacht-red-sea": seaHero(2, 1),
+    "red-sea-boat-snorkelling": seaHero(0, 3),
+    // No gallery photos — hero image plus clips only.
+    "deir-el-shelwit": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+      { type: "video", ...clip("temple", "yoga"), position: "50% 40%" },
+      { type: "video", ...clip("temple", "table"), position: "50% 50%" },
+    ],
+    "thirty-days-in-the-desert": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
+      { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
+      { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
+    ],
   };
   const heroMedia = HERO_MEDIA[slug];
 
@@ -244,6 +287,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set, somewhere real." },
       { video: "/videos/nile/nile.mp4", poster: "/videos/nile/nile-poster.jpg", caption: "An hour by the river, doing nothing." },
     ],
+    "hot-air-balloon-luxor": templeGallery,
+    "hot-air-balloon-private-vip": templeGallery,
+    "private-yacht-red-sea": seaGallery,
+    "red-sea-boat-snorkelling": seaGallery,
   };
   const galleryVideos = GALLERY_VIDEOS[slug];
 
@@ -266,6 +313,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "desert-astronomy-night": g(3),
     "camel-bedouin-breakfast": g(0),
     "reality-hunting": g(4),
+    "hot-air-balloon-luxor": g(2),
+    "hot-air-balloon-private-vip": g(3),
+    "private-yacht-red-sea": g(2),
+    "red-sea-boat-snorkelling": g(3),
   };
   const momentImage = MOMENT_IMAGE[slug];
 

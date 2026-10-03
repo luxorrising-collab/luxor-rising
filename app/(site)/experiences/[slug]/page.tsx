@@ -135,6 +135,20 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "luxor-temple": templeHero(0, 1),
     "hatshepsut-temple": templeHero(0, 1),
     "valley-of-the-kings": templeHero(0, 2),
+    "colossi-of-memnon": templeHero(2, 3),
+    "deir-el-medina": templeHero(0, 3),
+    "dendera-abydos": templeHero(0, 3),
+    "ramesseum-valley-of-queens": templeHero(1, 0),
+    "luxor-by-night": templeHero(2, 3),
+    // The Red Sea → Luxor crossing leads with the drive.
+    "hurghada-to-luxor-crossing": [
+      { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "driven"), position: "62% 45%" },
+      { type: "image", src: g(1), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+      { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
+      { type: "video", ...clip("temple", "table"), position: "50% 50%" },
+    ],
   };
   const heroMedia = HERO_MEDIA[slug];
 
@@ -151,6 +165,17 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "luxor-temple": templeGallery,
     "hatshepsut-temple": templeGallery,
     "valley-of-the-kings": templeGallery,
+    "colossi-of-memnon": templeGallery,
+    "deir-el-medina": templeGallery,
+    "dendera-abydos": templeGallery,
+    "ramesseum-valley-of-queens": templeGallery,
+    "luxor-by-night": templeGallery,
+    // Crossing uses the drive + entering in the hero, so the gallery gets the
+    // quiet pair instead.
+    "hurghada-to-luxor-crossing": [
+      { video: "/videos/temple/yoga.mp4", poster: "/videos/temple/yoga-poster.jpg", caption: "A quiet hour, somewhere along the way." },
+      { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+    ],
   };
   const galleryVideos = GALLERY_VIDEOS[slug];
 
@@ -160,6 +185,12 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "luxor-temple": g(3),
     "hatshepsut-temple": g(0),
     "valley-of-the-kings": g(2),
+    "colossi-of-memnon": g(2),
+    "deir-el-medina": g(3),
+    "dendera-abydos": g(1),
+    "ramesseum-valley-of-queens": g(1),
+    "luxor-by-night": g(3),
+    "hurghada-to-luxor-crossing": g(3),
   };
   const momentImage = MOMENT_IMAGE[slug];
 

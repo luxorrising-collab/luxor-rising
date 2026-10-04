@@ -46,12 +46,13 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
   }, []);
 
   // Advance through the slides. The timer is armed FIRST, so nothing about
-  // video playback can stall the slideshow. A clip plays as long as possible:
-  // we start the crossfade exactly one fade-length (1.1s, matching the CSS
-  // opacity transition) before its final frame, so the leaving clip is still
-  // in motion for the whole fade and the handover lands right as it ends —
-  // never a frozen full-stop frame.
-  const FADE = 1.1;
+  // video playback can stall the slideshow. Each clip plays its FULL length:
+  // it stays the clean, visible slide until one fade-length (0.7s, matching the
+  // CSS opacity transition) before its final frame, then the short crossfade
+  // overlaps only that last 0.7s — which keeps playing in motion, so the clip
+  // covers its whole scene and the handover lands right as it ends, never a
+  // frozen full-stop frame.
+  const FADE = 0.7;
   useEffect(() => {
     if (!cycle || items.length < 2) return;
     const isVideo = items[active].type === "video" && enableVideo;

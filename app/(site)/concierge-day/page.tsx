@@ -751,7 +751,8 @@ export default async function ConciergeDayPage() {
         <div className={styles.pheroBgs}>
           <HeroShow items={heroMedia} />
         </div>
-        <div className={styles.pheroScrim} />
+        {/* HeroShow carries its own tint, so no extra scrim here (avoids a
+            double-dark hero). */}
         <div className={`wrap ${styles.pheroContent}`}>
           <span className="eyebrow">{page?.heroEyebrow}</span>
           <h1 className="display">{page?.heroTitle}</h1>

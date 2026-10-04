@@ -293,6 +293,9 @@ export default async function ConciergeDayPage() {
   };
   // One clip paired with each static image, leading on the stargazing scene;
   // any image past the list simply falls back to the desert yoga pose.
+  // One clip per static image, strictly alternating image→clip so no two clips
+  // ever play back-to-back — a run of clips overloads video decoding and the
+  // last one freezes on its poster. The remaining motifs live in the gallery.
   const daySeq = [
     dayClips.stargazing,
     dayClips.felucca,
@@ -301,10 +304,6 @@ export default async function ConciergeDayPage() {
     dayClips.yoga,
     dayClips.table,
     dayClips.welcome,
-    dayClips.drive,
-    dayClips.stargazing2,
-    dayClips.desertPose,
-    dayClips.desert,
   ];
   const heroMedia: HeroShowItem[] = [];
   heroBgList.forEach((src, i) => {
@@ -322,19 +321,26 @@ export default async function ConciergeDayPage() {
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
       : GALLERY;
-  // A few of the brand-film clips, spread through the photo mosaic as play-able
-  // "Film" tiles (the same clean clips the hero uses).
+  // All of the brand-film clips, spread through the photo mosaic as play-able
+  // "Film" tiles — the gallery keeps every photo and adds every relevant clip,
+  // so the fuller set shows once the mosaic is expanded.
   const galleryClips = [
     { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "Under the desert stars" },
     { video: "/videos/nile/felucca.mp4", poster: "/videos/nile/felucca-poster.jpg", caption: "Take the tiller on the Nile" },
     { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "Dawn over Luxor, from the air" },
+    { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Two of you, under the Milky Way" },
+    { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "A private table in the dunes" },
+    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table" },
+    { video: "/videos/temple/yoga.mp4", poster: "/videos/temple/yoga-poster.jpg", caption: "Stillness, before the day begins" },
+    { video: "/videos/temple/entering.mp4", poster: "/videos/temple/entering-poster.jpg", caption: "Walked in, before the crowds" },
+    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive out" },
+    { video: "/videos/desert/yoga.mp4", poster: "/videos/desert/yoga-poster.jpg", caption: "A quiet moment in the sand" },
   ];
   const galleryItems: { image?: string; video?: string; poster?: string; caption?: string }[] = [];
-  const stepG = Math.max(2, Math.floor(baseGallery.length / (galleryClips.length + 1)));
   let gci = 0;
-  baseGallery.forEach((img, i) => {
+  baseGallery.forEach((img) => {
     galleryItems.push(img);
-    if (gci < galleryClips.length && (i + 1) % stepG === 0) galleryItems.push(galleryClips[gci++]);
+    if (gci < galleryClips.length) galleryItems.push(galleryClips[gci++]);
   });
   while (gci < galleryClips.length) galleryItems.push(galleryClips[gci++]);
   const builderImages = {

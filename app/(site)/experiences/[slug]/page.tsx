@@ -111,7 +111,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   // serene, people-free detail photos from this product's own gallery.
   const templeHero = (a: number, b: number): HeroShowItem[] => [
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+    { type: "video", ...clip("temple", "entering"), position: "34% 45%" },
     { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
     { type: "video", ...clip("temple", "yoga"), position: "50% 40%" },
     { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
@@ -126,7 +126,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   // alternating with serene river photos. a/b are two photos from the gallery.
   const nileHero = (a: number, b: number): HeroShowItem[] => [
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("nile", "felucca"), position: "50% 45%" },
+    { type: "video", ...clip("nile", "felucca"), position: "30% 45%" },
     { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
     { type: "video", ...clip("nile", "dinner"), position: "50% 45%" },
     { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
@@ -142,9 +142,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   // since there is no Red Sea footage — the sea is carried by the photos.
   const balloonHero = (a: number, b: number): HeroShowItem[] => [
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("sky", "balloon"), position: "50% 45%" },
+    { type: "video", ...clip("sky", "balloon"), position: "68% 45%" },
     { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+    { type: "video", ...clip("temple", "entering"), position: "34% 45%" },
     { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
     { type: "video", ...clip("temple", "table"), position: "50% 50%" },
   ];
@@ -175,7 +175,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       // then the portrait under the stars.
       { type: "video", ...clip("desert", "desert-camp"), position: "36% 45%" },
       { type: "image", src: g(8), alt: "The Milky Way over the dunes", position: "50% 55%" },
-      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "46% 45%" },
     ],
     "karnak-at-dawn": templeHero(0, 3),
     "luxor-temple": templeHero(0, 1),
@@ -197,12 +197,12 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
       { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("nile", "felucca"), position: "50% 45%" },
+      { type: "video", ...clip("nile", "felucca"), position: "30% 45%" },
     ],
     // Desert products.
     "desert-astronomy-night": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "46% 45%" },
       { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
       { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
@@ -233,13 +233,13 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     // No gallery photos — hero image plus clips only.
     "deir-el-shelwit": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("temple", "entering"), position: "40% 45%" },
+      { type: "video", ...clip("temple", "entering"), position: "34% 45%" },
       { type: "video", ...clip("temple", "yoga"), position: "50% 40%" },
       { type: "video", ...clip("temple", "table"), position: "50% 50%" },
     ],
     "thirty-days-in-the-desert": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("desert", "desert-stars"), position: "38% 45%" },
+      { type: "video", ...clip("desert", "desert-stars"), position: "46% 45%" },
       { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
       { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
     ],

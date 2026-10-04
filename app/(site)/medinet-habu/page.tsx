@@ -84,7 +84,7 @@ export default async function MedinetHabuPage() {
   // the hero and gallery, with the quiet "feel" clips leading the hero.
   const heroMedia: HeroShowItem[] = [
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-    { type: "video", src: "/videos/medinet/entering.mp4", poster: "/videos/medinet/entering-poster.jpg", position: "40% 45%" },
+    { type: "video", src: "/videos/medinet/entering.mp4", poster: "/videos/medinet/entering-poster.jpg", position: "45% 45%" },
     { type: "image", src: gi(0), alt: "A ceiling of winged sun-disks", position: "50% 50%" },
     { type: "video", src: "/videos/medinet/yoga.mp4", poster: "/videos/medinet/yoga-poster.jpg", position: "50% 40%" },
     { type: "image", src: gi(12), alt: "Colour and carving together, overhead and around", position: "50% 50%" },

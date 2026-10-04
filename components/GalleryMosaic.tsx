@@ -4,11 +4,15 @@ import * as React from "react";
 import Image from "next/image";
 import styles from "./GalleryMosaic.module.css";
 
-type Item = { image: string; caption?: string };
+type Item = { image?: string; video?: string; poster?: string; caption?: string };
 
 export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; initial?: number }) {
   const [expanded, setExpanded] = React.useState(false);
   const [openIdx, setOpenIdx] = React.useState<number | null>(null);
+  const [reduced, setReduced] = React.useState(false);
+  React.useEffect(() => {
+    setReduced(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
+  }, []);
 
   const collapsible = items.length > initial;
   const collapsed = collapsible && !expanded;
@@ -45,17 +49,33 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
         {visible.map((g, i) => (
           <button
             type="button"
-            key={g.image || i}
+            key={g.image || g.video || i}
             className={`${styles.gm} ${i === 0 ? styles.gmBig : ""}`}
             onClick={() => setOpenIdx(i)}
-            aria-label={g.caption ? `Enlarge: ${g.caption}` : "Enlarge image"}
+            aria-label={g.caption ? `Enlarge: ${g.caption}` : g.video ? "Play clip" : "Enlarge image"}
           >
-            <Image
-              src={g.image ?? ""}
-              alt={g.caption ?? ""}
-              fill
-              sizes={i === 0 ? "(max-width: 560px) 100vw, 50vw" : "(max-width: 560px) 50vw, 25vw"}
-            />
+            {g.video ? (
+              <>
+                <video
+                  poster={g.poster ?? g.image}
+                  muted
+                  loop
+                  playsInline
+                  autoPlay={!reduced}
+                  preload="metadata"
+                >
+                  <source src={g.video} type="video/mp4" />
+                </video>
+                <span className={styles.gmBadge}>Film</span>
+              </>
+            ) : (
+              <Image
+                src={g.image ?? ""}
+                alt={g.caption ?? ""}
+                fill
+                sizes={i === 0 ? "(max-width: 560px) 100vw, 50vw" : "(max-width: 560px) 50vw, 25vw"}
+              />
+            )}
             {g.caption && <span className={styles.gmCap}>{g.caption}</span>}
             <span className={styles.zoom} aria-hidden>
               ⤢
@@ -98,7 +118,20 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
           )}
           <figure className={styles.lbFigure} onClick={(e) => e.stopPropagation()}>
             <div className={styles.lbImg}>
-              <Image src={open.image} alt={open.caption ?? ""} fill sizes="92vw" />
+              {open.video ? (
+                <video
+                  src={open.video}
+                  poster={open.poster ?? open.image}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
+              ) : (
+                <Image src={open.image ?? ""} alt={open.caption ?? ""} fill sizes="92vw" />
+              )}
             </div>
             {open.caption && <figcaption className={styles.lbCap}>{open.caption}</figcaption>}
           </figure>

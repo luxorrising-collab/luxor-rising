@@ -318,10 +318,25 @@ export default async function ConciergeDayPage() {
     (page?.experiences ?? []).length > 0
       ? page!.experiences.map((e) => ({ src: e.image ?? "", h: e.title, p: e.description, k: e.badge || undefined }))
       : [...EXPERIENCES.map((e) => ({ ...e, k: undefined as string | undefined })), ...BONUS_EXPERIENCES];
-  const galleryItems =
+  const baseGallery =
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
       : GALLERY;
+  // A few of the brand-film clips, spread through the photo mosaic as play-able
+  // "Film" tiles (the same clean clips the hero uses).
+  const galleryClips = [
+    { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "Under the desert stars" },
+    { video: "/videos/nile/felucca.mp4", poster: "/videos/nile/felucca-poster.jpg", caption: "Take the tiller on the Nile" },
+    { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "Dawn over Luxor, from the air" },
+  ];
+  const galleryItems: { image?: string; video?: string; poster?: string; caption?: string }[] = [];
+  const stepG = Math.max(2, Math.floor(baseGallery.length / (galleryClips.length + 1)));
+  let gci = 0;
+  baseGallery.forEach((img, i) => {
+    galleryItems.push(img);
+    if (gci < galleryClips.length && (i + 1) % stepG === 0) galleryItems.push(galleryClips[gci++]);
+  });
+  while (gci < galleryClips.length) galleryItems.push(galleryClips[gci++]);
   const builderImages = {
     journeyMedinet: page?.builderJourneyMedinetImage || undefined,
     journeyKarnak: page?.builderJourneyKarnakImage || undefined,

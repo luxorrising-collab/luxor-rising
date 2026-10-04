@@ -32,6 +32,36 @@
   object-fit: cover;
   object-position: center;
 }
+.gm :global(video) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+/* "Film" badge on video tiles, top-left */
+.gmBadge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  padding: 0.22rem 0.52rem 0.22rem 0.46rem;
+  border-radius: 999px;
+  background: rgba(20, 12, 6, 0.55);
+  color: #fff;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.gmBadge::before {
+  content: "▶";
+  font-size: 0.56rem;
+}
 .gm::after {
   content: "";
   position: absolute;

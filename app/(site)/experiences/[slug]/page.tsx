@@ -133,8 +133,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
   ];
   const nileGallery = [
+    { video: "/videos/nile/sailing.mp4", poster: "/videos/nile/sailing-poster.jpg", caption: "Out on the water, the sail full." },
     { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time on the water to think it over." },
-    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive down to the river." },
   ];
 
   // Balloon products: the dawn ascent, the monuments you float over, and the
@@ -157,8 +157,13 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
   ];
   const seaGallery = [
-    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive down to the coast." },
     { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set, just for you." },
+  ];
+  // Balloon products: the dawn ascent itself, then a slow moment on the ground.
+  // (No drive-to-the-temple clip — you don't drive into a balloon.)
+  const balloonGallery = [
+    { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "The dawn ascent, over the valley." },
+    { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "A slow moment, before the sky." },
   ];
 
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
@@ -246,9 +251,11 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     string,
     { video: string; poster: string; caption: string; alt?: string }[]
   > = {
+    // The under-the-stars and desert clips lead the gallery — no temple drive.
     "private-desert-safari": [
-      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out, as the last of the light goes." },
-      { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, out under the stars." },
+      { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Two of you, under more stars than you've ever seen." },
+      { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "The Milky Way, the fire, and all the time in the world." },
+      { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Your camp in the sand, set for you alone." },
     ],
     "karnak-at-dawn": templeGallery,
     "luxor-temple": templeGallery,
@@ -262,32 +269,28 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "hurghada-to-luxor-crossing": templeGallery,
     "felucca-sunset-sail": nileGallery,
     "banana-island-felucca": nileGallery,
-    // Sailing lesson: the drive down + a sailing clip.
-    "sailing-lesson-nile": [
-      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive down to the river." },
-      { video: "/videos/nile/sailing.mp4", poster: "/videos/nile/sailing-poster.jpg", caption: "Out on the water, the sail full." },
-    ],
+    "sailing-lesson-nile": nileGallery,
     "nile-dinner-cruise": nileGallery,
     "desert-astronomy-night": [
-      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out, past the last of the light." },
+      { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Under the Milky Way, by the fire." },
       { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
     ],
     "camel-bedouin-breakfast": [
-      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out to the desert's edge." },
+      { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "The camp under the stars, the night before." },
       { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "A slow start, before the heat." },
     ],
     "reality-hunting": [
-      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "On the road, somewhere real." },
+      { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Out in the real desert, nothing staged." },
       { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set, somewhere real." },
     ],
-    "hot-air-balloon-luxor": templeGallery,
-    "hot-air-balloon-private-vip": templeGallery,
+    "hot-air-balloon-luxor": balloonGallery,
+    "hot-air-balloon-private-vip": balloonGallery,
     "private-yacht-red-sea": seaGallery,
     "red-sea-boat-snorkelling": seaGallery,
     // No gallery photos — a clips-only gallery, with the drive.
     "deir-el-shelwit": templeGallery,
     "thirty-days-in-the-desert": [
-      { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out, into the quiet." },
+      { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Your camp in the sand, far from everything." },
       { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set in the wild." },
     ],
   };

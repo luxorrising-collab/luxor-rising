@@ -45,37 +45,58 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
     setEnableVideo(!saveData);
   }, []);
 
-  // Advance through the slides. The timer is armed FIRST, so nothing about
-  // video playback can stall the slideshow. Each clip plays its FULL length:
-  // it stays the clean, visible slide until one fade-length (0.7s, matching the
-  // CSS opacity transition) before its final frame, then the short crossfade
-  // overlaps only that last 0.7s — which keeps playing in motion, so the clip
-  // covers its whole scene and the handover lands right as it ends, never a
-  // frozen full-stop frame.
   const FADE = 0.7;
   useEffect(() => {
     if (!cycle || items.length < 2) return;
+    const advance = () => setActive((a) => (a + 1) % items.length);
     const isVideo = items[active].type === "video" && enableVideo;
     const el = isVideo ? videoRefs.current[active] : null;
-    const dur = el && isFinite(el.duration) ? el.duration : 0;
-    const dwell = isVideo
-      ? dur > 1
-        ? Math.max(1200, Math.round((dur - FADE) * 1000))
-        : 2300 // duration not known yet (first play) — a safe short hold
-      : active === 0
-        ? 2200 // opening still carries LCP but only holds briefly
-        : 5000;
-    const t = window.setTimeout(() => setActive((a) => (a + 1) % items.length), dwell);
-    if (el) {
-      try {
-        el.currentTime = 0;
-        const p = el.play();
-        if (p && typeof p.catch === "function") p.catch(() => {});
-      } catch {
-        /* autoplay may be blocked — the poster shows, which is fine */
-      }
+
+    // Image slide — a simple dwell timer (the opening holds only briefly so it
+    // carries LCP without lingering).
+    if (!el) {
+      const t = window.setTimeout(advance, active === 0 ? 2200 : 5000);
+      return () => window.clearTimeout(t);
     }
-    return () => window.clearTimeout(t);
+
+    // Video slide — advance off the clip's REAL playback position, NOT a
+    // wall-clock timer. A clip that is slow to decode (the first one on a page
+    // especially) is then never cut mid-scene: we wait until it has actually
+    // played to one fade-length (FADE) before its end, then the short crossfade
+    // overlaps only that tail (still in motion), so the whole scene shows and
+    // the handover lands as it finishes. A safety timeout still guarantees the
+    // slideshow never stalls if playback is blocked (e.g. a hidden tab).
+    let fired = false;
+    const go = () => {
+      if (fired) return;
+      fired = true;
+      el.removeEventListener("timeupdate", onTime);
+      el.removeEventListener("ended", go);
+      window.clearTimeout(safety);
+      advance();
+    };
+    const onTime = () => {
+      const d = isFinite(el.duration) && el.duration > 0 ? el.duration : 0;
+      if (d && el.currentTime >= d - FADE) go();
+    };
+    el.addEventListener("timeupdate", onTime);
+    el.addEventListener("ended", go);
+    // Backstop: clips are ~3s, so real playback trips `onTime` near 2.3s even
+    // after a slow decode. 5s covers that, and bounds the wait if playback is
+    // blocked (autoplay off / hidden tab) so the slideshow never hangs.
+    const safety = window.setTimeout(go, 5000);
+    try {
+      el.currentTime = 0;
+      const p = el.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } catch {
+      /* autoplay blocked — the poster shows; the safety timer advances */
+    }
+    return () => {
+      el.removeEventListener("timeupdate", onTime);
+      el.removeEventListener("ended", go);
+      window.clearTimeout(safety);
+    };
   }, [active, cycle, enableVideo, items]);
 
   // A leaving clip keeps playing through its fade-out, then stops once it ends;

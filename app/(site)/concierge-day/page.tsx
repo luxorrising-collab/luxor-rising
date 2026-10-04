@@ -12,6 +12,7 @@ import JsonLd from "@/components/JsonLd";
 import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
+import HeroShow, { type HeroShowItem } from "@/components/HeroShow";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
@@ -266,6 +267,51 @@ export default async function ConciergeDayPage() {
       ? heroFromCms
       : ["/images/nile-river-solo.jpg", "/images/west-bank-dawn.jpg", "/images/karnak-columns-detail.jpg"];
   const dreamImg = page?.dreamImage || "/images/karnak-columns-detail.jpg";
+
+  // Cinematic hero: keep the static hero images in their order, but interleave
+  // the brand film's short clips between them (same HeroShow logic, tint and
+  // max-length playback as the individual product pages). Stargazing leads and
+  // the stargazing/desert scenes recur; object-position centres each subject on
+  // a tall mobile crop. A short run of clips tails the sequence before it loops.
+  const dayClip = (src: string, poster: string, position: string) => ({
+    type: "video" as const,
+    src,
+    poster,
+    position,
+  });
+  const dayClips = {
+    stargazing: dayClip("/videos/desert/desert-stars.mp4", "/videos/desert/desert-stars-poster.jpg", "46% 45%"),
+    stargazing2: dayClip("/videos/desert/couple-stars.mp4", "/videos/desert/couple-stars-poster.jpg", "40% 46%"),
+    desert: dayClip("/videos/desert/desert-camp.mp4", "/videos/desert/desert-camp-poster.jpg", "36% 45%"),
+    felucca: dayClip("/videos/nile/felucca.mp4", "/videos/nile/felucca-poster.jpg", "30% 45%"),
+    yoga: dayClip("/videos/temple/yoga.mp4", "/videos/temple/yoga-poster.jpg", "50% 40%"),
+    table: dayClip("/videos/temple/table.mp4", "/videos/temple/table-poster.jpg", "50% 50%"),
+    welcome: dayClip("/videos/temple/entering.mp4", "/videos/temple/entering-poster.jpg", "34% 45%"),
+    drive: dayClip("/videos/temple/driven.mp4", "/videos/temple/driven-poster.jpg", "50% 45%"),
+    desertPose: dayClip("/videos/desert/yoga.mp4", "/videos/desert/yoga-poster.jpg", "50% 40%"),
+  };
+  // One clip paired with each static image, leading on the stargazing scene;
+  // any image past the list simply falls back to the desert yoga pose.
+  const daySeq = [
+    dayClips.stargazing,
+    dayClips.felucca,
+    dayClips.desert,
+    dayClips.yoga,
+    dayClips.table,
+    dayClips.welcome,
+    dayClips.drive,
+    dayClips.stargazing2,
+    dayClips.desertPose,
+    dayClips.desert,
+  ];
+  const heroMedia: HeroShowItem[] = [];
+  heroBgList.forEach((src, i) => {
+    heroMedia.push({ type: "image", src });
+    heroMedia.push(daySeq[i] ?? dayClips.desertPose);
+  });
+  // Tail the remaining clips (the stargazing/desert repeats + the desert pose)
+  // so every motif shows even when there are fewer images than clips.
+  for (let j = heroBgList.length; j < daySeq.length; j++) heroMedia.push(daySeq[j]);
   const expCards =
     (page?.experiences ?? []).length > 0
       ? page!.experiences.map((e) => ({ src: e.image ?? "", h: e.title, p: e.description, k: e.badge || undefined }))
@@ -701,11 +747,7 @@ export default async function ConciergeDayPage() {
       {/* HERO */}
       <section className={styles.phero}>
         <div className={styles.pheroBgs}>
-          {heroBgList.map((src) => (
-            <div key={src} className={styles.pheroBg}>
-              <Image src={src} alt="" fill priority sizes="100vw" quality={90} />
-            </div>
-          ))}
+          <HeroShow items={heroMedia} />
         </div>
         <div className={styles.pheroScrim} />
         <div className={`wrap ${styles.pheroContent}`}>

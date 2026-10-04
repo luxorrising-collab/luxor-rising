@@ -128,9 +128,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
     { type: "video", ...clip("nile", "felucca"), position: "30% 45%" },
     { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("nile", "dinner"), position: "50% 45%" },
+    { type: "video", ...clip("nile", "dinner"), position: "60% 45%" },
     { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+    { type: "video", ...clip("nile", "nile"), position: "26% 50%" },
   ];
   const nileGallery = [
     { video: "/videos/nile/sailing.mp4", poster: "/videos/nile/sailing-poster.jpg", caption: "Out on the water, the sail full." },
@@ -150,7 +150,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   ];
   const seaHero = (a: number, b: number): HeroShowItem[] => [
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-    { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+    { type: "video", ...clip("nile", "nile"), position: "26% 50%" },
     { type: "image", src: g(a), alt: entry.title, position: "50% 50%" },
     { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
     { type: "image", src: g(b), alt: entry.title, position: "50% 50%" },
@@ -169,7 +169,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
     "private-desert-safari": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "60% 50%" },
-      { type: "video", ...clip("desert", "couple-stars"), position: "44% 46%" },
+      { type: "video", ...clip("desert", "couple-stars"), position: "40% 46%" },
       { type: "image", src: g(5), alt: "Red sand dunes at sunset", position: "50% 55%" },
       // The last two clips, kept separate: the woman in the golden desert,
       // then the portrait under the stars.
@@ -193,9 +193,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     // Dinner cruise leads the hero with the table on the water.
     "nile-dinner-cruise": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("nile", "dinner"), position: "50% 45%" },
+      { type: "video", ...clip("nile", "dinner"), position: "60% 45%" },
       { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+      { type: "video", ...clip("nile", "nile"), position: "26% 50%" },
       { type: "image", src: g(3), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("nile", "felucca"), position: "30% 45%" },
     ],
@@ -218,7 +218,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     ],
     "reality-hunting": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-      { type: "video", ...clip("nile", "nile"), position: "45% 50%" },
+      { type: "video", ...clip("nile", "nile"), position: "26% 50%" },
       { type: "image", src: g(0), alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("desert", "yoga"), position: "50% 40%" },
       { type: "image", src: g(1), alt: entry.title, position: "50% 50%" },

@@ -94,6 +94,7 @@ export default async function MedinetHabuPage() {
   const galleryVideos = [
     { video: "/videos/medinet/driven.mp4", poster: "/videos/medinet/driven-poster.jpg", caption: "The drive out, before the day begins." },
     { video: "/videos/medinet/reading.mp4", poster: "/videos/medinet/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+    { video: "/videos/medinet/table.mp4", poster: "/videos/medinet/table-poster.jpg", caption: "A hand-picked local table — a real meal where locals eat." },
   ];
 
   // Guest reviews also power star ratings in search results. Emitted ONLY once

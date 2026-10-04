@@ -120,6 +120,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const templeGallery = [
     { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The drive out, before the day begins." },
     { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table — a real meal where locals eat." },
   ];
 
   // Nile products: a private sail, dinner on the water, and a slow Nile hour,
@@ -135,6 +136,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const nileGallery = [
     { video: "/videos/nile/sailing.mp4", poster: "/videos/nile/sailing-poster.jpg", caption: "Out on the water, the sail full." },
     { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time on the water to think it over." },
+    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table — a real meal where locals eat." },
   ];
 
   // Balloon products: the dawn ascent, the monuments you float over, and the
@@ -164,6 +166,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const balloonGallery = [
     { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "The dawn ascent, over the valley." },
     { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "A slow moment, before the sky." },
+    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local breakfast, after you land." },
   ];
 
   const HERO_MEDIA: Record<string, HeroShowItem[]> = {
@@ -256,6 +259,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Two of you, under more stars than you've ever seen." },
       { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "The Milky Way, the fire, and all the time in the world." },
       { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Your camp in the sand, set for you alone." },
+      { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table — a real meal where locals eat." },
     ],
     "karnak-at-dawn": templeGallery,
     "luxor-temple": templeGallery,
@@ -274,10 +278,12 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "desert-astronomy-night": [
       { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Under the Milky Way, by the fire." },
       { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "Time to sit with it, and write it down." },
+      { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table — a real meal where locals eat." },
     ],
     "camel-bedouin-breakfast": [
       { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "The camp under the stars, the night before." },
       { video: "/videos/temple/reading.mp4", poster: "/videos/temple/reading-poster.jpg", caption: "A slow start, before the heat." },
+      { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A proper Bedouin breakfast, hand-picked for you." },
     ],
     "reality-hunting": [
       { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Out in the real desert, nothing staged." },

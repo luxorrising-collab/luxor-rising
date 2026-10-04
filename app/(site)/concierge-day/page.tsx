@@ -289,12 +289,14 @@ export default async function ConciergeDayPage() {
     welcome: dayClip("/videos/temple/entering.mp4", "/videos/temple/entering-poster.jpg", "34% 45%"),
     drive: dayClip("/videos/temple/driven.mp4", "/videos/temple/driven-poster.jpg", "50% 45%"),
     desertPose: dayClip("/videos/desert/yoga.mp4", "/videos/desert/yoga-poster.jpg", "50% 40%"),
+    balloon: dayClip("/videos/sky/balloon.mp4", "/videos/sky/balloon-poster.jpg", "68% 45%"),
   };
   // One clip paired with each static image, leading on the stargazing scene;
   // any image past the list simply falls back to the desert yoga pose.
   const daySeq = [
     dayClips.stargazing,
     dayClips.felucca,
+    dayClips.balloon,
     dayClips.desert,
     dayClips.yoga,
     dayClips.table,

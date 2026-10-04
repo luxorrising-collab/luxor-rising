@@ -1,10 +1,12 @@
 .footer {
   background: var(--color-ink);
   color: var(--color-sand);
-  padding: clamp(3rem, 5vw, 4.5rem) 0 2rem;
+  /* Extra bottom space so the fixed "Reserve" sticky bar (~68px) never covers
+     the social icons / copyright when scrolled to the very bottom. */
+  padding: clamp(3rem, 5vw, 4.5rem) 0 calc(5.5rem + env(safe-area-inset-bottom, 0px));
 }
 .footer.minimal {
-  padding: clamp(2.6rem, 5vw, 3.6rem) 0 2rem;
+  padding: clamp(2.6rem, 5vw, 3.6rem) 0 calc(5.5rem + env(safe-area-inset-bottom, 0px));
   text-align: center;
 }
 

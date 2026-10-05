@@ -290,6 +290,7 @@ export default async function ConciergeDayPage() {
     drive: dayClip("/videos/temple/driven.mp4", "/videos/temple/driven-poster.jpg", "50% 45%"),
     desertPose: dayClip("/videos/desert/yoga.mp4", "/videos/desert/yoga-poster.jpg", "50% 40%"),
     balloon: dayClip("/videos/sky/balloon.mp4", "/videos/sky/balloon-poster.jpg", "68% 45%"),
+    coupleBalloons: dayClip("/videos/sky/couple-balloons.mp4", "/videos/sky/couple-balloons-poster.jpg", "38% 45%"),
   };
   // One clip paired with each static image, leading on the stargazing scene;
   // any image past the list simply falls back to the desert yoga pose.
@@ -304,6 +305,7 @@ export default async function ConciergeDayPage() {
     dayClips.yoga,
     dayClips.table,
     dayClips.welcome,
+    dayClips.coupleBalloons,
   ];
   const heroMedia: HeroShowItem[] = [];
   heroBgList.forEach((src, i) => {
@@ -328,6 +330,7 @@ export default async function ConciergeDayPage() {
     { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "Under the desert stars" },
     { video: "/videos/nile/felucca.mp4", poster: "/videos/nile/felucca-poster.jpg", caption: "Take the tiller on the Nile" },
     { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "Dawn over Luxor, from the air" },
+    { video: "/videos/sky/couple-balloons.mp4", poster: "/videos/sky/couple-balloons-poster.jpg", caption: "The two of you, as the balloons rise" },
     { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Two of you, under the Milky Way" },
     { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "A private table in the dunes" },
     { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table" },

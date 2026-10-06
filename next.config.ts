@@ -39,8 +39,12 @@ const nextConfig: NextConfig = {
       "font-src 'self' https://fonts.gstatic.com data:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://connect.facebook.net`,
-      `connect-src 'self'${dev ? " ws:" : ""} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.facebook.com https://api.github.com https://github.com https://raw.githubusercontent.com`,
-      "frame-src 'self' https://www.googletagmanager.com https://*.facebook.com",
+      // GA4 analytics hits go to google-analytics.com; Google Signals / Google
+      // Ads linking + remarketing also ping doubleclick.net, www.google.com and
+      // googleadservices — those MUST be allowed or the ad-attribution hits are
+      // blocked (and your Ads clicks won't reconcile with GA4).
+      `connect-src 'self'${dev ? " ws:" : ""} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://*.doubleclick.net https://www.google.com https://www.googleadservices.com https://pagead2.googlesyndication.com https://connect.facebook.net https://*.facebook.com https://api.github.com https://github.com https://raw.githubusercontent.com`,
+      "frame-src 'self' https://www.googletagmanager.com https://*.doubleclick.net https://*.facebook.com",
       "worker-src 'self' blob:",
       "manifest-src 'self'",
       "upgrade-insecure-requests",

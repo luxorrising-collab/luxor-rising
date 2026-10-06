@@ -24,17 +24,35 @@ How to back up the whole project and get it running on a fresh machine.
 
 ---
 
-## 2. Back up to Google Drive (one complete snapshot)
+## 2. Back up to Google Drive
 
-From the project folder, make a single archive that excludes only the regenerable heavy folders:
+Approx sizes: `.git` 1.5 GB · `public/` 1.2 GB · `docs/luxor-video/` 1.4 GB · `node_modules/` 783 MB · `.next/` 1.5 GB · **total 6.6 GB**.
+
+### Option A — one complete snapshot (~4 GB, foolproof)
+
+From the project folder:
 
 ```bash
 tar --exclude=node_modules --exclude=.next -czf ../luxor-rising-backup.tgz .
 ```
 
-(`tar` ships with Windows 10+, Git Bash, and macOS.) This captures **everything** — code, git history, `.env.local`, the Excels, the video sources, and the uncommitted day-feel work. Upload `luxor-rising-backup.tgz` to Drive.
+(`tar` ships with Windows 10+, Git Bash, and macOS.) Captures **everything** — code, git history, `.env.local`, the Excels, the video sources, and the uncommitted day-feel work. Upload `luxor-rising-backup.tgz` to Drive. `node_modules`/`.next` are skipped (they regenerate with `npm install`).
 
-**Leaner alternative** (if the archive is too big for Drive): push any committed work to GitHub, then back up only the "ONLY on this computer" files from the table above, and rely on `git clone` for the rest.
+### Option B — lean backup (~1.4 GB, relies on GitHub for the rest)
+
+GitHub already holds the git history and the committed `public/` media, so you only need the local-only files. First save a patch of the uncommitted (day-feel) edits, then archive the local-only files:
+
+```bash
+git diff > ../luxor-uncommitted.patch          # edits to tracked files (day-feel, package.json)
+tar -czf ../luxor-local-only.tgz \
+  .env.local \
+  Luxor_Rising_Modely_naklady_ROAS.xlsx obsah-stranok.xlsx \
+  docs/luxor-video .assets \
+  components/BackgroundVideo.tsx \
+  public/videos/day-feel.mp4 public/videos/day-feel-poster.jpg
+```
+
+Upload both `luxor-local-only.tgz` and `luxor-uncommitted.patch`. On the new machine: `git clone`, drop these files in, then `git apply luxor-uncommitted.patch` to restore the day-feel edits.
 
 ---
 

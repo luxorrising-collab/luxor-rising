@@ -561,9 +561,10 @@ export default async function ConciergeDayPage() {
             <span className="eyebrow">{page?.dayShapeEyebrow}</span>
             <h2 className="display">{page?.dayShapeTitle}</h2>
             <p className="lead" style={{ marginTop: ".9rem", maxWidth: "62ch", marginInline: "auto" }}>
-              Two people can book the same temples and want completely different days. So
-              instead of a timetable, your concierge composes the day around you — and puts
-              you in each place at the hour it is genuinely quiet.
+              People can book the same temples and want completely different days. So instead of
+              a timetable, Your concierge shapes the day around what you came for, and times each
+              site to the hour it empties, until it feels, all day, like Luxor opened for you
+              alone.
             </p>
           </div>
           <div className={styles.principles}>

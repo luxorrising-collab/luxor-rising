@@ -22,14 +22,14 @@ positioningTitle: |-
 positioningLead: >-
   Most of Egypt is sold by the busload — three temples before lunch, a boat
   shared with eighty strangers. We do the opposite: one experience at a time,
-  paced to the hour the light is most beautiful, with every detail arranged so
+  paced to the hour the light is softest, with every detail arranged so
   you never lift a finger.
 positioningImage: /images/positioningImage.jpg
 positioningBadge: Paced to the light
 positioningLinkLabel: Meet the local host who plans it →
 positioningLinkHref: /private-guide
 offeringEyebrow: Where your trip begins
-offeringTitle: Two places. One unforgettable day.
+offeringTitle: Two places. One day you'll remember.
 offeringLead: >-
   In Luxor itself, or on the Red Sea in Hurghada — we build the private day
   around you, timed against the crowds and handled end to end.
@@ -48,7 +48,7 @@ offeringCards:
     kicker: From the Red Sea
     title: Hurghada
     description: >-
-      Staying on the coast? The best day of your holiday is a private trip
+      Staying on the coast? One of the best days of your holiday is a private trip
       inland to Luxor — door to door, back by evening.
     priceLabel: Day trips from €640
     ctaLabel: See day trips →
@@ -64,7 +64,7 @@ offeringCards:
     href: /concierge-day
 momentImage: /images/momentImage.jpg
 momentQuote: >-
-  Three thousand years of wonder — arranged entirely around one unforgettable
+  Three thousand years of wonder — arranged entirely around a single
   day.
 galleryEyebrow: A glimpse of Egypt
 galleryTitle: Moments we arrange
@@ -177,7 +177,7 @@ guidePosts:
     href: /insiders-guide/valley-of-the-kings-which-tombs
   - image: /images/guidePosts/1/image.jpg
     kicker: Day trips
-    title: 'Hurghada to Luxor: the perfect day trip'
+    title: 'Hurghada to Luxor: a day trip worth making'
     description: Is it worth it, how long it really takes, and how to do it in comfort.
     href: /insiders-guide
   - image: /images/guidePosts/2/image.jpg

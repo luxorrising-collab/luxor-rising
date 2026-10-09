@@ -42,13 +42,11 @@ sections:
   - section: faq
     visible: true
 contrastEyebrow: Why some people leave Egypt disappointed
-contrastTitle: You came for the wonder. Not for a queue.
-contrastLead: >-
-  Some visitors meet Luxor through a packed coach, twenty rushed minutes per
-  temple, the midday heat, and a guide they share with forty strangers. The real
-  Egypt the quiet, the colour, the awe passes them by. And here is the part
-  nobody says out loud: you flew four thousand kilometres to a place that has
-  stood for thousands years, and you may stand here once. 
+contrastTitle: You came for the wonder. Not for a noise.
+contrastLead: |-
+  Some visitors meet Luxor through a packed coach with 40 strangers, on someone else's clock. Twenty rushed minutes per temple. Shoulder to shoulder in the midday heat, and a guide they share with forty strangers. A generic script, rushed and impersonal. Hours lost to planning, booking, haggling and not knowing who to trust.
+
+  The real Egypt the quiet, the colour, the awe passes them by. And here is the part nobody says out loud: You flew thousand kilometres to a place that has stood sacred for thousands of years, and you may stand here once.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples hurried, shoulder to shoulder
@@ -56,17 +54,16 @@ badWayItems:
   - A generic script, rushed and impersonal
   - You hope it's good. You find out on the day.
 goodWayItems:
-  - Coffee, the sunrise over the Nile, and a car that waits for you
-  - Each place at the hour it is actually quiet, which is rarely the obvious one
-  - Three crafted expriences, unhurried. Not seven places, ticked off
-  - Your licensed Egyptologist, named and booked before someone else takes them
+  - Coffee and the sunrise over the Nile, with a car that waits for you
+  - Every place at the hour it is genuinely quiet
+  - A few crafted experiences, unhurried — room to feel each one
+  - Your own licensed Egyptologist, named and booked ahead
   - >-
-    One concierge who owns the whole day and a refund if the first two hours
+    One concierge who owns the whole day — and a refund if the first two hours
     don't feel different
   - >-
-    The day you mark a life moment with. An anniversary, a new chapter, a
-    birthday that matters. A single day or a few, made into an experience you
-    keep for a lifetime.
+    A day to mark a life moment: an anniversary, a new chapter, a birthday that
+    matters — made into something you keep for a lifetime.
 mechanismEyebrow: Why we can actually do this
 mechanismTitle: Every site has quiet hours. Almost nobody knows when they are.
 mechanismText: >-

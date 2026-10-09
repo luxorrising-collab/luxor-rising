@@ -76,6 +76,148 @@ const BONUS_EXPERIENCES = [
   },
 ];
 
+// Each concierge-day card is a real experience product. Keyed by the card's
+// place name (survives reordering in Keystatic) so the card can show the
+// product's poetic hero title + short description, link through to it, and play
+// that product's signature hero clip on hover.
+const CARD_TO_SLUG: Record<string, string> = {
+  "Karnak at dawn": "karnak-at-dawn",
+  "Valley of the Kings": "valley-of-the-kings",
+  "A private felucca at golden hour": "felucca-sunset-sail",
+  "A sunset picnic in the dunes": "private-desert-safari",
+  "Medinet Habu": "medinet-habu",
+  "Hot-air balloon at dawn": "hot-air-balloon-luxor",
+  "Deir el-Shelwit — the hidden temple of Isis": "deir-el-shelwit",
+  "A night in Luxor city": "luxor-by-night",
+  "Hatshepsut at Deir el-Bahari": "hatshepsut-temple",
+  "A private Nile dinner cruise": "nile-dinner-cruise",
+  "Dawn camel ride & Bedouin breakfast": "camel-bedouin-breakfast",
+};
+const cardClip = (dir: string, name: string, position: string) => ({
+  src: `/videos/${dir}/${name}.mp4`,
+  poster: `/videos/${dir}/${name}-poster.jpg`,
+  position,
+});
+// The single hero clip that plays when a card is hovered (cut from the brand film).
+const SLUG_TO_CLIP: Record<string, { src: string; poster: string; position: string }> = {
+  "karnak-at-dawn": cardClip("temple", "yoga", "50% 40%"),
+  "valley-of-the-kings": cardClip("temple", "entering", "34% 45%"),
+  "felucca-sunset-sail": cardClip("nile", "felucca", "30% 45%"),
+  "private-desert-safari": cardClip("desert", "desert-camp", "36% 45%"),
+  "medinet-habu": cardClip("temple", "table", "50% 50%"),
+  "hot-air-balloon-luxor": cardClip("sky", "balloon", "68% 45%"),
+  "deir-el-shelwit": cardClip("temple", "reading", "50% 45%"),
+  "luxor-by-night": cardClip("nile", "dinner", "60% 45%"),
+  "hatshepsut-temple": cardClip("temple", "entering", "34% 45%"),
+  "nile-dinner-cruise": cardClip("nile", "dinner", "60% 45%"),
+  "camel-bedouin-breakfast": cardClip("desert", "desert-stars", "46% 45%"),
+};
+
+// A custom line icon per experience, chosen to suit each one — shown on its card.
+const ic = (children: ReactNode) => (
+  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth={1.3} strokeLinecap="round" strokeLinejoin="round">
+    {children}
+  </svg>
+);
+const SLUG_TO_ICON: Record<string, ReactNode> = {
+  // Karnak — a hypostyle temple facade
+  "karnak-at-dawn": ic(
+    <>
+      <path d="M4 12 16 5l12 7" />
+      <path d="M5 12h22" />
+      <path d="M8.5 12v13M13.5 12v13M18.5 12v13M23.5 12v13" />
+      <path d="M5 25h22" />
+      <path d="M3 28h26" />
+    </>,
+  ),
+  // Valley of the Kings — a tomb doorway cut into the mountain
+  "valley-of-the-kings": ic(
+    <>
+      <path d="M3 27 16 7l13 20" />
+      <path d="M13 27v-7h6v7" />
+    </>,
+  ),
+  // Felucca — a lateen sail
+  "felucca-sunset-sail": ic(
+    <>
+      <path d="M5 23h22l-3 4H8z" />
+      <path d="M16 23V5" />
+      <path d="M16 7 7 21h9z" />
+    </>,
+  ),
+  // Desert safari — dunes under the stars
+  "private-desert-safari": ic(
+    <>
+      <path d="M3 25c4-6 10-6 14 0" />
+      <path d="M14 25c4-5 11-5 15 0" />
+      <path d="M9 8.5l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z" />
+      <path d="M22 6l.75 1.7 1.7.75-1.7.75L22 10.9l-.75-1.7-1.7-.75 1.7-.75z" />
+    </>,
+  ),
+  // Medinet Habu — a single ornate, painted column
+  "medinet-habu": ic(
+    <>
+      <path d="M11 12q5-4 10 0" />
+      <path d="M13 12v14M19 12v14" />
+      <path d="M15.3 12v14M16.7 12v14" opacity="0.5" />
+      <path d="M11 26h10" />
+      <path d="M10 29h12" />
+    </>,
+  ),
+  // Hot-air balloon
+  "hot-air-balloon-luxor": ic(
+    <>
+      <ellipse cx="16" cy="12.5" rx="8" ry="9" />
+      <path d="M16 3.5v18M11.2 5v14M20.8 5v14" opacity="0.5" />
+      <path d="M11.5 19.5 13 24.5M20.5 19.5 19 24.5" />
+      <path d="M13 24.5h6l-.7 3.4h-4.6z" />
+    </>,
+  ),
+  // Deir el-Shelwit — a temple pylon gateway
+  "deir-el-shelwit": ic(
+    <>
+      <path d="M4 27 6 10h4v17z" />
+      <path d="M28 27 26 10h-4v17z" />
+      <path d="M13 27V15h6v12" />
+    </>,
+  ),
+  // Luxor by night — a crescent moon and a star
+  "luxor-by-night": ic(
+    <>
+      <path d="M20 5a10 10 0 1 0 5 17 8 8 0 0 1-5-17z" />
+      <path d="M9 8l.9 2.2 2.2.9-2.2.9L9 14.2l-.9-2.2-2.2-.9 2.2-.9z" />
+    </>,
+  ),
+  // Hatshepsut — the terraced temple
+  "hatshepsut-temple": ic(
+    <>
+      <path d="M3 28h26" />
+      <path d="M6 28v-4h20M8.5 24v-4h15M11 20v-4h10" />
+      <path d="M13.5 16v-3h5v3" />
+    </>,
+  ),
+  // Nile dinner cruise — a decked boat on the water
+  "nile-dinner-cruise": ic(
+    <>
+      <path d="M5 21h22l-3 4H8z" />
+      <path d="M9 21v-6h14v6" />
+      <path d="M12 15v-3h8v3" />
+      <path d="M3 28c4-2 7-2 11 0s7 2 11 0" />
+    </>,
+  ),
+  // Camel & Bedouin breakfast — a camel
+  "camel-bedouin-breakfast": ic(
+    <>
+      <path d="M6 23c0-2 1.3-3.5 2.6-3.5S11 21 12.3 21s1.4-2.4 2.9-2.4 1.6 2 3 2l1.4-.3" />
+      <path d="M19.6 20.3c1.7 0 2.4-1.5 2.4-3.7l1.9-1.6 1 1.4-1.7.9" />
+      <path d="M6 23v4.5M10.5 22v5.5M15 22.5v5M19.6 20.3v7.2" />
+    </>,
+  ),
+};
+
+// Our signature experiences — marked with a seal on the card.
+const SIGNATURE_SLUGS = new Set(["medinet-habu", "deir-el-shelwit"]);
+
 const GALLERY = [
   { image: "/images/experiences/karnak-at-dawn-hero.jpg", caption: "Karnak, before the crowds" },
   { image: "/images/experiences/valley-of-the-kings-hero.jpg", caption: "Into the royal tombs" },
@@ -315,10 +457,31 @@ export default async function ConciergeDayPage() {
   // Tail the remaining clips (the stargazing/desert repeats + the desert pose)
   // so every motif shows even when there are fewer images than clips.
   for (let j = heroBgList.length; j < daySeq.length; j++) heroMedia.push(daySeq[j]);
-  const expCards =
+  const expEntryBySlug = new Map(experiences.map((e) => [e.slug, e.entry]));
+  const expHref = (slug: string) => (slug === "medinet-habu" ? "/medinet-habu" : `/experiences/${slug}`);
+  const rawExpCards =
     (page?.experiences ?? []).length > 0
-      ? page!.experiences.map((e) => ({ src: e.image ?? "", h: e.title, p: e.description, k: e.badge || undefined }))
+      ? page!.experiences.map((e) => ({ src: e.image ?? "", h: e.title ?? "", p: e.description ?? "", k: e.badge || undefined }))
       : [...EXPERIENCES.map((e) => ({ ...e, k: undefined as string | undefined })), ...BONUS_EXPERIENCES];
+  // Enrich each card with its product's poetic title, hook, link and hover clip.
+  const expCards = rawExpCards.map((c) => {
+    const slug = CARD_TO_SLUG[c.h];
+    const entry = slug ? expEntryBySlug.get(slug) : undefined;
+    const clip = slug ? SLUG_TO_CLIP[slug] : undefined;
+    return {
+      src: (entry?.heroImage as string | undefined) || c.src, // the product's own hero image
+      h: (entry?.title as string | undefined) || c.h, // poetic hero title
+      place: c.h, // place-name kicker
+      p: (entry?.hook as string | undefined) || c.p, // brief description, from the product
+      k: c.k,
+      href: slug ? expHref(slug) : undefined,
+      clip: clip?.src,
+      clipPoster: clip?.poster,
+      position: clip?.position,
+      icon: slug ? SLUG_TO_ICON[slug] : undefined,
+      signature: slug ? SIGNATURE_SLUGS.has(slug) : false,
+    };
+  });
   const baseGallery =
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
@@ -363,34 +526,20 @@ export default async function ConciergeDayPage() {
 
   const sectionMap: Record<string, ReactNode> = {
     contrast: (
-      <section key="contrast">
+      <section key="contrast" className={styles.problemDark}>
         <Reveal className="wrap-narrow center">
           <span className="eyebrow">{page?.contrastEyebrow}</span>
           <h2 className="display">{page?.contrastTitle}</h2>
-          <p className="lead" style={{ marginTop: "1rem" }}>
-            {page?.contrastLead}
-          </p>
+          {(page?.contrastLead ?? "")
+            .split(/\n{2,}/)
+            .map((para) => para.trim())
+            .filter(Boolean)
+            .map((para, i) => (
+              <p className="lead" key={i} style={{ marginTop: i === 0 ? "1rem" : "0.9rem" }}>
+                {para}
+              </p>
+            ))}
         </Reveal>
-        <div className="wrap">
-          <Reveal className={styles.cmp}>
-            <div className={`${styles.col} ${styles.bad}`}>
-              <h4>The usual way</h4>
-              <ul>
-                {(page?.badWayItems ?? []).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className={`${styles.col} ${styles.good}`}>
-              <h4>A Luxor Rising day</h4>
-              <ul>
-                {(page?.goodWayItems ?? []).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
       </section>
     ),
     mechanism: (
@@ -502,15 +651,39 @@ export default async function ConciergeDayPage() {
         </Reveal>
       </section>
     ),
+    // "What your day feels like" + "What your day can hold" merged into one:
+    // the rewritten feel copy, then the experiences themselves as the proof of it.
     dream: (
-      <section key="dream" className={styles.dream}>
-        <Image src={dreamImg} alt="" fill sizes="100vw" />
-        <div className={styles.dreamScrim} />
-        <Reveal className={`wrap-narrow center ${styles.dreamContent}`}>
-          <span className="eyebrow light">What your day feels like</span>
-          <div className="divider-line" />
-          <p>{page?.dreamText}</p>
-        </Reveal>
+      <section key="dream" style={{ background: "var(--color-paper)" }}>
+        <div className="wrap">
+          <Reveal className="center">
+            <span className="eyebrow">What your Luxor Rising day can hold</span>
+            <h2
+              className="display"
+              style={{ fontSize: "clamp(2.4rem, 5.2vw, 3.6rem)", lineHeight: 1.06, marginTop: ".5rem" }}
+            >
+              Unique experiences, woven into day you keep dreaming about
+            </h2>
+            <span className={styles.feelRule} aria-hidden />
+            <p className={styles.feelLead}>
+              More than a dozen experiences, composed in the one of the most magnetic and mystical
+              places on earth. At the edge of the Sahara, in Luxor, Where the largest temple ever
+              built still stands. It opens with the sunrise over the Nile, a car already waiting,
+              and one concierge who holds the whole day from that first hour. You reach each place
+              when it is best for You.
+            </p>
+            <p className="lead" style={{ marginTop: "1rem", maxWidth: "62ch", marginInline: "auto" }}>
+              For many who come it becomes more than a trip: a homecoming, a quiet place to set a
+              new direction, a way to mark an anniversary, a new chapter, a birthday that matters
+              made into something you keep for a lifetime. These are the days we make for the people
+              we love most. And if the first two hours don&apos;t feel different, the day is on us.
+              But Luxor holds far more than one day can. Let us show you.
+            </p>
+          </Reveal>
+        </div>
+        <div className="wrap">
+          <ExperienceGrid cards={expCards} initial={9} />
+        </div>
       </section>
     ),
     howItWorks: (
@@ -547,21 +720,8 @@ export default async function ConciergeDayPage() {
         </Reveal>
       </section>
     ),
-    experiences: (
-      <section key="experiences" style={{ background: "var(--color-paper)" }}>
-        <div className="wrap">
-          <div className="center" style={{ marginBottom: ".6rem" }}>
-            <span className="eyebrow">What your day can hold</span>
-            <h2 className="display">Arranged for you, delivered by locals</h2>
-            <p className="muted" style={{ maxWidth: "46ch", margin: ".5rem auto 0", fontSize: ".9rem" }}>
-              A sample of what your journey can hold across up to three days — tap any experience
-              to start designing your day.
-            </p>
-          </div>
-          <ExperienceGrid cards={expCards} initial={9} />
-        </div>
-      </section>
-    ),
+    // Merged into the "dream" / "What your day feels like" position above.
+    experiences: null,
     builder: (
       <section key="builder" id="design" style={{ background: "var(--color-paper)" }}>
         <div className="wrap">

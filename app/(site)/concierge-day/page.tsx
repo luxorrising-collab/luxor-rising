@@ -439,15 +439,20 @@ export default async function ConciergeDayPage() {
   // One clip per static image, strictly alternating image→clip so no two clips
   // ever play back-to-back — a run of clips overloads video decoding and the
   // last one freezes on its poster. The remaining motifs live in the gallery.
+  // Real footage from the day (graded, stabilised, cropped 16:9, gently slowed)
+  // crossfading between the static hero images — same HeroShow tint and timing.
+  void dayClips;
+  const realClip = (name: string, position = "50% 50%") =>
+    dayClip(`/videos/real/${name}.mp4`, `/videos/real/${name}-poster.jpg`, position);
   const daySeq = [
-    dayClips.stargazing,
-    dayClips.felucca,
-    dayClips.balloon,
-    dayClips.desert,
-    dayClips.yoga,
-    dayClips.table,
-    dayClips.welcome,
-    dayClips.coupleBalloons,
+    realClip("stargazing"),
+    realClip("felucca"),
+    realClip("balloon"),
+    realClip("desert"),
+    realClip("yoga"),
+    realClip("table"),
+    realClip("welcome"),
+    realClip("coupleBalloons"),
   ];
   const heroMedia: HeroShowItem[] = [];
   heroBgList.forEach((src, i) => {
@@ -486,21 +491,19 @@ export default async function ConciergeDayPage() {
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
       : GALLERY;
-  // All of the brand-film clips, spread through the photo mosaic as play-able
-  // "Film" tiles — the gallery keeps every photo and adds every relevant clip,
-  // so the fuller set shows once the mosaic is expanded.
+  // Real footage from the day, spread through the photo mosaic as play-able
+  // "Film" tiles. Each clip is a distinct single scene (no two share frames),
+  // graded and stabilised to match, with a caption for what it is.
   const galleryClips = [
-    { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "Under the desert stars" },
-    { video: "/videos/nile/felucca.mp4", poster: "/videos/nile/felucca-poster.jpg", caption: "Take the tiller on the Nile" },
-    { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "Dawn over Luxor, from the air" },
-    { video: "/videos/sky/couple-balloons.mp4", poster: "/videos/sky/couple-balloons-poster.jpg", caption: "The two of you, as the balloons rise" },
-    { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Two of you, under the Milky Way" },
-    { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "A private table in the dunes" },
-    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table" },
-    { video: "/videos/temple/yoga.mp4", poster: "/videos/temple/yoga-poster.jpg", caption: "Stillness, before the day begins" },
-    { video: "/videos/temple/entering.mp4", poster: "/videos/temple/entering-poster.jpg", caption: "Walked in, before the crowds" },
-    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive out" },
-    { video: "/videos/desert/yoga.mp4", poster: "/videos/desert/yoga-poster.jpg", caption: "A quiet moment in the sand" },
+    { video: "/videos/real/g/dawn.mp4", poster: "/videos/real/g/dawn-poster.jpg", caption: "Dawn over the West Bank" },
+    { video: "/videos/real/g/felucca.mp4", poster: "/videos/real/g/felucca-poster.jpg", caption: "The Nile, by felucca" },
+    { video: "/videos/real/g/medinet.mp4", poster: "/videos/real/g/medinet-poster.jpg", caption: "Inside Medinet Habu" },
+    { video: "/videos/real/g/fields.mp4", poster: "/videos/real/g/fields-poster.jpg", caption: "Green fields at first light" },
+    { video: "/videos/real/g/columns.mp4", poster: "/videos/real/g/columns-poster.jpg", caption: "The great columns of Karnak" },
+    { video: "/videos/real/g/water.mp4", poster: "/videos/real/g/water-poster.jpg", caption: "Still water at first light" },
+    { video: "/videos/real/g/shrine.mp4", poster: "/videos/real/g/shrine-poster.jpg", caption: "Deir el-Shelwit, the hidden temple" },
+    { video: "/videos/real/g/village.mp4", poster: "/videos/real/g/village-poster.jpg", caption: "A village on the West Bank" },
+    { video: "/videos/real/g/desert.mp4", poster: "/videos/real/g/desert-poster.jpg", caption: "The desert at dusk" },
   ];
   const galleryItems: { image?: string; video?: string; poster?: string; caption?: string }[] = [];
   let gci = 0;
@@ -560,12 +563,11 @@ export default async function ConciergeDayPage() {
           <div className="center" style={{ marginBottom: "1.4rem" }}>
             <span className="eyebrow">{page?.dayShapeEyebrow}</span>
             <h2 className="display">{page?.dayShapeTitle}</h2>
-            <p className="lead" style={{ marginTop: ".9rem", maxWidth: "62ch", marginInline: "auto" }}>
-              People can book the same temples and want completely different days. So instead of
-              a timetable, Your concierge shapes the day around what you came for, and times each
-              site to the hour it empties, until it feels, all day, like Luxor opened for you
-              alone.
-            </p>
+            {page?.dayShapeLead && (
+              <p className="lead" style={{ marginTop: ".9rem", maxWidth: "62ch", marginInline: "auto" }}>
+                {page.dayShapeLead}
+              </p>
+            )}
           </div>
           <div className={styles.principles}>
             {(page?.dayShapeSteps ?? []).map((s, i) => (
@@ -658,28 +660,33 @@ export default async function ConciergeDayPage() {
       <section key="dream" style={{ background: "var(--color-paper)" }}>
         <div className="wrap">
           <Reveal className="center">
-            <span className="eyebrow">What your Luxor Rising day can hold</span>
+            <span className="eyebrow">{page?.dreamEyebrow}</span>
             <h2
               className="display"
               style={{ fontSize: "clamp(2.4rem, 5.2vw, 3.6rem)", lineHeight: 1.06, marginTop: ".5rem" }}
             >
-              Unique experiences, woven into day you keep dreaming about
+              {page?.dreamTitle}
             </h2>
             <span className={styles.feelRule} aria-hidden />
-            <p className={styles.feelLead}>
-              More than a dozen experiences, composed in the one of the most magnetic and mystical
-              places on earth. At the edge of the Sahara, in Luxor, Where the largest temple ever
-              built still stands. It opens with the sunrise over the Nile, a car already waiting,
-              and one concierge who holds the whole day from that first hour. You reach each place
-              when it is best for You.
-            </p>
-            <p className="lead" style={{ marginTop: "1rem", maxWidth: "62ch", marginInline: "auto" }}>
-              For many who come it becomes more than a trip: a homecoming, a quiet place to set a
-              new direction, a way to mark an anniversary, a new chapter, a birthday that matters
-              made into something you keep for a lifetime. These are the days we make for the people
-              we love most. And if the first two hours don&apos;t feel different, the day is on us.
-              But Luxor holds far more than one day can. Let us show you.
-            </p>
+            {(page?.dreamText ?? "")
+              .split(/\n{2,}/)
+              .map((para) => para.trim())
+              .filter(Boolean)
+              .map((para, i) =>
+                i === 0 ? (
+                  <p className={styles.feelLead} key={i}>
+                    {para}
+                  </p>
+                ) : (
+                  <p
+                    className="lead"
+                    key={i}
+                    style={{ marginTop: "1rem", maxWidth: "62ch", marginInline: "auto" }}
+                  >
+                    {para}
+                  </p>
+                ),
+              )}
           </Reveal>
         </div>
         <div className="wrap">

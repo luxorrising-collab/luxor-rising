@@ -51,3 +51,14 @@ next-env.d.ts
 
 # Internal ROAS / margins workbook exported to the main directory — never commit
 /Luxor_Rising_Modely_naklady_ROAS.xlsx
+.assets/
+
+# Large video working files, sources and exports — never commit (multi-GB)
+/docs/luxor-video/**/*.mp4
+/docs/luxor-video/**/*.mov
+/docs/luxor-video/**/*.jpg
+/docs/luxor-video/**/*.jpeg
+/docs/luxor-video/**/*.png
+/public/videos/only real*.mp4
+/public/videos/day-feel.mp4
+/public/videos/day-feel-poster.jpg

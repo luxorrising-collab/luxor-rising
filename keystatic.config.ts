@@ -874,6 +874,7 @@ export default config({
         // How the day is arranged around the guest — principles, not a timetable.
         dayShapeEyebrow: fields.text({ label: "Shape-of-day eyebrow" }),
         dayShapeTitle: fields.text({ label: "Shape-of-day title" }),
+        dayShapeLead: fields.text({ label: "Shape-of-day lead", multiline: true }),
         dayShapeSteps: fields.array(
           fields.object({
             time: fields.text({
@@ -886,8 +887,10 @@ export default config({
         ),
         dayShapeNote: fields.text({ label: "Shape-of-day closing line", multiline: true }),
 
+        dreamEyebrow: fields.text({ label: "Experiences section eyebrow" }),
+        dreamTitle: fields.text({ label: "Experiences section title" }),
         dreamText: fields.text({
-          label: "\"What your day feels like\" text",
+          label: "Experiences section lead (blank line between the two paragraphs)",
           multiline: true,
         }),
         dreamImage: fields.image({

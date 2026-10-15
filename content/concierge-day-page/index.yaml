@@ -46,7 +46,7 @@ contrastTitle: You came for the wonder. Not for a noise.
 contrastLead: |-
   Some visitors meet Luxor through a packed coach with 40 strangers, on someone else's clock. Twenty rushed minutes per temple. Shoulder to shoulder in the midday heat, and a guide they share with forty strangers. A generic script, rushed and impersonal. Hours lost to planning, booking, haggling and not knowing who to trust.
 
-  The real Egypt the quiet, the colour, the awe passes them by. And here is the part nobody says out loud: You flew thousand kilometres to a place that has stood sacred for thousands of years, and you may stand here once.
+  The real Egypt the quiet, the colour, the awe passes them by. And here is the part nobody says out loud: You flew thousand kilometres to a place that has stood for thousands of years, and you may stand here once.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples hurried, shoulder to shoulder
@@ -83,6 +83,8 @@ mechanismNote: >-
   concierge is for, and it is the difference you are paying for.
 dayShapeEyebrow: The feel of it
 dayShapeTitle: Not a schedule. A day built around you.
+dayShapeLead: |-
+  People can book the same experiences and want completely different days. So instead of a timetable, Your concierge shapes the day around what you came for, and times each site to the hour it empties, until it feels, all day, like Luxor opened for you alone.
 dayShapeSteps:
   - time: We start with you, not a route
     label: >-
@@ -103,13 +105,14 @@ dayShapeSteps:
       Entries, timing, the private car, the guards, the Egyptologist, all held
       in the background by one person. You experience the day; your concierge
       carries everything underneath it.
-dreamText: >-
-  You wake before the heat. A private car with concierge is already waiting. At
-  Karnak, the great hall is almost empty your Egyptologist unfolds thousand
-  years as the first light moves between the columns. Between temples, coffee
-  and a meal at a table only a local would know. By late afternoon the Nile is
-  yours to sail, a felucca tilting into the gold. You met no friction, stood in
-  no queue, missed nothing. You simply arrived and Egypt did the rest.
+dreamEyebrow: More than a day
+dreamTitle: So what your Luxor Rising day can hold
+dreamText: |-
+  For many who come it becomes more than a trip: a homecoming, a quiet place to set a new direction, a way to mark an anniversary, a new chapter made into something you keep for a lifetime. These are the days we make for our guests. And if the first two hours don't feel different, the day is on us.
+
+  Luxor holds far more than one day. Let us show you.
+
+  More than a dozen experiences, composed in one of the most magnetic and mystical places on earth. At the edge of the Sahara, in Luxor, Where the largest temple ever built still stands. It opens with the sunrise over the Nile, a car already waiting, and one concierge who holds the whole day from that first hour. You reach each place when it is best for You.
 dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
   - image: /images/concierge-day/experiences/0/image.jpg

@@ -491,9 +491,9 @@ export default async function ConciergeDayPage() {
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
       : GALLERY;
-  // Real footage from the day, spread through the photo mosaic as play-able
-  // "Film" tiles. Each clip is a distinct single scene (no two share frames),
-  // graded and stabilised to match, with a caption for what it is.
+  // The mosaic keeps every photo AND every clip. Real footage from the day
+  // leads (distinct single scenes, graded and stabilised, each captioned),
+  // followed by the original brand-film clips.
   const galleryClips = [
     { video: "/videos/real/g/dawn.mp4", poster: "/videos/real/g/dawn-poster.jpg", caption: "Dawn over the West Bank" },
     { video: "/videos/real/g/felucca.mp4", poster: "/videos/real/g/felucca-poster.jpg", caption: "The Nile, by felucca" },
@@ -504,6 +504,17 @@ export default async function ConciergeDayPage() {
     { video: "/videos/real/g/shrine.mp4", poster: "/videos/real/g/shrine-poster.jpg", caption: "Deir el-Shelwit, the hidden temple" },
     { video: "/videos/real/g/village.mp4", poster: "/videos/real/g/village-poster.jpg", caption: "A village on the West Bank" },
     { video: "/videos/real/g/desert.mp4", poster: "/videos/real/g/desert-poster.jpg", caption: "The desert at dusk" },
+    { video: "/videos/desert/desert-stars.mp4", poster: "/videos/desert/desert-stars-poster.jpg", caption: "Under the desert stars" },
+    { video: "/videos/nile/felucca.mp4", poster: "/videos/nile/felucca-poster.jpg", caption: "Take the tiller on the Nile" },
+    { video: "/videos/sky/balloon.mp4", poster: "/videos/sky/balloon-poster.jpg", caption: "Dawn over Luxor, from the air" },
+    { video: "/videos/sky/couple-balloons.mp4", poster: "/videos/sky/couple-balloons-poster.jpg", caption: "The two of you, as the balloons rise" },
+    { video: "/videos/desert/couple-stars.mp4", poster: "/videos/desert/couple-stars-poster.jpg", caption: "Two of you, under the Milky Way" },
+    { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "A private table in the dunes" },
+    { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A hand-picked local table" },
+    { video: "/videos/temple/yoga.mp4", poster: "/videos/temple/yoga-poster.jpg", caption: "Stillness, before the day begins" },
+    { video: "/videos/temple/entering.mp4", poster: "/videos/temple/entering-poster.jpg", caption: "Walked in, before the crowds" },
+    { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive out" },
+    { video: "/videos/desert/yoga.mp4", poster: "/videos/desert/yoga-poster.jpg", caption: "A quiet moment in the sand" },
   ];
   const galleryItems: { image?: string; video?: string; poster?: string; caption?: string }[] = [];
   let gci = 0;

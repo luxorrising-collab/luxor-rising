@@ -238,6 +238,7 @@ const SECTION_FALLBACK = [
   "experiences",
   "consigliere",
   "builder",
+  "gifts",
   "valueStack",
   "socialProof",
   "guarantee",
@@ -541,16 +542,6 @@ export default async function ConciergeDayPage() {
     .filter((s) => s.visible !== false && s.section)
     .map((s) => s.section as string);
   const orderedKeys = orderedFromCms.length > 0 ? orderedFromCms : SECTION_FALLBACK;
-  // The signature-gifts section sits just after the value stack (where the buyer
-  // is weighing the day), injected here until it has its own Keystatic key.
-  const withGifts = orderedKeys.includes("gifts")
-    ? orderedKeys
-    : (() => {
-        const a = [...orderedKeys];
-        const i = a.indexOf("valueStack");
-        a.splice(i >= 0 ? i + 1 : a.length, 0, "gifts");
-        return a;
-      })();
 
   const sectionMap: Record<string, ReactNode> = {
     contrast: (
@@ -1028,7 +1019,7 @@ export default async function ConciergeDayPage() {
       {/* Sections render in the order set in Keystatic. The builder and value
           stack both live inside one DayCountProvider so they share day count
           wherever they sit in the order. */}
-      <DayCountProvider>{withGifts.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
+      <DayCountProvider>{orderedKeys.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
 
       <FullFooter columns={FOOTER_COLUMNS} />
     </>

@@ -29,6 +29,8 @@ sections:
     visible: true
   - section: builder
     visible: true
+  - section: gifts
+    visible: true
   - section: valueStack
     visible: true
   - section: socialProof

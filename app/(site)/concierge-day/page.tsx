@@ -13,6 +13,7 @@ import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
 import HeroShow, { type HeroShowItem } from "@/components/HeroShow";
+import GiftsSection from "@/components/GiftsSection";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
@@ -391,7 +392,10 @@ export default async function ConciergeDayPage() {
   // "Everything handled for you" — shown as priceless/timeless value, never a
   // euro figure, so we never publish what a guide, guard or car actually costs.
   // The shared single-experience value lines lead, then the operational layer.
-  const perDayServices = VALUE_LINES.map(([name, worth]) => ({ name, worth }));
+  const perDayServices = [
+    ...VALUE_LINES.map(([name, worth]) => ({ name, worth })),
+    { name: "A signature gift, chosen for you and locally made", worth: "to keep" },
+  ];
   const oneOffServices = [
     { name: "A concierge managing every hour of it", worth: "priceless" },
     { name: "Temple guards opening doors a coach never gets", worth: "priceless" },
@@ -537,6 +541,16 @@ export default async function ConciergeDayPage() {
     .filter((s) => s.visible !== false && s.section)
     .map((s) => s.section as string);
   const orderedKeys = orderedFromCms.length > 0 ? orderedFromCms : SECTION_FALLBACK;
+  // The signature-gifts section sits just after the value stack (where the buyer
+  // is weighing the day), injected here until it has its own Keystatic key.
+  const withGifts = orderedKeys.includes("gifts")
+    ? orderedKeys
+    : (() => {
+        const a = [...orderedKeys];
+        const i = a.indexOf("valueStack");
+        a.splice(i >= 0 ? i + 1 : a.length, 0, "gifts");
+        return a;
+      })();
 
   const sectionMap: Record<string, ReactNode> = {
     contrast: (
@@ -923,6 +937,7 @@ export default async function ConciergeDayPage() {
         </div>
       </section>
     ),
+    gifts: <GiftsSection key="gifts" />,
   };
 
   // Product/Service structured data for the money page. AggregateOffer carries
@@ -991,13 +1006,29 @@ export default async function ConciergeDayPage() {
               <span>Free cancellation</span>
             </div>
           </div>
+          <p
+            style={{
+              marginTop: "1.1rem",
+              fontSize: ".92rem",
+              letterSpacing: ".02em",
+              color: "var(--color-gold-soft, #E5D4AA)",
+            }}
+          >
+            ✦ A signature gift, hand-picked and locally made — included from your first full day.{" "}
+            <a
+              href="#gifts"
+              style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}
+            >
+              See the gifts →
+            </a>
+          </p>
         </div>
       </section>
 
       {/* Sections render in the order set in Keystatic. The builder and value
           stack both live inside one DayCountProvider so they share day count
           wherever they sit in the order. */}
-      <DayCountProvider>{orderedKeys.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
+      <DayCountProvider>{withGifts.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
 
       <FullFooter columns={FOOTER_COLUMNS} />
     </>

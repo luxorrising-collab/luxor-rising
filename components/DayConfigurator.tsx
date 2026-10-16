@@ -305,14 +305,15 @@ export default function DayConfigurator({
   // touch is a professional photographer/videographer (PHOTO_PRO — a flat
   // premium package, imported from lib/pricing-math so the server agrees).
 
-  // Hurghada → Luxor transfer upsell — real price pulled from the
-  // hurghada-to-luxor-crossing product via the Keystatic-fed price table.
-  const hurgPrice = priceOf("Hurghada") || 150;
+  // End-to-end concierge transfer (Marsa Alam / Hurghada) — a special bundled
+  // rate offered only with Design Your Day. The server (quote.ts) uses the same
+  // figure from the concierge-sea-transfer product so client and server agree.
+  const seaPrice = 290;
 
   function addonsCost() {
     let c = 0;
     if (photo) c += PHOTO_PRO;
-    if (hurg) c += hurgPrice;
+    if (hurg) c += seaPrice;
     return c;
   }
   const total = dayTotal(days, group, dayRate, volumeDiscount, groupSupplement) + addonsCost();
@@ -380,7 +381,7 @@ export default function DayConfigurator({
       });
     }
     const handled: PlanItem[] = [];
-    if (hurg) handled.push("Hurghada hotel pickup & private desert crossing");
+    if (hurg) handled.push("End-to-end concierge transfer from the coast (Marsa Alam or Hurghada)");
     handled.push("Your own licensed Egyptologist — every day");
     handled.push("All monument entry tickets for " + gl);
     handled.push("Private, air-conditioned transfers throughout");
@@ -483,7 +484,7 @@ export default function DayConfigurator({
       `Journey: ${JOURNEY[journey].name} (first temple: ${JOURNEY[journey].temple.split(" — ")[0]})`,
       `Evening: ${eveningLabel}`,
       photo ? "Add-on: private photographer / videographer" : "",
-      hurg ? "Add-on: Hurghada round-trip transfer" : "",
+      hurg ? "Add-on: End-to-end concierge transfer (sea)" : "",
     ]
       .filter(Boolean)
       .join(" · ");
@@ -504,7 +505,7 @@ export default function DayConfigurator({
           mode: pay,
           guests: group,
           photo,
-          hurg,
+          seaTransfer: hurg,
           date: tripDate,
           cancelPath: "/concierge-day#build",
           preferences,
@@ -797,27 +798,17 @@ export default function DayConfigurator({
                 <span className={styles.chk}>✓</span>
                 <div>
                   <b style={{ fontWeight: 500 }}>
-                    Hurghada ⇄ Luxor round trip{" "}
+                    End-to-end concierge transfer{" "}
                     <span className={styles.addonRec}>Recommended</span>
                   </b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
-                    Coming from the Red Sea? A private round trip with your
-                    concierge, Hurghada to Luxor and back — the desert crossing
-                    shared start to finish, on a flexible schedule of up to 48
-                    hours. In Luxor the car stays with you, wherever the day
-                    goes.{" "}
-                    <Link
-                      href="/experiences/hurghada-to-luxor-crossing"
-                      className={styles.addonLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      See details →
-                    </Link>
+                    Coming from the sea? Your concierge collects you in Marsa Alam
+                    or Hurghada and delivers you back, door to door — and the
+                    private car stays with you for the whole stay, wherever the
+                    days go. A special rate, only with Design Your Day.
                   </div>
                 </div>
-                <span className={styles.ax}>+€{hurgPrice}</span>
+                <span className={styles.ax}>+€{seaPrice}</span>
               </div>
             </div>
           </div>

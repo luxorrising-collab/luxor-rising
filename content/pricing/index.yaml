@@ -151,6 +151,11 @@ products:
     category: "Transfers"
     finalPrice: 250
     experienceSlug: ""
+  - key: "concierge-sea-transfer"
+    name: "End-to-end Concierge Transfer (Marsa Alam / Hurghada)"
+    category: "Transfers"
+    finalPrice: 290
+    experienceSlug: ""
   - key: "photoshoot-photographer-own-camera-editing"
     name: "Photoshoot — photographer + OWN camera & editing"
     category: "Add-ons & services"

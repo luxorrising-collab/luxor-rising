@@ -19,6 +19,7 @@ export type QuoteInput = {
   guests: number;
   photo?: boolean; // concierge photographer add-on
   hurg?: boolean; // Hurghada ⇄ Luxor crossing add-on
+  seaTransfer?: boolean; // end-to-end concierge transfer (Marsa Alam / Hurghada), Design-Your-Day only
 };
 
 export type Quote = {
@@ -33,6 +34,8 @@ const clamp = (n: number, lo: number, hi: number) =>
 
 const CROSSING_SLUG = "hurghada-to-luxor-crossing";
 const CROSSING_FALLBACK = 675;
+const SEA_TRANSFER_SLUG = "concierge-sea-transfer";
+const SEA_TRANSFER_FALLBACK = 290;
 
 /** Returns the authoritative quote, or null if the slug isn't a live, bookable
  *  product (unknown, inactive, or enquiry-only) — the caller then rejects. */
@@ -61,6 +64,7 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
     let total = dayTotal(days, guests, dayRate, volumeDiscount, groupSupplement);
     if (input.photo) total += PHOTO_PRO;
     if (input.hurg) total += crossing;
+    if (input.seaTransfer) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
     return { totalCents: Math.round(total) * 100, depositPercent };
   }
 

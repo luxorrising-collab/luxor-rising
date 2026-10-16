@@ -12,6 +12,7 @@ type Body = {
   guests?: number;
   photo?: boolean; // concierge photographer add-on
   hurg?: boolean; // Hurghada ⇄ Luxor crossing add-on
+  seaTransfer?: boolean; // end-to-end concierge transfer (Marsa Alam / Hurghada)
   date?: string;
   cancelPath?: string;
   preferences?: string;
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad request." }, { status: 400 });
   }
 
-  const { name, slug, mode = "full", guests, date, cancelPath, preferences, photo, hurg } = body;
+  const { name, slug, mode = "full", guests, date, cancelPath, preferences, photo, hurg, seaTransfer } = body;
   if (!name || !slug) {
     return NextResponse.json({ error: "Missing booking details." }, { status: 400 });
   }
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
   // Authoritative price: recomputed on the server from the product + chosen
   // options. The browser's amount is never trusted — this is what prevents a
   // tampered request from paying less than the real price.
-  const quote = await quoteBooking({ slug, guests: guests ?? 1, photo: !!photo, hurg: !!hurg });
+  const quote = await quoteBooking({ slug, guests: guests ?? 1, photo: !!photo, hurg: !!hurg, seaTransfer: !!seaTransfer });
   if (!quote) {
     return NextResponse.json(
       { error: "That option isn't available to book online. Please send us an enquiry." },

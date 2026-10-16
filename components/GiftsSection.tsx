@@ -45,7 +45,7 @@ const GIFTS: Gift[] = [
     name: "The Sistrum",
     hand: "A small instrument of metal — held, and gently shaken",
     meaning:
-      "Its sound has been used for thousands of years to still the mind and clear a space — to settle what is heavy and call in what is good. It carries a soft, feminine current: receptivity, intuition, the grace of letting life move through you. Received at the quiet moment of the day, it becomes a way to return to that stillness, anywhere.",
+      "Its sound has been used for thousands of years to still the mind and clear a space — to settle what is heavy and call in what is good. It carries a soft, feminine current: receptivity, intuition, the grace of letting life move through you. A way to return to that stillness, anywhere.",
     tags: ["Received energy", "Hand-picked", "Locally made"],
   },
   {
@@ -54,7 +54,7 @@ const GIFTS: Gift[] = [
     name: "The Sceptre",
     hand: "Of stone or metal — the mark of one who holds their own authority",
     meaning:
-      "In the oldest tradition, a sceptre carried in the right hand belonged to those who ruled themselves first. The looped cross it bears is a sign of life that endures — breath, continuity, the part of you that does not end. It carries a strong, masculine current: will, direction, standing in your own power without force. A reminder, in the hand, of the ruler within.",
+      "In the oldest tradition, a sceptre in the right hand belonged to those who ruled themselves first. The looped cross it bears is a sign of life that endures — breath, continuity, the part of you that does not end. A strong, masculine current: will, direction, standing in your own power without force.",
     tags: ["Inner authority", "Hand-picked", "Locally made"],
   },
   {
@@ -63,12 +63,12 @@ const GIFTS: Gift[] = [
     name: "The Crown",
     hand: "A simple band of metal, chosen with a scarf for you and the occasion",
     meaning:
-      "Light enough to wear, meant to be kept. A crown has always said one thing: remember who you are. Worn, or held in stillness, its small weight settles the body and quiets the nervous system — drawing you back to a calm, grounded sense of your own mastery and presence. Not costume. A practical anchor for returning to yourself.",
+      "Light enough to wear, meant to be kept. A crown has always said one thing: remember who you are. Worn, or held in stillness, its small weight settles the body and quiets the nervous system — drawing you back to a calm, grounded sense of your own mastery and presence.",
     tags: ["Mastery & presence", "Hand-picked", "Locally made"],
   },
 ];
 
-const SLIDES = 5; // intro + 3 gifts + finale
+const SLIDES = 5;
 const LABELS = ["Intro", "Sistrum", "Sceptre", "Crown", "The set"];
 
 export default function GiftsSection() {
@@ -88,134 +88,131 @@ export default function GiftsSection() {
 
   const go = (i: number) => setCur((i + SLIDES) % SLIDES);
   const barFill = (day: number) => (cur >= day ? "100%" : "0");
+  const slideClass = (i: number) => (cur === i ? `${styles.slide} ${styles.slideOn}` : styles.slide);
 
   return (
-    <section className={styles.wrap} id="gifts" aria-label="Signature gifts">
-      <div className={styles.inner}>
-        <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
-        <h2 className={styles.title}>Remembrances of the day</h2>
-        <p className={styles.sub}>
-          Signature gifts from the full Luxor Rising experience — like achievements, unlocked.
-        </p>
+    <section className={styles.stage} id="gifts" aria-label="Signature gifts">
+      <video
+        className={styles.bgvid}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="/videos/desert/desert-stars-poster.jpg"
+        aria-hidden
+      >
+        <source src="/videos/desert/desert-stars.mp4" type="video/mp4" />
+      </video>
+      <div className={styles.scrim} aria-hidden />
+      <div className={styles.frame} aria-hidden />
 
-        <div className={styles.progress} aria-hidden="true">
-          {[1, 2, 3].map((d) => (
-            <div className={styles.pdot} key={d}>
-              <span className={styles.pnum}>Day {d}</span>
-              <span className={styles.pbar}>
-                <i style={{ width: barFill(d) }} />
-              </span>
-            </div>
-          ))}
+      <div className={styles.inner}>
+        <div className={styles.head}>
+          <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
+          <h2 className={styles.htitle}>Remembrances of the day</h2>
+          <p className={styles.hsub}>From the full Luxor Rising experience — like achievements, unlocked.</p>
+          <div className={styles.progress} aria-hidden>
+            {[1, 2, 3].map((d) => (
+              <div className={styles.pdot} key={d}>
+                <span className={styles.pnum}>Day {d}</span>
+                <span className={styles.pbar}>
+                  <i style={{ width: barFill(d) }} />
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div
-          className={styles.stage}
+          className={styles.deck}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          <div className={cur === 0 ? `${styles.slide} ${styles.slideOn}` : styles.slide}>
-            <div className={`${styles.card} ${styles.introCard}`}>
+          <div className={slideClass(0)}>
+            <div className={styles.intro}>
               <p>
                 Of all the places on earth, few hold what Luxor holds. To walk through Medinet Habu
                 and Karnak — and to be invited deeper — is its own kind of passage.
               </p>
               <p>
-                Moments like these deserve to be marked. So on a full concierge day, your concierge
-                chooses a gift for you:{" "}
+                So on a full concierge day, your concierge chooses a gift for you:{" "}
                 <span className={styles.accent}>
                   hand-picked for the occasion, made by local artisans from the stone and metal of
                   this soil.
                 </span>
               </p>
               <p>
-                Some things can be bought. It is far more beautiful to receive them — a keepsake to
-                hold, and a story to tell.{" "}
-                <span className={styles.accent}>One per day. Each one tied in meaning to the place.</span>
+                Some things can be bought. It is far more beautiful to receive them.{" "}
+                <span className={styles.accent}>One per day — each tied in meaning to the place.</span>
               </p>
             </div>
           </div>
 
-          {GIFTS.map((g, i) => {
-            const idx = i + 1;
-            const on = cur === idx;
-            return (
-              <div key={g.name} className={on ? `${styles.slide} ${styles.slideOn}` : styles.slide}>
-                <div className={`${styles.card} ${styles.gift}`}>
-                  <div className={styles.spot}>
-                    <div className={styles.ring}>{g.icon}</div>
-                  </div>
-                  <div className={styles.body}>
-                    <span className={styles.badge}>{g.badge}</span>
-                    <h3 className={styles.gname}>{g.name}</h3>
-                    <p className={styles.ghand}>{g.hand}</p>
-                    <p className={styles.gmeaning}>{g.meaning}</p>
-                    <div className={styles.tags}>
-                      {g.tags.map((t) => (
-                        <span className={styles.tag} key={t}>
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+          {GIFTS.map((g, i) => (
+            <div key={g.name} className={slideClass(i + 1)}>
+              <div className={styles.halo}>{g.icon}</div>
+              <span className={styles.badge}>{g.badge}</span>
+              <h3 className={styles.gname}>{g.name}</h3>
+              <p className={styles.ghand}>{g.hand}</p>
+              <p className={styles.gmeaning}>{g.meaning}</p>
+              <div className={styles.tags}>
+                {g.tags.map((t) => (
+                  <span className={styles.tag} key={t}>
+                    {t}
+                  </span>
+                ))}
               </div>
-            );
-          })}
-
-          <div className={cur === 4 ? `${styles.slide} ${styles.slideOn}` : styles.slide}>
-            <div className={`${styles.card} ${styles.finale}`}>
-              <p className={styles.eyebrow} style={{ marginBottom: ".4rem" }}>
-                The full set
-              </p>
-              <h3 className={styles.gname} style={{ marginBottom: ".3rem" }}>
-                Three days. Three gifts. One story.
-              </h3>
-              <p className={styles.sub} style={{ margin: "0 auto", maxWidth: "52ch" }}>
-                Each full concierge day carries its own signature gift — hand-picked and locally
-                made. Design more of the day, and the set becomes yours to complete.
-              </p>
-              <div className={styles.setrow} aria-hidden="true">
-                <div className={styles.setitem}>
-                  <span className={styles.mini}><SistrumIcon /></span>Sistrum
-                </div>
-                <div className={styles.setitem}>
-                  <span className={styles.mini}><SceptreIcon /></span>Sceptre
-                </div>
-                <div className={styles.setitem}>
-                  <span className={styles.mini}><CrownIcon /></span>Crown
-                </div>
-              </div>
-              <a className={styles.cta} href="#design">
-                Design your day →
-              </a>
-              <p className={styles.fineprint}>
-                One gift per group, per day · hand-picked by your concierge · made by local artisans
-              </p>
             </div>
+          ))}
+
+          <div className={slideClass(4)}>
+            <p className={styles.eyebrow}>The full set</p>
+            <h3 className={styles.gname}>Three days. Three gifts. One story.</h3>
+            <p className={styles.gmeaning}>
+              Each full concierge day carries its own signature gift — hand-picked and locally made.
+              Design more of the day, and the set becomes yours to complete.
+            </p>
+            <div className={styles.setrow} aria-hidden>
+              <div className={styles.setitem}>
+                <span className={styles.mini}><SistrumIcon /></span>Sistrum
+              </div>
+              <div className={styles.setitem}>
+                <span className={styles.mini}><SceptreIcon /></span>Sceptre
+              </div>
+              <div className={styles.setitem}>
+                <span className={styles.mini}><CrownIcon /></span>Crown
+              </div>
+            </div>
+            <a className={styles.cta} href="#design">
+              Design your day →
+            </a>
+            <p className={styles.fineprint}>
+              One gift per group, per day · hand-picked by your concierge · made by local artisans
+            </p>
           </div>
         </div>
+      </div>
 
-        <div className={styles.controls}>
-          <div className={styles.dots}>
-            {Array.from({ length: SLIDES }).map((_, i) => (
-              <button
-                key={i}
-                className={cur === i ? `${styles.dot} ${styles.dotOn}` : styles.dot}
-                aria-label={LABELS[i]}
-                aria-current={cur === i}
-                onClick={() => go(i)}
-              />
-            ))}
-          </div>
-          <div className={styles.arrows}>
-            <button className={styles.arrow} aria-label="Previous" onClick={() => go(cur - 1)}>
-              ‹
-            </button>
-            <button className={styles.arrow} aria-label="Next" onClick={() => go(cur + 1)}>
-              ›
-            </button>
-          </div>
+      <div className={styles.controls}>
+        <div className={styles.dots}>
+          {Array.from({ length: SLIDES }).map((_, i) => (
+            <button
+              key={i}
+              className={cur === i ? `${styles.dot} ${styles.dotOn}` : styles.dot}
+              aria-label={LABELS[i]}
+              aria-current={cur === i}
+              onClick={() => go(i)}
+            />
+          ))}
+        </div>
+        <div className={styles.arrows}>
+          <button className={styles.arrow} aria-label="Previous" onClick={() => go(cur - 1)}>
+            ‹
+          </button>
+          <button className={styles.arrow} aria-label="Next" onClick={() => go(cur + 1)}>
+            ›
+          </button>
         </div>
       </div>
     </section>

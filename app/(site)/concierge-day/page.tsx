@@ -971,22 +971,6 @@ export default async function ConciergeDayPage() {
           <Link href="/reviews" className={styles.raterow} title="Read our reviews">
             <span className="stars">★ ★ ★ ★ ★</span> {socialProof} ↗
           </Link>
-          <a
-            href="#gifts"
-            style={{
-              display: "inline-block",
-              marginTop: ".7rem",
-              fontSize: ".9rem",
-              letterSpacing: ".02em",
-              color: "var(--color-gold-soft, #E5D4AA)",
-              textDecoration: "none",
-            }}
-          >
-            ✦ A signature gift, hand-picked and locally made — included from your first full day.{" "}
-            <span style={{ textDecoration: "underline", textUnderlineOffset: "3px" }}>
-              See the gifts →
-            </span>
-          </a>
           <div className={styles.priceRow}>
             <span className="from">From</span>
             <span className="amt">€{page?.startingPrice ?? 800}</span>
@@ -1013,6 +997,15 @@ export default async function ConciergeDayPage() {
               <span>Free cancellation</span>
             </div>
           </div>
+          <p className={styles.heroGift}>
+            <span className={styles.heroGiftMark} aria-hidden>
+              ✦
+            </span>{" "}
+            A signature gift, hand-picked and locally made, included from your first full day.{" "}
+            <a href="#gifts" className={styles.heroGiftLink}>
+              See the gifts →
+            </a>
+          </p>
         </div>
       </section>
 

@@ -335,9 +335,9 @@ export default function GiftsSection() {
           <h3 className={styles.gname}>The Crown</h3>
           <p className={styles.ghand}>A simple band of metal, chosen with a scarf for the occasion</p>
           <p className={styles.gmeaning}>
-            Light enough to wear, meant to be kept. Worn, or held in stillness, its small weight
-            settles the body and quiets the nervous system — drawing you back to a calm, grounded
-            sense of your own mastery and presence.
+            Light enough to wear, meant to be kept. Worn, or held in stillness or on special
+            occasions, its small weight settles the body and quiets the nervous system, drawing you
+            back to a calm, grounded sense of your own inner authority and presence.
           </p>
           <div className={styles.tags}>
             <span className={styles.tag}>Mastery &amp; presence</span>

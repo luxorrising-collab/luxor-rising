@@ -1251,3 +1251,190 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Signature-gift tracker in the checkout — the bronze-trio composition with
+   the gifts the current day count hasn't unlocked yet tinted over, a small
+   gold tick row, and a nudge to complete the set.
+--------------------------------------------------------------------------- */
+.giftPanel {
+  /* flush under the journey banner (cancels its 1.1rem margin) so the dark gift
+     hero flows straight out of the banner with no cream strip between them */
+  margin: -1.1rem -1.6rem 1rem;
+}
+/* A minimalist dark hero — the three signature marks recycled from the gifts
+   section, unlocked ones glowing, over a soft ambient gold light. No photo. */
+.giftHero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.3rem 1.4rem 1.05rem;
+  background:
+    radial-gradient(120% 95% at 50% 24%, rgba(201, 160, 99, 0.13), rgba(13, 9, 6, 0) 60%),
+    #0d0906;
+}
+.giftHeroGlow {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  width: 82%;
+  height: 78px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(201, 160, 99, 0.2), rgba(201, 160, 99, 0) 70%);
+  filter: blur(9px);
+  pointer-events: none;
+}
+.giftNodes {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  gap: 0.5rem;
+  margin-bottom: 0.95rem;
+}
+.giftNode {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.giftNodeHalo {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 58px;
+  height: 58px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 160, 99, 0.42), rgba(201, 160, 99, 0) 68%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.giftNodeIco {
+  position: relative;
+  height: 46px;
+  width: auto;
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+.giftNodeLabel {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+.giftNodeOn .giftNodeIco {
+  color: var(--color-gold-soft);
+  filter: drop-shadow(0 0 8px rgba(201, 160, 99, 0.6));
+}
+.giftNodeOn .giftNodeHalo {
+  opacity: 1;
+}
+.giftNodeOn .giftNodeLabel {
+  color: var(--color-gold-soft);
+}
+.giftNodeOff .giftNodeIco {
+  color: var(--color-cream);
+  opacity: 0.24;
+}
+.giftNodeOff .giftNodeLabel {
+  color: var(--color-gold-soft);
+  opacity: 0.5;
+}
+.giftHeroCap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.giftHeroMsg {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.94rem;
+  line-height: 1.35;
+  text-align: center;
+  color: #f3e7cf;
+}
+.giftHeroRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(201, 160, 99, 0.16);
+}
+.giftHeroCount {
+  font-size: 0.74rem;
+  color: var(--color-cream);
+  opacity: 0.86;
+}
+.giftHeroCount b {
+  color: #fff;
+  font-weight: 700;
+}
+.giftHeroLink {
+  flex: 0 0 auto;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-gold-soft);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.giftHeroLink:hover {
+  color: #fff;
+}
+.inclLink {
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-gold-soft);
+}
+.inclLink:hover {
+  color: var(--color-gold);
+}
+
+/* the gift badge inside the sticky checkout bar */
+.stickyGifts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-cream);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.stickyGiftIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+}
+.stickyGiftIcon {
+  height: 23px;
+  width: auto;
+  transition: color 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+}
+/* unlocked gifts glow gold, like the hero marks */
+.stickyGiftOn {
+  color: var(--color-gold-soft);
+  filter: drop-shadow(0 0 5px rgba(201, 160, 99, 0.85));
+}
+/* the rest wait, dimmed */
+.stickyGiftOff {
+  color: var(--color-cream);
+  opacity: 0.28;
+}
+.stickyGiftTxt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.stickyGifts:hover .stickyGiftTxt {
+  color: var(--color-gold-soft);
+}
+@media (max-width: 560px) {
+  .stickyGiftTxt {
+    display: none;
+  }
+}

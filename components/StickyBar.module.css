@@ -35,10 +35,20 @@
 .btn {
   padding: 0.7rem 1.5rem;
   font-size: 0.76rem;
+  flex: 0 0 auto;
+}
+/* optional badge slot (gift count) — sits just before the CTA */
+.extra {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 560px) {
   .meta {
     display: none;
+  }
+  .inner {
+    gap: 0.6rem;
   }
 }

@@ -11,6 +11,7 @@ export default function StickyBar({
   revealOnScroll = false,
   revealAfter = 640,
   className = "",
+  extra,
 }: {
   name: string;
   meta: string;
@@ -19,6 +20,8 @@ export default function StickyBar({
   revealOnScroll?: boolean;
   revealAfter?: number;
   className?: string;
+  /* optional node rendered between the text and the CTA (e.g. a gift badge) */
+  extra?: React.ReactNode;
 }) {
   const [shown, setShown] = useState(!revealOnScroll);
 
@@ -39,6 +42,7 @@ export default function StickyBar({
           <span className={styles.name}>{name}</span>
           <span className={styles.meta}>{meta}</span>
         </div>
+        {extra ? <div className={styles.extra}>{extra}</div> : null}
         <a href={ctaHref} className={`btn btn-primary ${styles.btn}`}>
           {ctaLabel}
         </a>

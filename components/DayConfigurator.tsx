@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
+import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
 import { trackBeginCheckout } from "@/lib/analytics";
 import { dayTotal, PHOTO_PRO } from "@/lib/pricing-math";
@@ -317,6 +318,18 @@ export default function DayConfigurator({
     return c;
   }
   const total = dayTotal(days, group, dayRate, volumeDiscount, groupSupplement) + addonsCost();
+
+  // Signature gifts: one per full concierge day, up to the set of three. The
+  // configurator shows exactly what the current day count unlocks, and nudges
+  // toward completing the set.
+  const giftCount = giftsForDays(days);
+  const giftsLabel = `${giftCount} gift${giftCount > 1 ? "s" : ""}`;
+  const giftMsg =
+    giftCount >= 3
+      ? "The full set — all three signature gifts, hand-picked and yours to keep."
+      : giftCount === 2
+        ? "Two gifts so far. Add a third day to complete the set with the Crown."
+        : "The Sistrum is yours. Add a second day to unlock the Sceptre.";
   // The gold "Save" badge shows the Design Your Day product's own saving (the
   // multi-day volume discount, scaling with days + guests) — not the à-la-carte
   // comparison, which stays below as a separate angle.
@@ -839,6 +852,44 @@ export default function DayConfigurator({
               </div>
             </div>
 
+            {/* signature gifts — what the current day count unlocks, with the
+                locked ones tinted over; a quiet nudge to complete the set */}
+            <div className={styles.giftPanel}>
+              <div className={styles.giftHero}>
+                <span className={styles.giftHeroGlow} aria-hidden />
+                {/* the three signature marks, recycled from the gifts section —
+                    unlocked ones glow, the rest wait, dimmed, with their day */}
+                <div className={styles.giftNodes}>
+                  {GIFTS.map((g) => {
+                    const on = g.day <= giftCount;
+                    return (
+                      <div
+                        key={g.key}
+                        className={`${styles.giftNode} ${on ? styles.giftNodeOn : styles.giftNodeOff}`}
+                      >
+                        <span className={styles.giftNodeHalo} aria-hidden />
+                        <g.Icon className={styles.giftNodeIco} />
+                        <span className={styles.giftNodeLabel}>
+                          {on ? g.name.replace(/^The /, "") : `Day ${g.day}`}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className={styles.giftHeroCap}>
+                  <p className={styles.giftHeroMsg}>{giftMsg}</p>
+                  <div className={styles.giftHeroRow}>
+                    <span className={styles.giftHeroCount}>
+                      <b>{giftCount} of 3</b> signature gifts, yours to keep
+                    </span>
+                    <a href="#gifts" className={styles.giftHeroLink}>
+                      See the gifts →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* social proof — a high-ticket day needs trust up front */}
             <div className={styles.sumStars}>
               <span className={styles.stars}>★★★★★</span> {socialProof}
@@ -899,6 +950,9 @@ export default function DayConfigurator({
             {/* value stack — the scope of the offer, right at the price */}
             <div className={styles.sumChips}>
               <span className={styles.sumChip}>{expCount} experiences</span>
+              <span className={`${styles.sumChip} ${styles.sumChipFree}`}>
+                {giftCount} signature gift{giftCount > 1 ? "s" : ""} — to keep
+              </span>
               {plan.bonus.length > 0 && (
                 <span className={`${styles.sumChip} ${styles.sumChipFree}`}>
                   {plan.bonus.length} signature bonus{plan.bonus.length > 1 ? "es" : ""} — free
@@ -1028,6 +1082,17 @@ export default function DayConfigurator({
                   <b>{expCount} experiences</b>
                   <span>arranged in any order with your concierge</span>
                 </li>
+                <li>
+                  <b>
+                    {giftCount} signature gift{giftCount > 1 ? "s" : ""} — yours to keep
+                  </b>
+                  <span>
+                    hand-picked &amp; locally made, one per full day.{" "}
+                    <a href="#gifts" className={styles.inclLink}>
+                      See the gifts →
+                    </a>
+                  </span>
+                </li>
                 {plan.bonus.length > 0 && (
                   <li>
                     <b>
@@ -1100,6 +1165,21 @@ export default function DayConfigurator({
         ctaHref="#design"
         ctaLabel="Check your date →"
         revealOnScroll={false}
+        extra={
+          <a href="#gifts" className={styles.stickyGifts} aria-label={`${giftsLabel} included — see the gifts`}>
+            <span className={styles.stickyGiftIcons} aria-hidden>
+              {GIFTS.map((g) => (
+                <g.Icon
+                  key={g.key}
+                  className={`${styles.stickyGiftIcon} ${g.day <= giftCount ? styles.stickyGiftOn : styles.stickyGiftOff}`}
+                />
+              ))}
+            </span>
+            <span className={styles.stickyGiftTxt}>
+              {giftsLabel} included
+            </span>
+          </a>
+        }
       />
     </>
   );

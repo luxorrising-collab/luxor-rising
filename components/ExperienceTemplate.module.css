@@ -110,6 +110,34 @@
   letter-spacing: 0.1em;
 }
 
+/* signature-gift line — a quiet note at the foot of the hero */
+.heroGift {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(201, 160, 99, 0.3);
+  max-width: 620px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--color-gold-soft, #e5d4aa);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+.heroGift b {
+  color: #fff;
+  font-weight: 600;
+}
+.heroGiftMark {
+  color: var(--color-gold);
+}
+.heroGiftLink {
+  color: var(--color-gold-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+.heroGiftLink:hover {
+  color: #fff;
+}
+
 /* at a glance */
 .glance {
   background: var(--color-paper);

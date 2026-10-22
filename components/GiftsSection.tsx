@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import styles from "./GiftsSection.module.css";
+import { GIFT_DEFAULTS, GIFT_SHORT, type GiftData, type GiftKey } from "@/lib/gifts";
 
 type Media = { type: "image" | "video"; src: string; poster?: string; dur?: number };
 
@@ -199,38 +200,53 @@ function DayDiagram({
   variant,
   activeKey,
   onPick,
+  interactive = true,
 }: {
   variant: "intro" | "day" | "complete";
   activeKey?: string;
-  onPick: (card: number) => void;
+  onPick: (key: string) => void;
+  /** When false the nodes are purely visual (no jumping between gifts). */
+  interactive?: boolean;
 }) {
   return (
     <div
       className={`${styles.diagram} ${styles["dia_" + variant] ?? ""}`}
       role="group"
-      aria-label="The three days and their gifts"
+      aria-label="The three signature gifts"
     >
       {DAYS.map((d, i) => {
         const on = activeKey === d.key;
         let state = styles.nodeSoft;
         if (variant === "day") state = on ? styles.nodeOn : styles.nodeDim;
         else if (variant === "complete") state = styles.nodeLit;
+        const label = `Day ${d.num} — the ${d.key === "ankh" ? "sceptre" : d.key}`;
+        const inner = (
+          <>
+            <span className={styles.nodeGlow} aria-hidden />
+            <span className={styles.nodeIcon}>
+              <d.Icon />
+            </span>
+            <span className={styles.nodeNum}>{d.num}</span>
+          </>
+        );
         return (
           <React.Fragment key={d.key}>
             {i > 0 ? <span className={styles.diaLink} aria-hidden /> : null}
-            <button
-              type="button"
-              className={`${styles.node} ${state}`}
-              aria-current={on || undefined}
-              aria-label={`Day ${d.num} — the ${d.key === "ankh" ? "sceptre" : d.key}`}
-              onClick={() => onPick(d.card)}
-            >
-              <span className={styles.nodeGlow} aria-hidden />
-              <span className={styles.nodeIcon}>
-                <d.Icon />
-              </span>
-              <span className={styles.nodeNum}>{d.num}</span>
-            </button>
+            {interactive ? (
+              <button
+                type="button"
+                className={`${styles.node} ${state}`}
+                aria-current={on || undefined}
+                aria-label={label}
+                onClick={() => onPick(d.key)}
+              >
+                {inner}
+              </button>
+            ) : (
+              <div className={`${styles.node} ${state}`} aria-label={label}>
+                {inner}
+              </div>
+            )}
           </React.Fragment>
         );
       })}
@@ -241,138 +257,170 @@ function DayDiagram({
 type Card = {
   key: string;
   label: string;
+  diagKey?: string;
   media: Media[];
-  render: (go: (i: number) => void) => React.ReactNode;
+  render: (goKey: (key: string) => void) => React.ReactNode;
 };
 
-export default function GiftsSection() {
+const GIFT_MEDIA: Record<GiftKey, Media[]> = {
+  sistrum: MEDIA_SISTRUM,
+  sceptre: MEDIA_ANKH,
+  crown: MEDIA_CROWN,
+};
+// The diagram labels the Sceptre node "ankh" internally.
+const GIFT_DIAGKEY: Record<GiftKey, string> = {
+  sistrum: "sistrum",
+  sceptre: "ankh",
+  crown: "crown",
+};
+const GIFT_DAY_LABEL: Record<GiftKey, string> = {
+  sistrum: "Day One",
+  sceptre: "Day Two",
+  crown: "Day Three",
+};
+const GIFT_DAY_SUFFIX: Record<GiftKey, string> = {
+  sistrum: "received for the left hand",
+  sceptre: "received for the right hand",
+  crown: "the author’s day, worn",
+};
+/**
+ * The signature-gift showcase.
+ * - No props → the concierge-day set (intro → three gifts → the set).
+ * - `featured` → an experience: lead with the gift received here, explain the
+ *   set, and invite to Design Your Day (first and last slides), with the CTA
+ *   pointing at `designHref`.
+ */
+export default function GiftsSection({
+  featured,
+  designHref = "#design",
+  content,
+}: {
+  featured?: GiftKey;
+  designHref?: string;
+  content?: Record<GiftKey, GiftData>;
+} = {}) {
   const [cur, setCur] = React.useState(0);
+  const gifts = content ?? GIFT_DEFAULTS;
 
-  const cards: Card[] = [
-    {
-      key: "intro",
-      label: "The gifts",
-      media: MEDIA_INTRO,
-      render: (go) => (
+  const giftCard = (
+    key: GiftKey,
+    opts: { eyebrow?: string; badge?: React.ReactNode; invite?: string } = {}
+  ): Card => {
+    const g = gifts[key];
+    return {
+      key,
+      label: GIFT_SHORT[key],
+      diagKey: GIFT_DIAGKEY[key],
+      media: GIFT_MEDIA[key],
+      render: (goKey) => (
         <>
-          <DayDiagram variant="intro" onPick={go} />
-          <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
-          <h2 className={styles.htitle}>Remembrances of the day</h2>
-          <p className={styles.hsub}>
-            From the full Luxor Rising experience — like achievements, unlocked.
-          </p>
-          <p className={styles.introLine}>
-            On a full concierge day your concierge chooses a gift for you:{" "}
-            <span className={styles.accent}>
-              hand-picked for the occasion, made by local artisans from the stone and metal of this
-              soil.
-            </span>{" "}
-            One per day — each tied in meaning to the place.
-          </p>
-        </>
-      ),
-    },
-    {
-      key: "sistrum",
-      label: "Sistrum",
-      media: MEDIA_SISTRUM,
-      render: (go) => (
-        <>
-          <DayDiagram variant="day" activeKey="sistrum" onPick={go} />
+          <DayDiagram
+            variant="day"
+            activeKey={GIFT_DIAGKEY[key]}
+            onPick={goKey}
+            interactive={!featured}
+          />
+          {opts.eyebrow ? <p className={styles.eyebrow}>{opts.eyebrow}</p> : null}
           <span className={styles.day}>
-            Day One <i>·</i> received for the left hand
+            {opts.badge ?? (
+              <>
+                <b>{GIFT_DAY_LABEL[key]}</b> <i>·</i> {GIFT_DAY_SUFFIX[key]}
+              </>
+            )}
           </span>
-          <h3 className={styles.gname}>The Sistrum</h3>
-          <p className={styles.ghand}>A small instrument of metal — held, and gently shaken</p>
-          <p className={styles.gmeaning}>
-            Its sound has been used for thousands of years to still the mind and clear a space. A
-            soft, feminine current: receptivity, intuition, the grace of letting life move through
-            you — a way to return to that stillness, anywhere.
-          </p>
+          <h3 className={styles.gname}>{g.name}</h3>
+          <p className={styles.ghand}>{g.hand}</p>
+          <p className={styles.gmeaning}>{g.meaning}</p>
           <div className={styles.tags}>
-            <span className={styles.tag}>Received energy</span>
-            <span className={styles.tag}>Hand-picked</span>
-            <span className={styles.tag}>Locally made</span>
+            {g.tags.map((t) => (
+              <span key={t} className={styles.tag}>
+                {t}
+              </span>
+            ))}
           </div>
+          {opts.invite ? (
+            <a className={styles.cta} href={designHref}>
+              {opts.invite}
+            </a>
+          ) : null}
         </>
       ),
-    },
-    {
-      key: "ankh",
-      label: "Sceptre",
-      media: MEDIA_ANKH,
-      render: (go) => (
-        <>
-          <DayDiagram variant="day" activeKey="ankh" onPick={go} />
-          <span className={styles.day}>
-            Day Two <i>·</i> received for the right hand
-          </span>
-          <h3 className={styles.gname}>The Sceptre</h3>
-          <p className={styles.ghand}>Of stone or metal — the mark of one who holds their own authority</p>
-          <p className={styles.gmeaning}>
-            The looped cross it bears is a sign of life that endures — breath, continuity, the part
-            of you that does not end. A strong, masculine current: will, direction, standing in your
-            own power without force.
-          </p>
-          <div className={styles.tags}>
-            <span className={styles.tag}>Inner authority</span>
-            <span className={styles.tag}>Hand-picked</span>
-            <span className={styles.tag}>Locally made</span>
-          </div>
-        </>
-      ),
-    },
-    {
-      key: "crown",
-      label: "Crown",
-      media: MEDIA_CROWN,
-      render: (go) => (
-        <>
-          <DayDiagram variant="day" activeKey="crown" onPick={go} />
-          <span className={styles.day}>
-            Day Three <i>·</i> the author&apos;s day, worn
-          </span>
-          <h3 className={styles.gname}>The Crown</h3>
-          <p className={styles.ghand}>A simple band of metal, chosen with a scarf for the occasion</p>
-          <p className={styles.gmeaning}>
-            Light enough to wear, meant to be kept. Worn, or held in stillness or on special
-            occasions, its small weight settles the body and quiets the nervous system, drawing you
-            back to a calm, grounded sense of your own inner authority and presence.
-          </p>
-          <div className={styles.tags}>
-            <span className={styles.tag}>Mastery &amp; presence</span>
-            <span className={styles.tag}>Hand-picked</span>
-            <span className={styles.tag}>Locally made</span>
-          </div>
-        </>
-      ),
-    },
-    {
-      key: "set",
-      label: "The set",
-      media: MEDIA_SET,
-      render: (go) => (
-        <>
-          <DayDiagram variant="complete" onPick={go} />
-          <p className={styles.eyebrow}>The full set</p>
-          <h3 className={styles.gname}>Three days. Three gifts. One story.</h3>
-          <p className={styles.gmeaning}>
-            Each full concierge day carries its own signature gift — hand-picked and locally made.
-            Design more of the day, and the set becomes yours to complete.
-          </p>
-          <a className={styles.cta} href="#design">
-            Design your day →
-          </a>
-          <p className={styles.fineprint}>
-            One gift per group, per day · hand-picked by your concierge · made by local artisans
-          </p>
-        </>
-      ),
-    },
-  ];
+    };
+  };
+
+  const introCard: Card = {
+    key: "intro",
+    label: "The gifts",
+    media: MEDIA_INTRO,
+    render: (goKey) => (
+      <>
+        <DayDiagram variant="intro" onPick={goKey} interactive={!featured} />
+        <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
+        <h2 className={styles.htitle}>Remembrances of the day</h2>
+        <p className={styles.hsub}>
+          From the full Luxor Rising experience — like achievements, unlocked.
+        </p>
+        <p className={styles.introLine}>
+          On a full concierge day your concierge chooses a gift for you:{" "}
+          <span className={styles.accent}>
+            hand-picked for the occasion, made by local artisans from the stone and metal of this
+            soil.
+          </span>{" "}
+          One per day — each tied in meaning to the place.
+        </p>
+      </>
+    ),
+  };
+
+  const setCard: Card = {
+    key: "set",
+    label: "The set",
+    media: MEDIA_SET,
+    render: (goKey) => (
+      <>
+        <DayDiagram variant="complete" onPick={goKey} interactive={!featured} />
+        <p className={styles.eyebrow}>The full set</p>
+        <h3 className={styles.gname}>Three days. Three gifts. One story.</h3>
+        <p className={styles.gmeaning}>
+          {featured
+            ? "You receive one signature gift on this experience. Design your day — more days, more gifts — and the whole set becomes yours to keep."
+            : "Each full concierge day carries its own signature gift — hand-picked and locally made. Design more of the day, and the set becomes yours to complete."}
+        </p>
+        <a className={styles.cta} href={designHref}>
+          Design your day →
+        </a>
+        <p className={styles.fineprint}>
+          One gift per group, per day · hand-picked by your concierge · made by local artisans
+        </p>
+      </>
+    ),
+  };
+
+  // Experience pages tell a focused three-beat story: the gift received here →
+  // the story of the gifts → the whole set, inviting into Design Your Day. The
+  // diagram is non-interactive so the focus never jumps to another gift.
+  const cards: Card[] = featured
+    ? [
+        giftCard(featured, {
+          eyebrow: "Your signature gift · received on this experience",
+          badge: (
+            <>
+              Received on this experience <i>·</i> yours to keep
+            </>
+          ),
+          invite: "Design your day for the full set →",
+        }),
+        { ...introCard, label: "The story" },
+        setCard,
+      ]
+    : [introCard, giftCard("sistrum"), giftCard("sceptre"), giftCard("crown"), setCard];
 
   const n = cards.length;
   const go = (i: number) => setCur((i + n) % n);
+  const goKey = (key: string) => {
+    const i = cards.findIndex((c) => c.diagKey === key);
+    if (i >= 0) setCur(i);
+  };
 
   return (
     <section className={styles.stage} id="gifts" aria-label="Signature gifts">
@@ -383,7 +431,7 @@ export default function GiftsSection() {
           <div key={c.key} className={i === cur ? `${styles.card} ${styles.cardOn}` : styles.card}>
             <MediaReel media={c.media} active={i === cur} />
             <div className={styles.scrim} aria-hidden />
-            <div className={styles.content}>{c.render(go)}</div>
+            <div className={styles.content}>{c.render(goKey)}</div>
           </div>
         ))}
       </div>

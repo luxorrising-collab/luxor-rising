@@ -10,6 +10,7 @@ import type { HeroShowItem } from "@/components/HeroShow";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
+import { resolveGift } from "@/lib/gifts";
 
 const SLUG = "medinet-habu";
 
@@ -82,13 +83,15 @@ export default async function MedinetHabuPage() {
   const gi = (i: number) => `/images/experiences/medinet-habu/gallery/${i}/image.jpg`;
   // Alternating serene detail (no people) / clip — each clip used once across
   // the hero and gallery, with the quiet "feel" clips leading the hero.
+  // Hero slideshow — real photographs only, in order (no "feel" clips), cross-
+  // fading in our established slideshow style. Starts on the hero image (LCP).
   const heroMedia: HeroShowItem[] = [
     { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
-    { type: "video", src: "/videos/medinet/entering.mp4", poster: "/videos/medinet/entering-poster.jpg", position: "45% 45%" },
-    { type: "image", src: gi(0), alt: "A ceiling of winged sun-disks", position: "50% 50%" },
-    { type: "video", src: "/videos/medinet/yoga.mp4", poster: "/videos/medinet/yoga-poster.jpg", position: "50% 40%" },
-    { type: "image", src: gi(12), alt: "Colour and carving together, overhead and around", position: "50% 50%" },
-    { type: "video", src: "/videos/medinet/table.mp4", poster: "/videos/medinet/table-poster.jpg", position: "50% 50%" },
+    ...entry.gallery
+      .map((g) => g.image)
+      .filter((src): src is string => Boolean(src))
+      .slice(0, 6)
+      .map((src) => ({ type: "image" as const, src, alt: entry.title, position: "50% 50%" })),
   ];
   // Gallery "feel" clips — the remaining two, used nowhere else.
   const galleryVideos = [
@@ -236,6 +239,7 @@ export default async function MedinetHabuPage() {
             title={entry.title || undefined}
             region="Luxor"
             hurghadaTransfer={crossingPrice}
+            giftFeatured={resolveGift(entry.signatureGift, entry.category)}
           />
         }
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}
@@ -276,6 +280,8 @@ export default async function MedinetHabuPage() {
         finalText={`Private, certified-guided, and arranged end to end — from €${basePrice}. Reserve your hour at the mound.`}
         finalCtaHref="#book"
         finalCtaLabel="Reserve this experience →"
+        giftFeatured={resolveGift(entry.signatureGift, entry.category)}
+        showValueAnchor={globals?.showValueAnchor ?? false}
       />
 
       <FullFooter columns={FOOTER_COLUMNS} />

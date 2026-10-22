@@ -525,3 +525,75 @@
   text-align: center;
   line-height: 1.4;
 }
+
+/* signature-gift row in the checkout summary — the gift included here */
+.giftRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.75rem 0 0.25rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-gold-soft);
+  background: rgba(201, 160, 99, 0.08);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--color-espresso);
+}
+.giftRowIco {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--color-gold-deep);
+}
+.giftRowIco svg {
+  height: 32px;
+  width: auto;
+  filter: drop-shadow(0 0 4px rgba(201, 160, 99, 0.4));
+}
+.giftRowTxt {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.giftRowTxt b {
+  color: var(--color-gold-deep);
+  font-weight: 600;
+}
+.giftRowLink {
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.giftRow:hover .giftRowLink {
+  text-decoration: underline;
+}
+
+/* gift indicator in the sticky checkout bar (dark) — the included gift, glowing */
+.stickyGifts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-cream);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.stickyGiftIco {
+  display: inline-flex;
+  color: var(--color-gold-soft);
+}
+.stickyGiftIco svg {
+  height: 24px;
+  width: auto;
+  filter: drop-shadow(0 0 5px rgba(201, 160, 99, 0.85));
+}
+.stickyGiftTxt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.stickyGifts:hover .stickyGiftTxt {
+  color: var(--color-gold-soft);
+}
+@media (max-width: 440px) {
+  .stickyGiftTxt {
+    display: none;
+  }
+}

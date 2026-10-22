@@ -8,7 +8,9 @@ import Gallery, { type GalleryImage } from "./Gallery";
 import ConsigliereSection from "./ConsigliereSection";
 import HeroShow, { type HeroShowItem } from "./HeroShow";
 import TestimonialsCarousel from "./TestimonialsCarousel";
+import GiftsSectionServer from "./GiftsSectionServer";
 import { VALUE_LINES } from "@/lib/value-lines";
+import { GIFT_DEFAULTS, type GiftKey } from "@/lib/gifts";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
@@ -136,6 +138,11 @@ export type ExperienceTemplateProps = {
   finalText: string;
   finalCtaHref: string;
   finalCtaLabel: string;
+  /** The signature gift guests receive on this experience. When set, a gift
+      line appears in the hero and the gifts showcase runs after checkout. */
+  giftFeatured?: GiftKey;
+  /** Show the "What's handled for you" value-anchor block. Off by default. */
+  showValueAnchor?: boolean;
 };
 
 export default function ExperienceTemplate({
@@ -185,6 +192,8 @@ export default function ExperienceTemplate({
   finalText,
   finalCtaHref,
   finalCtaLabel,
+  giftFeatured,
+  showValueAnchor = false,
 }: ExperienceTemplateProps) {
   const transformed = Markdoc.transform(contentNode);
   const contentChildren = Tag.isTag(transformed) ? transformed.children : [transformed];
@@ -223,6 +232,18 @@ export default function ExperienceTemplate({
           <Link href="/reviews" className={styles.heroTrust} title="Read our reviews">
             <span className="stars">★ ★ ★ ★ ★</span> {socialProof} ↗
           </Link>
+          {giftFeatured && (
+            <p className={styles.heroGift}>
+              <span className={styles.heroGiftMark} aria-hidden>
+                ✦
+              </span>{" "}
+              On this day you receive <b>{GIFT_DEFAULTS[giftFeatured].name}</b> — a signature gift,
+              hand-picked and locally made, yours to keep.{" "}
+              <Link href="#gifts" className={styles.heroGiftLink}>
+                See the gift →
+              </Link>
+            </p>
+          )}
         </div>
       </section>
 
@@ -340,7 +361,15 @@ export default function ExperienceTemplate({
         </div>
       </section>
 
-      {/* VALUE ANCHOR — what a private day here is really worth */}
+      {/* SIGNATURE GIFT — below the checkout (as on Design Your Day): the gift
+          received here, the story, then the whole set, inviting into DYD. */}
+      {giftFeatured && (
+        <GiftsSectionServer featured={giftFeatured} designHref="/concierge-day#design" />
+      )}
+
+      {/* VALUE ANCHOR — what a private day here is really worth. Hidden by
+          default now (toggle `showValueAnchor` in the product page settings). */}
+      {showValueAnchor && (
       <section>
         <Reveal className="wrap-narrow center">
           <span className="eyebrow">What&apos;s handled for you</span>
@@ -361,6 +390,7 @@ export default function ExperienceTemplate({
           </div>
         </Reveal>
       </section>
+      )}
 
       {/* GUARANTEE */}
       <section className={styles.guarantee}>

@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./ExperienceConfigurator.module.css";
 import StickyBar from "./StickyBar";
+import { GIFTS } from "./GiftMarks";
+import { GIFT_DEFAULTS, type GiftKey } from "@/lib/gifts";
 import { trackBeginCheckout } from "@/lib/analytics";
 
 type Pay = "full" | "deposit";
@@ -70,6 +72,8 @@ type ExperienceConfiguratorProps = {
   /** Price of the optional Hurghada ⇄ Luxor round-trip crossing add-on. Pass 0
    *  (or omit for Hurghada/Red-Sea products) to hide the upsell. */
   hurghadaTransfer?: number;
+  /** The signature gift included with this experience — shown in the summary. */
+  giftFeatured?: GiftKey;
 };
 
 export default function ExperienceConfigurator({
@@ -91,7 +95,9 @@ export default function ExperienceConfigurator({
   title,
   region = "Luxor",
   hurghadaTransfer = 150,
+  giftFeatured,
 }: ExperienceConfiguratorProps) {
+  const giftIcon = giftFeatured ? GIFTS.find((g) => g.key === giftFeatured)?.Icon : undefined;
   // The evocative title leads (uniqueness); the place name labels it (clarity).
   const hasTitle = Boolean(title && title.trim() && title.trim() !== name.trim());
   const cardLabel = hasTitle ? name : "You're reserving";
@@ -105,8 +111,13 @@ export default function ExperienceConfigurator({
   const [agreed, setAgreed] = useState(false);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
+  // The coastal upsell is the end-to-end concierge transfer (Marsa Alam /
+  // Hurghada) — the same €290 bundled product offered on Design Your Day, not
+  // the standalone €675 crossing. Offered on non-Red-Sea experiences (gated by
+  // the page via `hurghadaTransfer`).
+  const seaPrice = 290;
   const offerHurghada = Boolean(hurghadaTransfer && hurghadaTransfer > 0);
-  const hurgAdd = offerHurghada && hurg ? hurghadaTransfer : 0;
+  const hurgAdd = offerHurghada && hurg ? seaPrice : 0;
   const total = basePrice + extra(group, groupSupplement) + hurgAdd;
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
@@ -176,10 +187,10 @@ export default function ExperienceConfigurator({
           slug,
           mode: pay,
           guests: group,
-          hurg: !!hurgAdd,
+          seaTransfer: !!hurgAdd,
           date: tripDate,
           preferences: hurgAdd
-            ? `Add-on: Hurghada ⇄ Luxor round-trip transfer (+€${hurghadaTransfer})`
+            ? `Add-on: End-to-end concierge transfer, Marsa Alam / Hurghada (+€${seaPrice})`
             : undefined,
         }),
       });
@@ -253,8 +264,9 @@ export default function ExperienceConfigurator({
             </div>
           )}
 
-          {/* Optional intercity crossing — the included transfer is door-to-door
-              within {region}; this adds the Hurghada ⇄ Luxor desert crossing. */}
+          {/* Optional coastal upsell — the included transfer is door-to-door
+              within {region}; this adds the end-to-end concierge transfer from
+              the Red Sea coast (the same bundled product as Design Your Day). */}
           {offerHurghada && (
             <div className={styles.step}>
               <div className={styles.careHead}>Coming from the Red Sea?</div>
@@ -275,22 +287,15 @@ export default function ExperienceConfigurator({
                   ✓
                 </span>
                 <div>
-                  <b className={styles.an}>Hurghada ⇄ Luxor round trip</b>
+                  <b className={styles.an}>End-to-end concierge transfer</b>
                   <div className={styles.ad}>
-                    A private round trip with your concierge, Hurghada to Luxor
-                    and back — the desert crossing shared start to finish, on a
-                    flexible schedule of up to 48 hours. In Luxor the car stays
-                    with you, wherever the day goes.{" "}
-                    <Link
-                      href="/experiences/hurghada-to-luxor-crossing"
-                      className={styles.addonLink}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      See details →
-                    </Link>
+                    Coming from the sea? Your concierge collects you in Marsa Alam
+                    or Hurghada and delivers you back, door to door — the private
+                    car shared start to finish, on a flexible schedule of up to 48
+                    hours. A special bundled rate.
                   </div>
                 </div>
-                <span className={styles.ax}>+€{hurghadaTransfer}</span>
+                <span className={styles.ax}>+€{seaPrice}</span>
               </div>
             </div>
           )}
@@ -320,6 +325,17 @@ export default function ExperienceConfigurator({
           <div className={styles.sumPer}>
             {group > 1 ? euro(perPerson) + " per person · more of you, less each" : "Private, just you"}
           </div>
+          {giftFeatured && giftIcon && (
+            <a href="#gifts" className={styles.giftRow}>
+              <span className={styles.giftRowIco} aria-hidden>
+                {giftIcon({})}
+              </span>
+              <span className={styles.giftRowTxt}>
+                Includes <b>{GIFT_DEFAULTS[giftFeatured].name}</b> — a signature gift, yours to keep.
+                <span className={styles.giftRowLink}> See it →</span>
+              </span>
+            </a>
+          )}
           {/* date — moved into the card so checkout is self-contained (matches concierge) */}
           <div className={styles.sumSub}>Your date</div>
           <input
@@ -445,6 +461,20 @@ export default function ExperienceConfigurator({
         ctaLabel="Reserve"
         revealOnScroll
         revealAfter={640}
+        extra={
+          giftFeatured && giftIcon ? (
+            <a
+              href="#gifts"
+              className={styles.stickyGifts}
+              aria-label={`Includes ${GIFT_DEFAULTS[giftFeatured].name} — see the gift`}
+            >
+              <span className={styles.stickyGiftIco} aria-hidden>
+                {giftIcon({})}
+              </span>
+              <span className={styles.stickyGiftTxt}>Gift included</span>
+            </a>
+          ) : undefined
+        }
       />
     </>
   );

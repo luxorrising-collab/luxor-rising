@@ -11,6 +11,7 @@ import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
+import { resolveGift } from "@/lib/gifts";
 
 async function getData(slug: string) {
   const [entry, globals, pricingRules, finalPrice, crossingPrice, socialProof] = await Promise.all([
@@ -247,7 +248,26 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "video", ...clip("temple", "reading"), position: "50% 50%" },
     ],
   };
-  const heroMedia = HERO_MEDIA[slug];
+  // Hero slideshow — real photographs only (no AI "feel" clips), in the
+  // established sequence. If a hero was clip-heavy, top it up from the gallery
+  // (in order) so every experience still cross-fades a few photos.
+  const heroPhotos: HeroShowItem[] = (HERO_MEDIA[slug] ?? []).filter(
+    (m) => m.type === "image"
+  );
+  if (heroPhotos.length === 0 && entry.heroImage) {
+    heroPhotos.push({ type: "image", src: entry.heroImage, alt: entry.title, position: "50% 50%" });
+  }
+  if (heroPhotos.length < 3) {
+    const used = new Set(heroPhotos.map((m) => m.src));
+    for (const gimg of entry.gallery) {
+      if (heroPhotos.length >= 5) break;
+      if (gimg.image && !used.has(gimg.image)) {
+        heroPhotos.push({ type: "image", src: gimg.image, alt: entry.title, position: "50% 50%" });
+        used.add(gimg.image);
+      }
+    }
+  }
+  const heroMedia = heroPhotos;
 
   // Short "feel" clips shown as their own tiles inside the gallery mosaic.
   const GALLERY_VIDEOS: Record<
@@ -483,6 +503,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
               title={entry.title || undefined}
               region={region}
               hurghadaTransfer={hurghadaTransfer}
+              giftFeatured={resolveGift(entry.signatureGift, entry.category)}
             />
           )
         }
@@ -528,6 +549,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         }
         finalCtaHref="#book"
         finalCtaLabel={isEnquiry ? "Request an invitation →" : "Reserve this experience →"}
+        giftFeatured={isEnquiry ? undefined : resolveGift(entry.signatureGift, entry.category)}
+        showValueAnchor={globals?.showValueAnchor ?? false}
       />
 
       <FullFooter columns={FOOTER_COLUMNS} />

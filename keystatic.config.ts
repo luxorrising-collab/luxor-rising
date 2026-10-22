@@ -14,6 +14,21 @@ const EXPERIENCE_CATEGORIES = [
   { label: "Signature", value: "signature" },
 ] as const;
 
+// One signature gift's editable copy (name, subtitle, meaning, tags).
+const giftFields = (label: string) =>
+  fields.object(
+    {
+      name: fields.text({ label: "Name" }),
+      hand: fields.text({ label: "Subtitle (the hand / form)", multiline: true }),
+      meaning: fields.text({ label: "Meaning", multiline: true }),
+      tags: fields.array(fields.text({ label: "Tag" }), {
+        label: "Tags",
+        itemLabel: (p) => p.value || "Tag",
+      }),
+    },
+    { label }
+  );
+
 const REVIEW_SOURCES = [
   { label: "Google", value: "google" },
   { label: "Meta / Facebook", value: "facebook" },
@@ -417,6 +432,18 @@ export default config({
           options: EXPERIENCE_CATEGORIES,
           defaultValue: EXPERIENCE_CATEGORIES[0].value,
         }),
+        signatureGift: fields.select({
+          label: "Signature gift",
+          description:
+            "The gift guests receive on this experience. 'Auto' uses the rule: temples & tombs → the Sceptre, everything else → the Sistrum.",
+          options: [
+            { label: "Auto (by category)", value: "auto" },
+            { label: "The Sistrum", value: "sistrum" },
+            { label: "The Sceptre", value: "sceptre" },
+            { label: "The Crown", value: "crown" },
+          ],
+          defaultValue: "auto",
+        }),
         duration: fields.text({
           label: "Duration",
           description: 'e.g. "Half day", "~2 hours, private"',
@@ -611,6 +638,16 @@ export default config({
   },
 
   singletons: {
+    gifts: singleton({
+      label: "Signature gifts",
+      path: "content/gifts/",
+      format: { data: "yaml" },
+      schema: {
+        sistrum: giftFields("The Sistrum"),
+        sceptre: giftFields("The Sceptre"),
+        crown: giftFields("The Crown"),
+      },
+    }),
     pricingRules: singleton({
       label: "Pricing rules",
       path: "content/pricing-rules/",
@@ -670,6 +707,12 @@ export default config({
       label: "Product page settings (global template)",
       path: "content/product-page-settings/",
       schema: {
+        showValueAnchor: fields.checkbox({
+          label: "Show “What’s handled for you” value block",
+          description:
+            "The price-anchor block (“Some of it has a price. The best of it doesn’t.”) on every product page. Off by default.",
+          defaultValue: false,
+        }),
         howItWorksEyebrow: fields.text({ label: "\"How it works\" eyebrow" }),
         howItWorksTitle: fields.text({ label: "\"How it works\" title" }),
         howItWorksSteps: fields.array(

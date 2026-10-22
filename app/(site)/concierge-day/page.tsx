@@ -13,7 +13,7 @@ import GalleryMosaic from "@/components/GalleryMosaic";
 import ValueStack from "@/components/ValueStack";
 import ConsigliereSection from "@/components/ConsigliereSection";
 import HeroShow, { type HeroShowItem } from "@/components/HeroShow";
-import GiftsSection from "@/components/GiftsSection";
+import GiftsSectionServer from "@/components/GiftsSectionServer";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import ExperienceGrid from "@/components/ExperienceGrid";
 import { DayCountProvider } from "@/components/DayCount";
@@ -928,7 +928,7 @@ export default async function ConciergeDayPage() {
         </div>
       </section>
     ),
-    gifts: <GiftsSection key="gifts" />,
+    gifts: <GiftsSectionServer key="gifts" />,
   };
 
   // Product/Service structured data for the money page. AggregateOffer carries

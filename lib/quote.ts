@@ -87,6 +87,9 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
   // the crossing itself) — decided here, server-side, from the product itself.
   const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow ?? ""} ${input.slug}`);
   if (input.hurg && !isRedSea) total += crossing;
+  // End-to-end concierge transfer (Marsa Alam / Hurghada) — the €290 bundled
+  // upsell, same product as Design Your Day, offered on non-Red-Sea experiences.
+  if (input.seaTransfer && !isRedSea) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
 
   return { totalCents: Math.round(total) * 100, depositPercent };
 }

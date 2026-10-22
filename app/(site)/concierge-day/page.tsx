@@ -839,7 +839,7 @@ export default async function ConciergeDayPage() {
             </div>
             <div className={styles.gr}>
               <h4>Cancel freely</h4>
-              <p>Full refund up to 7 days before. No questions, no fine print.</p>
+              <p>Full refund up to 7 days before — less any reservations already committed on your behalf.</p>
             </div>
             <div className={styles.gr}>
               <h4>Pay your way</h4>
@@ -903,7 +903,7 @@ export default async function ConciergeDayPage() {
               </div>
               <div className={styles.finalGr}>
                 <h4>Cancel freely</h4>
-                <p>Full refund up to 7 days before. No questions, no fine print.</p>
+                <p>Full refund up to 7 days before — less any reservations already committed on your behalf.</p>
               </div>
               <div className={styles.finalGr}>
                 <h4>Pay your way</h4>

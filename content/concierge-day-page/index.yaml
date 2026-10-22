@@ -32,7 +32,7 @@ sections:
   - section: gifts
     visible: true
   - section: valueStack
-    visible: true
+    visible: false
   - section: socialProof
     visible: true
   - section: scarcity

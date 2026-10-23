@@ -10,7 +10,7 @@ import HeroShow, { type HeroShowItem } from "./HeroShow";
 import TestimonialsCarousel from "./TestimonialsCarousel";
 import GiftsSectionServer from "./GiftsSectionServer";
 import { VALUE_LINES } from "@/lib/value-lines";
-import { GIFT_DEFAULTS, type GiftKey } from "@/lib/gifts";
+import { type GiftKey } from "@/lib/gifts";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
@@ -237,8 +237,8 @@ export default function ExperienceTemplate({
               <span className={styles.heroGiftMark} aria-hidden>
                 ✦
               </span>{" "}
-              On this day you receive <b>{GIFT_DEFAULTS[giftFeatured].name}</b> — a signature gift,
-              hand-picked and locally made, yours to keep.{" "}
+              On this day you receive a signature gift, hand-picked and locally made, yours to
+              keep.{" "}
               <Link href="#gifts" className={styles.heroGiftLink}>
                 See the gift →
               </Link>

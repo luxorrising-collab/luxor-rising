@@ -19,19 +19,27 @@ heroImages:
 sections:
   - section: contrast
     visible: true
+  - section: mechanism
+    visible: false
   - section: dream
     visible: true
   - section: dayShape
     visible: true
+  - section: dayFeel
+    visible: false
   - section: experiences
     visible: true
   - section: consigliere
     visible: true
+  - section: howItWorks
+    visible: false
   - section: builder
     visible: true
   - section: gifts
     visible: true
   - section: valueStack
+    visible: false
+  - section: guarantee
     visible: false
   - section: socialProof
     visible: true
@@ -39,8 +47,12 @@ sections:
     visible: true
   - section: gallery
     visible: true
+  - section: threshold
+    visible: false
   - section: finalCta
     visible: true
+  - section: multiDay
+    visible: false
   - section: faq
     visible: true
 contrastEyebrow: Why some people leave Egypt disappointed

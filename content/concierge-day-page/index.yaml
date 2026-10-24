@@ -37,15 +37,15 @@ sections:
     visible: true
   - section: gifts
     visible: true
+  - section: scarcity
+    visible: true
   - section: valueStack
     visible: false
   - section: guarantee
     visible: false
-  - section: socialProof
-    visible: true
-  - section: scarcity
-    visible: true
   - section: gallery
+    visible: true
+  - section: socialProof
     visible: true
   - section: threshold
     visible: false
@@ -57,10 +57,17 @@ sections:
     visible: true
 contrastEyebrow: Why some people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a noise.
-contrastLead: |-
-  Some visitors meet Luxor through a packed coach with 40 strangers, on someone else's clock. Twenty rushed minutes per temple. Shoulder to shoulder in the midday heat, and a guide they share with forty strangers. A generic script, rushed and impersonal. Hours lost to planning, booking, haggling and not knowing who to trust.
+contrastLead: >-
+  Some visitors meet Luxor through a packed coach with 40 strangers, on someone
+  else's clock. Twenty rushed minutes per temple. Shoulder to shoulder in the
+  midday heat, and a guide they share with forty strangers. A generic script,
+  rushed and impersonal. Hours lost to planning, booking, haggling and not
+  knowing who to trust.
 
-  The real Egypt the quiet, the colour, the awe passes them by. And here is the part nobody says out loud: You flew thousand kilometres to a place that has stood for thousands of years, and you may stand here once.
+
+  The real Egypt the quiet, the colour, the awe passes them by. And here is the
+  part nobody says out loud: You flew thousand kilometres to a place that has
+  stood for thousands of years, and you may stand here once.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples hurried, shoulder to shoulder
@@ -87,8 +94,8 @@ mechanismText: >-
   when each site actually empties. Sometimes that is first light. Sometimes it
   is late afternoon, when the light is better anyway. Occasionally it is the
   middle of the day, when the heat clears a site completely and only a few
-  people can take it and if you are one of them, you get somewhere few people reach
-  to yourself.
+  people can take it and if you are one of them, you get somewhere few people
+  reach to yourself.
 mechanismNote: >-
   Then he goes further than a schedule: a call ahead to the guards who know him,
   and the Egyptologist you want booked before someone else takes them not
@@ -97,8 +104,11 @@ mechanismNote: >-
   concierge is for, and it is the difference you are paying for.
 dayShapeEyebrow: The feel of it
 dayShapeTitle: Not a schedule. A day built around you.
-dayShapeLead: |-
-  People can book the same experiences and want completely different days. So instead of a timetable, Your concierge shapes the day around what you came for, and times each site to the hour it empties, until it feels, all day, like Luxor opened for you alone.
+dayShapeLead: >-
+  People can book the same experiences and want completely different days. So
+  instead of a timetable, Your concierge shapes the day around what you came
+  for, and times each site to the hour it empties, until it feels, all day, like
+  Luxor opened for you alone.
 dayShapeSteps:
   - time: We start with you, not a route
     label: >-
@@ -121,12 +131,21 @@ dayShapeSteps:
       carries everything underneath it.
 dreamEyebrow: More than a day
 dreamTitle: So what your Luxor Rising day can hold
-dreamText: |-
-  For many who come it becomes more than a trip: a homecoming, a quiet place to set a new direction, a way to mark an anniversary, a new chapter made into something you keep for a lifetime. These are the days we make for our guests. And if the first two hours don't feel different, the day is on us.
+dreamText: >-
+  For many who come it becomes more than a trip: a homecoming, a quiet place to
+  set a new direction, a way to mark an anniversary, a new chapter made into
+  something you keep for a lifetime. These are the days we make for our guests.
+  And if the first two hours don't feel different, the day is on us.
+
 
   Luxor holds far more than one day. Let us show you.
 
-  More than a dozen experiences, composed in one of the most magnetic and mystical places on earth. At the edge of the Sahara, in Luxor, Where the largest temple ever built still stands. It opens with the sunrise over the Nile, a car already waiting, and one concierge who holds the whole day from that first hour. You reach each place when it is best for You.
+
+  More than a dozen experiences, composed in one of the most magnetic and
+  mystical places on earth. At the edge of the Sahara, in Luxor, Where the
+  largest temple ever built still stands. It opens with the sunrise over the
+  Nile, a car already waiting, and one concierge who holds the whole day from
+  that first hour. You reach each place when it is best for You.
 dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
   - image: /images/concierge-day/experiences/0/image.jpg

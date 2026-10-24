@@ -356,17 +356,21 @@ export default function GiftsSection({
       <>
         <DayDiagram variant="intro" onPick={goKey} interactive={!featured} />
         <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
-        <h2 className={styles.htitle}>Remembrances of the day</h2>
+        <h2 className={styles.htitle}>
+          Of all the places on earth, only a few hold what Luxor holds.
+        </h2>
         <p className={styles.hsub}>
-          From the full Luxor Rising experience — like achievements, unlocked.
+          To walk through Medinet Habu and Karnak and to be invited deeper is its own kind of
+          passage.
         </p>
         <p className={styles.introLine}>
-          On a full concierge day your concierge chooses a gift for you:{" "}
+          So on a full Luxor Rising day, your concierge chooses a gift for you:{" "}
           <span className={styles.accent}>
             hand-picked for the occasion, made by local artisans from the stone and metal of this
             soil.
           </span>{" "}
-          One per day — each tied in meaning to the place.
+          Some things can be bought. But it is far more beautiful to receive them. One per day,
+          each tied in meaning to the place and experience.
         </p>
       </>
     ),

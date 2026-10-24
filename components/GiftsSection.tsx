@@ -352,28 +352,48 @@ export default function GiftsSection({
     key: "intro",
     label: "The gifts",
     media: MEDIA_INTRO,
-    render: (goKey) => (
-      <>
-        <DayDiagram variant="intro" onPick={goKey} interactive={!featured} />
-        <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
-        <h2 className={styles.htitle}>
-          Of all the places on earth, only a few hold what Luxor holds.
-        </h2>
-        <p className={styles.hsub}>
-          To walk through Medinet Habu and Karnak and to be invited deeper is its own kind of
-          passage.
-        </p>
-        <p className={styles.introLine}>
-          So on a full Luxor Rising day, your concierge chooses a gift for you:{" "}
-          <span className={styles.accent}>
-            hand-picked for the occasion, made by local artisans from the stone and metal of this
-            soil.
-          </span>{" "}
-          Some things can be bought. But it is far more beautiful to receive them. One per day,
-          each tied in meaning to the place and experience.
-        </p>
-      </>
-    ),
+    render: (goKey) =>
+      featured ? (
+        // On an experience this slide is "The story" — the deeper why.
+        <>
+          <DayDiagram variant="intro" onPick={goKey} interactive={false} />
+          <p className={styles.eyebrow}>The story</p>
+          <h2 className={styles.htitle}>
+            Of all the places on earth, only a few hold what Luxor holds.
+          </h2>
+          <p className={styles.hsub}>
+            To walk through Medinet Habu and Karnak and to be invited deeper is its own kind of
+            passage.
+          </p>
+          <p className={styles.introLine}>
+            So on a full Luxor Rising day, your concierge chooses a gift for you:{" "}
+            <span className={styles.accent}>
+              hand-picked for the occasion, made by local artisans from the stone and metal of
+              this soil.
+            </span>{" "}
+            Some things can be bought. But it is far more beautiful to receive them. One per day,
+            each tied in meaning to the place and experience.
+          </p>
+        </>
+      ) : (
+        // On Design Your Day this is the opening intro.
+        <>
+          <DayDiagram variant="intro" onPick={goKey} interactive />
+          <p className={styles.eyebrow}>Signature gifts · received, not bought</p>
+          <h2 className={styles.htitle}>Remembrances of the day</h2>
+          <p className={styles.hsub}>
+            From the full Luxor Rising experience — like achievements, unlocked.
+          </p>
+          <p className={styles.introLine}>
+            On a full concierge day your concierge chooses a gift for you:{" "}
+            <span className={styles.accent}>
+              hand-picked for the occasion, made by local artisans from the stone and metal of
+              this soil.
+            </span>{" "}
+            One per day — each tied in meaning to the place.
+          </p>
+        </>
+      ),
   };
 
   const setCard: Card = {
@@ -388,7 +408,7 @@ export default function GiftsSection({
         <p className={styles.gmeaning}>
           {featured
             ? "You receive one signature gift on this experience. Design your day — more days, more gifts — and the whole set becomes yours to keep."
-            : "Each full concierge day carries its own signature gift — hand-picked and locally made. Design more of the day, and the set becomes yours to complete."}
+            : "Of all the places on earth, only a few hold what Luxor holds — and some things are far more beautiful to receive than to buy. Each full concierge day carries its own signature gift, hand-picked and locally made. Design more of the day, and the set becomes yours to complete."}
         </p>
         <a className={styles.cta} href={designHref}>
           Design your day →

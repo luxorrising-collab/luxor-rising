@@ -68,7 +68,8 @@ export async function POST(req: Request) {
   const userMessage = (body.message ?? "").trim();
   const topic = (body.topic ?? "").trim().toLowerCase();
   const topicLabel = TOPIC_LABEL[topic] ?? "Website";
-  const partySize = GROUP_SIZE[group] ?? null;
+  // Known labels first; otherwise a leading number ("6 guests" from Design Your Day).
+  const partySize = GROUP_SIZE[group] ?? (parseInt(group, 10) || null);
   const context = [group && `Group: ${group}`, base && `Staying: ${base}`]
     .filter(Boolean)
     .join(" · ");

@@ -9,7 +9,7 @@ export type GroupSupplementTier = { minGuests: number; extraPerDay: number };
 export type ExpSupplementTier = { minGuests: number; extraPerGuest: number };
 
 /** Flat premium for the optional private photographer/videographer add-on. */
-export const PHOTO_PRO = 460;
+export const PHOTO_PRO = 290;
 
 /** Concierge day: per-day party supplement summed across the tiers up to g. */
 export function extraPerDay(g: number, groupSupplement: GroupSupplementTier[]): number {
@@ -42,6 +42,19 @@ export function dayTotal(
   // The multi-day discount applies to the whole day price (rate + supplement).
   const perDay = dayRate + extraPerDay(g, groupSupplement);
   return Math.round(perDay * d * (1 - discount / 100));
+}
+
+/** Adventure Light (concierge only): priced on the same rule as the concierge
+ *  day — each extra guest adds +20% of the day rate, and each extra day takes
+ *  10% off the whole total. (Entries & experiences are still paid locally.) */
+export const LIGHT_DAY_RATE = 330;
+/** +20% of the base rate per extra guest; -10% off the total per extra day. */
+export const GUEST_STEP = 0.2;
+export const DAY_DISCOUNT_STEP = 0.1;
+export function lightTotal(d: number, g: number, lightDayRate: number): number {
+  const guestMult = 1 + GUEST_STEP * (g - 1);
+  const dayDiscount = DAY_DISCOUNT_STEP * (d - 1);
+  return Math.round(lightDayRate * guestMult * d * (1 - dayDiscount));
 }
 
 /** Single experience: per-guest supplement summed across the tiers up to g. */

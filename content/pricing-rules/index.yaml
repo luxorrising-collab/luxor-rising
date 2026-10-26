@@ -1,16 +1,17 @@
 dayRate: 800
 volumeDiscount:
   - minDays: 2
-    discountPercent: 5.56
+    discountPercent: 10
   - minDays: 3
-    discountPercent: 11.11
+    discountPercent: 20
   - minDays: 4
-    discountPercent: 12.22
+    discountPercent: 30
 groupSupplement:
   - minGuests: 2
-    extraPerDay: 195
+    extraPerDay: 160
   - minGuests: 3
-    extraPerDay: 245
+    extraPerDay: 160
   - minGuests: 4
-    extraPerDay: 295
+    extraPerDay: 160
 depositPercent: 50
+lightDayRate: 330

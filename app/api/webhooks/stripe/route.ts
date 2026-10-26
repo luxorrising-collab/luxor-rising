@@ -182,15 +182,16 @@ export async function POST(req: Request) {
       balanceAutoCharge: scheduleBalance,
     });
   }
-  const isConcierge = (md.slug || "").startsWith("concierge-day");
+  const isConcierge = /^concierge-(day|light)-\d+d$/.test(md.slug || "");
   const productUrl = md.slug
     ? isConcierge
       ? `${SITE_URL}/concierge-day`
       : `${SITE_URL}/experiences/${md.slug}`
     : undefined;
-  // Concierge journeys encode the day count in the slug (e.g. concierge-day-3d).
+  // Concierge journeys encode the day count in the slug (e.g. concierge-day-3d,
+  // concierge-light-2d).
   const conciergeDays = isConcierge
-    ? parseInt((md.slug || "").match(/concierge-day-(\d+)d/)?.[1] || "", 10) || undefined
+    ? parseInt((md.slug || "").match(/concierge-(?:day|light)-(\d+)d/)?.[1] || "", 10) || undefined
     : undefined;
   await sendAhmedJobBrief({
     clientName,

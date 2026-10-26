@@ -3,6 +3,8 @@ import { getFinalPriceMap } from "@/lib/pricing";
 import {
   dayTotal,
   expExtra,
+  lightTotal,
+  LIGHT_DAY_RATE,
   PHOTO_PRO,
   type VolumeDiscountTier,
   type GroupSupplementTier,
@@ -64,6 +66,17 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
     let total = dayTotal(days, guests, dayRate, volumeDiscount, groupSupplement);
     if (input.photo) total += PHOTO_PRO;
     if (input.hurg) total += crossing;
+    if (input.seaTransfer) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
+    return { totalCents: Math.round(total) * 100, depositPercent };
+  }
+
+  // ── Adventure Light: concierge only, flat per day, e.g. concierge-light-2d ──
+  const light = /^concierge-light-(\d+)d$/.exec(input.slug);
+  if (light) {
+    const days = clamp(Number(light[1]), 1, 4);
+    const guests = clamp(input.guests, 1, 4);
+    let total = lightTotal(days, guests, pricingRules?.lightDayRate ?? LIGHT_DAY_RATE);
+    if (input.photo) total += PHOTO_PRO;
     if (input.seaTransfer) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
     return { totalCents: Math.round(total) * 100, depositPercent };
   }

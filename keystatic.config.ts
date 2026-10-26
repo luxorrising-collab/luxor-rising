@@ -700,6 +700,12 @@ export default config({
           description: "Percentage of the total price guests may pay as a deposit to hold a date.",
           validation: { min: 0, max: 100 },
         }),
+        lightDayRate: fields.number({
+          label: "Adventure Light — rate per day (EUR)",
+          description:
+            "Concierge-only day (no experiences included, entries paid locally). Flat per day for the whole group of up to 4 — no group supplement or volume discount.",
+          validation: { min: 0 },
+        }),
       },
     }),
 
@@ -985,6 +991,11 @@ export default config({
         }),
         builderJourneyBalloonImage: fields.image({
           label: "Day builder — Balloon (Eagle at Dawn) journey image",
+          directory: "public/images/concierge-day",
+          publicPath: "/images/concierge-day/",
+        }),
+        builderJourneyLightImage: fields.image({
+          label: "Day builder — Adventure Light image",
           directory: "public/images/concierge-day",
           publicPath: "/images/concierge-day/",
         }),

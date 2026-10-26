@@ -532,6 +532,7 @@ export default async function ConciergeDayPage() {
     journeyMedinet: page?.builderJourneyMedinetImage || undefined,
     journeyKarnak: page?.builderJourneyKarnakImage || undefined,
     journeyBalloon: page?.builderJourneyBalloonImage || undefined,
+    journeyLight: page?.builderJourneyLightImage || undefined,
     sunsetNile: page?.builderSunsetNileImage || undefined,
     sunsetPicnic: page?.builderSunsetPicnicImage || undefined,
     sunsetCustom: page?.builderSunsetCustomImage || undefined,
@@ -747,7 +748,7 @@ export default async function ConciergeDayPage() {
     // Merged into the "dream" / "What your day feels like" position above.
     experiences: null,
     builder: (
-      <section key="builder" id="design" style={{ background: "var(--color-paper)" }}>
+      <section key="builder" id="design" style={{ background: "var(--color-paper)", paddingBottom: 0 }}>
         <div className="wrap">
           <div className="center" style={{ marginBottom: "2.2rem" }}>
             <span className="eyebrow">Design your day</span>
@@ -768,6 +769,7 @@ export default async function ConciergeDayPage() {
               extraPerDay: t.extraPerDay ?? 0,
             }))}
             depositPercent={pricingRules?.depositPercent ?? 50}
+            lightDayRate={pricingRules?.lightDayRate ?? 330}
             images={builderImages}
             priceTable={alaCartePrices}
             brandTable={alaCarteBrands}

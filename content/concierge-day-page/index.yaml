@@ -6,7 +6,7 @@ heroSubtitle: >-
   friction, nothing to carry, and nothing missed. All you do is arrive.
 heroTrustLine: 4.9 · 28+ private days arranged · trusted by travellers in Hurghada & Luxor.
 startingPrice: 330
-priceNote: / day · concierge only · local costs extra
+priceNote: / day
 heroImages:
   - /images/concierge-day/heroImages/0.jpg
   - /images/concierge-day/heroImages/1.jpg
@@ -214,7 +214,7 @@ gallery:
     caption: Breakfast at the desert's edge
 builderJourneyMedinetImage: /images/concierge-day/builderJourneyMedinetImage.jpg
 builderJourneyKarnakImage: /images/concierge-day/builderJourneyKarnakImage.jpg
-builderJourneyLightImage: /images/concierge-day/concierge-nile.jpg
+builderJourneyLightImage: /images/concierge-day/builderJourneyLightImage.jpg
 builderSunsetNileImage: /images/concierge-day/builderSunsetNileImage.jpg
 builderSunsetPicnicImage: /images/concierge-day/builderSunsetPicnicImage.jpg
 builderSunsetCustomImage: /images/concierge-day/builderSunsetCustomImage.jpg

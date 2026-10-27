@@ -26,7 +26,7 @@ import styles from "./ConciergeDayPage.module.css";
 export const metadata: Metadata = {
   title: "The Signature Concierge Day",
   description:
-    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing for you to arrange. From €800.",
+    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing to arrange. Or just your concierge on the ground. From €330.",
 };
 
 const EXPERIENCES = [

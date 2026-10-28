@@ -78,6 +78,28 @@
 .bylineMeta {
   font-size: 0.76rem;
   color: var(--color-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-start;
+}
+.verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-gold-deep);
+  font-weight: 500;
+}
+.check {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-gold-deep);
+  color: #fff;
+  font-size: 0.6rem;
+  line-height: 1;
 }
 
 /* hero image */
@@ -150,4 +172,106 @@
   color: var(--color-muted);
   margin-top: 0.9rem;
   letter-spacing: 0.04em;
+}
+
+/* "The short version" takeaways box */
+.takeaway {
+  max-width: 720px;
+  margin: 0 0 2.6rem;
+  padding: 1.6rem 1.8rem;
+  background: var(--color-cream-deep);
+  border: 1px solid var(--color-line);
+  border-left: 3px solid var(--color-gold);
+  border-radius: 8px;
+}
+.takeaway h4 {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.takeaway ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.takeaway li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.takeaway li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+}
+
+/* standard inline CTA spacing */
+.cta {
+  max-width: 720px;
+  margin: 1rem 0 3rem;
+}
+
+/* FAQ */
+.faqSection {
+  max-width: 720px;
+  margin: 1rem 0 3rem;
+}
+.faqSection h2 {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1.4rem;
+}
+
+/* sources */
+.sources {
+  max-width: 720px;
+  margin: 0 0 3rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--color-line);
+}
+.sources h3 {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.sources ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.sources li {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  position: relative;
+  padding-left: 1.2rem;
+}
+.sources li::before {
+  content: "↗";
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+  font-size: 0.78rem;
+}
+.sources a {
+  color: var(--color-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+  text-underline-offset: 2px;
+}
+.sources a:hover {
+  color: var(--color-gold-deep);
 }

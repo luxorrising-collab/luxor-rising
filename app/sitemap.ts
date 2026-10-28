@@ -48,9 +48,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
   for (const a of articles) {
+    if (a.entry.draft) continue; // drafts stay out of the sitemap
     urls.push({
       url: `${BASE}/insiders-guide/${a.slug}`,
-      lastModified: a.entry.publishedAt ? new Date(a.entry.publishedAt) : now,
+      lastModified: a.entry.updatedAt
+        ? new Date(a.entry.updatedAt)
+        : a.entry.publishedAt
+          ? new Date(a.entry.publishedAt)
+          : now,
       changeFrequency: "yearly",
       priority: 0.6,
     });

@@ -252,6 +252,12 @@ export default config({
       columns: ["title", "category", "author", "publishedAt"],
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
+        draft: fields.checkbox({
+          label: "Draft (hidden from the live site)",
+          defaultValue: false,
+          description:
+            "While ticked, the article is invisible on the site, in the guide listing and in the sitemap — but still editable here. Untick to publish. New auto-generated drafts arrive ticked.",
+        }),
         excerpt: fields.text({
           label: "Excerpt",
           multiline: true,
@@ -278,6 +284,17 @@ export default config({
           description: 'Free text, e.g. "9 min read"',
         }),
         publishedAt: fields.date({ label: "Published at" }),
+        updatedAt: fields.date({
+          label: "Last updated",
+          description:
+            "Optional. Shown as \"Updated …\" and sent to Google as the modified date. Bump it whenever you refresh facts or prices — freshness helps search and AI answers.",
+        }),
+        keyTakeaways: fields.array(fields.text({ label: "Takeaway", multiline: true }), {
+          label: "Key takeaways (\"The short version\")",
+          itemLabel: (p) => p.value || "Takeaway",
+          description:
+            "3–5 short, standalone sentences shown in a box at the top. These are what people skim and what AI answers quote — make each one true on its own, with the specific number or name in it.",
+        }),
         content: fields.markdoc({
           label: "Content",
           options: {
@@ -287,6 +304,30 @@ export default config({
             },
           },
         }),
+        faqs: fields.array(
+          fields.object({
+            question: fields.text({ label: "Question" }),
+            answer: fields.text({ label: "Answer", multiline: true }),
+          }),
+          {
+            label: "FAQ (\"Questions we get asked\")",
+            itemLabel: (p) => p.fields.question.value || "Question",
+            description:
+              "Real questions guests ask, answered honestly in our voice. These render as an accordion and feed FAQ structured data (Google rich results + AI answers). Aim for 4–6.",
+          }
+        ),
+        sources: fields.array(
+          fields.object({
+            label: fields.text({ label: "Source name" }),
+            url: fields.url({ label: "Source URL" }),
+          }),
+          {
+            label: "Sources",
+            itemLabel: (p) => p.fields.label.value || "Source",
+            description:
+              "Where the facts and prices came from (official sites, museums, our own on-the-ground checks). Shown at the foot of the article — it is what earns trust with readers and AI engines.",
+          }
+        ),
         ...seoFields,
       },
     }),

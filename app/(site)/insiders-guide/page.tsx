@@ -27,10 +27,12 @@ export const metadata: Metadata = {
 };
 
 export default async function InsidersGuidePage() {
-  const [allArticles, page] = await Promise.all([
+  const [all, page] = await Promise.all([
     reader.collections.articles.all(),
     reader.singletons.insidersGuidePage.read(),
   ]);
+  // Drafts live in the CMS but never appear in the public guide.
+  const allArticles = all.filter((a) => !a.entry.draft);
   const featured = [...allArticles].sort((a, b) =>
     (b.entry.publishedAt ?? "").localeCompare(a.entry.publishedAt ?? "")
   )[0];

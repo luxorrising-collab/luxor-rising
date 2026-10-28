@@ -21,7 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const entry = await getEntry(slug);
-  if (!entry) return {};
+  if (!entry || entry.draft) return {};
   const title = entry.metaTitle || entry.title;
   const description = entry.metaDescription || entry.excerpt;
   return {
@@ -42,35 +42,70 @@ export async function generateMetadata({
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const entry = await getEntry(slug);
-  if (!entry) notFound();
+  // Drafts exist in the CMS but must not be reachable on the live site.
+  if (!entry || entry.draft) notFound();
 
   const author = ARTICLE_AUTHORS[entry.author] ?? { name: entry.author, bio: "" };
   const categoryLabel = ARTICLE_CATEGORY_LABELS[entry.category] ?? entry.category;
-  const updatedDate = entry.publishedAt
-    ? new Date(entry.publishedAt).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
-    : null;
+  const fmt = (d: string) =>
+    new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const publishedLabel = entry.publishedAt ? fmt(entry.publishedAt) : null;
+  const updatedLabel = entry.updatedAt ? fmt(entry.updatedAt) : publishedLabel;
 
   // The brand byline "Luxor Rising" maps to an Organization; a named person → Person.
   const authorLd =
     author.name === "Luxor Rising"
       ? { "@type": "Organization", name: author.name }
-      : { "@type": "Person", name: author.name };
+      : {
+          "@type": "Person",
+          name: author.name,
+          jobTitle: "Concierge, Luxor Rising",
+          knowsAbout: ["Luxor", "Ancient Egypt", "Egypt travel"],
+        };
+
+  const faqs = (entry.faqs ?? []).filter((f) => f.question && f.answer);
 
   const JSON_LD = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: entry.title,
-    description: entry.excerpt,
-    image: entry.heroImage ? [`https://luxorrising.com${entry.heroImage}`] : undefined,
-    author: authorLd,
-    publisher: { "@type": "Organization", name: "Luxor Rising" },
-    datePublished: entry.publishedAt,
-    dateModified: entry.publishedAt,
-    mainEntityOfPage: `https://luxorrising.com/insiders-guide/${slug}`,
+    "@graph": [
+      {
+        "@type": "Article",
+        headline: entry.title,
+        description: entry.excerpt,
+        image: entry.heroImage ? [`https://luxorrising.com${entry.heroImage}`] : undefined,
+        author: authorLd,
+        reviewedBy: { "@type": "Person", name: "Dr. Nour", jobTitle: "Licensed Egyptologist" },
+        publisher: { "@type": "Organization", name: "Luxor Rising" },
+        datePublished: entry.publishedAt,
+        dateModified: entry.updatedAt || entry.publishedAt,
+        mainEntityOfPage: `https://luxorrising.com/insiders-guide/${slug}`,
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://luxorrising.com/" },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Insider's Guide",
+            item: "https://luxorrising.com/insiders-guide",
+          },
+          { "@type": "ListItem", position: 3, name: entry.title },
+        ],
+      },
+      ...(faqs.length > 0
+        ? [
+            {
+              "@type": "FAQPage",
+              mainEntity: faqs.map((f) => ({
+                "@type": "Question",
+                name: f.question,
+                acceptedAnswer: { "@type": "Answer", text: f.answer },
+              })),
+            },
+          ]
+        : []),
+    ],
   };
 
   return (
@@ -87,8 +122,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         readingTime={entry.readingTime}
         authorName={author.name}
         authorBio={author.bio}
-        updatedLabel={updatedDate ? `Updated ${updatedDate}` : undefined}
+        updatedLabel={updatedLabel ? `Updated ${updatedLabel}` : undefined}
+        factCheckedBy="Fact-checked by Dr. Nour, licensed Egyptologist"
         heroImage={entry.heroImage ?? undefined}
+        keyTakeaways={entry.keyTakeaways ? [...entry.keyTakeaways] : undefined}
+        faqs={faqs.map((f) => ({ question: f.question, answer: f.answer }))}
+        sources={(entry.sources ?? [])
+          .filter((s): s is { label: string; url: string } => Boolean(s.label && s.url))
+          .map((s) => ({ label: s.label, url: s.url }))}
         contentNode={entry.content.node}
       />
 

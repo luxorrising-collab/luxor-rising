@@ -6,37 +6,44 @@ import { GIFT_DEFAULTS, GIFT_SHORT, type GiftData, type GiftKey } from "@/lib/gi
 
 type Media = { type: "image" | "video"; src: string; poster?: string; dur?: number };
 
-const P = "/images/presents/web/";
-const STAR: Media = {
+const P = "/videos/real/";
+// The real footage from the Design Your Day hero — the same graded, stabilised
+// clips, not AI renders. They play as one continuous, slowed slideshow behind
+// the gift showcase, in the hero's crossfading style.
+const clip = (name: string): Media => ({
   type: "video",
-  src: `${P}star.mp4`,
-  poster: `${P}star-poster.jpg`,
-  dur: 3600, // fallback only; the clip (3.04s) advances on its own 'ended' event
-};
-const img = (name: string, dur?: number): Media => ({
-  type: "image",
-  src: `${P}${name}.jpg`,
-  dur,
+  src: `${P}${name}.mp4`,
+  poster: `${P}${name}-poster.jpg`,
 });
-
-const DUR = (m: Media) => m.dur ?? (m.type === "video" ? 3200 : 4200);
-
-// Stable module-level reels — same array identity across every render, so a
-// page re-render never re-runs the reel's effects (which would restart a clip).
-const MEDIA_INTRO: Media[] = [
-  STAR,
-  img("sistrum-a", 3600),
-  img("ankh-a", 3600),
-  img("crown-a", 3600),
-  img("set", 3600),
-  img("set-static-3", 3600),
+// Stable module-level reel — same array identity across every render, so a page
+// re-render never restarts a clip mid-play. Same real clips as the hero.
+const MEDIA_CLIPS: Media[] = [
+  clip("stargazing"),
+  clip("felucca"),
+  clip("balloon"),
+  clip("table"),
+  clip("welcome"),
+  clip("desert"),
+  clip("yoga"),
+  clip("coupleBalloons"),
 ];
-const MEDIA_SISTRUM: Media[] = [img("sistrum-a"), img("sistrum-b")];
-const MEDIA_ANKH: Media[] = [img("ankh-a"), img("ankh-b")];
-const MEDIA_CROWN: Media[] = [img("crown-a"), img("crown-b")];
-const MEDIA_SET: Media[] = [img("crown-b"), img("set-bronze-trio"), img("set-two-crowns")];
+// Played slower than real time, so each clip lingers (hero feel, but longer).
+const CLIP_RATE = 0.6;
 
-function MediaReel({ media, active }: { media: Media[]; active: boolean }) {
+// Fallback dwell only — clips advance on their own 'ended' event; this is a
+// generous backstop so a slow decode never cuts a scene short.
+const DUR = (m: Media) => m.dur ?? (m.type === "video" ? 14000 : 5000);
+
+function MediaReel({
+  media,
+  active,
+  rate = 1,
+}: {
+  media: Media[];
+  active: boolean;
+  /** Playback rate for video layers — < 1 plays the clips slower (and longer). */
+  rate?: number;
+}) {
   const [i, setI] = React.useState(0);
   const vids = React.useRef<Array<HTMLVideoElement | null>>([]);
   const n = media.length;
@@ -85,6 +92,7 @@ function MediaReel({ media, active }: { media: Media[]; active: boolean }) {
       if (active && idx === i) {
         try {
           v.currentTime = 0;
+          v.playbackRate = rate;
           const p = v.play();
           if (p && typeof p.catch === "function") p.catch(() => {});
         } catch {
@@ -98,7 +106,7 @@ function MediaReel({ media, active }: { media: Media[]; active: boolean }) {
         }
       }
     });
-  }, [i, active, media]);
+  }, [i, active, media, rate]);
 
   return (
     <div className={styles.reel} aria-hidden>
@@ -117,7 +125,9 @@ function MediaReel({ media, active }: { media: Media[]; active: boolean }) {
                 muted
                 loop={media.length < 2}
                 playsInline
-                preload="auto"
+                // Only the current / adjacent clips fetch bytes; the rest stay on
+                // their poster until their turn, so an 8-clip reel never loads at once.
+                preload={active && near(idx) ? "auto" : "none"}
                 poster={m.poster}
               >
                 <source src={m.src} type="video/mp4" />
@@ -258,15 +268,9 @@ type Card = {
   key: string;
   label: string;
   diagKey?: string;
-  media: Media[];
   render: (goKey: (key: string) => void) => React.ReactNode;
 };
 
-const GIFT_MEDIA: Record<GiftKey, Media[]> = {
-  sistrum: MEDIA_SISTRUM,
-  sceptre: MEDIA_ANKH,
-  crown: MEDIA_CROWN,
-};
 // The diagram labels the Sceptre node "ankh" internally.
 const GIFT_DIAGKEY: Record<GiftKey, string> = {
   sistrum: "sistrum",
@@ -311,7 +315,6 @@ export default function GiftsSection({
       key,
       label: GIFT_SHORT[key],
       diagKey: GIFT_DIAGKEY[key],
-      media: GIFT_MEDIA[key],
       render: (goKey) => (
         <>
           <DayDiagram
@@ -351,7 +354,6 @@ export default function GiftsSection({
   const introCard: Card = {
     key: "intro",
     label: "The gifts",
-    media: MEDIA_INTRO,
     render: (goKey) =>
       featured ? (
         // On an experience this slide is "The story" — the deeper why.
@@ -399,7 +401,6 @@ export default function GiftsSection({
   const setCard: Card = {
     key: "set",
     label: "The set",
-    media: MEDIA_SET,
     render: (goKey) => (
       <>
         <DayDiagram variant="complete" onPick={goKey} interactive={!featured} />
@@ -451,10 +452,14 @@ export default function GiftsSection({
       <div className={styles.frame} aria-hidden />
 
       <div className={styles.deck}>
+        {/* One steady background for the whole section — the real hero clips as a
+            continuous, slowed slideshow, plus a single scrim. `key` pins the reel
+            so changing slides never remounts or restarts it; only the gift text on
+            top changes, the background never switches. */}
+        <MediaReel key="gift-bg" media={MEDIA_CLIPS} active rate={CLIP_RATE} />
+        <div className={styles.scrim} aria-hidden />
         {cards.map((c, i) => (
           <div key={c.key} className={i === cur ? `${styles.card} ${styles.cardOn}` : styles.card}>
-            <MediaReel media={c.media} active={i === cur} />
-            <div className={styles.scrim} aria-hidden />
             <div className={styles.content}>{c.render(goKey)}</div>
           </div>
         ))}

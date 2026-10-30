@@ -48,6 +48,12 @@ export function dayTotal(
  *  day — each extra guest adds +20% of the day rate, and each extra day takes
  *  10% off the whole total. (Entries & experiences are still paid locally.) */
 export const LIGHT_DAY_RATE = 330;
+
+/** Original — the full sightseeing day: everything under our bar included
+ *  (the inexpensive temples & tombs, a private felucca, a desert trip, all
+ *  entries). Priced like the concierge day (group supplement + volume discount)
+ *  but at a lower base rate than Signature. */
+export const ORIGINAL_DAY_RATE = 450;
 /** +20% of the base rate per extra guest; -10% off the total per extra day. */
 export const GUEST_STEP = 0.2;
 export const DAY_DISCOUNT_STEP = 0.1;

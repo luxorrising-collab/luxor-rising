@@ -5,6 +5,7 @@ import {
   expExtra,
   lightTotal,
   LIGHT_DAY_RATE,
+  ORIGINAL_DAY_RATE,
   PHOTO_PRO,
   type VolumeDiscountTier,
   type GroupSupplementTier,
@@ -66,6 +67,27 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
     let total = dayTotal(days, guests, dayRate, volumeDiscount, groupSupplement);
     if (input.photo) total += PHOTO_PRO;
     if (input.hurg) total += crossing;
+    if (input.seaTransfer) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
+    return { totalCents: Math.round(total) * 100, depositPercent };
+  }
+
+  // ── Original: the full sightseeing day — priced on the SAME rule as the
+  //    concierge day (per-guest supplement up, multi-day discount down), just at
+  //    a lower base rate, e.g. concierge-original-2d ──
+  const orig = /^concierge-original-(\d+)d$/.exec(input.slug);
+  if (orig) {
+    const days = clamp(Number(orig[1]), 1, 4);
+    const guests = clamp(input.guests, 1, 4);
+    const volumeDiscount: VolumeDiscountTier[] = (pricingRules?.volumeDiscount ?? []).map((t) => ({
+      minDays: t.minDays ?? 0,
+      discountPercent: t.discountPercent ?? 0,
+    }));
+    const groupSupplement: GroupSupplementTier[] = (pricingRules?.groupSupplement ?? []).map((t) => ({
+      minGuests: t.minGuests ?? 0,
+      extraPerDay: t.extraPerDay ?? 0,
+    }));
+    let total = dayTotal(days, guests, ORIGINAL_DAY_RATE, volumeDiscount, groupSupplement);
+    if (input.photo) total += PHOTO_PRO;
     if (input.seaTransfer) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
     return { totalCents: Math.round(total) * 100, depositPercent };
   }

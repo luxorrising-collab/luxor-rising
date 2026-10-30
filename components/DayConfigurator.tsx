@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./DayConfigurator.module.css";
@@ -8,11 +8,14 @@ import StickyBar from "./StickyBar";
 import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
 import { trackBeginCheckout } from "@/lib/analytics";
-import { dayTotal, lightTotal, LIGHT_DAY_RATE, PHOTO_PRO } from "@/lib/pricing-math";
+import { dayTotal, lightTotal, LIGHT_DAY_RATE, ORIGINAL_DAY_RATE, PHOTO_PRO } from "@/lib/pricing-math";
 
 type DayCount = 1 | 2 | 3 | 4;
 type SignatureJourney = "medinet" | "karnak" | "balloon";
-type Journey = SignatureJourney | "light";
+// "light" = concierge-only (Adventure Light). "reality" = Reality Hunting, the
+// business/land/investment day — bespoke, so it routes to the enquiry path
+// (never Stripe checkout), the same way 5+ groups and 5+ days do.
+type Journey = SignatureJourney | "light" | "reality" | "original";
 type Pay = "full" | "deposit";
 
 export type VolumeDiscountTier = { minDays: number; discountPercent: number };
@@ -45,9 +48,19 @@ const JOURNEY: Record<
     companion: "Then any experience of the Luxor Rising day, chosen as you go",
   },
   light: {
-    name: "Adventure Light",
+    name: "Adventure",
     temple: "Your concierge, on the ground all day",
     companion: "Planned with you — paid locally as you go",
+  },
+  reality: {
+    name: "Reality Hunting",
+    temple: "A full day given to your business",
+    companion: "Introductions, access & an honest local read",
+  },
+  original: {
+    name: "Original",
+    temple: "Everything Luxor has to offer, in one day",
+    companion: "All the temples & tombs, a felucca and the desert — entries included",
   },
 };
 
@@ -72,12 +85,363 @@ const SIGNATURE_CARDS: { key: SignatureJourney; intro: string }[] = [
   },
 ];
 // Each Signature day is the same promise; stated once, under the cards.
-const SIGNATURE_META = "Your concierge + 3 experiences + a signature gift";
+const SIGNATURE_META = "Door-to-door from the coast · 3 signature experiences · insider access · a gift";
 const JOURNEY_NOTE =
-  "Every Signature day is three hand-picked experiences in a crafted order — with your own concierge end to end: driver, planner, translator and fixer. The full journey holds all 10; add days to unlock more, with signature bonuses and a gift along the way.";
+  "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a coach never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
 const CONSIGLIERE_INTRO =
   "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then bring local cash and go with the flow.";
 const CONSIGLIERE_META = "Concierge all day · a small gift · you pay locally";
+
+// Reality Hunting — the business, land & investment day. Bespoke by nature, so
+// it always routes to the private-proposal form, anchored at €350/day. The copy
+// leans on access + discretion + an honest local read (the exact levers the big
+// operators charge a fortune for), always framed straight — never bribery, and
+// never a cut of the deal.
+const REALITY_RATE = 350;
+// Title / subtitle for the card (title is the product name; the subtitle is what
+// the concierge actually does).
+const REALITY_TITLE = "Reality Hunting";
+const REALITY_SUBTITLE =
+  "Your concierge opens the doors, the local contacts and the private, off-market opportunities almost no one else can reach.";
+const REALITY_META = "A full day for business · introductions & private access";
+const REALITY_INCLUDED = [
+  "Collected door-to-door from Hurghada or Marsa Alam — included, with the private car on hand all day",
+  "Your whole day aimed at the deal — we clear everything else so you never lose an hour to logistics",
+  "The access the big firms sell for a fortune — except here it's a real local who holds the keys, not a number in a far-off office",
+  "Introductions in person — owners, officials, lawyers and the people who actually decide",
+  "Private, off-market opportunities — land and property that never reaches a listing (we hold some ourselves)",
+  "A straight local read on every deal — what's real, what's worth it, what to walk away from",
+  "Translation, paperwork and negotiation, handled on your side of the table",
+  "Total discretion — your plans stay yours, start to finish",
+];
+const REALITY_LOCAL = [
+  "Legal, notary and official fees are paid directly to the providers, at cost — never through us",
+  "We open doors and advise you straight; we never pay bribes, and we never take a cut of your deal",
+  "Every opportunity is yours to verify independently before you commit — and we'll help you do exactly that",
+];
+
+// Original — the full sightseeing day. Everything under our bar is included: the
+// inexpensive temples & tombs, a private felucca and a desert trip, with all
+// entries in the price. Bookable at a flat rate per day (1–4 guests).
+const ORIGINAL_RATE = ORIGINAL_DAY_RATE;
+const ORIGINAL_SUBTITLE =
+  "Everything Luxor has to offer in one unhurried day — the great temples and tombs, a private felucca and the desert, every entry ticket included.";
+const ORIGINAL_META = "All the sites · entries included · private felucca & desert";
+const ORIGINAL_INCLUDED = [
+  "Door-to-door transfer from Hurghada or Marsa Alam — included, the car stays with you all day",
+  "Every entry ticket included — no queues, no cash, nothing to carry",
+  "East bank — Karnak, Luxor Temple, and the Luxor & Mummification museums",
+  "West bank — the Valley of the Kings (three tombs), Hatshepsut, Medinet Habu, the Ramesseum, Deir el-Medina, the Valley of the Queens and the Colossi of Memnon",
+  "A private felucca on the Nile at golden hour",
+  "A trip out into the desert",
+  "Your concierge end to end — driver, planner, translator & fixer, all day",
+  "In any order you like, at the quiet hour for each — just tell your concierge",
+];
+const ORIGINAL_MORE = [
+  "The premium tombs — Nefertari, Seti I (KV17) and Tutankhamun — are special tickets, added on request",
+  "Want a private Egyptologist, the balloon, signature gifts and insider access? That's the Signature day above",
+];
+
+// The Signature day, unpacked — shown when a Signature journey is selected, so
+// its full value reads at a glance and never looks thinner than the
+// concierge-only options below it.
+const SIGNATURE_INCLUDED = [
+  "Door-to-door transfer from Hurghada, Marsa Alam or the coast — included in the price, and the private car stays with you the whole trip",
+  "Insider access & insider knowledge at the signature temples — doors opened, the real stories, and introductions to local contacts and businesses a coach never gets",
+  "A hot-air balloon at dawn — included (best on day two)",
+  "A signature desert sunset picnic or a felucca sail on the Nile — included",
+  "Temples and tombs in any order you like — venture into the desert one day, go anywhere in range the next; just tell your concierge",
+  "Your own licensed Egyptologist, at the monuments — every day",
+  "Every monument entry ticket — nothing to buy, queue for or carry",
+  "A full meal and hand-picked local food & coffee stops — where locals actually eat",
+  "Tips and everything in between handled — nothing to think about, just a memorable stay start to finish",
+  "Your day photographed on your phone — sent the same day, not in six weeks",
+  "One concierge end to end — planner, translator & fixer, on WhatsApp before you arrive and all day",
+  "A signature gift, hand-picked & locally made, from your first full day",
+  "First two hours, or your money back",
+];
+const SIGNATURE_UNLOCKS = [
+  "More experiences unlock as you add days — venture further, to Aswan and beyond",
+  "Signature bonuses on us — the hidden temple of Isis (day 3), a Nile sailing lesson (day 4)",
+  "A second and third gift — the full set of three",
+  "A private photoshoot of your day, from three days",
+  "A better per-day price the longer you stay",
+];
+
+// A few headline inclusions shown on each product card's face, so the cards read
+// as detailed products at a glance (the full lists live in each expansion).
+const SIGNATURE_POINTS = [
+  "Door-to-door transfer from the coast — included",
+  "Private Egyptologist & insider access, every day",
+  "Temples, tombs, a felucca or the desert — your choice",
+  "Hot-air balloon, food stops, tips & a gift — included",
+];
+const ORIGINAL_POINTS = [
+  "Door-to-door transfer from the coast — included",
+  "Every temple & tomb entry ticket — included",
+  "A private felucca and a desert trip — included",
+  "Your concierge end to end, in any order you like",
+];
+const LIGHT_POINTS = [
+  "Door-to-door transfer from the coast — included",
+  "Your concierge on the ground all day",
+  "Food stops & tips handled for you",
+  "Entries & experiences paid locally, as you go",
+];
+const REALITY_POINTS = [
+  "Door-to-door transfer from the coast — included",
+  "Introductions to owners, officials & lawyers",
+  "Private, off-market land & property",
+  "Honest local advice — we take no cut of your deal",
+];
+
+// ── Line icons for the brochure, so every included line carries a symbol ──
+const bic = (children: ReactNode) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.4}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={styles.expIco}
+    aria-hidden
+  >
+    {children}
+  </svg>
+);
+const IC = {
+  car: bic(
+    <>
+      <path d="M3 13l1.8-4.6A2 2 0 0 1 6.7 7h10.6a2 2 0 0 1 1.9 1.4L21 13" />
+      <path d="M3 13h18v4H3z" />
+      <circle cx="7" cy="18.5" r="1.3" />
+      <circle cx="17" cy="18.5" r="1.3" />
+    </>,
+  ),
+  guide: bic(
+    <>
+      <circle cx="12" cy="8" r="3.1" />
+      <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+    </>,
+  ),
+  key: bic(
+    <>
+      <circle cx="8" cy="12" r="3" />
+      <path d="M11 12h10M17 12v3M20.5 12v2" />
+    </>,
+  ),
+  ticket: bic(
+    <>
+      <path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4z" />
+      <path d="M14 6v12" strokeDasharray="2 2" />
+    </>,
+  ),
+  sail: bic(
+    <>
+      <path d="M4 19h16l-2 2.2H6z" />
+      <path d="M12 19V3.5" />
+      <path d="M12 5 5 17h7z" />
+    </>,
+  ),
+  desert: bic(
+    <>
+      <path d="M3 18c3-4 7-4 10 0" />
+      <path d="M10 18c3-3 8-3 11 0" />
+      <circle cx="7" cy="7" r="2.3" />
+    </>,
+  ),
+  balloon: bic(
+    <>
+      <ellipse cx="12" cy="9" rx="5.4" ry="6" />
+      <path d="M9.6 14 11 18M14.4 14 13 18" />
+      <path d="M10.4 18h3.2l-.4 2.3h-2.4z" />
+    </>,
+  ),
+  food: bic(
+    <>
+      <path d="M5 8h11a3 3 0 0 1 0 6h-1" />
+      <path d="M5 8v6a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3V8" />
+      <path d="M8 3v2M11.5 3v2" />
+    </>,
+  ),
+  tips: bic(
+    <>
+      <ellipse cx="12" cy="7" rx="7" ry="3" />
+      <path d="M5 7v10c0 1.7 3.1 3 7 3s7-1.3 7-3V7" />
+      <path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" />
+    </>,
+  ),
+  camera: bic(
+    <>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <circle cx="12" cy="13.5" r="3.1" />
+      <path d="M8.5 7 10 5h4l1.5 2" />
+    </>,
+  ),
+  gift: bic(
+    <>
+      <rect x="4" y="9" width="16" height="11" rx="1" />
+      <path d="M4 13h16M12 9v11" />
+      <path d="M12 9S9.5 4.5 7.7 6.2 12 9 12 9z M12 9s2.5-4.5 4.3-2.8S12 9 12 9z" />
+    </>,
+  ),
+  shield: bic(
+    <>
+      <path d="M12 3l7 3v5c0 4.4-3 7.4-7 8.9C8 18.4 5 15.4 5 11V6z" />
+      <path d="M9 12l2 2 4-4" />
+    </>,
+  ),
+  chat: bic(
+    <>
+      <path d="M4 5h16v11H9l-5 4z" />
+      <path d="M8 9.5h8M8 12.5h5" />
+    </>,
+  ),
+  temple: bic(
+    <>
+      <path d="M4 10 12 5l8 5" />
+      <path d="M5 10h14" />
+      <path d="M7 10v8M11 10v8M13 10v8M17 10v8" />
+      <path d="M4 20h16" />
+    </>,
+  ),
+  doc: bic(
+    <>
+      <path d="M7 3h7l4 4v14H7z" />
+      <path d="M14 3v4h4" />
+      <path d="M9.5 12h6M9.5 15h6M9.5 18h3.5" />
+    </>,
+  ),
+  check: bic(<path d="M5 12l4 4 10-10" />),
+} as const;
+
+// Pick a symbol for any inclusion line by what it names.
+const iconFor = (t: string): ReactNode => {
+  const s = t.toLowerCase();
+  if (/transfer|door-to-door|coast|\bcar\b|collected/.test(s)) return IC.car;
+  if (/egyptologist/.test(s)) return IC.guide;
+  if (/insider access|\bdoors\b|contacts|introduction/.test(s)) return IC.key;
+  if (/entry|entries|ticket/.test(s)) return IC.ticket;
+  if (/felucca|nile/.test(s)) return IC.sail;
+  if (/desert|sahara|dune/.test(s)) return IC.desert;
+  if (/balloon/.test(s)) return IC.balloon;
+  if (/food|coffee|meal|table|eat/.test(s)) return IC.food;
+  if (/\btip|baksheesh/.test(s)) return IC.tips;
+  if (/photograph|photo/.test(s)) return IC.camera;
+  if (/gift/.test(s)) return IC.gift;
+  if (/money back|cancellation|refund|verify|bribe|cut of|straight|honest/.test(s)) return IC.shield;
+  if (/whatsapp|concierge|planner|fixer|sorted|arrange|hiccup/.test(s)) return IC.chat;
+  if (/temple|tomb|valley|karnak|hatshepsut|medinet|site|order you like/.test(s)) return IC.temple;
+  if (/lawyer|paperwork|notary|legal|\bdeal|business|property|\bland\b|opportunit|discretion/.test(s))
+    return IC.doc;
+  return IC.check;
+};
+
+// The experiences shown in each day's brochure (icon + name + a line).
+const SIGNATURE_EXPS = [
+  {
+    icon: IC.temple,
+    name: "Karnak & the great temples",
+    desc: "The greatest temple ever built, at the quiet hour — read for you by your Egyptologist.",
+  },
+  {
+    icon: IC.ticket,
+    name: "The Valley of the Kings",
+    desc: "Three royal tombs, chosen and read for you where the valley is still empty.",
+  },
+  {
+    icon: IC.temple,
+    name: "Medinet Habu & Hatshepsut",
+    desc: "Our signature temple with colour still on the walls, and the terraces of the queen who ruled as king.",
+  },
+  {
+    icon: IC.sail,
+    name: "A private felucca — or the desert",
+    desc: "Golden hour on the Nile, or a sunset picnic in the dunes. Your choice.",
+  },
+  {
+    icon: IC.balloon,
+    name: "A hot-air balloon at dawn",
+    desc: "Float over the valley and the temples in the first light. Best on day two.",
+  },
+  {
+    icon: IC.sail,
+    name: "Aswan, Philae & the islands",
+    desc: "A venture further south — the island temple of Isis and the Nile at its gentlest.",
+  },
+  {
+    icon: IC.temple,
+    name: "Dendera & Abydos",
+    desc: "The best-preserved temple ceiling in Egypt, and the temple of Osiris beyond Luxor.",
+  },
+];
+const ORIGINAL_EXPS = [
+  {
+    icon: IC.temple,
+    name: "Karnak & Luxor Temple",
+    desc: "The two great temples of the east bank, with the Luxor & Mummification museums.",
+  },
+  {
+    icon: IC.ticket,
+    name: "The Valley of the Kings",
+    desc: "The general ticket — three royal tombs.",
+  },
+  {
+    icon: IC.temple,
+    name: "Hatshepsut, Medinet Habu & the Ramesseum",
+    desc: "The finest temples of the west bank.",
+  },
+  {
+    icon: IC.temple,
+    name: "Queens, Workers & the Colossi",
+    desc: "The Valley of the Queens, Deir el-Medina and the Colossi of Memnon.",
+  },
+  { icon: IC.sail, name: "A private felucca on the Nile", desc: "Golden hour on the water." },
+  { icon: IC.desert, name: "A trip into the desert", desc: "Out past the fields, into the sand." },
+];
+
+// Shown in the "Also included" list of every bookable card — the local-access
+// layer, stated honestly (no guarantee, no commission).
+const INSIDER_CONTACTS =
+  "Local business contacts & off-market opportunities — land, property, projects, local knowledge and lifelong contacts, introduced friend to friend";
+
+// Operational inclusions for the brochure — kept separate from the experiences
+// above, so nothing is said twice.
+const SIGNATURE_HANDLED = [
+  "Door-to-door transfer from Hurghada, Marsa Alam or the coast — the car stays with you",
+  "Your own licensed Egyptologist, at the monuments — every day",
+  "Insider access & knowledge — the doors most never reach and the real stories behind the walls",
+  "A venture past the monuments — hidden spots in the desert and a sunset few ever see",
+  "Staged moments on request — a proposal, an anniversary, a surprise timed to the light",
+  "Every monument entry ticket — nothing to buy, queue for or carry",
+  "A full meal and hand-picked local food & coffee stops — where locals actually eat",
+  "Tips and everything in between, handled — nothing to think about",
+  "Your day photographed on your phone — sent the same day",
+  "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking",
+  "A signature gift, hand-picked & locally made, from your first full day",
+  INSIDER_CONTACTS,
+  "First two hours, or your money back",
+];
+const ORIGINAL_HANDLED = [
+  "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day",
+  "Every entry ticket, in the price — no queues, no cash, nothing to carry",
+  "A private Egyptologist & insider access at the sites",
+  "Tips and the logistics handled — nothing to break the spell",
+  "Your concierge end to end — driver, planner, translator & fixer, in any order you like",
+  INSIDER_CONTACTS,
+];
+
+// The executive summary at the top of each brochure — a detailed read of what
+// the day actually is and who it's for. Never a repeat of the card's own line.
+const SIGNATURE_LEAD =
+  "The full Luxor Rising day, arranged end to end for a trip that's meant to matter — an anniversary, a honeymoon, a milestone. A private Egyptologist and real insider access, every temple and tomb at its quietest, plus ventures beyond them: hidden desert spots, and a staged moment if you want one — a proposal timed to the light. Tips and logistics are carried underneath, so you just arrive. And quiet local introductions are there too, whenever you want them.";
+const ORIGINAL_LEAD =
+  "The complete sightseeing day — every great temple and tomb of both banks, a private felucca and a trip into the desert, with every entry ticket already in the price. A private Egyptologist reads each site for you at the hour it's quietest, with insider access along the way, and tips and the logistics are handled so you never break the spell to sort anything out. Done in whatever order you like.";
+const LIGHT_LEAD =
+  "Your own trusted person on the ground for the day — a driver, translator and fixer who knows Luxor from the inside. Insider access and local contacts where they count, tips and the small frictions handled, and the day shaped around you. We plan it together before you arrive; entries and experiences you pay locally as you go, so it stays light and flexible — and the more days you take, the more of Luxor you can fit in.";
+const REALITY_LEAD =
+  "A full day aimed at one thing: making something real in Egypt. We open the doors, make the introductions in person, and give you a straight local read on every opportunity.";
 
 const MORE_DAYS_MSG =
   "Five days or more — slower still, and shaped entirely around you. Your concierge sends a private proposal.";
@@ -85,17 +449,22 @@ const MORE_DAYS_MSG =
 // Adventure Light — your own person on the ground. Said plainly, so nobody
 // arrives expecting the Signature day.
 const LIGHT_INCLUDED = [
+  "Door-to-door transfer from Hurghada or Marsa Alam — included in the price, and the car stays with you all day",
   "Your own person on the ground — a trusted driver, translator and fixer all day",
   "Your planner on WhatsApp from the moment you book — the trip mapped out with you before you arrive",
+  "Authentic local introductions — hosts, artisans & storytellers you'd never find on your own",
+  "A hand-picked local food & coffee stop, on us — where locals actually eat, not the tourist cafés",
+  "Tips & baksheesh handled by your concierge — no haggling, no awkward moments (you cover the tips; he sorts the rest)",
   "Anything that comes up, sorted on the spot — bookings, timings and the little hiccups",
-  "Someone who knows the place — and gets you in, from temple doors to the best local tables",
+  "Someone who knows the place — and gets you in, from temple doors to the best tables",
   "Tickets, queues and timings handled as you go",
+  INSIDER_CONTACTS,
   "Still reachable after you fly home",
   "A small gift from your concierge",
 ];
 const LIGHT_LOCAL = [
   "No experiences are booked in advance — bring local cash and pay as you go",
-  "Entry tickets, experiences, meals and tips are paid locally, on the day — local prices vary with the season",
+  "Entry tickets, the experiences you choose and your tips are paid locally, on the day — your concierge handles the how, so it's always smooth and fair",
   "We'll arrange what we can ahead of time, but some things depend on the day and on availability",
 ];
 
@@ -119,6 +488,16 @@ const ALT: Record<
     companion: "Medinet Habu — temple of Ramesses III",
   },
   light: {
+    temple: "",
+    tsig: false,
+    companion: "",
+  },
+  reality: {
+    temple: "",
+    tsig: false,
+    companion: "",
+  },
+  original: {
     temple: "",
     tsig: false,
     companion: "",
@@ -325,6 +704,8 @@ export type DayConfiguratorImages = {
   journeyKarnak?: string;
   journeyBalloon?: string;
   journeyLight?: string;
+  journeyReality?: string;
+  journeyOriginal?: string;
   sunsetNile?: string;
   sunsetPicnic?: string;
   sunsetCustom?: string;
@@ -419,6 +800,11 @@ export default function DayConfigurator({
     journeyBalloon: images.journeyBalloon || "/images/experiences/balloon-hero.jpg",
     journeyLight:
       images.journeyLight || "/images/concierge-day/concierge-nile.jpg",
+    // Accommodation image from the villas gallery — a terrace/balcony over the
+    // Nile for the Reality Hunting day.
+    journeyReality: images.journeyReality || "/images/villas/luxor-nile-terrace.jpg",
+    // The iconic sightseeing shot for Original — Karnak at dawn.
+    journeyOriginal: images.journeyOriginal || "/images/experiences/karnak-at-dawn-hero.jpg",
   };
   const journeyImg = (j: Journey) =>
     j === "medinet"
@@ -427,22 +813,50 @@ export default function DayConfigurator({
         ? img.journeyKarnak
         : j === "balloon"
           ? img.journeyBalloon
-          : img.journeyLight;
+          : j === "reality"
+            ? img.journeyReality
+            : j === "original"
+              ? img.journeyOriginal
+              : img.journeyLight;
   const { days, setDays } = useDayCount();
   const [group, setGroup] = useState(2);
   const [journey, setJourney] = useState<Journey>("medinet");
+  // Which card's detail panel is open. Nothing is expanded until the guest taps a
+  // card; selecting (for the booking summary) and expanding happen on that tap.
+  const [expanded, setExpanded] = useState<"signature" | "original" | "light" | "reality" | null>(
+    null,
+  );
   const isLight = journey === "light";
+  const isReality = journey === "reality";
+  const isOriginal = journey === "original";
+  // The "simple-card" family — no Signature 3-journey pick, no gift set, a flat
+  // per-day price and a single fixed inclusion list: Adventure Light, Reality
+  // Hunting and Original all render this way (Original is still bookable).
+  const conc = isLight || isReality || isOriginal;
+  // One agreed display name per card, used everywhere (no shape variants).
+  const dayName = isOriginal
+    ? "Original"
+    : isLight
+      ? "Adventure"
+      : isReality
+        ? "Reality Hunting"
+        : "Signature";
+  // Tap a card → select it for the summary AND toggle its detail panel.
+  const pickCard = (key: "signature" | "original" | "light" | "reality", j: Journey) => {
+    setJourney(j);
+    setExpanded((prev) => (prev === key ? null : key));
+  };
   // 5+ guests or 5+ days → a private proposal. The checkout column keeps its
-  // look but turns into a short request form instead of a payment.
+  // look but turns into a short request form instead of a payment. Reality
+  // Hunting is bespoke, so it always takes that same proposal path.
   const [bigGroup, setBigGroup] = useState(false);
   const [bigGroupCount, setBigGroupCount] = useState(6);
   const [moreDays, setMoreDays] = useState(false);
   const [moreDaysCount, setMoreDaysCount] = useState(5);
-  const proposal = bigGroup || moreDays;
+  const proposal = bigGroup || moreDays || isReality;
   const [eq, setEq] = useState({ name: "", email: "", phone: "", message: "" });
   const [eqSent, setEqSent] = useState(false);
   const [photo, setPhoto] = useState(false);
-  const [hurg, setHurg] = useState(false);
   const [pay, setPay] = useState<Pay>("deposit");
   const [tripDate, setTripDate] = useState("");
   const [dateError, setDateError] = useState(false);
@@ -458,30 +872,31 @@ export default function DayConfigurator({
   // touch is a professional photographer/videographer (PHOTO_PRO — a flat
   // premium package, imported from lib/pricing-math so the server agrees).
 
-  // End-to-end concierge transfer (Marsa Alam / Hurghada) — a special bundled
-  // rate offered only with Design Your Day. The server (quote.ts) uses the same
-  // figure from the concierge-sea-transfer product so client and server agree.
-  const seaPrice = 290;
-
+  // End-to-end concierge transfer (Marsa Alam / Hurghada) is now INCLUDED in the
+  // price on every Design Your Day variant — no longer a paid add-on. The only
+  // paid finishing touch left is the professional photographer/videographer.
   function addonsCost() {
     let c = 0;
     if (photo) c += PHOTO_PRO;
-    if (hurg) c += seaPrice;
     return c;
   }
   // Signature days scale by guests and get the volume discount; Adventure Light
   // is a flat concierge rate per day for the group.
   const baseTotal = (d: number) =>
-    isLight
-      ? lightTotal(d, group, lightDayRate)
-      : dayTotal(d, group, dayRate, volumeDiscount, groupSupplement);
+    isReality
+      ? REALITY_RATE * d
+      : isOriginal
+        ? dayTotal(d, group, ORIGINAL_RATE, volumeDiscount, groupSupplement)
+        : conc
+          ? lightTotal(d, group, lightDayRate)
+          : dayTotal(d, group, dayRate, volumeDiscount, groupSupplement);
   const total = baseTotal(days) + addonsCost();
 
   // Signature gifts: one per full concierge day, up to the set of three. The
   // configurator shows exactly what the current day count unlocks, and nudges
   // toward completing the set. Adventure Light carries a single small gift.
-  const giftCount = isLight ? 0 : moreDays ? 3 : giftsForDays(days);
-  const giftsLabel = isLight ? "A gift" : `${giftCount} gift${giftCount > 1 ? "s" : ""}`;
+  const giftCount = conc ? 0 : moreDays ? 3 : giftsForDays(days);
+  const giftsLabel = conc ? "A gift" : `${giftCount} gift${giftCount > 1 ? "s" : ""}`;
   const giftMsg =
     giftCount >= 3
       ? "The full set — all three signature gifts, hand-picked and yours to keep."
@@ -491,7 +906,11 @@ export default function DayConfigurator({
   // The gold "Save" badge shows the Design Your Day product's own saving (the
   // multi-day volume discount, scaling with days + guests) — not the à-la-carte
   // comparison, which stays below as a separate angle.
-  const dydSaving = isLight ? 0 : daySaving(days, group, dayRate, volumeDiscount, groupSupplement);
+  const dydSaving = isOriginal
+    ? daySaving(days, group, ORIGINAL_RATE, volumeDiscount, groupSupplement)
+    : conc
+      ? 0
+      : daySaving(days, group, dayRate, volumeDiscount, groupSupplement);
   const perPerson = Math.round(total / group);
   const deposit = Math.round((total * depositPercent) / 100);
 
@@ -514,14 +933,35 @@ export default function DayConfigurator({
     const gl = group + (group > 1 ? " guests" : " guest");
     if (journey === "light") {
       const extras: PlanItem[] = [];
-      if (hurg) extras.push("End-to-end concierge transfer from the coast (Marsa Alam or Hurghada)");
       if (photo) extras.push("Private photographer / videographer for your day");
       return {
         start: [] as PlanItem[],
-        startTitle: "Adventure Light · concierge only",
+        startTitle: "Adventure · concierge only",
         pool: [] as PlanItem[],
         bonus: [] as PlanItem[],
         handled: [...extras, ...LIGHT_INCLUDED] as PlanItem[],
+      };
+    }
+    if (journey === "reality") {
+      const extras: PlanItem[] = [];
+      if (photo) extras.push("Private photographer / videographer for your day");
+      return {
+        start: [] as PlanItem[],
+        startTitle: "Reality Hunting · business day",
+        pool: [] as PlanItem[],
+        bonus: [] as PlanItem[],
+        handled: [...extras, ...REALITY_INCLUDED] as PlanItem[],
+      };
+    }
+    if (journey === "original") {
+      const extras: PlanItem[] = [];
+      if (photo) extras.push("Private photographer / videographer for your day");
+      return {
+        start: [] as PlanItem[],
+        startTitle: "Original · the full day",
+        pool: [] as PlanItem[],
+        bonus: [] as PlanItem[],
+        handled: [...extras, ...ORIGINAL_INCLUDED] as PlanItem[],
       };
     }
     const start: PlanItem[] = [];
@@ -564,9 +1004,15 @@ export default function DayConfigurator({
       });
     }
     const handled: PlanItem[] = [];
-    if (hurg) handled.push("End-to-end concierge transfer from the coast (Marsa Alam or Hurghada)");
+    handled.push(
+      "Door-to-door transfer from Hurghada, Marsa Alam or the coast — included, and the car stays with you the whole trip"
+    );
+    handled.push(
+      "Insider access & insider knowledge — doors, the real stories, and introductions to local contacts & businesses"
+    );
     handled.push("Your own licensed Egyptologist — every day");
     handled.push("All monument entry tickets for " + gl);
+    handled.push("Temples & tombs in any order you like — or into the desert; just tell your concierge");
     handled.push("Private, air-conditioned transfers throughout");
     handled.push("Every reservation, timing & fast-track entry, planned for you");
     handled.push(
@@ -584,12 +1030,12 @@ export default function DayConfigurator({
 
     return {
       start,
-      startTitle: "Day 1 · " + j.name,
+      startTitle: "Day 1 · Signature",
       pool,
       bonus,
       handled,
     };
-  }, [journey, group, photo, days, hurg]);
+  }, [journey, group, photo, days]);
 
   // Counts shown in the progress bar are derived from the actual itinerary, so
   // they can never drift from what's really included. Experiences = the touring
@@ -622,7 +1068,7 @@ export default function DayConfigurator({
       }
     });
   });
-  const showSavings = !isLight && sepTotal > total;
+  const showSavings = !conc && sepTotal > total;
 
   const glabel = group + (group > 1 ? " guests" : " guest");
 
@@ -651,12 +1097,16 @@ export default function DayConfigurator({
     return [
       `${d} day${d > 1 ? "s" : ""}`,
       `${g} guest${g > 1 ? "s" : ""}`,
-      isLight
-        ? "Adventure Light (concierge only)"
-        : `Signature day: ${JOURNEY[journey].name} (first: ${JOURNEY[journey].temple.split(" — ")[0]})`,
-      isLight ? "" : "Sunset: Nile or desert, chosen with the concierge",
+      isReality
+        ? "Reality Hunting (business · land · investment)"
+        : isOriginal
+          ? "Original (the full sightseeing day — entries, felucca & desert included)"
+          : isLight
+            ? "Adventure (concierge only)"
+            : "Signature (full guided day — insider access, Egyptologist, balloon & a gift)",
+      conc ? "" : "Sunset: Nile or desert, chosen with the concierge",
+      "Door-to-door transfer from the coast (Hurghada / Marsa Alam): included",
       photo ? "Add-on: private photographer / videographer" : "",
-      hurg ? "Add-on: End-to-end concierge transfer (sea)" : "",
     ]
       .filter(Boolean)
       .join(" · ");
@@ -717,8 +1167,16 @@ export default function DayConfigurator({
       setError("Please agree to the Terms and Cancellation Policy to continue.");
       return;
     }
-    const name = isLight ? `${days}-day Adventure Light` : `${days}-day Concierge Journey`;
-    const slug = isLight ? `concierge-light-${days}d` : `concierge-day-${days}d`;
+    const name = isLight
+      ? `${days}-day Adventure`
+      : isOriginal
+        ? `${days}-day Original`
+        : `${days}-day Concierge Journey`;
+    const slug = isLight
+      ? `concierge-light-${days}d`
+      : isOriginal
+        ? `concierge-original-${days}d`
+        : `concierge-day-${days}d`;
     const preferences = configSummary();
     trackBeginCheckout({
       value: total,
@@ -737,7 +1195,6 @@ export default function DayConfigurator({
           mode: pay,
           guests: group,
           photo,
-          seaTransfer: hurg,
           date: tripDate,
           cancelPath: "/concierge-day#build",
           preferences,
@@ -755,6 +1212,107 @@ export default function DayConfigurator({
     setLoading(false);
   }
 
+  // The expansion hero — the exact graphic & hero detail of the checkout
+  // summary (image + scrim + eyebrow + title + the gift marks), shown at the top
+  // of a card's expansion so it reads like the final summary from the first look.
+  const renderExpHero = (opts: { img: string; eyebrow: string; title: string; sub?: string }) => (
+    <div className={styles.expHero}>
+      <Image src={opts.img} alt="" fill sizes="(max-width: 820px) 100vw, 860px" className={styles.visHeroImg} />
+      <span className={styles.visHeroScrim} aria-hidden />
+      <div className={styles.visHeroCap}>
+        <span className={styles.visEyebrow}>{opts.eyebrow}</span>
+        <h4 className={styles.visJourney}>{opts.title}</h4>
+        {opts.sub && <p className={styles.expHeroSub}>{opts.sub}</p>}
+      </div>
+      <div className={styles.visGifts}>
+        {conc ? (
+          <div className={styles.visGiftOne}>
+            <span className={styles.visGiftOneMark} aria-hidden>
+              ✦
+            </span>
+            <span>A gift from your concierge</span>
+          </div>
+        ) : (
+          GIFTS.map((g) => {
+            const on = g.day <= giftCount;
+            return (
+              <div
+                key={g.key}
+                className={`${styles.giftNode} ${on ? styles.giftNodeOn : styles.giftNodeOff}`}
+              >
+                <span className={styles.giftNodeHalo} aria-hidden />
+                <g.Icon className={styles.giftNodeIco} />
+                <span className={styles.giftNodeLabel}>
+                  {on ? g.name.replace(/^The /, "") : `Day ${g.day}`}
+                </span>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+
+  // A card's expansion — the brochure. No hero or title (the card above is the
+  // header), so it reads as one continuous card: a lead line, the experiences
+  // included, everything handled, and any honest caveats — each with a symbol.
+  const renderBrochure = (opts: {
+    lead: string;
+    experiences?: { icon: ReactNode; name: string; desc: string }[];
+    expLede?: string;
+    included: string[];
+    caveats?: { label: string; items: string[] };
+    note?: string;
+  }) => (
+    <div className={styles.expCard}>
+      <div className={styles.expInner}>
+        <p className={styles.expLead}>{opts.lead}</p>
+        {opts.experiences && opts.experiences.length > 0 && (
+          <div className={styles.expBlock}>
+            <span className={styles.expEyebrow}>Experiences included</span>
+            {opts.expLede && <p className={styles.expLede}>{opts.expLede}</p>}
+            <ul className={styles.expExps}>
+              {opts.experiences.map((e) => (
+                <li key={e.name}>
+                  <span className={styles.expExpIco}>{e.icon}</span>
+                  <span className={styles.expExpTxt}>
+                    <b>{e.name}</b>
+                    <span>{e.desc}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div className={styles.expBlock}>
+          <span className={styles.expEyebrow}>Also included</span>
+          <ul className={styles.expInc}>
+            {opts.included.map((t) => (
+              <li key={t}>
+                <span className={styles.expIncIco}>{iconFor(t)}</span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {opts.caveats && opts.caveats.items.length > 0 && (
+          <div className={styles.expBlock}>
+            <span className={styles.expEyebrow}>{opts.caveats.label}</span>
+            <ul className={`${styles.expInc} ${styles.expMuted}`}>
+              {opts.caveats.items.map((t) => (
+                <li key={t}>
+                  <span className={styles.expIncIco}>{iconFor(t)}</span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {opts.note && <p className={styles.expNote}>{opts.note}</p>}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div className={styles.cfgGrid}>
@@ -766,65 +1324,150 @@ export default function DayConfigurator({
               <h3>What should your day feel like?</h3>
             </div>
             <p className={styles.prefNote}>
-              Start with the day you&apos;re dreaming of. Pick a Signature journey — or hand the
-              whole day to your concierge.
+              Three ways to spend the day. Tap any card to open exactly what&apos;s included.
             </p>
-            {/* three Signature journeys: the feeling leads, the shared promise sits below */}
-            <div className={styles.sigCards}>
-              {SIGNATURE_CARDS.map((c) => {
-                const on = journey === c.key;
-                return (
-                  <div
-                    key={c.key}
-                    role="button"
-                    tabIndex={0}
-                    aria-pressed={on}
-                    aria-label={JOURNEY[c.key].name}
-                    className={`${styles.sigCard} ${on ? styles.sigOn : ""}`}
-                    onClick={() => setJourney(c.key)}
-                    onKeyDown={(e) => pickKey(e, () => setJourney(c.key))}
-                  >
-                    <Image
-                      src={journeyImg(c.key)}
-                      alt=""
-                      fill
-                      sizes="(max-width: 560px) 90vw, 290px"
-                      className={styles.sigImg}
-                    />
-                    <span className={styles.sigShade} aria-hidden />
-                    <div className={styles.sigTop}>
-                      <span className={styles.sigTier}>✦ Signature</span>
-                      {on && <span className={styles.sigChosen}>✓ Your day</span>}
-                    </div>
-                    <div className={styles.sigBody}>
-                      <h4 className={styles.sigPlace}>{JOURNEY[c.key].name}</h4>
-                      <p className={styles.sigHook}>{c.intro}</p>
-                      <span className={styles.sigMeta}>{SIGNATURE_META}</span>
-                      <div className={styles.sigFoot}>
-                        <span className={styles.sigPrice}>
-                          <small>from</small> {euro(dayRate)}
-                          <small>/day</small>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <p className={styles.journeyNote}>{JOURNEY_NOTE}</p>
 
-            <div className={styles.cardsOr}>
-              <span>or — hand us the day entirely</span>
+            {/* 1 · Signature — one card, no shape variants. Tap to open its dark
+                detail panel in the checkout-summary style. */}
+            <div
+              role="button"
+              tabIndex={0}
+              aria-pressed={!conc}
+              aria-label="Signature — a full guided day"
+              className={`${styles.sigCard} ${styles.sigCardWide} ${!conc ? styles.sigOn : ""} ${
+                expanded === "signature" ? styles.sigOpen : ""
+              }`}
+              onClick={() => pickCard("signature", "medinet")}
+              onKeyDown={(e) => pickKey(e, () => pickCard("signature", "medinet"))}
+            >
+              <Image
+                src={img.journeyMedinet}
+                alt=""
+                fill
+                sizes="(max-width: 560px) 100vw, 860px"
+                className={styles.sigImg}
+              />
+              <span className={styles.sigShade} aria-hidden />
+              <div className={styles.sigTop}>
+                <span className={styles.sigTier}>Full day · insider access</span>
+                {!conc ? (
+                  <span className={styles.sigChosen}>✓ Selected</span>
+                ) : (
+                  <span className={styles.sigSave}>See details ↓</span>
+                )}
+              </div>
+              <div className={styles.sigBody}>
+                <span className={styles.sigKicker}>End-to-end to Luxor</span>
+                <h4 className={styles.sigPlace}>Signature</h4>
+                <p className={styles.sigHook}>
+                  A full guided day with nothing to arrange: door-to-door from the coast, a private
+                  Egyptologist and insider access, the temples and tombs in the order you like, a
+                  hot-air balloon at dawn, local food stops, tips handled, and a signature gift to
+                  keep.
+                </p>
+                <ul className={styles.sigPoints}>
+                  {SIGNATURE_POINTS.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+                <span className={styles.sigMeta}>{SIGNATURE_META}</span>
+                <div className={styles.sigFoot}>
+                  <span className={styles.sigPrice}>
+                    <small>from</small> {euro(dayRate)}
+                    <small>/day</small>
+                  </span>
+                  <span className={styles.sigNote}>transfer from the coast included</span>
+                </div>
+              </div>
             </div>
-            {/* The Consigliere — same card family, a calmer wide card */}
+
+            {expanded === "signature" &&
+              renderBrochure({
+                lead: SIGNATURE_LEAD,
+                experiences: SIGNATURE_EXPS,
+                expLede:
+                  "The best of what Luxor has to offer — you choose which to do each day, and add days to fit in more. One day covers the highlights; the full set unlocks across three to four.",
+                included: SIGNATURE_HANDLED,
+                caveats: { label: "As you add days", items: SIGNATURE_UNLOCKS },
+                note: "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf.",
+              })}
+
+            {/* 2 · Original — the full sightseeing day, entries included. */}
+            <div className={styles.cardsOr}>
+              <span>or</span>
+            </div>
+            <div
+              role="button"
+              tabIndex={0}
+              aria-pressed={isOriginal}
+              aria-label="Original — the full sightseeing day, entries included"
+              className={`${styles.sigCard} ${styles.sigCardWide} ${isOriginal ? styles.sigOn : ""} ${
+                expanded === "original" ? styles.sigOpen : ""
+              }`}
+              onClick={() => pickCard("original", "original")}
+              onKeyDown={(e) => pickKey(e, () => pickCard("original", "original"))}
+            >
+              <Image
+                src={img.journeyOriginal}
+                alt=""
+                fill
+                sizes="(max-width: 560px) 100vw, 860px"
+                className={styles.sigImg}
+              />
+              <span className={styles.sigShade} aria-hidden />
+              <div className={styles.sigTop}>
+                <span className={styles.sigTier}>Full day · all the sights</span>
+                {isOriginal ? (
+                  <span className={styles.sigChosen}>✓ Selected</span>
+                ) : (
+                  <span className={styles.sigSave}>See details ↓</span>
+                )}
+              </div>
+              <div className={styles.sigBody}>
+                <span className={styles.sigKicker}>Entries included</span>
+                <h4 className={styles.sigPlace}>Original</h4>
+                <p className={styles.sigHook}>{ORIGINAL_SUBTITLE}</p>
+                <ul className={styles.sigPoints}>
+                  {ORIGINAL_POINTS.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+                <span className={styles.sigMeta}>{ORIGINAL_META}</span>
+                <div className={styles.sigFoot}>
+                  <span className={styles.sigPrice}>
+                    <small>from</small> {euro(ORIGINAL_RATE)}
+                    <small>/day</small>
+                  </span>
+                  <span className={styles.sigNote}>transfer from the coast included</span>
+                </div>
+              </div>
+            </div>
+
+            {expanded === "original" &&
+              renderBrochure({
+                lead: ORIGINAL_LEAD,
+                experiences: ORIGINAL_EXPS,
+                expLede:
+                  "The best of Luxor's temples and tombs, every entry in the price — you choose the order, and add days to go slower and see more.",
+                included: ORIGINAL_HANDLED,
+                caveats: { label: "Added on request", items: ORIGINAL_MORE },
+                note: "In any order you like, at the quiet hour for each — just tell your concierge.",
+              })}
+
+            {/* 3 · Adventure Light — concierge only, pay as you go. */}
+            <div className={styles.cardsOr}>
+              <span>or</span>
+            </div>
             <div
               role="button"
               tabIndex={0}
               aria-pressed={isLight}
-              aria-label="Adventure Light — your own concierge"
-              className={`${styles.sigCard} ${styles.sigCardWide} ${isLight ? styles.sigOn : ""}`}
-              onClick={() => setJourney("light")}
-              onKeyDown={(e) => pickKey(e, () => setJourney("light"))}
+              aria-label="Adventure — concierge only"
+              className={`${styles.sigCard} ${styles.sigCardWide} ${isLight ? styles.sigOn : ""} ${
+                expanded === "light" ? styles.sigOpen : ""
+              }`}
+              onClick={() => pickCard("light", "light")}
+              onKeyDown={(e) => pickKey(e, () => pickCard("light", "light"))}
             >
               <Image
                 src={img.journeyLight}
@@ -835,17 +1478,22 @@ export default function DayConfigurator({
               />
               <span className={styles.sigShade} aria-hidden />
               <div className={styles.sigTop}>
-                <span className={styles.sigTier}>Pay as you go</span>
+                <span className={styles.sigTier}>Concierge only</span>
                 {isLight ? (
-                  <span className={styles.sigChosen}>✓ Your day</span>
+                  <span className={styles.sigChosen}>✓ Selected</span>
                 ) : (
-                  <span className={styles.sigSave}>Most flexible</span>
+                  <span className={styles.sigSave}>See details ↓</span>
                 )}
               </div>
               <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>Your own concierge</span>
-                <h4 className={styles.sigPlace}>Adventure Light</h4>
+                <span className={styles.sigKicker}>Pay as you go</span>
+                <h4 className={styles.sigPlace}>Adventure</h4>
                 <p className={styles.sigHook}>{CONSIGLIERE_INTRO}</p>
+                <ul className={styles.sigPoints}>
+                  {LIGHT_POINTS.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
                 <span className={styles.sigMeta}>{CONSIGLIERE_META}</span>
                 <div className={styles.sigFoot}>
                   <span className={styles.sigPrice}>
@@ -857,28 +1505,77 @@ export default function DayConfigurator({
               </div>
             </div>
 
-            {isLight && (
-              <div className={styles.lightInfo}>
-                <div>
-                  <span className={styles.feelEyebrow}>Included</span>
-                  <ul className={styles.lightList}>
-                    {LIGHT_INCLUDED.map((t) => (
-                      <li key={t}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <span className={styles.feelEyebrow}>Paid locally, on the day</span>
-                  <ul className={`${styles.lightList} ${styles.lightLocal}`}>
-                    {LIGHT_LOCAL.map((t) => (
-                      <li key={t}>{t}</li>
-                    ))}
-                  </ul>
-                  <p className={styles.lightAsk}>
-                    Go with the flow — tell us what you need, and we&apos;ll arrange it.
-                  </p>
+            {expanded === "light" &&
+              renderBrochure({
+                lead: LIGHT_LEAD,
+                included: LIGHT_INCLUDED,
+                caveats: { label: "Paid locally, on the day", items: LIGHT_LOCAL },
+                note: "Go with the flow — tell us what you need, and we'll arrange it.",
+              })}
+
+            {/* 4 · Reality Hunting — business, land & investment. Hidden for now
+                (kept in place to re-enable later); Signature/Original/Adventure
+                already carry the local-contacts layer. */}
+            {false && (
+            <>
+            <div className={styles.cardsOr}>
+              <span>or</span>
+            </div>
+            <div
+              role="button"
+              tabIndex={0}
+              aria-pressed={isReality}
+              aria-label="Reality Hunting — business, land and investment"
+              className={`${styles.sigCard} ${styles.sigCardWide} ${isReality ? styles.sigOn : ""} ${
+                expanded === "reality" ? styles.sigOpen : ""
+              }`}
+              onClick={() => pickCard("reality", "reality")}
+              onKeyDown={(e) => pickKey(e, () => pickCard("reality", "reality"))}
+            >
+              <Image
+                src={img.journeyReality}
+                alt=""
+                fill
+                sizes="(max-width: 560px) 100vw, 860px"
+                className={styles.sigImg}
+              />
+              <span className={styles.sigShade} aria-hidden />
+              <div className={styles.sigTop}>
+                <span className={styles.sigTier}>Business &amp; investment</span>
+                {isReality ? (
+                  <span className={styles.sigChosen}>✓ Selected</span>
+                ) : (
+                  <span className={styles.sigSave}>See details ↓</span>
+                )}
+              </div>
+              <div className={styles.sigBody}>
+                <span className={styles.sigKicker}>Private access</span>
+                <h4 className={styles.sigPlace}>{REALITY_TITLE}</h4>
+                <p className={styles.sigHook}>{REALITY_SUBTITLE}</p>
+                <ul className={styles.sigPoints}>
+                  {REALITY_POINTS.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+                <span className={styles.sigMeta}>{REALITY_META}</span>
+                <div className={styles.sigFoot}>
+                  <span className={styles.sigPrice}>
+                    <small>from</small> {euro(REALITY_RATE)}
+                    <small>/day</small>
+                  </span>
+                  <span className={styles.sigNote}>land · property · introductions</span>
                 </div>
               </div>
+            </div>
+
+            {expanded === "reality" &&
+              renderBrochure({
+                lead: REALITY_LEAD,
+                included: REALITY_INCLUDED,
+                caveats: { label: "How it works", items: REALITY_LOCAL },
+                note: "Tell your concierge what you're hunting for — we reply with a plan and the people to meet.",
+              })}
+            </>
             )}
           </div>
 
@@ -924,11 +1621,13 @@ export default function DayConfigurator({
             <div className={styles.grpNote}>
               {bigGroup
                 ? "Groups of five or more are arranged personally — your checkout becomes a short request, and your concierge replies within 24 hours with a private proposal."
-                : group > 1
-                  ? `${euro(perPerson)} per person — adding guests lowers the per-person rate.${isLight ? " Local costs are extra." : ""}`
-                  : isLight
-                    ? "Travelling with others? Add them — the per-person rate drops. Local costs are paid on the day."
-                    : "Travelling with your partner or friends? Add them — the per-person price drops."}
+                : isReality
+                  ? "Coming alone, or with partners, advisors or family? Add them — we'll shape the day around who's at the table."
+                  : group > 1
+                    ? `${euro(perPerson)} per person — adding guests lowers the per-person rate.${isLight ? " Local costs are extra." : ""}`
+                    : isLight
+                      ? "Travelling with others? Add them — the per-person rate drops. Local costs are paid on the day."
+                      : "Travelling with your partner or friends? Add them — the per-person price drops."}
             </div>
           </div>
 
@@ -940,7 +1639,16 @@ export default function DayConfigurator({
             </div>
             <div className={styles.daysGrid}>
               {([1, 2, 3, 4] as DayCount[]).map((d) => {
-                const sv = isLight ? 0 : daySaving(d, group, dayRate, volumeDiscount, groupSupplement);
+                const sv =
+                  isLight || isReality
+                    ? 0
+                    : daySaving(
+                        d,
+                        group,
+                        isOriginal ? ORIGINAL_RATE : dayRate,
+                        volumeDiscount,
+                        groupSupplement,
+                      );
                 const on = !moreDays && days === d;
                 return (
                   <button
@@ -953,12 +1661,14 @@ export default function DayConfigurator({
                       setMoreDays(false);
                     }}
                   >
-                    {d === 3 && !isLight && <span className={styles.pop}>Most popular</span>}
+                    {d === 3 && !conc && <span className={styles.pop}>Most popular</span>}
                     <div className={styles.dn}>
                       {d} {d > 1 ? "days" : "day"}
                     </div>
                     <div className={styles.dp}>{euro(baseTotal(d))}</div>
-                    <div className={styles.dsave}>{sv > 0 ? "save " + euro(sv) : " "}</div>
+                    <div className={styles.dsave}>
+                      {!isLight && !isReality && sv > 0 ? "save " + euro(sv) : " "}
+                    </div>
                   </button>
                 );
               })}
@@ -985,11 +1695,15 @@ export default function DayConfigurator({
                 onChange={setMoreDaysCount}
               />
             )}
-            {isLight ? (
+            {conc ? (
               <div className={styles.grpNote}>
-                {moreDays
-                  ? "A longer trip with your concierge — we'll plan it with you and send a proposal."
-                  : "Each day: your concierge from pickup to the end of the day. Book as many as your trip needs."}
+                {isReality
+                  ? moreDays
+                    ? "A longer engagement — we'll scope it with you and send a plan and a price."
+                    : "Each day is a full day given to your business — book as many as the deal needs."
+                  : moreDays
+                    ? "A longer trip with your concierge — we'll plan it with you and send a proposal."
+                    : "Each day: your concierge from pickup to the end of the day. Book as many as your trip needs."}
               </div>
             ) : (
               <div className={styles.daySummary}>
@@ -1012,7 +1726,7 @@ export default function DayConfigurator({
               <h3>Add the finishing touches</h3>
             </div>
             <div className={styles.pref}>
-              {!isLight && (
+              {!conc && (
                 <div className={`${styles.addon} ${styles.sel}`} style={{ cursor: "default", marginBottom: ".6rem" }}>
                   <span className={styles.chk}>✓</span>
                   <div>
@@ -1044,24 +1758,20 @@ export default function DayConfigurator({
                 <span className={styles.ax}>+€{PHOTO_PRO}</span>
               </div>
               <div
-                className={`${styles.addon} ${hurg ? styles.sel : ""}`}
-                style={{ marginTop: ".6rem" }}
-                onClick={() => setHurg((h) => !h)}
+                className={`${styles.addon} ${styles.sel}`}
+                style={{ cursor: "default", marginTop: ".6rem" }}
               >
                 <span className={styles.chk}>✓</span>
                 <div>
-                  <b style={{ fontWeight: 500 }}>
-                    End-to-end concierge transfer{" "}
-                    <span className={styles.addonRec}>Recommended</span>
-                  </b>
+                  <b style={{ fontWeight: 500 }}>End-to-end transfer from the coast</b>
                   <div className="muted" style={{ fontSize: ".76rem" }}>
                     Coming from the sea? Your concierge collects you in Marsa Alam
                     or Hurghada and delivers you back, door to door — and the
                     private car stays with you for the whole stay, wherever the
-                    days go. A special rate, only with Design Your Day.
+                    days go. Included in your price, on every Design Your Day.
                   </div>
                 </div>
-                <span className={styles.ax}>+€{seaPrice}</span>
+                <span className={styles.ax}>Included</span>
               </div>
             </div>
           </div>
@@ -1088,7 +1798,7 @@ export default function DayConfigurator({
             <div className={styles.visHero}>
               <Image
                 src={journeyImg(journey)}
-                alt={JOURNEY[journey].name}
+                alt={dayName}
                 fill
                 sizes="(max-width: 820px) 100vw, 460px"
                 className={styles.visHeroImg}
@@ -1096,15 +1806,21 @@ export default function DayConfigurator({
               <span className={styles.visHeroScrim} aria-hidden />
               <div className={styles.visHeroCap}>
                 <span className={styles.visEyebrow}>
-                  {isLight ? "Luxor Rising · Concierge" : "Luxor Rising · Signature day"}
+                  {isReality
+                    ? "Luxor Rising · Reality Hunting"
+                    : isOriginal
+                      ? "Luxor Rising · Original"
+                      : isLight
+                        ? "Luxor Rising · Concierge"
+                        : "Luxor Rising · Signature day"}
                 </span>
                 <h4 className={styles.visJourney}>
-                  {isLight ? "Your own concierge" : JOURNEY[journey].name}
+                  {dayName}
                 </h4>
               </div>
               {/* the presents, glowing over the image */}
               <div className={styles.visGifts}>
-                {isLight ? (
+                {conc ? (
                   <div className={styles.visGiftOne}>
                     <span className={styles.visGiftOneMark} aria-hidden>
                       ✦
@@ -1131,14 +1847,33 @@ export default function DayConfigurator({
               </div>
             </div>
             <p className={styles.visFeel}>
-              {isLight
-                ? "A trusted driver, translator and friend on the ground — everything handled on the spot."
-                : proposal
-                  ? "The same Signature day, made to measure — shaped around your group, at your pace."
-                  : FEEL[days]}
+              {isReality
+                ? "A full day given to what you came to build — the right people, the right doors, and an honest local read on every opportunity."
+                : isOriginal
+                  ? "Everything Luxor is famous for in one unhurried day — the great temples and tombs, a felucca and the desert, every entry handled."
+                  : isLight
+                    ? "A trusted driver, translator and friend on the ground — everything handled on the spot."
+                    : proposal
+                      ? "The same Signature day, made to measure — shaped around your group, at your pace."
+                      : FEEL[days]}
             </p>
             <p className={styles.visGiftLine}>
-              {isLight ? (
+              {isReality ? (
+                <>
+                  We open the doors and sit on your side of the table — never taking a cut of your
+                  deal.{" "}
+                  <a href="#gifts" className={styles.inclLink}>
+                    A gift to keep too →
+                  </a>
+                </>
+              ) : isOriginal ? (
+                <>
+                  Every entry ticket, a private felucca and the desert — all in the price.{" "}
+                  <a href="#gifts" className={styles.inclLink}>
+                    A gift to keep too →
+                  </a>
+                </>
+              ) : isLight ? (
                 <>
                   The three signature gifts come with the Signature days.{" "}
                   <a href="#gifts" className={styles.inclLink}>
@@ -1155,7 +1890,7 @@ export default function DayConfigurator({
               )}
             </p>
 
-            {!isLight && (
+            {!conc && (
               <JourneyProgress
                 days={days}
                 expCount={expCount}
@@ -1167,7 +1902,45 @@ export default function DayConfigurator({
             )}
             <div className={styles.sumDetails}>
               <div className={styles.sumSub}>What&apos;s included</div>
-              {isLight ? (
+              {isReality ? (
+                <ul className={styles.sumIncl}>
+                  <li>
+                    <b>A full day for business</b>
+                    <span>land, property or a company — your whole day given to it</span>
+                  </li>
+                  <li>
+                    <b>Doors opened</b>
+                    <span>owners, officials &amp; lawyers — the people who actually decide, met in person</span>
+                  </li>
+                  <li>
+                    <b>Our own network</b>
+                    <span>trusted local contacts, built over years on the ground</span>
+                  </li>
+                  <li>
+                    <b>Off-market opportunities</b>
+                    <span>land &amp; property that never reaches a listing — we hold some ourselves</span>
+                  </li>
+                </ul>
+              ) : isOriginal ? (
+                <ul className={styles.sumIncl}>
+                  <li>
+                    <b>Every entry ticket included</b>
+                    <span>the great temples &amp; tombs of both banks — no queues, no cash</span>
+                  </li>
+                  <li>
+                    <b>A private felucca &amp; the desert</b>
+                    <span>golden hour on the Nile and a trip out into the sand</span>
+                  </li>
+                  <li>
+                    <b>Door-to-door from the coast</b>
+                    <span>collected from Hurghada or Marsa Alam — the car stays all day</span>
+                  </li>
+                  <li>
+                    <b>Your concierge end to end</b>
+                    <span>driver, planner, translator &amp; fixer — in any order you like</span>
+                  </li>
+                </ul>
+              ) : isLight ? (
                 <ul className={styles.sumIncl}>
                   <li>
                     <b>Your own person on the ground</b>
@@ -1178,12 +1951,12 @@ export default function DayConfigurator({
                     <span>from the moment you book — the trip planned with you</span>
                   </li>
                   <li>
-                    <b>A small gift</b>
-                    <span>from your concierge, yours to keep</span>
+                    <b>Food stops, contacts &amp; tips sorted</b>
+                    <span>a local table on us, authentic introductions, and your concierge handles the tipping</span>
                   </li>
                   <li>
                     <b>Paid locally, in cash</b>
-                    <span>entry tickets, experiences, meals &amp; tips</span>
+                    <span>entry tickets, the experiences you choose &amp; your tips</span>
                   </li>
                 </ul>
               ) : (
@@ -1196,7 +1969,7 @@ export default function DayConfigurator({
                   </span>
                 </li>
                 <li>
-                  <b>Day 1 · {JOURNEY[journey].name}</b>
+                  <b>Day 1 · Signature</b>
                   <span>
                     {journey === "balloon"
                       ? "Dawn over Luxor, then any experience of the day"
@@ -1234,10 +2007,10 @@ export default function DayConfigurator({
               )}
               <button className={styles.sumMore} onClick={() => setListOpen((o) => !o)}>
                 {listOpen
-                  ? isLight
+                  ? conc
                     ? "Hide the details"
                     : "Hide full itinerary"
-                  : isLight
+                  : conc
                     ? "See the details"
                     : "See full itinerary"}{" "}
                 <span>{listOpen ? "▴" : "▾"}</span>
@@ -1273,13 +2046,27 @@ export default function DayConfigurator({
                   </>
                 )}
                 <li className={styles.dh}>
-                  {isLight ? "Adventure Light · included" : "Handled for you, throughout"}
+                  {isReality
+                    ? "Reality Hunting · what the day opens"
+                    : isOriginal
+                      ? "Original · what's included"
+                      : isLight
+                        ? "Adventure · included"
+                        : "Handled for you, throughout"}
                 </li>
                 {plan.handled.map((it, i) => (
                   <li key={"h" + i} className={itemClasses(it)}>
                     {itemText(it)}
                   </li>
                 ))}
+                {isOriginal && (
+                  <>
+                    <li className={styles.dh}>The only extras</li>
+                    {ORIGINAL_MORE.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </>
+                )}
                 {isLight && (
                   <>
                     <li className={styles.dh}>Paid locally, on the day</li>
@@ -1287,6 +2074,15 @@ export default function DayConfigurator({
                       <li key={t}>{t}</li>
                     ))}
                     <li>Tell us what you need — and we&apos;ll arrange it</li>
+                  </>
+                )}
+                {isReality && (
+                  <>
+                    <li className={styles.dh}>How it works, honestly</li>
+                    {REALITY_LOCAL.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                    <li>Tell us what you&apos;re hunting for — and we&apos;ll arrange it</li>
                   </>
                 )}
               </ul>
@@ -1324,19 +2120,24 @@ export default function DayConfigurator({
                   </div>
                 ) : (
                   <form onSubmit={handleProposal} noValidate>
-                    <span className={styles.propEyebrow}>Your private proposal</span>
+                    <span className={styles.propEyebrow}>
+                      {isReality ? "Your private plan" : "Your private proposal"}
+                    </span>
                     <h4 className={styles.propTitle}>
-                      {bigGroup && moreDays
-                        ? `${bigGroupCount} of you, ${moreDaysCount} days`
-                        : bigGroup
-                          ? `A day for ${bigGroupCount} of you`
-                          : `${moreDaysCount} days in Luxor`}
+                      {isReality && !bigGroup && !moreDays
+                        ? "Let's make it real"
+                        : bigGroup && moreDays
+                          ? `${bigGroupCount} of you, ${moreDaysCount} days`
+                          : bigGroup
+                            ? `A day for ${bigGroupCount} of you`
+                            : `${moreDaysCount} days in Luxor`}
                     </h4>
                     <p className={styles.propText}>
-                      Larger groups and longer journeys are shaped personally —{" "}
-                      {isLight ? "the same concierge" : `the same ${JOURNEY[journey].name} day`},
-                      arranged around you. Tell us where to reach you; your concierge replies with
-                      a proposal and a price.
+                      {isReality
+                        ? "Reality Hunting is where our concierge earns his name. Tell us what you're here to do — buy land, open a business, close a deal — and you'll get a plan, the people to meet, and the private, off-market opportunities we're already holding. From €350 a day, and worth many times that in the right door opened."
+                        : `Larger groups and longer journeys are shaped personally — ${
+                            isLight ? "the same concierge" : `the same ${dayName} day`
+                          }, arranged around you. Tell us where to reach you; your concierge replies with a proposal and a price.`}
                     </p>
                     {/* Honeypot: hidden from people, catches bots. */}
                     <input
@@ -1426,9 +2227,11 @@ export default function DayConfigurator({
                       <div className={`${styles.rrow} ${styles.rrowGuar}`}>
                         <span className={styles.ric} aria-hidden>🛡</span>
                         <span>
-                          {isLight
-                            ? "The same concierge, and the same care"
-                            : "The same Signature day, gifts and promise — first two hours, or your money back"}
+                          {isReality
+                            ? "Honest advice and real access — and we never take a cut of your deal"
+                            : isLight
+                              ? "The same concierge, and the same care"
+                              : "The same Signature day, gifts and promise — first two hours, or your money back"}
                         </span>
                       </div>
                     </div>
@@ -1490,16 +2293,24 @@ export default function DayConfigurator({
             )}
 
             {/* value stack — the scope of the offer, right at the price */}
-            {isLight ? (
+            {isOriginal ? (
+              <div className={styles.sumChips}>
+                <span className={`${styles.sumChip} ${styles.sumChipFree}`}>All entries — included</span>
+                <span className={`${styles.sumChip} ${styles.sumChipFree}`}>Coast transfer — included</span>
+                <span className={`${styles.sumChip} ${styles.sumChipFree}`}>Felucca &amp; desert</span>
+                <span className={styles.sumChip}>Everything handled</span>
+              </div>
+            ) : isLight ? (
               <div className={styles.sumChips}>
                 <span className={styles.sumChip}>Concierge all day</span>
-                <span className={styles.sumChip}>Planned with you</span>
+                <span className={`${styles.sumChip} ${styles.sumChipFree}`}>Coast transfer — included</span>
                 <span className={`${styles.sumChip} ${styles.sumChipFree}`}>A gift — to keep</span>
                 <span className={styles.sumChip}>Entries paid locally</span>
               </div>
             ) : (
               <div className={styles.sumChips}>
                 <span className={styles.sumChip}>{expCount} experiences</span>
+                <span className={`${styles.sumChip} ${styles.sumChipFree}`}>Coast transfer — included</span>
                 <span className={`${styles.sumChip} ${styles.sumChipFree}`}>
                   {giftCount} signature gift{giftCount > 1 ? "s" : ""} — to keep
                 </span>
@@ -1631,7 +2442,7 @@ export default function DayConfigurator({
       </div>
 
       <StickyBar
-        name={isLight ? "Adventure Light" : "Concierge Day"}
+        name={isReality ? "Reality Hunting" : isOriginal ? "Original" : isLight ? "Adventure" : "Concierge Day"}
         meta={
           proposal
             ? "private proposal · reply in 24h"
@@ -1641,7 +2452,7 @@ export default function DayConfigurator({
         ctaLabel={proposal ? "Request your proposal →" : "See your day & price →"}
         revealOnScroll={false}
         extra={
-          isLight ? (
+          conc ? (
             <span className={styles.stickyGifts}>
               <span className={styles.stickyGiftMin} aria-hidden>
                 ✦

@@ -2020,9 +2020,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 1rem 0.95rem 0.85rem;
+  padding: 1.4rem 1.4rem 1.3rem;
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 .sigTheme {
   font-size: 0.6rem;
@@ -2571,11 +2572,11 @@
 }
 /* the Consigliere intro is longer — give the wide card room so text clears the chips */
 .sigCardWide {
-  min-height: 340px;
+  min-height: 390px;
 }
 @media (max-width: 560px) {
   .sigCardWide {
-    min-height: 340px;
+    min-height: 370px;
   }
 }
 
@@ -2999,4 +3000,187 @@
 }
 .visGiftLine .inclLink {
   font-style: normal;
+}
+
+/* The expansion hero — the same graphic & hero detail as the checkout summary's
+   visHero (image + scrim + eyebrow + title + the gift marks), shown at the top
+   of a card's expansion. Reuses .visHeroImg / .visHeroScrim / .visHeroCap /
+   .visGifts, so it matches the checkout card exactly. */
+.expHero {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 13px;
+  margin: 0.2rem 0 1rem;
+  border: 1px solid rgba(201, 160, 99, 0.3);
+}
+.expHeroSub {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(243, 231, 207, 0.92);
+  max-width: 62ch;
+}
+
+/* A card's expansion — the brochure. It attaches flush beneath the card (no
+   gap, squared top) so the card + brochure read as ONE continuous dark card. */
+.expCard {
+  margin: -1px 0 0.2rem;
+  border: 1px solid rgba(201, 160, 99, 0.42);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #17110b, #0d0905);
+  color: #f3e7cf;
+  box-shadow: 0 30px 60px -34px rgba(0, 0, 0, 0.72);
+  animation: feelIn 0.4s ease both;
+}
+.expInner {
+  padding: 1.5rem 1.7rem 1.6rem;
+  display: grid;
+  gap: 1.35rem;
+}
+@media (max-width: 560px) {
+  .expInner {
+    padding: 1.2rem 1.2rem 1.3rem;
+    gap: 1.1rem;
+  }
+}
+.expLead {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(243, 231, 207, 0.95);
+  max-width: 64ch;
+}
+.expBlock {
+  display: grid;
+  gap: 0.7rem;
+}
+.expEyebrow {
+  display: block;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-gold-soft);
+}
+.expLede {
+  margin: -0.15rem 0 0.1rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: rgba(243, 231, 207, 0.72);
+  max-width: 60ch;
+}
+.expIco {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+/* Experiences — icon + name + a line, in a comfortable two-column grid */
+.expExps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem 1.8rem;
+}
+@media (max-width: 560px) {
+  .expExps {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+}
+.expExps li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.expExpIco {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--color-gold-soft);
+  opacity: 0.95;
+}
+.expExpTxt {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.expExpTxt b {
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: #fff;
+}
+.expExpTxt span {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(243, 231, 207, 0.82);
+}
+/* Also-included / caveats — icon + line, one per row */
+.expInc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.expInc li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: rgba(243, 231, 207, 0.92);
+}
+.expIncIco {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--color-gold-soft);
+}
+.expMuted li {
+  color: rgba(243, 231, 207, 0.68);
+}
+.expMuted .expIncIco {
+  opacity: 0.6;
+}
+.expNote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(243, 231, 207, 0.82);
+}
+
+/* When a card is open, square its bottom so the brochure below reads as part of
+   the same card, and lift the pair together. */
+.sigCard.sigOpen {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* A compact row of key inclusions on each product card's face — makes the cards
+   more detailed without crowding the image. */
+.sigPoints {
+  list-style: none;
+  margin: 0.15rem 0 0.1rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+}
+.sigPoints li {
+  position: relative;
+  padding-left: 1rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: rgba(243, 231, 207, 0.92);
+}
+.sigPoints li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-gold-soft);
+  font-weight: 700;
 }

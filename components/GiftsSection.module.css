@@ -35,6 +35,9 @@
   display: none;
   border-radius: 14px;
   overflow: hidden;
+  /* Above the steady deck-level scrim (z1), so only the gift text crossfades on
+     top of a background that never changes with the slide. */
+  z-index: 2;
 }
 .cardOn {
   display: block;
@@ -72,9 +75,9 @@
   z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(10, 7, 4, 0.48) 0%,
-    rgba(10, 7, 4, 0.5) 58%,
-    rgba(10, 7, 4, 0.64) 100%
+    rgba(10, 7, 4, 0.58) 0%,
+    rgba(10, 7, 4, 0.6) 58%,
+    rgba(10, 7, 4, 0.72) 100%
   );
 }
 

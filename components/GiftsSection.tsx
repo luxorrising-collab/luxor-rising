@@ -44,7 +44,11 @@ function MediaReel({
   /** Playback rate for video layers — < 1 plays the clips slower (and longer). */
   rate?: number;
 }) {
-  const [i, setI] = React.useState(0);
+  // [current, previous] — we keep the outgoing clip fully opaque underneath
+  // while the incoming one fades in on top of it, so coverage is always 100%.
+  // That means the dark scrim above never sees a lightened gap: the tint reads
+  // exactly the same at every moment and on every clip, with no mid-fade dip.
+  const [[i, prev], setIdx] = React.useState<[number, number]>([0, 0]);
   const vids = React.useRef<Array<HTMLVideoElement | null>>([]);
   const n = media.length;
   // Keep the previous, current and next layers live: the previous one is still
@@ -55,7 +59,8 @@ function MediaReel({
 
   React.useEffect(() => {
     if (!active) {
-      setI(0); // always restart a card from its first frame (the stargazing clip on intro)
+      // Restart from the first frame when the section isn't in view (no loop here).
+      setIdx((s) => (s[0] === 0 && s[1] === 0 ? s : [0, 0]));
       return;
     }
     const reduce =
@@ -65,7 +70,7 @@ function MediaReel({
     if (reduce || media.length < 2) return;
 
     const m = media[i];
-    const advance = () => setI((x) => (x + 1) % media.length);
+    const advance = () => setIdx(([c]) => [(c + 1) % media.length, c]);
 
     // A video in a slideshow plays once and advances when it ends — never
     // looping back mid-view. The timer is only a fallback for blocked autoplay.
@@ -114,8 +119,20 @@ function MediaReel({
         // Videos keep their <source>, but preload="none" means no bytes load
         // until this layer is the active one. Images only mount near their turn.
         const showImg = active && near(idx);
+        // Current sits on top and fades in; the previous clip stays fully opaque
+        // directly beneath it until it's covered, so there's never a see-through
+        // moment that would let the tint pulse.
+        const isCur = active && idx === i;
+        const isPrev = active && idx === prev && prev !== i;
         return (
-          <div key={idx} className={styles.layer} style={{ opacity: active && idx === i ? 1 : 0 }}>
+          <div
+            key={idx}
+            className={styles.layer}
+            style={{
+              opacity: isCur || isPrev ? 1 : 0,
+              zIndex: isCur ? 2 : isPrev ? 1 : 0,
+            }}
+          >
             {m.type === "video" ? (
               <video
                 ref={(el) => {
@@ -125,9 +142,10 @@ function MediaReel({
                 muted
                 loop={media.length < 2}
                 playsInline
-                // Only the current / adjacent clips fetch bytes; the rest stay on
-                // their poster until their turn, so an 8-clip reel never loads at once.
-                preload={active && near(idx) ? "auto" : "none"}
+                // Only the current clip and the one after it fetch bytes; the reel
+                // only runs forward, so the clip just shown is already cached and
+                // the rest stay on their poster — an 8-clip reel never loads at once.
+                preload={active && (idx === i || idx === (i + 1) % n) ? "auto" : "none"}
                 poster={m.poster}
               >
                 <source src={m.src} type="video/mp4" />
@@ -306,6 +324,31 @@ export default function GiftsSection({
   const [cur, setCur] = React.useState(0);
   const gifts = content ?? GIFT_DEFAULTS;
 
+  // The reel is below the fold, so hold its clips until the section is within a
+  // screen of the viewport, then activate for good. This keeps the first paint
+  // light (posters only) — no multi-MB video is fetched or decoded up front.
+  const stageRef = React.useRef<HTMLElement>(null);
+  const [inView, setInView] = React.useState(false);
+  React.useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const giftCard = (
     key: GiftKey,
     opts: { eyebrow?: string; badge?: React.ReactNode; invite?: string } = {}
@@ -448,7 +491,7 @@ export default function GiftsSection({
   };
 
   return (
-    <section className={styles.stage} id="gifts" aria-label="Signature gifts">
+    <section ref={stageRef} className={styles.stage} id="gifts" aria-label="Signature gifts">
       <div className={styles.frame} aria-hidden />
 
       <div className={styles.deck}>
@@ -456,7 +499,7 @@ export default function GiftsSection({
             continuous, slowed slideshow, plus a single scrim. `key` pins the reel
             so changing slides never remounts or restarts it; only the gift text on
             top changes, the background never switches. */}
-        <MediaReel key="gift-bg" media={MEDIA_CLIPS} active rate={CLIP_RATE} />
+        <MediaReel key="gift-bg" media={MEDIA_CLIPS} active={inView} rate={CLIP_RATE} />
         <div className={styles.scrim} aria-hidden />
         {cards.map((c, i) => (
           <div key={c.key} className={i === cur ? `${styles.card} ${styles.cardOn}` : styles.card}>

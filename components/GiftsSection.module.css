@@ -52,6 +52,10 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  /* A constant dark floor behind the clips: if a layer is ever less than fully
+     opaque, what shows through is this exact tint tone — never a lighter gap —
+     so the veil over the footage stays even across every clip. */
+  background: #0a0704;
 }
 .layer {
   position: absolute;

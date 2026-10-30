@@ -795,8 +795,10 @@
   appearance: none;
   background: none;
   border: 0;
-  padding: 0;
-  margin-top: 0.75rem;
+  /* Generous vertical padding so the tap target clears the ~44px guideline on
+     touch, without changing where the label reads. */
+  padding: 0.7rem 0.4rem;
+  margin: 0.3rem -0.4rem 0;
   cursor: pointer;
   font-family: inherit;
   font-size: 0.64rem;
@@ -1386,6 +1388,14 @@
   .exp,
   .expAll {
     min-height: 320px;
+  }
+  /* The gallery cards are full-width on a phone, so the corner label and the
+     selling chips can be a touch larger and easier to read. */
+  .expTag {
+    font-size: 0.7rem;
+  }
+  .expFeat {
+    font-size: 0.68rem;
   }
 }
 

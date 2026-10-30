@@ -162,6 +162,25 @@ export async function POST(req: Request) {
     return new Response("db error", { status: 500 }); // let Stripe retry
   }
 
+  // All three Design-Your-Day tiers are concierge journeys: concierge-day
+  // (Signature), concierge-original (Original) and concierge-light (Adventure).
+  // Derived up front so every email below reflects the right package.
+  const conciergeMatch = (md.slug || "").match(/^concierge-(day|original|light)-(\d+)d$/);
+  const isConcierge = !!conciergeMatch;
+  const tier: "signature" | "original" | "adventure" | undefined = conciergeMatch
+    ? conciergeMatch[1] === "original"
+      ? "original"
+      : conciergeMatch[1] === "light"
+        ? "adventure"
+        : "signature"
+    : undefined;
+  const productUrl = md.slug
+    ? isConcierge
+      ? `${SITE_URL}/concierge-day`
+      : `${SITE_URL}/experiences/${md.slug}`
+    : undefined;
+  const conciergeDays = conciergeMatch ? parseInt(conciergeMatch[2], 10) || undefined : undefined;
+
   // Emails are best-effort — never fail the webhook over them.
   const amountEur = amountCents != null ? Math.round(amountCents / 100) : undefined;
   const totalEur = fullTotalCents != null ? Math.round(fullTotalCents / 100) : undefined;
@@ -178,21 +197,11 @@ export async function POST(req: Request) {
       balanceEur,
       payMode,
       preferences: preferences || undefined,
+      tier,
       // Tell the guest the balance auto-charges only when we actually scheduled it.
       balanceAutoCharge: scheduleBalance,
     });
   }
-  const isConcierge = /^concierge-(day|light)-\d+d$/.test(md.slug || "");
-  const productUrl = md.slug
-    ? isConcierge
-      ? `${SITE_URL}/concierge-day`
-      : `${SITE_URL}/experiences/${md.slug}`
-    : undefined;
-  // Concierge journeys encode the day count in the slug (e.g. concierge-day-3d,
-  // concierge-light-2d).
-  const conciergeDays = isConcierge
-    ? parseInt((md.slug || "").match(/concierge-(?:day|light)-(\d+)d/)?.[1] || "", 10) || undefined
-    : undefined;
   await sendAhmedJobBrief({
     clientName,
     clientEmail: email ?? undefined,
@@ -204,6 +213,7 @@ export async function POST(req: Request) {
     preferences: preferences || undefined,
     payMode,
     days: conciergeDays,
+    tier,
   });
 
   // Owner notification — so the master accounts hear about every order.

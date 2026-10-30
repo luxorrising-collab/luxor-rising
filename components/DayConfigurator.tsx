@@ -34,7 +34,7 @@ const JOURNEY: Record<
 > = {
   medinet: {
     name: "Initiation to power",
-    temple: "Medinet Habu — your first temple",
+    temple: "Medinet Habu — temple of Ramesses III",
     companion: "Hatshepsut Temple at Deir el-Bahari",
   },
   karnak: {
@@ -85,7 +85,7 @@ const SIGNATURE_CARDS: { key: SignatureJourney; intro: string }[] = [
   },
 ];
 // Each Signature day is the same promise; stated once, under the cards.
-const SIGNATURE_META = "Door-to-door from the coast · 3 signature experiences · insider access · a gift";
+const SIGNATURE_META = "Door-to-door from the coast · the best of Luxor, your choice · insider access · a gift";
 const JOURNEY_NOTE =
   "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a coach never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
 const CONSIGLIERE_INTRO =
@@ -477,8 +477,8 @@ const LIGHT_INCLUDED = [
   "A small gift from your concierge",
 ];
 const LIGHT_LOCAL = [
-  "No experiences are booked in advance — bring local cash and pay as you go",
-  "Entry tickets, the experiences you choose and your tips are paid locally, on the day — your concierge handles the how, so it's always smooth and fair",
+  "Beyond the included temple & Nile sail, nothing else is pre-booked — bring local cash and pay for the rest as you go",
+  "Any further entry tickets, the experiences you choose and your tips are paid locally, on the day — your concierge handles the how, so it's always smooth and fair",
   "We'll arrange what we can ahead of time, but some things depend on the day and on availability",
 ];
 
@@ -978,13 +978,15 @@ export default function DayConfigurator({
         handled: [...extras, ...ORIGINAL_INCLUDED] as PlanItem[],
       };
     }
+    // Signature is the guest's pick of the best of Luxor — no day is pre-fixed to
+    // particular temples. Everything goes into one "your choice" menu, scaled by
+    // the number of days.
     const start: PlanItem[] = [];
-    start.push({ t: j.temple, sig: journey === "medinet" });
-    start.push({ t: j.companion, follows: true });
-    start.push({ t: SUNSET_FIRST });
-    if (photo) start.push("Private photographer / videographer for your day");
-
     const pool: PlanItem[] = [];
+    pool.push({ t: j.temple, sig: journey === "medinet" });
+    pool.push({ t: j.companion });
+    pool.push(SUNSET_FIRST);
+    if (photo) pool.push("Private photographer / videographer for your day");
     const bonus: PlanItem[] = [];
     if (days >= 2) {
       pool.push("Valley of the Kings");
@@ -1017,6 +1019,8 @@ export default function DayConfigurator({
         bonus: true,
       });
     }
+    // Kept in step with the Signature card's promises — nothing here is offered
+    // that the card (face + "Also included") doesn't already promise.
     const handled: PlanItem[] = [];
     handled.push(
       "Door-to-door transfer from Hurghada, Marsa Alam or the coast — included, and the car stays with you the whole trip"
@@ -1027,24 +1031,19 @@ export default function DayConfigurator({
     handled.push("Your own licensed Egyptologist — every day");
     handled.push("All monument entry tickets for " + gl);
     handled.push("Temples & tombs in any order you like — or into the desert; just tell your concierge");
-    handled.push("Private, air-conditioned transfers throughout");
-    handled.push("Every reservation, timing & fast-track entry, planned for you");
+    handled.push("Every reservation and timing, planned for you");
     handled.push(
       "Your day photographed on your own phone — you'll have them before dinner, not in six weeks"
     );
     handled.push(
-      "A full meal and up to three hand-picked local food & coffee stops a day — where locals actually eat"
+      "A full meal and hand-picked local food & coffee stops — where locals actually eat"
     );
-    handled.push(
-      "The guards know us: nobody follows you, sells you anything, or asks for a tip"
-    );
-    if (days >= 4) handled.push("Upgraded VIP transfers on your unhurried days");
+    handled.push("Tips and everything in between, handled — nothing to think about");
     handled.push("Your concierge on WhatsApp — before you arrive & all day");
-    handled.push("Free cancellation up to 7 days before");
 
     return {
       start,
-      startTitle: "Day 1 · Signature",
+      startTitle: "",
       pool,
       bonus,
       handled,
@@ -1086,9 +1085,6 @@ export default function DayConfigurator({
 
   const glabel = group + (group > 1 ? " guests" : " guest");
 
-  const medS = JOURNEY[journey].temple.split(" — ")[0];
-  const compS = JOURNEY[journey].companion.split(" at ")[0].split(" — ")[0];
-
   const cancelText = tripDate
     ? (() => {
         const dl = cancelDeadline(tripDate);
@@ -1116,9 +1112,9 @@ export default function DayConfigurator({
         : isOriginal
           ? "Original (the full sightseeing day — entries, felucca & desert included)"
           : isLight
-            ? "Adventure (concierge only)"
-            : "Signature (full guided day — insider access, Egyptologist, balloon & a gift)",
-      conc ? "" : "Sunset: Nile or desert, chosen with the concierge",
+            ? "Adventure (concierge only — one temple of choice & a Nile sail included)"
+            : "Signature (full guided day — the best of Luxor your choice, insider access, Egyptologist, balloon & a gift)",
+      conc ? "" : "Experiences: temples, tombs, a felucca or the desert — your choice, in any order",
       "Door-to-door transfer from the coast (Hurghada / Marsa Alam): included",
       photo ? "Add-on: private photographer / videographer" : "",
     ]
@@ -1185,7 +1181,7 @@ export default function DayConfigurator({
       ? `${days}-day Adventure`
       : isOriginal
         ? `${days}-day Original`
-        : `${days}-day Concierge Journey`;
+        : `${days}-day Signature`;
     const slug = isLight
       ? `concierge-light-${days}d`
       : isOriginal
@@ -1962,16 +1958,16 @@ export default function DayConfigurator({
                     <span>trusted driver, translator, negotiator &amp; problem-solver, all day</span>
                   </li>
                   <li>
-                    <b>Your advisor on WhatsApp</b>
-                    <span>from the moment you book — the trip planned with you</span>
+                    <b>One temple of your choice &amp; a Nile sail</b>
+                    <span>a temple entry and a felucca on the Nile — included in the price</span>
                   </li>
                   <li>
-                    <b>Food stops, contacts &amp; tips sorted</b>
-                    <span>a local table on us, authentic introductions, and your concierge handles the tipping</span>
+                    <b>Door-to-door from the coast</b>
+                    <span>collected from Hurghada or Marsa Alam — the car stays all day</span>
                   </li>
                   <li>
-                    <b>Paid locally, in cash</b>
-                    <span>entry tickets, the experiences you choose &amp; your tips</span>
+                    <b>Anything more, paid locally</b>
+                    <span>further entries, the experiences you choose &amp; your tips — in cash, on the day</span>
                   </li>
                 </ul>
               ) : (
@@ -1984,16 +1980,12 @@ export default function DayConfigurator({
                   </span>
                 </li>
                 <li>
-                  <b>Day 1 · Signature</b>
-                  <span>
-                    {journey === "balloon"
-                      ? "Dawn over Luxor, then any experience of the day"
-                      : `${medS} & ${compS}`}
-                  </span>
+                  <b>The best of Luxor — your choice</b>
+                  <span>temples, tombs, a felucca or the desert, in any order — at the quiet hour</span>
                 </li>
                 <li>
-                  <b>{expCount} experiences</b>
-                  <span>arranged in any order with your concierge</span>
+                  <b>Go at your own pace</b>
+                  <span>see as much as you wish — nothing rushed, nothing off the table</span>
                 </li>
                 <li>
                   <b>
@@ -2039,7 +2031,7 @@ export default function DayConfigurator({
                 ))}
                 {plan.pool.length > 0 && (
                   <>
-                    <li className={styles.dh}>Your experiences · in any order</li>
+                    <li className={styles.dh}>The best of Luxor · your choice</li>
                     {plan.pool.map((it, i) => (
                       <li key={"p" + i} className={itemClasses(it)}>
                         {itemText(it)}
@@ -2332,7 +2324,7 @@ export default function DayConfigurator({
               </div>
             ) : (
               <div className={styles.sumChips}>
-                <span className={styles.sumChip}>{expCount} experiences</span>
+                <span className={styles.sumChip}>The best of Luxor</span>
                 <span className={`${styles.sumChip} ${styles.sumChipFree}`}>Coast transfer — included</span>
                 <span className={`${styles.sumChip} ${styles.sumChipFree}`}>
                   {giftCount} signature gift{giftCount > 1 ? "s" : ""} — to keep

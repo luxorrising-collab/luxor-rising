@@ -384,10 +384,11 @@ export type BookingEmail = {
   pickup?: string;
   time?: string;
   preferences?: string; // the guest's design-your-day choices (" · " joined)
+  tier?: "signature" | "original" | "adventure"; // Design-Your-Day package, if any
 };
 
-// What every Luxor Rising booking includes — stated up front to remove doubt
-// and the need to hunt through the FAQ.
+// What a full-service booking includes — a single experience, Signature or
+// Original — stated up front to remove doubt and the need to hunt the FAQ.
 const INCLUDED: string[] = [
   "Private to your group — never shared with strangers",
   "A licensed Egyptologist / expert host with you throughout",
@@ -397,6 +398,21 @@ const INCLUDED: string[] = [
   "Your concierge reachable all day, so you never have a decision to make",
   "Free cancellation up to 7 days before",
 ];
+
+// Adventure is concierge-only — just the two included experiences; the rest is
+// chosen on the day and paid locally, so its list is stated honestly.
+const INCLUDED_ADVENTURE: string[] = [
+  "Private to your group — never shared with strangers",
+  "Your own driver, translator & fixer on the ground all day",
+  "One temple of your choice and a Nile sail — included",
+  "Hotel or villa pickup and drop-off, and door-to-door transfer from the coast",
+  "Your concierge reachable all day, so you never have a decision to make",
+  "Anything more — further sites, experiences and tips — chosen on the day and paid locally",
+  "Free cancellation up to 7 days before",
+];
+
+const includedFor = (tier?: string): string[] =>
+  tier === "adventure" ? INCLUDED_ADVENTURE : INCLUDED;
 
 // Turn the "1 days · 2 guests · Journey: … · Evening: …" preferences string into
 // clean bullet items, dropping the day/guest counts already shown in the summary.
@@ -438,9 +454,10 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
     : "";
 
   const choices = choiceItems(b.preferences);
+  const included = includedFor(b.tier);
   const sections: { title: string; items: string[]; check?: boolean }[] = [];
   if (choices.length) sections.push({ title: "Your day, as you shaped it", items: choices });
-  sections.push({ title: "Everything's handled", items: INCLUDED, check: true });
+  sections.push({ title: "Everything's handled", items: included, check: true });
 
   const html = renderEmail({
     preheader: `Your ${b.productName} is confirmed.`,
@@ -476,7 +493,7 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
     "",
     ...(choices.length ? ["Your day, as you shaped it:", ...choices.map((c) => `· ${c}`), ""] : []),
     "Everything's handled:",
-    ...INCLUDED.map((i) => `· ${i}`),
+    ...included.map((i) => `· ${i}`),
     "",
     `What happens next: your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
     "",
@@ -706,6 +723,7 @@ export type AhmedBrief = {
   preferences?: string; // raw design-your-day string (fallback for `ordered`)
   payMode?: string; // 'full' | 'deposit'
   days?: number; // concierge journeys: number of days (drives the menu below)
+  tier?: "signature" | "original" | "adventure"; // which Design-Your-Day package
   notes?: string; // any extra concierge notes
   sample?: boolean; // a clearly-labelled sample (not a real booking)
 };
@@ -737,6 +755,36 @@ const CONCIERGE_ACTIVITIES: string[] = [
   "Air-conditioned private transfers",
   "Hurghada round-trip transfer",
 ];
+
+// Original — the full sightseeing day: everything in, the order agreed with the
+// guest. All entries are paid for; no Signature extras (balloon, gifts, bonuses).
+function originalIncluded(hasTransfer: boolean, guests?: number): string[] {
+  const g = guests ? `${guests} guest${guests > 1 ? "s" : ""}` : "the guests";
+  return [
+    "Every great temple & tomb of both banks — the order agreed with the guest",
+    `All monument entry tickets for ${g} — nothing paid locally`,
+    "A private felucca on the Nile and a trip into the desert",
+    "Your own licensed Egyptologist at the sites",
+    hasTransfer ? "Hurghada / Marsa Alam door-to-door transfer — the car stays all day" : "",
+    "Private, air-conditioned transfers throughout",
+    "Every reservation, timing & fast-track entry, arranged in advance",
+    "Concierge reachable on WhatsApp all day",
+  ].filter(Boolean);
+}
+
+// Adventure — concierge only. Just two experiences are included; everything else
+// is chosen on the day and paid locally. No Egyptologist, no all-in tickets.
+function adventureIncluded(hasTransfer: boolean): string[] {
+  return [
+    "Your own driver, translator & fixer on the ground all day",
+    "One temple of the guest's choice — entry included",
+    "A Nile sail (shared felucca) with a local boatman",
+    "A hand-picked local food & coffee stop",
+    hasTransfer ? "Hurghada / Marsa Alam door-to-door transfer — the car stays all day" : "",
+    "Concierge reachable on WhatsApp all day",
+    "NOTE: any further sites, experiences, entry tickets and tips are chosen on the day and paid locally, in cash — not included",
+  ].filter(Boolean);
+}
 
 // The concierge journey scope — what the guest has paid for and must receive,
 // exactly as promised on the page (food, transfers, tickets, guiding, photos).
@@ -778,18 +826,33 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   if (b.clientEmail) rows.push({ label: "Email", value: b.clientEmail });
   if (b.productUrl) rows.push({ label: "Product page", value: b.productUrl });
 
+  const tier = b.tier ?? "signature";
   const isConcierge = (b.days ?? 0) >= 1;
-  const multiDay = (b.days ?? 0) >= 2;
+  const isSignature = isConcierge && tier === "signature";
+  // The full temple/activity menu is a Signature thing (the guest shapes the
+  // order over the days). Original is a fixed full-sightseeing day; Adventure is
+  // concierge-only with just the two included experiences.
+  const signatureMultiDay = isSignature && (b.days ?? 0) >= 2;
+  const hasTransfer = transferItems.length > 0;
   const firstTemple = b.preferences?.match(/first temple:\s*([^)]+)\)/i)?.[1]?.trim();
+
+  // One line that frames the journey for Ahmed, tailored to the package.
+  const introJourneyLine = isSignature
+    ? `This is a ${b.days}-day Signature journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
+    : tier === "original"
+      ? `This is a ${b.days}-day Original sightseeing journey. Everything below is included and paid for — the great temples & tombs, a felucca and the desert, with all entries; shape the order together with the guest.`
+      : tier === "adventure"
+        ? `This is a ${b.days}-day Adventure (concierge only). Only the items marked "included" are paid for — one temple of their choice and a Nile sail; everything else the guest chooses on the day and pays locally.`
+        : "Here's your run sheet for the day.";
 
   const sections: { title: string; items: string[]; check?: boolean; small?: boolean }[] = [];
   if (ordered.length)
     sections.push({
-      title: isConcierge ? "What the client has chosen so far" : "What the client ordered",
+      title: isSignature ? "What the client has chosen so far" : "What the client ordered",
       items: ordered,
       check: true,
     });
-  if (isConcierge) {
+  if (isSignature) {
     sections.push({
       title: "How the journey works",
       items: [
@@ -799,12 +862,26 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     });
     sections.push({
       title: "Included — paid for, and to be delivered in full",
-      items: conciergeIncluded(b.days ?? 1, transferItems.length > 0, b.guests),
+      items: conciergeIncluded(b.days ?? 1, hasTransfer, b.guests),
+      check: true,
+      small: true,
+    });
+  } else if (tier === "original") {
+    sections.push({
+      title: "Included — paid for, and to be delivered in full",
+      items: originalIncluded(hasTransfer, b.guests),
+      check: true,
+      small: true,
+    });
+  } else if (tier === "adventure") {
+    sections.push({
+      title: "Included — paid for, and to be delivered in full",
+      items: adventureIncluded(hasTransfer),
       check: true,
       small: true,
     });
   }
-  if (multiDay) {
+  if (signatureMultiDay) {
     sections.push({ title: "Temples & sites on the menu", items: CONCIERGE_TEMPLES, small: true });
     sections.push({ title: "Activities on the menu", items: CONCIERGE_ACTIVITIES, small: true });
     if ((b.days ?? 0) >= 3)
@@ -840,9 +917,7 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
           ]
         : []),
       "Great news: another Luxor Rising guest is coming your way, and they're in the very best hands with you. 🎉",
-      isConcierge
-        ? `This is a ${b.days}-day concierge journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
-        : "Here's your run sheet for the day.",
+      introJourneyLine,
       "Please give them a warm call to say hello and confirm the pickup point and time.",
     ],
     summary: { title: "Booking", rows },
@@ -865,9 +940,7 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
       ? "Hello Ahmed! This is a sample so you can see what a Luxor Rising booking will look like — there is nothing to deliver here, it isn't a real booking. The real ones will arrive the same way."
       : "",
     "Great news — another guest to look after, and they're in the very best hands with you! Give them a warm call to say hello and confirm the pickup point and time.",
-    isConcierge
-      ? `\nThis is a ${b.days}-day concierge journey. Everything below is paid for by the guest and must be delivered in full — the exact temples, activities and their order you shape together with the guest, and that's yours to run.`
-      : "",
+    isConcierge ? `\n${introJourneyLine}` : "",
     "",
     `Experience: ${b.productName}`,
     b.productUrl ? `Product page: ${b.productUrl}` : "",
@@ -879,9 +952,9 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     b.clientPhone ? `Call the client: ${b.clientPhone}` : "",
     b.clientEmail ? `Email: ${b.clientEmail}` : "",
     "",
-    ordered.length ? (isConcierge ? "What the client has chosen so far:" : "What the client ordered:") : "",
+    ordered.length ? (isSignature ? "What the client has chosen so far:" : "What the client ordered:") : "",
     ...ordered.map((i) => `· ${i}`),
-    ...(isConcierge
+    ...(isSignature
       ? [
           "",
           "How the journey works:",
@@ -889,10 +962,14 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
           "· Across the journey you cover the temples and activities below — the order and priority you decide together with the guest, and that's yours to run.",
           "",
           "Included — paid for, and to be delivered in full:",
-          ...conciergeIncluded(b.days ?? 1, transferItems.length > 0, b.guests).map((i) => `· ${i}`),
+          ...conciergeIncluded(b.days ?? 1, hasTransfer, b.guests).map((i) => `· ${i}`),
         ]
-      : []),
-    ...(multiDay
+      : tier === "original"
+        ? ["", "Included — paid for, and to be delivered in full:", ...originalIncluded(hasTransfer, b.guests).map((i) => `· ${i}`)]
+        : tier === "adventure"
+          ? ["", "Included — paid for, and to be delivered in full:", ...adventureIncluded(hasTransfer).map((i) => `· ${i}`)]
+          : []),
+    ...(signatureMultiDay
       ? [
           "",
           "Temples & sites on the menu:",

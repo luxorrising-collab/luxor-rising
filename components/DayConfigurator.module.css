@@ -741,11 +741,27 @@
   opacity: 0.7;
   margin-top: 0.1rem;
 }
+/* a quiet line that names what the price is for, so the figure reads in context */
+.sumForline {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-gold-deep);
+  margin-bottom: 0.3rem;
+}
 .sumPriceblock {
   display: flex;
   align-items: baseline;
   gap: 0.7rem;
   flex-wrap: wrap;
+}
+/* reassurance directly under the big number — all-in, nothing hidden */
+.sumAllin {
+  font-size: 0.72rem;
+  color: var(--color-ink);
+  opacity: 0.6;
+  margin-top: 0.28rem;
 }
 .sumPrice {
   font-family: var(--font-display);
@@ -2020,10 +2036,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 1.4rem 1.4rem 1.3rem;
+  padding: 1.7rem 1.65rem 1.55rem;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.42rem;
 }
 .sigTheme {
   font-size: 0.6rem;
@@ -2572,11 +2588,11 @@
 }
 /* the Consigliere intro is longer — give the wide card room so text clears the chips */
 .sigCardWide {
-  min-height: 390px;
+  min-height: 440px;
 }
 @media (max-width: 560px) {
   .sigCardWide {
-    min-height: 370px;
+    min-height: 420px;
   }
 }
 
@@ -3164,16 +3180,16 @@
    more detailed without crowding the image. */
 .sigPoints {
   list-style: none;
-  margin: 0.15rem 0 0.1rem;
+  margin: 0.3rem 0 0.15rem;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0.9rem;
+  gap: 0.42rem 1rem;
 }
 .sigPoints li {
   position: relative;
-  padding-left: 1rem;
-  font-size: 0.72rem;
+  padding-left: 1.05rem;
+  font-size: 0.75rem;
   line-height: 1.5;
   color: rgba(243, 231, 207, 0.92);
 }

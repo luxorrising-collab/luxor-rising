@@ -6,6 +6,10 @@
   /* New stacking context so a playing <video> isn't promoted to a hardware
      overlay that would punch through the tint mid-clip. */
   isolation: isolate;
+  /* Constant dark floor: if the crossfade is ever briefly less than fully
+     covered, the gap shows this tone rather than a lighter background — the
+     tint then reads the same throughout, with no flicker. */
+  background: #0a0704;
 }
 .layer {
   position: absolute;

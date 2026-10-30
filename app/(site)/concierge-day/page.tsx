@@ -217,7 +217,114 @@ const SLUG_TO_ICON: Record<string, ReactNode> = {
 };
 
 // Our signature experiences — marked with a seal on the card.
-const SIGNATURE_SLUGS = new Set(["medinet-habu", "deir-el-shelwit"]);
+// The signature experiences — marked with a "Signature experience" label in the
+// card's top-right (the "Included" label stays top-left on every card).
+const SIGNATURE_SLUGS = new Set([
+  "karnak-at-dawn",
+  "private-desert-safari",
+  "medinet-habu",
+  "deir-el-shelwit",
+  "felucca-sunset-sail",
+  "hatshepsut-temple",
+]);
+
+// Which Design-Your-Day packages include each experience — shown as small labels
+// in the card's top-left. Signature is the all-access day; Original is the full
+// sightseeing day (every temple & tomb, a felucca, the desert); Adventure
+// includes one temple of choice and a Nile sail.
+type Tier = "Signature" | "Original" | "Adventure";
+const SLUG_TO_TIERS: Record<string, Tier[]> = {
+  "karnak-at-dawn": ["Signature", "Original", "Adventure"],
+  "valley-of-the-kings": ["Signature", "Original"],
+  "felucca-sunset-sail": ["Signature", "Original", "Adventure"],
+  "private-desert-safari": ["Signature", "Original"],
+  "medinet-habu": ["Signature", "Original", "Adventure"],
+  "hatshepsut-temple": ["Signature", "Original", "Adventure"],
+  "hot-air-balloon-luxor": ["Signature"],
+  "deir-el-shelwit": ["Signature"],
+  "luxor-by-night": ["Signature"],
+  "nile-dinner-cruise": ["Signature"],
+  "camel-bedouin-breakfast": ["Signature"],
+};
+
+// Small selling-point icons for the gallery cards — a common one on every card
+// (insider access) plus two to four picked for each experience, so each card
+// sells itself at a glance.
+const fic = (children: ReactNode) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+    {children}
+  </svg>
+);
+const FEAT = {
+  insider: fic(
+    <>
+      <circle cx="9" cy="12" r="3" />
+      <path d="M12 12h9M18 12v3M21 12v2.5" />
+    </>,
+  ),
+  dawn: fic(
+    <>
+      <circle cx="12" cy="13" r="3.4" />
+      <path d="M12 4.5v2M4.5 13H2.5M21.5 13h-2M6 7 4.7 5.7M18 7l1.3-1.3M3 20h18" />
+    </>,
+  ),
+  nile: fic(<path d="M3 8c3 2 6 2 9 0s6-2 9 0M3 13c3 2 6 2 9 0s6-2 9 0M3 18c3 2 6 2 9 0s6-2 9 0" />),
+  desert: fic(
+    <>
+      <path d="M3 18c3-5 6-7 9-7s6 2 9 7" />
+      <circle cx="8" cy="8" r="2" />
+    </>,
+  ),
+  balloon: fic(
+    <>
+      <path d="M12 3a6 6 0 0 1 6 6c0 4-6 8-6 8s-6-4-6-8a6 6 0 0 1 6-6Z" />
+      <path d="M10.5 20h3M11 17l-.6 3M13 17l.6 3" />
+    </>,
+  ),
+  night: fic(<path d="M20 14a8 8 0 1 1-9-9 7 7 0 0 0 9 9Z" />),
+  ticket: fic(
+    <>
+      <rect x="3" y="7" width="18" height="10" rx="2" />
+      <path d="M8 7v10" />
+    </>,
+  ),
+  guide: fic(
+    <>
+      <circle cx="12" cy="8" r="3" />
+      <path d="M6 20a6 6 0 0 1 12 0" />
+    </>,
+  ),
+  temple: fic(
+    <>
+      <path d="M4 10 12 5l8 5" />
+      <path d="M5 10h14M7 10v9M12 10v9M17 10v9M4 19h16" />
+    </>,
+  ),
+  food: fic(<path d="M6 3v8M9 3v8M7.5 11v10M16 3c-1.8 1-3 4-3 7h3v11" />),
+  crowd: fic(
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </>,
+  ),
+  onus: fic(<path d="M12 3l2.5 6.3 6.5.4-5 4.2 1.7 6.4L12 17l-5.7 3.5L8 14.1l-5-4.2 6.5-.4Z" />),
+};
+type Feat = { icon: ReactNode; label: string };
+const f = (icon: ReactNode, label: string): Feat => ({ icon, label });
+const INSIDER = f(FEAT.insider, "Insider access");
+const SLUG_TO_FEATURES: Record<string, Feat[]> = {
+  "karnak-at-dawn": [INSIDER, f(FEAT.dawn, "At dawn"), f(FEAT.guide, "Licensed guide"), f(FEAT.temple, "The great hall")],
+  "valley-of-the-kings": [INSIDER, f(FEAT.ticket, "3 royal tombs"), f(FEAT.crowd, "Before the crowds"), f(FEAT.guide, "Licensed guide")],
+  "felucca-sunset-sail": [INSIDER, f(FEAT.dawn, "Golden hour"), f(FEAT.nile, "On the Nile"), f(FEAT.guide, "Local boatman")],
+  "private-desert-safari": [INSIDER, f(FEAT.food, "Sunset picnic"), f(FEAT.desert, "The dunes")],
+  "medinet-habu": [INSIDER, f(FEAT.temple, "Colour on the walls"), f(FEAT.crowd, "Near-empty"), f(FEAT.guide, "Licensed guide")],
+  "hot-air-balloon-luxor": [INSIDER, f(FEAT.dawn, "At dawn"), f(FEAT.balloon, "Aerial view")],
+  "deir-el-shelwit": [INSIDER, f(FEAT.temple, "Near-secret temple"), f(FEAT.onus, "On us")],
+  "luxor-by-night": [INSIDER, f(FEAT.night, "After dark"), f(FEAT.guide, "Local hosts")],
+  "hatshepsut-temple": [INSIDER, f(FEAT.dawn, "First light"), f(FEAT.temple, "Cliff terraces"), f(FEAT.guide, "Licensed guide")],
+  "nile-dinner-cruise": [INSIDER, f(FEAT.night, "After dark"), f(FEAT.food, "Private table"), f(FEAT.nile, "On the river")],
+  "camel-bedouin-breakfast": [INSIDER, f(FEAT.dawn, "First light"), f(FEAT.food, "Bedouin breakfast"), f(FEAT.desert, "In the sand")],
+};
 
 const GALLERY = [
   { image: "/images/experiences/karnak-at-dawn-hero.jpg", caption: "Karnak, before the crowds" },
@@ -490,6 +597,8 @@ export default async function ConciergeDayPage() {
       position: clip?.position,
       icon: slug ? SLUG_TO_ICON[slug] : undefined,
       signature: slug ? SIGNATURE_SLUGS.has(slug) : false,
+      tiers: slug ? SLUG_TO_TIERS[slug] : undefined,
+      features: slug ? SLUG_TO_FEATURES[slug] : undefined,
     };
   });
   const baseGallery =
@@ -674,7 +783,7 @@ export default async function ConciergeDayPage() {
     // "What your day feels like" + "What your day can hold" merged into one:
     // the rewritten feel copy, then the experiences themselves as the proof of it.
     dream: (
-      <section key="dream" style={{ background: "var(--color-paper)" }}>
+      <section key="dream" style={{ background: "var(--color-paper)", paddingBottom: "clamp(1.6rem, 3vw, 2.6rem)" }}>
         <div className="wrap">
           <Reveal className="center">
             <span className="eyebrow">{page?.dreamEyebrow}</span>

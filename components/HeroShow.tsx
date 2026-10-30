@@ -28,7 +28,10 @@ export type HeroShowItem = {
  *    instead of downloading the clip. (Mobile plays the clips, cropped to fill.)
  */
 export default function HeroShow({ items }: { items: HeroShowItem[] }) {
-  const [active, setActive] = useState(0);
+  // [active, previous] — the leaving slide is held fully opaque beneath the
+  // incoming one (z-stacked) so the crossfade never opens a gap that would let
+  // the tint flicker or lighten mid-fade.
+  const [[active, prev], setAV] = useState<[number, number]>([0, 0]);
   const [cycle, setCycle] = useState(false);
   const [enableVideo, setEnableVideo] = useState(false);
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
@@ -48,7 +51,7 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
   const FADE = 0.7;
   useEffect(() => {
     if (!cycle || items.length < 2) return;
-    const advance = () => setActive((a) => (a + 1) % items.length);
+    const advance = () => setAV(([a]) => [(a + 1) % items.length, a]);
     const isVideo = items[active].type === "video" && enableVideo;
     const el = isVideo ? videoRefs.current[active] : null;
 
@@ -108,7 +111,14 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
       {items.map((it, i) => {
         const asVideo = it.type === "video" && enableVideo;
         return (
-          <div key={i} className={styles.layer} style={{ opacity: i === active ? 1 : 0 }}>
+          <div
+            key={i}
+            className={styles.layer}
+            style={{
+              opacity: i === active || i === prev ? 1 : 0,
+              zIndex: i === active ? 2 : i === prev ? 1 : 0,
+            }}
+          >
             {asVideo ? (
               <video
                 ref={(el) => {

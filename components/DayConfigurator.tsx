@@ -89,8 +89,8 @@ const SIGNATURE_META = "Door-to-door from the coast · 3 signature experiences �
 const JOURNEY_NOTE =
   "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a coach never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
 const CONSIGLIERE_INTRO =
-  "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then bring local cash and go with the flow.";
-const CONSIGLIERE_META = "Concierge all day · a small gift · you pay locally";
+  "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then go with the flow.";
+const CONSIGLIERE_META = "One temple & a Nile sail · concierge all day · more paid locally";
 
 // Reality Hunting — the business, land & investment day. Bespoke by nature, so
 // it always routes to the private-proposal form, anchored at €350/day. The copy
@@ -184,9 +184,9 @@ const ORIGINAL_POINTS = [
 ];
 const LIGHT_POINTS = [
   "Door-to-door transfer from the coast — included",
+  "One temple of your choice & a Nile sail — included",
   "Your concierge on the ground all day",
-  "Food stops & tips handled for you",
-  "Entries & experiences paid locally, as you go",
+  "Anything more, paid locally as you go",
 ];
 const REALITY_POINTS = [
   "Door-to-door transfer from the coast — included",
@@ -400,6 +400,20 @@ const ORIGINAL_EXPS = [
   { icon: IC.sail, name: "A private felucca on the Nile", desc: "Golden hour on the water." },
   { icon: IC.desert, name: "A trip into the desert", desc: "Out past the fields, into the sand." },
 ];
+// Adventure includes just these two experiences — shown in the same icon + line
+// style as Signature and Original. (The Nile sail is a shared felucca, not private.)
+const ADVENTURE_EXPS = [
+  {
+    icon: IC.temple,
+    name: "One temple of your choice",
+    desc: "Any one of Luxor's great temples — entry included, chosen with your concierge on the day.",
+  },
+  {
+    icon: IC.sail,
+    name: "A sail on the Nile",
+    desc: "An hour on the water as the light turns, aboard a felucca with a local boatman.",
+  },
+];
 
 // Shown in the "Also included" list of every bookable card — the local-access
 // layer, stated honestly (no guarantee, no commission).
@@ -439,7 +453,7 @@ const SIGNATURE_LEAD =
 const ORIGINAL_LEAD =
   "The complete sightseeing day — every great temple and tomb of both banks, a private felucca and a trip into the desert, with every entry ticket already in the price. A private Egyptologist reads each site for you at the hour it's quietest, with insider access along the way, and tips and the logistics are handled so you never break the spell to sort anything out. Done in whatever order you like.";
 const LIGHT_LEAD =
-  "Your own trusted person on the ground for the day — a driver, translator and fixer who knows Luxor from the inside. Insider access and local contacts where they count, tips and the small frictions handled, and the day shaped around you. We plan it together before you arrive; entries and experiences you pay locally as you go, so it stays light and flexible — and the more days you take, the more of Luxor you can fit in.";
+  "Your own trusted person on the ground for the day — a driver, translator and fixer who knows Luxor from the inside. Insider access and local contacts where they count, tips and the small frictions handled, and the day shaped around you. We plan it together before you arrive; then you go with the flow and pay the local costs as you go, so it stays light and flexible — and the more days you take, the more of Luxor you can fit in.";
 const REALITY_LEAD =
   "A full day aimed at one thing: making something real in Egypt. We open the doors, make the introductions in person, and give you a straight local read on every opportunity.";
 
@@ -1486,7 +1500,7 @@ export default function DayConfigurator({
                 )}
               </div>
               <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>Pay as you go</span>
+                <span className={styles.sigKicker}>Temple &amp; sail included</span>
                 <h4 className={styles.sigPlace}>Adventure</h4>
                 <p className={styles.sigHook}>{CONSIGLIERE_INTRO}</p>
                 <ul className={styles.sigPoints}>
@@ -1508,6 +1522,7 @@ export default function DayConfigurator({
             {expanded === "light" &&
               renderBrochure({
                 lead: LIGHT_LEAD,
+                experiences: ADVENTURE_EXPS,
                 included: LIGHT_INCLUDED,
                 caveats: { label: "Paid locally, on the day", items: LIGHT_LOCAL },
                 note: "Go with the flow — tell us what you need, and we'll arrange it.",
@@ -2240,12 +2255,20 @@ export default function DayConfigurator({
               </div>
             ) : (
             <>
-            {/* price */}
+            {/* price — named so the figure always reads in context */}
+            <div className={styles.sumForline}>
+              {dayName} · {days === 1 ? "1 day" : `${days} days`} · {glabel}
+            </div>
             <div className={styles.sumPriceblock}>
               <div className={styles.sumPrice}>{euro(total)}</div>
               {dydSaving > 0 && (
                 <span className={styles.sumSavepill}>Save {euro(dydSaving)}</span>
               )}
+            </div>
+            <div className={styles.sumAllin}>
+              {isLight
+                ? "Transfer, concierge, one temple & a Nile sail included · more paid locally"
+                : "All-in · no hidden extras"}
             </div>
             {group > 1 && (
               <div className={styles.sumPp}>

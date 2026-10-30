@@ -22,6 +22,10 @@ export type ExperienceCardData = {
   icon?: React.ReactNode;
   /** Marks a signature experience — shows a gold seal. */
   signature?: boolean;
+  /** Which day packages include this experience (top-left labels). */
+  tiers?: string[];
+  /** Selling-point chips (icon + short label) shown on the card face. */
+  features?: { icon: React.ReactNode; label: string }[];
 };
 
 /**
@@ -31,6 +35,10 @@ export type ExperienceCardData = {
 function ExpCard({ e }: { e: ExperienceCardData }) {
   const vidRef = React.useRef<HTMLVideoElement>(null);
   const [open, setOpen] = React.useState(false);
+  // "Included" sits top-left on every experience; the signature experiences also
+  // get a "Signature experience" label top-right.
+  const tiers = e.tiers ?? [];
+  const showIncluded = tiers.length > 0;
   const onEnter = () => {
     const v = vidRef.current;
     if (!v) return;
@@ -75,26 +83,47 @@ function ExpCard({ e }: { e: ExperienceCardData }) {
           <source src={e.clip} type="video/mp4" />
         </video>
       )}
-      {e.icon && (
-        <span className={styles.expIcon} aria-hidden>
-          {e.icon}
-        </span>
-      )}
-      {e.signature ? (
-        <span className={styles.expSignature} aria-label="A signature experience">
-          <svg className={styles.expSigStar} viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-            <path d="M8 0.5l1.9 4.9 5.1 0.4-3.9 3.3 1.2 5-4.3-2.7-4.3 2.7 1.2-5L0.9 5.8 6 5.4z" />
-          </svg>
-          Signature
+      {/* "Included" — top-left on every experience. */}
+      {showIncluded ? (
+        <span className={styles.expTag} aria-label="Included in your day">
+          Included
         </span>
       ) : (
-        e.k && <span className={styles.expBadge}>{e.k}</span>
+        e.icon && (
+          <span className={styles.expIcon} aria-hidden>
+            {e.icon}
+          </span>
+        )
+      )}
+      {/* "Signature experience" — top-right, only on the signature experiences. */}
+      {e.signature && (
+        <span
+          className={`${styles.expTag} ${styles.expTagRight} ${styles.expTagSig}`}
+          aria-label="A signature experience"
+        >
+          <svg className={styles.expTagStar} viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+            <path d="M8 0.5l1.9 4.9 5.1 0.4-3.9 3.3 1.2 5-4.3-2.7-4.3 2.7 1.2-5L0.9 5.8 6 5.4z" />
+          </svg>
+          Signature experience
+        </span>
       )}
       <div className={styles.expScrim} />
       <div className={styles.expTx}>
         {e.place && e.place !== e.h && <span className={styles.expKicker}>{e.place}</span>}
         <h4>{e.h}</h4>
         <span className={styles.expRule} aria-hidden />
+        {e.features && e.features.length > 0 && (
+          <ul className={styles.expFeats}>
+            {e.features.map((ft) => (
+              <li key={ft.label} className={styles.expFeat}>
+                <span className={styles.expFeatIco} aria-hidden>
+                  {ft.icon}
+                </span>
+                {ft.label}
+              </li>
+            ))}
+          </ul>
+        )}
         <div className={styles.expPanel}>
           {e.p && <p>{e.p}</p>}
           {e.href && (

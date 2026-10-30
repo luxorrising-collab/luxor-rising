@@ -139,14 +139,8 @@ dreamText: >-
   And if the first two hours don't feel different, the day is on us.
 
 
-  Luxor holds far more than one day. Let us show you.
-
-
-  More than a dozen experiences, composed in one of the most magnetic and
-  mystical places on earth. At the edge of the Sahara, in Luxor, Where the
-  largest temple ever built still stands. It opens with the sunrise over the
-  Nile, a car already waiting, and one concierge who holds the whole day from
-  that first hour. You reach each place when it is best for You.
+  A dozen ways to spend a day where the largest temple ever built still stands —
+  sunrise on the Nile, a car waiting, one concierge holding every hour.
 dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
   - image: /images/concierge-day/experiences/0/image.jpg
@@ -174,7 +168,7 @@ experiences:
     description: >-
       A near-secret Greco-Roman temple, its ceilings still deep with colour. On
       us.
-    badge: Signature bonus ★
+    badge: Bonus ★
   - image: /images/concierge-day/experiences/7/image.jpg
     title: A night in Luxor city
     description: The souk, the lantern-lit Corniche, and hosts who actually know the place.

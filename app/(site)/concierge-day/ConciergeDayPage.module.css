@@ -437,6 +437,47 @@
   flex: none;
   margin-top: -1px;
 }
+/* One status label, top-left — "Included" on most cards, "Signature" on the
+   experiences that belong to the Signature day alone. The only badge on a card. */
+.expTag {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.95rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  padding: 0.3rem 0.66rem 0.32rem;
+  border: 1px solid rgba(229, 212, 170, 0.45);
+  border-radius: 999px;
+  background: rgba(20, 12, 6, 0.46);
+  backdrop-filter: blur(4px);
+  color: rgba(243, 231, 207, 0.95);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+/* The "Signature experience" label sits in the opposite (top-right) corner. */
+.expTagRight {
+  left: auto;
+  right: 0.95rem;
+}
+/* Signature experiences get the gold accent + a small star. */
+.expTagSig {
+  border-color: rgba(229, 212, 170, 0.75);
+  color: var(--color-gold-soft);
+}
+.expTagStar {
+  width: 10px;
+  height: 10px;
+  color: var(--color-gold);
+  flex: none;
+  margin-top: -1px;
+}
 /* Problem / agitation section — a dark, moody beat under the hero, in our gold tones */
 .problemDark {
   background: linear-gradient(180deg, #17100a 0%, #1d1209 55%, #17100a 100%);
@@ -634,6 +675,42 @@
 .exp:hover .expRule {
   width: 52px;
 }
+/* Selling-point chips — small icon + label, a few per card. */
+.expFeats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.34rem 0.4rem;
+}
+.expFeat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.24rem 0.52rem 0.26rem;
+  border: 1px solid rgba(229, 212, 170, 0.34);
+  border-radius: 999px;
+  background: rgba(14, 9, 3, 0.55);
+  backdrop-filter: blur(3px);
+  color: rgba(243, 231, 207, 0.95);
+  font-size: 0.6rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+}
+.expFeatIco {
+  display: inline-flex;
+  width: 12px;
+  height: 12px;
+  color: var(--color-gold-soft);
+  flex: none;
+}
+.expFeatIco svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 /* Description + product link stay collapsed until "Read more" is clicked. */
 .expPanel {
   max-height: 0;
@@ -783,7 +860,7 @@
 /* show-all toggle — collapses the grid so 11 cards don't take over the page */
 .expMoreWrap {
   text-align: center;
-  margin-top: 1.6rem;
+  margin-top: 1.2rem;
 }
 .expMore {
   font: inherit;

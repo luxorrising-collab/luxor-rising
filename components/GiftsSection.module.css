@@ -62,12 +62,20 @@
   inset: 0;
   opacity: 0;
   transition: opacity 1.1s ease;
+  /* Promote each layer to its own compositor layer so the crossfade is a pure
+     GPU opacity blend — no per-frame repaint of the stack, which is what makes
+     the tint look like it flickers on some live browsers. */
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .media {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Uniform tint — the real (AI-visualised) imagery reads as atmosphere beneath

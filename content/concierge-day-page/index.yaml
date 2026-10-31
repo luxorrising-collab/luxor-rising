@@ -58,16 +58,16 @@ sections:
 contrastEyebrow: Why some people leave Egypt disappointed
 contrastTitle: You came for the wonder. Not for a noise.
 contrastLead: >-
-  Some visitors meet Luxor through a packed coach with 40 strangers, on someone
-  else's clock. Twenty rushed minutes per temple. Shoulder to shoulder in the
-  midday heat, and a guide they share with forty strangers. A generic script,
-  rushed and impersonal. Hours lost to planning, booking, haggling and not
-  knowing who to trust.
+  Some visitors meet Luxor through a packed coach on someone else's clock.
+  Twenty rushed minutes per temple. Shoulder to shoulder in the midday heat, and
+  a guide they share with forty strangers. A generic script, rushed and
+  impersonal. Hours lost to planning, booking, haggling and not knowing who to
+  trust.
 
 
   The real Egypt the quiet, the colour, the awe passes them by. And here is the
   part nobody says out loud: You flew thousand kilometres to a place that has
-  stood for thousands of years, and you may stand here once.
+  stood sacred for thousands of years, and you may stand here once.
 badWayItems:
   - A coach with 40 strangers, on someone else's clock
   - Temples hurried, shoulder to shoulder
@@ -139,8 +139,14 @@ dreamText: >-
   And if the first two hours don't feel different, the day is on us.
 
 
-  A dozen ways to spend a day where the largest temple ever built still stands —
-  sunrise on the Nile, a car waiting, one concierge holding every hour.
+  Luxor holds far more than one day. Let us show you.
+
+
+  More than a dozen experiences, composed in one of the most magnetic and
+  mystical places on earth. At the edge of the Sahara, in Luxor, Where the
+  largest temple ever built still stands. It opens with the sunrise over the
+  Nile, a car already waiting, and one concierge who holds the whole day from
+  that first hour. You reach each place when it is best for You.
 dreamImage: /images/concierge-day/dreamImage.jpg
 experiences:
   - image: /images/concierge-day/experiences/0/image.jpg
@@ -168,7 +174,7 @@ experiences:
     description: >-
       A near-secret Greco-Roman temple, its ceilings still deep with colour. On
       us.
-    badge: Bonus ★
+    badge: Signature bonus ★
   - image: /images/concierge-day/experiences/7/image.jpg
     title: A night in Luxor city
     description: The souk, the lantern-lit Corniche, and hosts who actually know the place.

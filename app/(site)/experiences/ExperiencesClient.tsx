@@ -208,7 +208,7 @@ export default function ExperiencesClient({
           </p>
           <div className={styles.grid}>
             {visibleSingleDay.map((item) => (
-              <ExperienceCard key={item.title} filmic {...item} />
+              <ExperienceCard key={item.title} {...item} />
             ))}
           </div>
         </Reveal>
@@ -232,7 +232,7 @@ export default function ExperiencesClient({
           </div>
           <div className={styles.grid}>
             {visibleEnquiry.map((item) => (
-              <ExperienceCard key={item.title} filmic {...item} />
+              <ExperienceCard key={item.title} {...item} />
             ))}
           </div>
         </Reveal>

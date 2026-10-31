@@ -20,8 +20,6 @@ export type ExperienceCardProps = {
   ctaLabel: string;
   ctaVariant?: "primary" | "secondary";
   compact?: boolean;
-  /** Cinematic listing variant: tall image, title over it, light footer. */
-  filmic?: boolean;
 };
 
 export default function ExperienceCard({
@@ -42,54 +40,8 @@ export default function ExperienceCard({
   ctaLabel,
   ctaVariant = "primary",
   compact = false,
-  filmic = false,
 }: ExperienceCardProps) {
   const btnClass = `btn ${ctaVariant === "primary" ? "btn-primary" : "btn-line"}`;
-
-  if (filmic) {
-    return (
-      <article className={`${styles.card} ${styles.filmic}`}>
-        <Link href={href} className={styles.fMedia}>
-          <Image src={src} alt={alt} fill sizes="(max-width: 1000px) 100vw, 33vw" loading="lazy" />
-          <div className={styles.fScrim} aria-hidden />
-          {badge && (
-            <span className={`${styles.badge} ${badgeVariant === "signature" ? styles.sig : ""}`}>
-              {badgeVariant === "signature" ? `★ ${badge}` : badge}
-            </span>
-          )}
-          {scarcity && (
-            <span className={styles.scarce}>
-              <span className={styles.pulse} />
-              {scarcity}
-            </span>
-          )}
-          <div className={styles.fOverlay}>
-            {place && <span className={styles.fPlace}>{place}</span>}
-            <h3 className={styles.fTitle}>{title}</h3>
-          </div>
-        </Link>
-        <div className={styles.fBody}>
-          <p className={styles.fHook}>{hook}</p>
-          {facts && facts.length > 0 && (
-            <div className={styles.fFacts}>
-              {facts.map((f, i) => (
-                <span key={i}>{f}</span>
-              ))}
-            </div>
-          )}
-          <div className={styles.fFoot}>
-            <div className={styles.fPrice}>
-              <small>{priceLabel}</small>
-              <b>{priceValue}</b> {priceNote && <i>{priceNote}</i>}
-            </div>
-            <Link href={href} className={btnClass}>
-              {ctaLabel}
-            </Link>
-          </div>
-        </div>
-      </article>
-    );
-  }
 
   if (compact) {
     return (

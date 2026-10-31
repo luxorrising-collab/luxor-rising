@@ -108,11 +108,7 @@ export default async function ExperiencesPage() {
         : isFunnel(slug, entry.bookingType)
           ? "/ day"
           : entry.priceNote || undefined,
-    ctaLabel: isFunnel(slug, entry.bookingType)
-      ? "Design your day →"
-      : entry.bookingType === "enquiry"
-        ? "Enquire →"
-        : "Reserve →",
+    ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
     category: entry.category,
     location: HURGHADA_SLUGS.has(slug) ? "hurghada" : "luxor",
   }));

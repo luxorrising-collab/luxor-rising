@@ -62,3 +62,4 @@ next-env.d.ts
 /public/videos/only real*.mp4
 /public/videos/day-feel.mp4
 /public/videos/day-feel-poster.jpg
+.dev-notes.json

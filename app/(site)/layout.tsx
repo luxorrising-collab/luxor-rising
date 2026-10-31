@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "../globals.css";
 import ConsentProvider from "@/components/consent/ConsentProvider";
 import ConsentManager from "@/components/consent/ConsentManager";
+import DevComment from "@/components/DevComment";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import JsonLd from "@/components/JsonLd";
 import { reader } from "@/lib/keystatic-reader";
@@ -117,6 +118,7 @@ export default async function RootLayout({
           {children}
           <ConsentBanner />
         </ConsentProvider>
+        {process.env.NODE_ENV === "development" && <DevComment />}
       </body>
     </html>
   );

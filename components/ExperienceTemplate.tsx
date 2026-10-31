@@ -103,6 +103,20 @@ export type ExperienceTemplateProps = {
   bookNote?: string;
   /** Enquiry-only product: swap checkout price/CTAs for a "request an invitation" flow. */
   isEnquiry?: boolean;
+  /** Design-Your-Day funnel: hide the single-experience price everywhere. */
+  hidePrice?: boolean;
+  /** Show a Design-Your-Day-framed price in the hero instead (amount + note). */
+  heroPrice?: { amount: number; note: string };
+  /** Override the primary hero CTA (label + target). */
+  heroCtaLabel?: string;
+  heroCtaHref?: string;
+  /** A block rendered right after the Reserve/checkout section (above the
+      gifts/presents section) — e.g. "What we take care of". */
+  postContent?: React.ReactNode;
+  /** A full-width block rendered at the very top of the Reserve/checkout section. */
+  preBook?: React.ReactNode;
+  /** A block rendered at the very end of the page (e.g. single-experience advantages). */
+  pageEnd?: React.ReactNode;
   /** Main social-proof line (from Site settings), shown next to ★★★★★ in the hero. */
   socialProof?: string;
   configurator: React.ReactNode;
@@ -166,6 +180,13 @@ export default function ExperienceTemplate({
   bookLead,
   bookNote,
   isEnquiry = false,
+  hidePrice = false,
+  heroPrice,
+  heroCtaLabel,
+  heroCtaHref = "#book",
+  postContent,
+  preBook,
+  pageEnd,
   socialProof = "4.9 · 28+ private days arranged",
   configurator,
   basePrice,
@@ -214,16 +235,25 @@ export default function ExperienceTemplate({
           <span className="eyebrow">{heroEyebrow}</span>
           <h1 className="display">{title}</h1>
           <div className={styles.heroSub}>{hook}</div>
-          {!isEnquiry && (
+          {heroPrice ? (
             <div className={styles.priceRow}>
               <span className="from">From</span>
-              <span className="amt">€{basePrice}</span>
-              <span className="per">{priceNote}</span>
+              <span className="amt">€{heroPrice.amount}</span>
+              <span className="per">{heroPrice.note}</span>
             </div>
+          ) : (
+            !isEnquiry &&
+            !hidePrice && (
+              <div className={styles.priceRow}>
+                <span className="from">From</span>
+                <span className="amt">€{basePrice}</span>
+                <span className="per">{priceNote}</span>
+              </div>
+            )
           )}
           <div className={styles.heroCta}>
-            <Link href="#book" className="btn btn-primary btn-lg">
-              {isEnquiry ? "Request an invitation →" : "Reserve this experience →"}
+            <Link href={heroCtaHref} className="btn btn-primary btn-lg">
+              {heroCtaLabel ?? (isEnquiry ? "Request an invitation →" : "Reserve this experience →")}
             </Link>
             <Link href="#content" className="btn btn-ghost btn-lg">
               Why it matters
@@ -262,8 +292,8 @@ export default function ExperienceTemplate({
               {bestTime}
             </div>
             <div className={styles.gf}>
-              <span>{isEnquiry ? "Format" : "From"}</span>
-              {isEnquiry ? "Fully bespoke" : <>€{basePrice}</>}
+              <span>{isEnquiry ? "Format" : hidePrice ? "In your day" : "From"}</span>
+              {isEnquiry ? "Fully bespoke" : hidePrice ? "Included" : <>€{basePrice}</>}
             </div>
             <div className={styles.gf}>
               <span>{isEnquiry ? "Places" : "Cancellation"}</span>
@@ -343,9 +373,19 @@ export default function ExperienceTemplate({
       )}
 
       {/* BOOK / CONFIGURATOR */}
-      <section id="book" style={{ background: "var(--color-paper)" }}>
+      <section
+        id="book"
+        style={{
+          background: "var(--color-paper)",
+          // When a preBook band is present it sits flush under the section
+          // above (its own padding gives the breathing room), so drop the
+          // paper gap on top.
+          ...(preBook ? { paddingTop: 0 } : {}),
+        }}
+      >
+        {preBook}
         <div className="wrap">
-          <div className="center" style={{ marginBottom: ".3rem" }}>
+          <div className="center" style={{ marginTop: "clamp(2.5rem, 5vw, 4rem)", marginBottom: ".3rem" }}>
             <span className="eyebrow">{bookEyebrow}</span>
             <h2 className="display">{bookTitle}</h2>
             <p className="lead" style={{ marginTop: ".6rem" }}>
@@ -361,11 +401,11 @@ export default function ExperienceTemplate({
         </div>
       </section>
 
+      {postContent}
+
       {/* SIGNATURE GIFT — below the checkout (as on Design Your Day): the gift
           received here, the story, then the whole set, inviting into DYD. */}
-      {giftFeatured && (
-        <GiftsSectionServer featured={giftFeatured} designHref="/concierge-day#design" />
-      )}
+      {giftFeatured && <GiftsSectionServer designHref="/concierge-day#design" />}
 
       {/* VALUE ANCHOR — what a private day here is really worth. Hidden by
           default now (toggle `showValueAnchor` in the product page settings). */}
@@ -465,6 +505,8 @@ export default function ExperienceTemplate({
           </div>
         </Reveal>
       </section>
+
+      {pageEnd}
     </>
   );
 }

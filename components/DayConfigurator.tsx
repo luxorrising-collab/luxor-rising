@@ -713,6 +713,212 @@ function itemClasses(it: PlanItem) {
   return c.join(" ");
 }
 
+// ── Editable card content (Keystatic) ──────────────────────────────────────
+// Every word of the three product cards can be overridden from the CMS; where a
+// field is left empty, the built-in default below is used, so nothing ever
+// renders blank. Experience icons are chosen from the IC set by key.
+export type CardExperienceContent = { icon?: string | null; name?: string | null; desc?: string | null };
+export type CardSummaryContent = { title?: string | null; desc?: string | null };
+export type CardContent = {
+  summary?: readonly CardSummaryContent[] | null;
+  tier?: string | null;
+  kicker?: string | null;
+  title?: string | null;
+  hook?: string | null;
+  points?: readonly (string | null)[] | null;
+  meta?: string | null;
+  priceNote?: string | null;
+  lead?: string | null;
+  expLede?: string | null;
+  experiences?: readonly CardExperienceContent[] | null;
+  included?: readonly (string | null)[] | null;
+  caveatsLabel?: string | null;
+  caveats?: readonly (string | null)[] | null;
+  note?: string | null;
+};
+export type CardsContent = {
+  signature?: CardContent | null;
+  original?: CardContent | null;
+  adventure?: CardContent | null;
+};
+
+const SIG_HOOK_DEFAULT =
+  "A full guided day with nothing to arrange: door-to-door from the coast, a private Egyptologist and insider access, the temples and tombs in the order you like, a hot-air balloon at dawn, local food stops, tips handled, and a signature gift to keep.";
+const SIG_EXPLEDE_DEFAULT =
+  "The best of what Luxor has to offer — you choose which to do each day, and add days to fit in more. One day covers the highlights; the full set unlocks across three to four.";
+const SIG_NOTE_DEFAULT =
+  "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf.";
+const ORIG_EXPLEDE_DEFAULT =
+  "The best of Luxor's temples and tombs, every entry in the price — you choose the order, and add days to go slower and see more.";
+const ORIG_NOTE_DEFAULT = "In any order you like, at the quiet hour for each — just tell your concierge.";
+const ADV_NOTE_DEFAULT = "Go with the flow — tell us what you need, and we'll arrange it.";
+
+// The checkout column's "What's included" summary for each card (title + desc).
+const SIG_SUMMARY_DEFAULT = [
+  {
+    title: "Your own concierge, end to end",
+    desc: "driver, planner, translator & fixer — on WhatsApp from booking, with you all day (everything the concierge-only day gives, and more)",
+  },
+  {
+    title: "The best of Luxor — your choice",
+    desc: "temples, tombs, a felucca or the desert, in any order — at the quiet hour",
+  },
+  { title: "Go at your own pace", desc: "see as much as you wish — nothing rushed, nothing off the table" },
+  { title: "Everything handled", desc: "Egyptologist, entries, transfers & timing" },
+];
+const ORIG_SUMMARY_DEFAULT = [
+  {
+    title: "Every entry ticket included",
+    desc: "the great temples & tombs of both banks — no queues, no cash",
+  },
+  { title: "A private felucca & the desert", desc: "golden hour on the Nile and a trip out into the sand" },
+  {
+    title: "Door-to-door from the coast",
+    desc: "collected from Hurghada or Marsa Alam — the car stays all day",
+  },
+  {
+    title: "Your concierge end to end",
+    desc: "driver, planner, translator & fixer — in any order you like",
+  },
+];
+const ADV_SUMMARY_DEFAULT = [
+  {
+    title: "Your own person on the ground",
+    desc: "trusted driver, translator, negotiator & problem-solver, all day",
+  },
+  {
+    title: "One temple of your choice & a Nile sail",
+    desc: "a temple entry and a felucca on the Nile — included in the price",
+  },
+  {
+    title: "Door-to-door from the coast",
+    desc: "collected from Hurghada or Marsa Alam — the car stays all day",
+  },
+  {
+    title: "Anything more, paid locally",
+    desc: "further entries, the experiences you choose & your tips — in cash, on the day",
+  },
+];
+
+const DEFAULT_CARDS = {
+  signature: {
+    tier: "Full day · insider access",
+    kicker: "End-to-end to Luxor",
+    title: "Signature",
+    hook: SIG_HOOK_DEFAULT,
+    points: SIGNATURE_POINTS,
+    meta: SIGNATURE_META,
+    priceNote: "transfer from the coast included",
+    lead: SIGNATURE_LEAD,
+    expLede: SIG_EXPLEDE_DEFAULT,
+    experiences: SIGNATURE_EXPS,
+    included: SIGNATURE_HANDLED,
+    caveatsLabel: "As you add days",
+    caveats: SIGNATURE_UNLOCKS,
+    note: SIG_NOTE_DEFAULT,
+    summary: SIG_SUMMARY_DEFAULT,
+  },
+  original: {
+    tier: "Full day · all the sights",
+    kicker: "Entries included",
+    title: "Original",
+    hook: ORIGINAL_SUBTITLE,
+    points: ORIGINAL_POINTS,
+    meta: ORIGINAL_META,
+    priceNote: "transfer from the coast included",
+    lead: ORIGINAL_LEAD,
+    expLede: ORIG_EXPLEDE_DEFAULT,
+    experiences: ORIGINAL_EXPS,
+    included: ORIGINAL_HANDLED,
+    caveatsLabel: "Added on request",
+    caveats: ORIGINAL_MORE,
+    note: ORIG_NOTE_DEFAULT,
+    summary: ORIG_SUMMARY_DEFAULT,
+  },
+  adventure: {
+    tier: "Concierge only",
+    kicker: "Temple & sail included",
+    title: "Adventure",
+    hook: CONSIGLIERE_INTRO,
+    points: LIGHT_POINTS,
+    meta: CONSIGLIERE_META,
+    priceNote: "1–4 guests · local costs extra",
+    lead: LIGHT_LEAD,
+    expLede: "",
+    experiences: ADVENTURE_EXPS,
+    included: LIGHT_INCLUDED,
+    caveatsLabel: "Paid locally, on the day",
+    caveats: LIGHT_LOCAL,
+    note: ADV_NOTE_DEFAULT,
+    summary: ADV_SUMMARY_DEFAULT,
+  },
+};
+
+type ResolvedExp = { icon: ReactNode; name: string; desc: string };
+type ResolvedSummary = { title: string; desc: string };
+type ResolvedCard = {
+  summary: ResolvedSummary[];
+  tier: string;
+  kicker: string;
+  title: string;
+  hook: string;
+  points: string[];
+  meta: string;
+  priceNote: string;
+  lead: string;
+  expLede: string;
+  experiences: ResolvedExp[];
+  included: string[];
+  caveatsLabel: string;
+  caveats: string[];
+  note: string;
+};
+
+const cmsStr = (v: string | null | undefined, d: string): string => (v && v.trim() ? v : d);
+const cmsArr = (v: readonly (string | null)[] | null | undefined, d: readonly string[]): string[] => {
+  const clean = (v ?? []).map((x) => (x ?? "").trim()).filter(Boolean);
+  return clean.length ? clean : [...d];
+};
+const resolveExps = (
+  cms: readonly CardExperienceContent[] | null | undefined,
+  def: readonly ResolvedExp[],
+): ResolvedExp[] => {
+  const clean = (cms ?? []).filter((e) => (e?.name ?? "").trim());
+  if (!clean.length) return [...def];
+  return clean.map((e) => ({
+    icon: (e.icon && IC[e.icon as keyof typeof IC]) || IC.check,
+    name: (e.name ?? "").trim(),
+    desc: (e.desc ?? "").trim(),
+  }));
+};
+const resolveSummary = (
+  cms: readonly CardSummaryContent[] | null | undefined,
+  def: readonly ResolvedSummary[],
+): ResolvedSummary[] => {
+  const clean = (cms ?? []).filter((s) => (s?.title ?? "").trim());
+  if (!clean.length) return [...def];
+  return clean.map((s) => ({ title: (s.title ?? "").trim(), desc: (s.desc ?? "").trim() }));
+};
+const resolveCard = (cms: CardContent | null | undefined, def: ResolvedCard): ResolvedCard => ({
+  summary: resolveSummary(cms?.summary, def.summary),
+  tier: cmsStr(cms?.tier, def.tier),
+  kicker: cmsStr(cms?.kicker, def.kicker),
+  title: cmsStr(cms?.title, def.title),
+  hook: cmsStr(cms?.hook, def.hook),
+  points: cmsArr(cms?.points, def.points),
+  meta: cmsStr(cms?.meta, def.meta),
+  priceNote: cmsStr(cms?.priceNote, def.priceNote),
+  lead: cmsStr(cms?.lead, def.lead),
+  // expLede may legitimately be empty (Adventure has none), so an empty CMS
+  // value only falls back when the default itself is non-empty.
+  expLede: cms?.expLede && cms.expLede.trim() ? cms.expLede : def.expLede,
+  experiences: resolveExps(cms?.experiences, def.experiences),
+  included: cmsArr(cms?.included, def.included),
+  caveatsLabel: cmsStr(cms?.caveatsLabel, def.caveatsLabel),
+  caveats: cmsArr(cms?.caveats, def.caveats),
+  note: cmsStr(cms?.note, def.note),
+});
+
 export type DayConfiguratorImages = {
   journeyMedinet?: string;
   journeyKarnak?: string;
@@ -748,6 +954,8 @@ type DayConfiguratorProps = {
   /** WhatsApp number (from Site settings) for the "ask us" link. Falls back to
    *  the enquiry form when unset, so the CTA is never a dead link. */
   whatsappNumber?: string;
+  /** Editable card copy from Keystatic — any field left empty uses the default. */
+  cards?: CardsContent;
 };
 
 export default function DayConfigurator({
@@ -770,7 +978,12 @@ export default function DayConfigurator({
   supplementTable,
   socialProof = "4.9 · 28+ private days arranged",
   whatsappNumber = "",
+  cards,
 }: DayConfiguratorProps) {
+  // Resolve each card's copy: CMS value where set, built-in default otherwise.
+  const SIG = resolveCard(cards?.signature, DEFAULT_CARDS.signature);
+  const ORIG = resolveCard(cards?.original, DEFAULT_CARDS.original);
+  const ADV = resolveCard(cards?.adventure, DEFAULT_CARDS.adventure);
   // Build the WhatsApp link from the configured number (digits only, no leading
   // 00). If none is set, the CTA points at the enquiry form — never a dead link.
   const waDigits = whatsappNumber.replace(/\D/g, "").replace(/^00/, "");
@@ -849,12 +1062,12 @@ export default function DayConfigurator({
   const conc = isLight || isReality || isOriginal;
   // One agreed display name per card, used everywhere (no shape variants).
   const dayName = isOriginal
-    ? "Original"
+    ? ORIG.title
     : isLight
-      ? "Adventure"
+      ? ADV.title
       : isReality
         ? "Reality Hunting"
-        : "Signature";
+        : SIG.title;
   // Tap a card → select it for the summary AND toggle its detail panel.
   const pickCard = (key: "signature" | "original" | "light" | "reality", j: Journey) => {
     setJourney(j);
@@ -1178,10 +1391,10 @@ export default function DayConfigurator({
       return;
     }
     const name = isLight
-      ? `${days}-day Adventure`
+      ? `${days}-day ${ADV.title}`
       : isOriginal
-        ? `${days}-day Original`
-        : `${days}-day Signature`;
+        ? `${days}-day ${ORIG.title}`
+        : `${days}-day ${SIG.title}`;
     const slug = isLight
       ? `concierge-light-${days}d`
       : isOriginal
@@ -1359,7 +1572,7 @@ export default function DayConfigurator({
               />
               <span className={styles.sigShade} aria-hidden />
               <div className={styles.sigTop}>
-                <span className={styles.sigTier}>Full day · insider access</span>
+                <span className={styles.sigTier}>{SIG.tier}</span>
                 {!conc ? (
                   <span className={styles.sigChosen}>✓ Selected</span>
                 ) : (
@@ -1367,39 +1580,33 @@ export default function DayConfigurator({
                 )}
               </div>
               <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>End-to-end to Luxor</span>
-                <h4 className={styles.sigPlace}>Signature</h4>
-                <p className={styles.sigHook}>
-                  A full guided day with nothing to arrange: door-to-door from the coast, a private
-                  Egyptologist and insider access, the temples and tombs in the order you like, a
-                  hot-air balloon at dawn, local food stops, tips handled, and a signature gift to
-                  keep.
-                </p>
+                <span className={styles.sigKicker}>{SIG.kicker}</span>
+                <h4 className={styles.sigPlace}>{SIG.title}</h4>
+                <p className={styles.sigHook}>{SIG.hook}</p>
                 <ul className={styles.sigPoints}>
-                  {SIGNATURE_POINTS.map((p) => (
+                  {SIG.points.map((p) => (
                     <li key={p}>{p}</li>
                   ))}
                 </ul>
-                <span className={styles.sigMeta}>{SIGNATURE_META}</span>
+                <span className={styles.sigMeta}>{SIG.meta}</span>
                 <div className={styles.sigFoot}>
                   <span className={styles.sigPrice}>
                     <small>from</small> {euro(dayRate)}
                     <small>/day</small>
                   </span>
-                  <span className={styles.sigNote}>transfer from the coast included</span>
+                  <span className={styles.sigNote}>{SIG.priceNote}</span>
                 </div>
               </div>
             </div>
 
             {expanded === "signature" &&
               renderBrochure({
-                lead: SIGNATURE_LEAD,
-                experiences: SIGNATURE_EXPS,
-                expLede:
-                  "The best of what Luxor has to offer — you choose which to do each day, and add days to fit in more. One day covers the highlights; the full set unlocks across three to four.",
-                included: SIGNATURE_HANDLED,
-                caveats: { label: "As you add days", items: SIGNATURE_UNLOCKS },
-                note: "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf.",
+                lead: SIG.lead,
+                experiences: SIG.experiences,
+                expLede: SIG.expLede,
+                included: SIG.included,
+                caveats: { label: SIG.caveatsLabel, items: SIG.caveats },
+                note: SIG.note,
               })}
 
             {/* 2 · Original — the full sightseeing day, entries included. */}
@@ -1426,7 +1633,7 @@ export default function DayConfigurator({
               />
               <span className={styles.sigShade} aria-hidden />
               <div className={styles.sigTop}>
-                <span className={styles.sigTier}>Full day · all the sights</span>
+                <span className={styles.sigTier}>{ORIG.tier}</span>
                 {isOriginal ? (
                   <span className={styles.sigChosen}>✓ Selected</span>
                 ) : (
@@ -1434,34 +1641,33 @@ export default function DayConfigurator({
                 )}
               </div>
               <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>Entries included</span>
-                <h4 className={styles.sigPlace}>Original</h4>
-                <p className={styles.sigHook}>{ORIGINAL_SUBTITLE}</p>
+                <span className={styles.sigKicker}>{ORIG.kicker}</span>
+                <h4 className={styles.sigPlace}>{ORIG.title}</h4>
+                <p className={styles.sigHook}>{ORIG.hook}</p>
                 <ul className={styles.sigPoints}>
-                  {ORIGINAL_POINTS.map((p) => (
+                  {ORIG.points.map((p) => (
                     <li key={p}>{p}</li>
                   ))}
                 </ul>
-                <span className={styles.sigMeta}>{ORIGINAL_META}</span>
+                <span className={styles.sigMeta}>{ORIG.meta}</span>
                 <div className={styles.sigFoot}>
                   <span className={styles.sigPrice}>
                     <small>from</small> {euro(ORIGINAL_RATE)}
                     <small>/day</small>
                   </span>
-                  <span className={styles.sigNote}>transfer from the coast included</span>
+                  <span className={styles.sigNote}>{ORIG.priceNote}</span>
                 </div>
               </div>
             </div>
 
             {expanded === "original" &&
               renderBrochure({
-                lead: ORIGINAL_LEAD,
-                experiences: ORIGINAL_EXPS,
-                expLede:
-                  "The best of Luxor's temples and tombs, every entry in the price — you choose the order, and add days to go slower and see more.",
-                included: ORIGINAL_HANDLED,
-                caveats: { label: "Added on request", items: ORIGINAL_MORE },
-                note: "In any order you like, at the quiet hour for each — just tell your concierge.",
+                lead: ORIG.lead,
+                experiences: ORIG.experiences,
+                expLede: ORIG.expLede,
+                included: ORIG.included,
+                caveats: { label: ORIG.caveatsLabel, items: ORIG.caveats },
+                note: ORIG.note,
               })}
 
             {/* 3 · Adventure Light — concierge only, pay as you go. */}
@@ -1488,7 +1694,7 @@ export default function DayConfigurator({
               />
               <span className={styles.sigShade} aria-hidden />
               <div className={styles.sigTop}>
-                <span className={styles.sigTier}>Concierge only</span>
+                <span className={styles.sigTier}>{ADV.tier}</span>
                 {isLight ? (
                   <span className={styles.sigChosen}>✓ Selected</span>
                 ) : (
@@ -1496,32 +1702,33 @@ export default function DayConfigurator({
                 )}
               </div>
               <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>Temple &amp; sail included</span>
-                <h4 className={styles.sigPlace}>Adventure</h4>
-                <p className={styles.sigHook}>{CONSIGLIERE_INTRO}</p>
+                <span className={styles.sigKicker}>{ADV.kicker}</span>
+                <h4 className={styles.sigPlace}>{ADV.title}</h4>
+                <p className={styles.sigHook}>{ADV.hook}</p>
                 <ul className={styles.sigPoints}>
-                  {LIGHT_POINTS.map((p) => (
+                  {ADV.points.map((p) => (
                     <li key={p}>{p}</li>
                   ))}
                 </ul>
-                <span className={styles.sigMeta}>{CONSIGLIERE_META}</span>
+                <span className={styles.sigMeta}>{ADV.meta}</span>
                 <div className={styles.sigFoot}>
                   <span className={styles.sigPrice}>
                     <small>from</small> {euro(lightDayRate)}
                     <small>/day</small>
                   </span>
-                  <span className={styles.sigNote}>1–4 guests · local costs extra</span>
+                  <span className={styles.sigNote}>{ADV.priceNote}</span>
                 </div>
               </div>
             </div>
 
             {expanded === "light" &&
               renderBrochure({
-                lead: LIGHT_LEAD,
-                experiences: ADVENTURE_EXPS,
-                included: LIGHT_INCLUDED,
-                caveats: { label: "Paid locally, on the day", items: LIGHT_LOCAL },
-                note: "Go with the flow — tell us what you need, and we'll arrange it.",
+                lead: ADV.lead,
+                experiences: ADV.experiences,
+                expLede: ADV.expLede,
+                included: ADV.included,
+                caveats: { label: ADV.caveatsLabel, items: ADV.caveats },
+                note: ADV.note,
               })}
 
             {/* 4 · Reality Hunting — business, land & investment. Hidden for now
@@ -1934,59 +2141,30 @@ export default function DayConfigurator({
                 </ul>
               ) : isOriginal ? (
                 <ul className={styles.sumIncl}>
-                  <li>
-                    <b>Every entry ticket included</b>
-                    <span>the great temples &amp; tombs of both banks — no queues, no cash</span>
-                  </li>
-                  <li>
-                    <b>A private felucca &amp; the desert</b>
-                    <span>golden hour on the Nile and a trip out into the sand</span>
-                  </li>
-                  <li>
-                    <b>Door-to-door from the coast</b>
-                    <span>collected from Hurghada or Marsa Alam — the car stays all day</span>
-                  </li>
-                  <li>
-                    <b>Your concierge end to end</b>
-                    <span>driver, planner, translator &amp; fixer — in any order you like</span>
-                  </li>
+                  {ORIG.summary.map((s) => (
+                    <li key={s.title}>
+                      <b>{s.title}</b>
+                      <span>{s.desc}</span>
+                    </li>
+                  ))}
                 </ul>
               ) : isLight ? (
                 <ul className={styles.sumIncl}>
-                  <li>
-                    <b>Your own person on the ground</b>
-                    <span>trusted driver, translator, negotiator &amp; problem-solver, all day</span>
-                  </li>
-                  <li>
-                    <b>One temple of your choice &amp; a Nile sail</b>
-                    <span>a temple entry and a felucca on the Nile — included in the price</span>
-                  </li>
-                  <li>
-                    <b>Door-to-door from the coast</b>
-                    <span>collected from Hurghada or Marsa Alam — the car stays all day</span>
-                  </li>
-                  <li>
-                    <b>Anything more, paid locally</b>
-                    <span>further entries, the experiences you choose &amp; your tips — in cash, on the day</span>
-                  </li>
+                  {ADV.summary.map((s) => (
+                    <li key={s.title}>
+                      <b>{s.title}</b>
+                      <span>{s.desc}</span>
+                    </li>
+                  ))}
                 </ul>
               ) : (
               <ul className={styles.sumIncl}>
-                <li>
-                  <b>Your own concierge, end to end</b>
-                  <span>
-                    driver, planner, translator &amp; fixer — on WhatsApp from booking, with you
-                    all day (everything the concierge-only day gives, and more)
-                  </span>
-                </li>
-                <li>
-                  <b>The best of Luxor — your choice</b>
-                  <span>temples, tombs, a felucca or the desert, in any order — at the quiet hour</span>
-                </li>
-                <li>
-                  <b>Go at your own pace</b>
-                  <span>see as much as you wish — nothing rushed, nothing off the table</span>
-                </li>
+                {SIG.summary.map((s) => (
+                  <li key={s.title}>
+                    <b>{s.title}</b>
+                    <span>{s.desc}</span>
+                  </li>
+                ))}
                 <li>
                   <b>
                     {giftCount} signature gift{giftCount > 1 ? "s" : ""} — yours to keep
@@ -2006,10 +2184,6 @@ export default function DayConfigurator({
                     <span>on us — yours free</span>
                   </li>
                 )}
-                <li>
-                  <b>Everything handled</b>
-                  <span>Egyptologist, entries, transfers &amp; timing</span>
-                </li>
               </ul>
               )}
               <button className={styles.sumMore} onClick={() => setListOpen((o) => !o)}>

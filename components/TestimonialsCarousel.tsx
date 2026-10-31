@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./TestimonialsCarousel.module.css";
 
@@ -79,13 +80,15 @@ export default function TestimonialsCarousel({
               aria-hidden={!isCenter}
               onClick={!isCenter ? () => go(i) : undefined}
             >
-              {t.image && (
-                <img
+              {t.image && Math.min((((i - idx) % n) + n) % n, (((idx - i) % n) + n) % n) <= 2 && (
+                <Image
                   className={styles.img}
                   src={t.image}
                   alt=""
-                  aria-hidden="true"
-                  loading="lazy"
+                  aria-hidden
+                  fill
+                  sizes="(max-width: 760px) 82vw, 430px"
+                  quality={68}
                   draggable={false}
                 />
               )}

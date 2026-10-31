@@ -29,6 +29,74 @@ const giftFields = (label: string) =>
     { label }
   );
 
+// Icons available for a Design-Your-Day card's "Experiences included" items.
+const CARD_ICON_OPTIONS = [
+  { label: "Temple", value: "temple" },
+  { label: "Ticket / tomb", value: "ticket" },
+  { label: "Felucca / sail", value: "sail" },
+  { label: "Desert", value: "desert" },
+  { label: "Balloon", value: "balloon" },
+  { label: "Car / transfer", value: "car" },
+  { label: "Guide", value: "guide" },
+  { label: "Key / access", value: "key" },
+  { label: "Food", value: "food" },
+  { label: "Tips", value: "tips" },
+  { label: "Camera", value: "camera" },
+  { label: "Gift", value: "gift" },
+  { label: "Shield / guarantee", value: "shield" },
+  { label: "Chat / concierge", value: "chat" },
+  { label: "Document", value: "doc" },
+  { label: "Check", value: "check" },
+] as const;
+
+// One Design-Your-Day product card's editable copy (face + expanded brochure).
+const cardFields = (label: string) =>
+  fields.object(
+    {
+      tier: fields.text({ label: "Tier chip (top-left)" }),
+      kicker: fields.text({ label: "Eyebrow (above the title)" }),
+      title: fields.text({ label: "Card title" }),
+      hook: fields.text({ label: "Card description", multiline: true }),
+      points: fields.array(fields.text({ label: "Point" }), {
+        label: "Card bullet points",
+        itemLabel: (p) => p.value || "Point",
+      }),
+      meta: fields.text({ label: "Meta line (under the points)" }),
+      priceNote: fields.text({ label: "Price note (next to the price)" }),
+      lead: fields.text({ label: "Brochure lead (executive summary)", multiline: true }),
+      expLede: fields.text({ label: "Experiences intro line", multiline: true }),
+      experiences: fields.array(
+        fields.object({
+          icon: fields.select({ label: "Icon", options: CARD_ICON_OPTIONS, defaultValue: "check" }),
+          name: fields.text({ label: "Name" }),
+          desc: fields.text({ label: "Description", multiline: true }),
+        }),
+        { label: "Experiences included", itemLabel: (p) => p.fields.name.value || "Experience" }
+      ),
+      included: fields.array(fields.text({ label: "Line" }), {
+        label: '"Also included" lines',
+        itemLabel: (p) => p.value || "Line",
+      }),
+      caveatsLabel: fields.text({ label: "Caveats heading" }),
+      caveats: fields.array(fields.text({ label: "Line" }), {
+        label: "Caveats lines",
+        itemLabel: (p) => p.value || "Line",
+      }),
+      note: fields.text({ label: "Brochure closing note", multiline: true }),
+      summary: fields.array(
+        fields.object({
+          title: fields.text({ label: "Title" }),
+          desc: fields.text({ label: "Description", multiline: true }),
+        }),
+        {
+          label: 'Checkout "What\'s included" summary',
+          itemLabel: (p) => p.fields.title.value || "Item",
+        }
+      ),
+    },
+    { label }
+  );
+
 const REVIEW_SOURCES = [
   { label: "Google", value: "google" },
   { label: "Meta / Facebook", value: "facebook" },
@@ -1098,6 +1166,17 @@ export default config({
         finalEyebrow: fields.text({ label: "Final CTA eyebrow" }),
         finalTitle: fields.text({ label: "Final CTA title" }),
         finalText: fields.text({ label: "Final CTA text", multiline: true }),
+
+        // Design-Your-Day product cards. Any field left blank uses the built-in
+        // default, so the cards never render empty.
+        cards: fields.object(
+          {
+            signature: cardFields("Signature card"),
+            original: cardFields("Original card"),
+            adventure: cardFields("Adventure card"),
+          },
+          { label: "Design Your Day — product cards" }
+        ),
       },
     }),
 

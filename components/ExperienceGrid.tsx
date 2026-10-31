@@ -155,11 +155,108 @@ function ExpCard({ e }: { e: ExperienceCardData }) {
 export default function ExperienceGrid({
   cards,
   initial = 6,
+  layout = "grid",
+  designHref = "#design",
+  tone = "light",
 }: {
   cards: ExperienceCardData[];
   initial?: number;
+  /** "strip" renders a single horizontal, swipeable row instead of a grid. */
+  layout?: "grid" | "strip";
+  /** Where the cards and the "design your day" tail link point. */
+  designHref?: string;
+  /** "dark" lifts the strip cards for a dark/filmic backdrop. */
+  tone?: "light" | "dark";
 }) {
   const [expanded, setExpanded] = React.useState(false);
+  const stripRef = React.useRef<HTMLDivElement>(null);
+
+  // Gentle, cinematic auto-drift for the slideshow — pauses on hover / touch,
+  // reverses at each end (no jarring jump), and respects reduced-motion.
+  React.useEffect(() => {
+    if (layout !== "strip") return;
+    const el = stripRef.current;
+    if (!el) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let paused = false;
+    let dir = 1;
+    const pause = () => {
+      paused = true;
+    };
+    const resume = () => {
+      paused = false;
+    };
+    el.addEventListener("pointerenter", pause);
+    el.addEventListener("pointerleave", resume);
+    el.addEventListener("pointerdown", pause);
+    el.addEventListener("touchstart", pause, { passive: true });
+    // Gentle, always-on drift — perceptible but calm (~0.65px/frame ≈ 40px/s).
+    const tick = () => {
+      if (!paused && el.scrollWidth > el.clientWidth + 4) {
+        el.scrollLeft += 0.65 * dir;
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) dir = -1;
+        else if (el.scrollLeft <= 0) dir = 1;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("pointerenter", pause);
+      el.removeEventListener("pointerleave", resume);
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("touchstart", pause);
+    };
+  }, [layout]);
+
+  // Single-row slideshow: every card in one swipeable strip, no collapse.
+  if (layout === "strip") {
+    const itemClass =
+      tone === "dark" ? `${styles.expStripItem} ${styles.expStripItemDark}` : styles.expStripItem;
+    const arrowClass =
+      tone === "dark" ? `${styles.stripArrow} ${styles.stripArrowDark}` : styles.stripArrow;
+    // Scroll one card at a time; pause the auto-drift briefly so the nudge lands.
+    const nudge = (dir: 1 | -1) => {
+      const el = stripRef.current;
+      if (!el) return;
+      const first = el.firstElementChild as HTMLElement | null;
+      const step = first ? first.getBoundingClientRect().width + 14 : el.clientWidth * 0.85;
+      el.scrollBy({ left: step * dir, behavior: "smooth" });
+    };
+    return (
+      <div className={styles.stripShell}>
+        <div className={styles.expStrip} ref={stripRef}>
+          {cards.map((e) => (
+            <div className={itemClass} key={e.href || e.h}>
+              <ExpCard e={e} />
+            </div>
+          ))}
+          <Link className={`${styles.expAll} ${itemClass}`} href={designHref}>
+            <div className={styles.expAllIn}>
+              <div className="k">The full collection</div>
+              <h4>Explore all experiences</h4>
+              <p>Temples, tombs, the Nile, the desert and more — designed into your day.</p>
+              <span className={styles.expAllCta}>Design your day →</span>
+            </div>
+          </Link>
+        </div>
+        <div className={styles.stripNav}>
+          <button type="button" aria-label="Previous" className={arrowClass} onClick={() => nudge(-1)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+          <button type="button" aria-label="Next" className={arrowClass} onClick={() => nudge(1)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const collapsible = cards.length > initial;
   const visible = collapsible && !expanded ? cards.slice(0, initial) : cards;
 

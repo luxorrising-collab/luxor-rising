@@ -393,6 +393,108 @@
   overflow: hidden;
   box-shadow: 0 34px 80px -46px rgba(42, 28, 16, 0.6);
 }
+/* Single-row slideshow — a swipeable, gently auto-scrolling strip of the same
+   cards, taller and more filmic, with a little air between them. */
+.expStrip {
+  display: flex;
+  gap: 0.9rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  /* Top room so the hover-lift isn't clipped (overflow-x:auto forces y:auto). */
+  padding: 1rem 0.2rem 1.4rem;
+  -webkit-overflow-scrolling: touch;
+  /* No scrollbar — navigation is by the centred arrows below. */
+  scrollbar-width: none;
+}
+.expStrip::-webkit-scrollbar {
+  display: none;
+}
+/* Centred prev/next arrows under the slideshow (in place of a scrollbar). */
+.stripShell {
+  position: relative;
+}
+.stripNav {
+  display: flex;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+.stripArrow {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 99, 0.45);
+  background: rgba(201, 160, 99, 0.08);
+  color: var(--color-gold-deep, #9a7636);
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.stripArrow svg {
+  width: 19px;
+  height: 19px;
+}
+.stripArrow:hover {
+  background: var(--color-gold, #c9a063);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+.stripArrow:active {
+  transform: translateY(0);
+}
+/* On the dark filmic band. */
+.stripArrowDark {
+  border-color: rgba(229, 212, 170, 0.38);
+  background: rgba(243, 231, 207, 0.08);
+  color: rgba(243, 231, 207, 0.92);
+}
+.stripArrowDark:hover {
+  background: var(--color-gold, #c9a063);
+  color: #1a140d;
+  border-color: transparent;
+}
+.expStripItem {
+  transition: transform 0.6s cubic-bezier(0.22, 0.7, 0.26, 1), box-shadow 0.6s ease;
+  will-change: transform;
+  flex: 0 0 clamp(300px, 84vw, 400px);
+  height: clamp(440px, 64vh, 580px);
+  scroll-snap-align: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 28px 64px -34px rgba(42, 28, 16, 0.7);
+}
+.expStripItem > :global(*) {
+  height: 100%;
+  /* Fill the wrapper exactly — the card's own aspect-ratio would otherwise make
+     it wider than the strip item and clip the right-anchored labels/image. */
+  width: 100%;
+}
+/* On a dark/filmic band the warm shadow disappears; lift the cards with a
+   deeper shadow and a faint warm ring so they read as separate film stills. */
+.expStripItemDark {
+  box-shadow: 0 24px 60px -26px rgba(0, 0, 0, 0.8);
+  outline: 1px solid rgba(201, 160, 99, 0.16);
+  outline-offset: -1px;
+}
+/* Gentle, slow float-up on hover — the slide you're drawn to lifts a little. */
+.expStripItem:hover {
+  transform: translateY(-8px);
+}
+.expStripItemDark:hover {
+  box-shadow: 0 36px 72px -24px rgba(0, 0, 0, 0.85);
+  outline-color: rgba(201, 160, 99, 0.32);
+}
+@media (prefers-reduced-motion: reduce) {
+  .expStripItem {
+    transition: none;
+  }
+  .expStripItem:hover {
+    transform: none;
+  }
+}
 /* custom per-experience icon, top-left of the card */
 .expIcon {
   position: absolute;

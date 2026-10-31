@@ -6,22 +6,29 @@ import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
+import DayHoldSlideshow from "@/components/DayHoldSlideshow";
+import DesignYourDayCta from "@/components/DesignYourDayCta";
+import TakenCareOfSection from "@/components/TakenCareOfSection";
 import type { HeroShowItem } from "@/components/HeroShow";
 import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
+import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
 
 async function getData(slug: string) {
-  const [entry, globals, pricingRules, finalPrice, crossingPrice, socialProof] = await Promise.all([
-    reader.collections.experiences.read(slug, { resolveLinkedFiles: true }),
-    reader.singletons.productPageSettings.read(),
-    reader.singletons.pricingRules.read(),
-    getFinalPrice(slug),
-    getFinalPrice("hurghada-to-luxor-crossing"),
-    getSocialProof(),
-  ]);
+  const [entry, globals, pricingRules, conciergePage, experiences, finalPrice, crossingPrice, socialProof] =
+    await Promise.all([
+      reader.collections.experiences.read(slug, { resolveLinkedFiles: true }),
+      reader.singletons.productPageSettings.read(),
+      reader.singletons.pricingRules.read(),
+      reader.singletons.conciergeDayPage.read(),
+      reader.collections.experiences.all(),
+      getFinalPrice(slug),
+      getFinalPrice("hurghada-to-luxor-crossing"),
+      getSocialProof(),
+    ]);
   // Inactive experiences 404 rather than render at their direct URL.
   if (!entry || !entry.isActive) return null;
   // Single source of truth: the Product-prices singleton wins when it has a
@@ -35,6 +42,8 @@ async function getData(slug: string) {
     entry,
     globals,
     pricingRules,
+    conciergePage,
+    experiences,
     basePrice,
     showAssembledTotal,
     socialProof,
@@ -51,11 +60,19 @@ export async function generateMetadata({
   const data = await getData(slug);
   if (!data) return {};
   const { entry, basePrice } = data;
-  // Keep the "from €X" figure in SEO title/description consistent with the live price.
-  const swap = (s: string) =>
-    entry.basePrice && basePrice !== entry.basePrice
+  // Funnel pages (Luxor single-day experiences) sell the day from €330, not a
+  // single-experience price — so keep the "from €X" in the SEO title/description
+  // consistent with what the page actually shows.
+  const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
+  const isLuxorFunnel = entry.bookingType !== "enquiry" && !isRedSea;
+  const swap = (s: string) => {
+    if (isLuxorFunnel && entry.basePrice) {
+      return s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), "€330");
+    }
+    return entry.basePrice && basePrice !== entry.basePrice
       ? s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${basePrice}`)
       : s;
+  };
   const title = swap(entry.metaTitle || entry.title);
   const description = swap(entry.metaDescription || entry.hook);
   return {
@@ -85,7 +102,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
 
   const data = await getData(slug);
   if (!data) notFound();
-  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof, crossingPrice } = data;
+  const { entry, globals, pricingRules, conciergePage, experiences, basePrice, showAssembledTotal, socialProof, crossingPrice } = data;
   // Enquiry-only products (e.g. a bespoke multi-week retreat) reuse the standard
   // product page, but swap Stripe checkout for the enquiry form and drop the
   // fixed-price / "reserve" language.
@@ -97,6 +114,22 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
   const region = isRedSea ? "Hurghada" : "Luxor";
   const hurghadaTransfer = isRedSea ? 0 : crossingPrice;
+
+  // Luxor single-day experiences funnel into Design Your Day (the Medinet Habu
+  // pattern): no single-experience checkout — instead a Design-your-day CTA, the
+  // "what your day can hold" slideshow, and "what we take care of". Enquiry
+  // retreats keep their enquiry flow; Red Sea / Hurghada products (the crossing)
+  // keep their own single-experience checkout.
+  const isLuxorFunnel = !isEnquiry && !isRedSea;
+  // A short, clean label for the funnel copy ("Make X part of your day") — trim
+  // any "— subtitle" so long product names read naturally.
+  const shortName = (entry.name || entry.title).split(/\s[—–-]\s/)[0].trim();
+  const stripCards = isLuxorFunnel
+    ? buildConciergeDayCards({
+        cmsExperiences: conciergePage?.experiences,
+        experiences,
+      }).filter((c) => c.href !== dydExpHref(slug))
+    : [];
 
   // Cinematic hero slideshow, per product. Starts on the product's own hero
   // image (so first paint is unchanged / LCP-safe), then crossfades through
@@ -434,7 +467,10 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav ctaHref="#book" ctaLabel={isEnquiry ? "Enquire" : "Reserve"} />
+      <Nav
+        ctaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
+        ctaLabel={isLuxorFunnel ? "Design your day" : isEnquiry ? "Enquire" : "Reserve"}
+      />
 
       <ExperienceTemplate
         isEnquiry={isEnquiry}
@@ -444,6 +480,17 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         heroEyebrow={entry.heroEyebrow}
         heroImage={entry.heroImage ?? ""}
         heroMedia={heroMedia}
+        hidePrice={isLuxorFunnel}
+        heroPrice={
+          isLuxorFunnel
+            ? {
+                amount: 330,
+                note: "/ day - including door to door transfer from Hurghada or Marsa Alam",
+              }
+            : undefined
+        }
+        heroCtaLabel={isLuxorFunnel ? "Design your day →" : undefined}
+        heroCtaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
         glanceLead={entry.glanceLead}
         bestTime={entry.bestTime}
         duration={entry.duration}
@@ -454,12 +501,27 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         momentImage={momentImage}
         gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
         galleryVideos={galleryVideos}
-        bookEyebrow={entry.bookEyebrow}
-        bookTitle={entry.bookTitle}
-        bookLead={entry.bookLead}
-        bookNote={entry.bookNote || undefined}
+        bookEyebrow={isLuxorFunnel ? "Design your day" : entry.bookEyebrow}
+        bookTitle={isLuxorFunnel ? `Make ${shortName} part of your day` : entry.bookTitle}
+        bookLead={
+          isLuxorFunnel
+            ? `${shortName} isn't sold as a ticket — it's one of the ways to spend a Luxor Rising day. Build the whole day around it: the temples and tombs you choose, in the order you like, with a private Egyptologist, insider access and everything arranged end to end.`
+            : entry.bookLead
+        }
+        bookNote={isLuxorFunnel ? undefined : entry.bookNote || undefined}
+        preBook={isLuxorFunnel ? <DayHoldSlideshow cards={stripCards} /> : undefined}
+        postContent={
+          isLuxorFunnel ? (
+            <TakenCareOfSection
+              title={`Everything about ${shortName}, handled`}
+              items={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
+            />
+          ) : undefined
+        }
         configurator={
-          isEnquiry ? (
+          isLuxorFunnel ? (
+            <DesignYourDayCta />
+          ) : isEnquiry ? (
             <div className="wrap-narrow" style={{ paddingTop: "1.5rem" }}>
               {entry.takenCareOf.length > 0 && (
                 <div
@@ -541,14 +603,28 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         reviewsVerified={globals?.reviewsVerified ?? false}
         reviewAverage={reviewAverage}
         reviewCount={reviewCount}
-        finalTitle={isEnquiry ? "Begin a private conversation" : `Reserve ${entry.title}`}
-        finalText={
-          isEnquiry
-            ? "Fully bespoke and arranged end to end. Tell us what you’re carrying — we reply personally, within 24 hours."
-            : `Private, certified-guided, and arranged end to end — from €${basePrice}.`
+        finalTitle={
+          isLuxorFunnel
+            ? `Make ${shortName} part of your day.`
+            : isEnquiry
+              ? "Begin a private conversation"
+              : `Reserve ${entry.title}`
         }
-        finalCtaHref="#book"
-        finalCtaLabel={isEnquiry ? "Request an invitation →" : "Reserve this experience →"}
+        finalText={
+          isLuxorFunnel
+            ? `${shortName} is one of the ways to spend a Luxor Rising day — design the whole day around it, private and arranged end to end, from €330.`
+            : isEnquiry
+              ? "Fully bespoke and arranged end to end. Tell us what you’re carrying — we reply personally, within 24 hours."
+              : `Private, certified-guided, and arranged end to end — from €${basePrice}.`
+        }
+        finalCtaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
+        finalCtaLabel={
+          isLuxorFunnel
+            ? "Design your day →"
+            : isEnquiry
+              ? "Request an invitation →"
+              : "Reserve this experience →"
+        }
         giftFeatured={isEnquiry ? undefined : resolveGift(entry.signatureGift, entry.category)}
         showValueAnchor={globals?.showValueAnchor ?? false}
       />

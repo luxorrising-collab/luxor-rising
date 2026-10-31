@@ -4,9 +4,12 @@ import Nav from "@/components/Nav";
 import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
-import ExperienceConfigurator from "@/components/ExperienceConfigurator";
 import ExperienceTemplate from "@/components/ExperienceTemplate";
+import DayHoldSlideshow from "@/components/DayHoldSlideshow";
+import DesignYourDayCta from "@/components/DesignYourDayCta";
+import TakenCareOfSection from "@/components/TakenCareOfSection";
 import type { HeroShowItem } from "@/components/HeroShow";
+import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
@@ -15,27 +18,19 @@ import { resolveGift } from "@/lib/gifts";
 const SLUG = "medinet-habu";
 
 async function getData() {
-  const [entry, globals, pricingRules, finalPrice, crossingPrice, socialProof] = await Promise.all([
+  const [entry, globals, experiences, conciergePage, finalPrice, socialProof] = await Promise.all([
     reader.collections.experiences.read(SLUG, { resolveLinkedFiles: true }),
     reader.singletons.productPageSettings.read(),
-    reader.singletons.pricingRules.read(),
+    reader.collections.experiences.all(),
+    reader.singletons.conciergeDayPage.read(),
     getFinalPrice(SLUG),
-    getFinalPrice("hurghada-to-luxor-crossing"),
     getSocialProof(),
   ]);
   if (!entry) return null;
   const basePrice = finalPrice ?? entry.basePrice ?? 0;
   const vst = parseEuro(entry.valueStackTotal);
   const showAssembledTotal = vst != null && vst > basePrice;
-  return {
-    entry,
-    globals,
-    pricingRules,
-    basePrice,
-    showAssembledTotal,
-    socialProof,
-    crossingPrice: crossingPrice ?? 675,
-  };
+  return { entry, globals, experiences, conciergePage, basePrice, showAssembledTotal, socialProof };
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,7 +67,16 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MedinetHabuPage() {
   const data = await getData();
   if (!data) notFound();
-  const { entry, globals, pricingRules, basePrice, showAssembledTotal, socialProof, crossingPrice } = data;
+  const { entry, globals, experiences, conciergePage, basePrice, showAssembledTotal, socialProof } = data;
+
+  // Gallery slideshow — the exact Design Your Day gallery cards (hover clips,
+  // icons, tier labels + selling-point chips), as one swipeable row. Built from
+  // the same shared builder and CMS source as /concierge-day, minus this temple.
+  const selfHref = dydExpHref(SLUG);
+  const stripCards = buildConciergeDayCards({
+    cmsExperiences: conciergePage?.experiences,
+    experiences,
+  }).filter((c) => c.href !== selfHref);
 
   const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
   const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
@@ -197,13 +201,20 @@ export default async function MedinetHabuPage() {
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav ctaHref="#book" ctaLabel="Reserve" />
+      <Nav ctaHref="/concierge-day#design" ctaLabel="Design your day" />
 
       <ExperienceTemplate
         socialProof={socialProof}
         title={entry.title}
         hook={entry.hook}
         heroEyebrow={entry.heroEyebrow}
+        hidePrice
+        heroPrice={{
+          amount: 330,
+          note: "/ day - including door to door transfer from Hurghada or Marsa Alam",
+        }}
+        heroCtaLabel="Design your day →"
+        heroCtaHref="/concierge-day#design"
         heroImage={entry.heroImage ?? ""}
         heroMedia={heroMedia}
         glanceLead={entry.glanceLead}
@@ -216,32 +227,11 @@ export default async function MedinetHabuPage() {
         momentImage={gi(7)}
         gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
         galleryVideos={galleryVideos}
-        bookEyebrow={entry.bookEyebrow}
-        bookTitle={entry.bookTitle}
-        bookLead={entry.bookLead}
-        bookNote={entry.bookNote || undefined}
-        configurator={
-          <ExperienceConfigurator
-            name="Medinet Habu"
-            slug={SLUG}
-            basePrice={basePrice}
-            maxGuests={entry.maxGuests ?? 4}
-            groupSupplement={entry.groupSupplement.map((t) => ({
-              minGuests: t.minGuests ?? 0,
-              extraPerGuest: t.extraPerGuest ?? 0,
-            }))}
-            depositPercent={pricingRules?.depositPercent ?? 50}
-            glanceIncludes={entry.glanceIncludes}
-            includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
-            feelText={entry.glanceIncludes}
-            socialProof={socialProof}
-            image={entry.heroImage || undefined}
-            title={entry.title || undefined}
-            region="Luxor"
-            hurghadaTransfer={crossingPrice}
-            giftFeatured={resolveGift(entry.signatureGift, entry.category)}
-          />
-        }
+        bookEyebrow="Design your day"
+        bookTitle="Make Medinet Habu part of your day"
+        bookLead="Medinet Habu isn't sold as a ticket — it's one of the ways to spend a Luxor Rising day. Build the whole day around it: the temples and tombs you choose, in the order you like, with a private Egyptologist, insider access and everything arranged end to end."
+        bookNote={undefined}
+        configurator={<DesignYourDayCta />}
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}
         valueStackTotal={entry.valueStackTotal}
         showAssembledTotal={showAssembledTotal}
@@ -277,11 +267,18 @@ export default async function MedinetHabuPage() {
         reviewAverage={reviewAverage}
         reviewCount={reviewCount}
         finalTitle="Begin where everything began."
-        finalText={`Private, certified-guided, and arranged end to end — from €${basePrice}. Reserve your hour at the mound.`}
-        finalCtaHref="#book"
-        finalCtaLabel="Reserve this experience →"
+        finalText="Medinet Habu is one of the ways to spend your day. Design the whole day around it — private, certified-guided, and arranged end to end, from €330."
+        finalCtaHref="/concierge-day#design"
+        finalCtaLabel="Design your day →"
         giftFeatured={resolveGift(entry.signatureGift, entry.category)}
         showValueAnchor={globals?.showValueAnchor ?? false}
+        preBook={<DayHoldSlideshow cards={stripCards} />}
+        postContent={
+          <TakenCareOfSection
+            title="Everything about Medinet Habu, handled"
+            items={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
+          />
+        }
       />
 
       <FullFooter columns={FOOTER_COLUMNS} />

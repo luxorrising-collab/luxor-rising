@@ -13,6 +13,10 @@ const SITE = "https://www.luxorrising.com";
 const BRAND = "Luxor Rising";
 // A dependable static hero for the Concierge Day card.
 const CONCIERGE_IMAGE = `${SITE}/images/experiences/karnak-at-dawn/heroImage.jpg`;
+// The "from" price every Luxor experience page now shows — a private day,
+// door-to-door transfer included — since each funnels into Design Your Day.
+// Kept in step with the hero price hardcoded on those pages.
+const DAY_FROM = 330;
 
 export type FeedProduct = {
   id: string;
@@ -52,9 +56,10 @@ const priceBand = (v: number): string =>
   v < 350 ? "Under €350" : v < 600 ? "€350–599" : v < 1000 ? "€600–999" : "€1000+";
 
 export async function getFeedProducts(): Promise<FeedProduct[]> {
-  const [all, priceMap] = await Promise.all([
+  const [all, priceMap, conciergePage] = await Promise.all([
     reader.collections.experiences.all(),
     getFinalPriceMap(),
+    reader.singletons.conciergeDayPage.read(),
   ]);
 
   const products: FeedProduct[] = [
@@ -63,7 +68,8 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
       title: "The Concierge Day — your private day in Luxor",
       description:
         "A full private day in Luxor: several experiences woven into one, your own licensed Egyptologist, and one concierge handling every ticket, transfer and timing.",
-      price: priceMap.get("design-your-day") ?? 800,
+      // The "from" price the Concierge Day page advertises — kept in step with it.
+      price: conciergePage?.startingPrice ?? DAY_FROM,
       link: `${SITE}/concierge-day`,
       image: CONCIERGE_IMAGE,
       category: "Concierge day",
@@ -74,13 +80,24 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
   for (const { slug, entry } of all) {
     const name = entry.name || entry.title;
     if (!entry.isActive || !name) continue;
-    const price = priceMap.get(slug) ?? entry.basePrice ?? 0;
-    if (!price) continue;
     const region = regionOf(slug, entry.heroEyebrow);
+    // Luxor single-day experiences now funnel into Design Your Day: their pages
+    // sell the day "from €330", not a single-experience price. The crossing
+    // (Red Sea transfer) and enquiry products keep their own price. Keep the
+    // feed price — and any "€X" in the description — consistent with the page.
+    const isEnquiry = entry.bookingType === "enquiry";
+    const isLuxorFunnel = !isEnquiry && region !== "Red Sea, Egypt";
+    const price = isLuxorFunnel ? DAY_FROM : priceMap.get(slug) ?? entry.basePrice ?? 0;
+    if (!price) continue;
+    const rawDesc = clean(entry.metaDescription || entry.hook);
+    const description =
+      isLuxorFunnel && entry.basePrice
+        ? rawDesc.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${DAY_FROM}`)
+        : rawDesc;
     products.push({
       id: slug,
       title: feedTitle(name, entry.title, region),
-      description: clean(entry.metaDescription || entry.hook),
+      description,
       price,
       link: slug === "medinet-habu" ? `${SITE}/medinet-habu` : `${SITE}/experiences/${slug}`,
       image: entry.heroImage ? `${SITE}${entry.heroImage}` : "",

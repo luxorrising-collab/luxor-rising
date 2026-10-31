@@ -1,3 +1,4 @@
+showValueAnchor: false
 howItWorksEyebrow: How it works
 howItWorksTitle: You choose a date. We arrange everything.
 howItWorksSteps:
@@ -22,11 +23,10 @@ disclosureText: >-
 consigliereEyebrow: The person at the heart of it
 consigliereTitle: What is a Luxor Rising concierge?
 consigliereLead: >-
-  Not a guide with a flag and a script. A concierge is one trusted person who
-  understands where you are in your own journey, shares the road with you, and
-  quietly arranges every last detail — the car, the tickets, the right hour, the
-  doors — so all you have to do is be present. You manage nothing. You just
-  flow.
+  A concierge is one trusted person who understands where you are in your own
+  journey, shares the road with you, and quietly arranges every last detail the
+  car, the tickets, the right hour, the doors so all you have to do is be
+  present. You manage nothing. You just flow.
 consigliereImage: /images/hosts/consigliereImage.jpg
 consiglierePoints:
   - title: A guide who understands your journey

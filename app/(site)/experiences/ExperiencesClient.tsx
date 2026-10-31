@@ -78,7 +78,7 @@ function matches(item: Item, filter: string, locs: Set<string>) {
 
 export default function ExperiencesClient({
   cmsItems = [],
-  conciergeDayPrice = 800,
+  conciergeDayPrice = 330,
 }: {
   cmsItems?: CmsExperienceItem[];
   conciergeDayPrice?: number;
@@ -198,17 +198,17 @@ export default function ExperiencesClient({
       {visibleSingleDay.length > 0 && (
         <Reveal className={styles.sec}>
           <div className={styles.secHead}>
-            <h2>Book a single experience</h2>
-            <span className={styles.tag}>Instant reservation</span>
+            <h2>The experiences</h2>
+            <span className={styles.tag}>Private · from €330 a day</span>
           </div>
           <p className={styles.secSub}>
-            One experience, one concierge, everything handled — entry, transfer, timing, and a
-            licensed Egyptologist who actually reads the walls. Reserve online in two minutes. Or
-            weave several into a <Link href="/concierge-day">concierge day</Link>.
+            Each one is a private experience, woven into one unhurried Luxor Rising day — your own
+            licensed Egyptologist, insider access, and everything arranged end to end. Pick what
+            calls to you, and <Link href="/concierge-day">design the day around it</Link>.
           </p>
           <div className={styles.grid}>
             {visibleSingleDay.map((item) => (
-              <ExperienceCard key={item.title} {...item} />
+              <ExperienceCard key={item.title} filmic {...item} />
             ))}
           </div>
         </Reveal>
@@ -232,7 +232,7 @@ export default function ExperiencesClient({
           </div>
           <div className={styles.grid}>
             {visibleEnquiry.map((item) => (
-              <ExperienceCard key={item.title} {...item} />
+              <ExperienceCard key={item.title} filmic {...item} />
             ))}
           </div>
         </Reveal>

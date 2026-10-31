@@ -15,7 +15,7 @@ import styles from "./ExperiencesPage.module.css";
 export const metadata: Metadata = {
   title: "Experiences in Luxor — Private, Curated, One Day at a Time",
   description:
-    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your concierge, delivered by licensed local specialists. From €800 a day.",
+    "Every Luxor Rising experience: private temples, tombs, sunrise balloon, desert and Nile. Curated by your concierge, delivered by licensed local specialists. From €330 a day.",
   alternates: { canonical: "/experiences" },
   openGraph: {
     type: "website",
@@ -37,9 +37,10 @@ const HURGHADA_SLUGS = new Set([
 ]);
 
 export default async function ExperiencesPage() {
-  const [allExperiences, priceMap, socialProof] = await Promise.all([
+  const [allExperiences, priceMap, conciergePage, socialProof] = await Promise.all([
     reader.collections.experiences.all(),
     getFinalPriceMap(),
+    reader.singletons.conciergeDayPage.read(),
     getSocialProof(),
   ]);
   const activeExperiences = allExperiences.filter(({ entry }) => entry.isActive && entry.title);
@@ -49,9 +50,14 @@ export default async function ExperiencesPage() {
   // Single source of truth: the Product-prices singleton wins over the stored basePrice.
   const priceOf = (slug: string, entry: { basePrice?: number | null }) =>
     priceMap.get(slug) ?? entry.basePrice ?? 0;
-  // The Concierge Day ("Design your day") price, fed live into the "Start here"
-  // callout, the sticky bar and structured data so it never drifts.
-  const conciergeDayPrice = priceMap.get("design-your-day") ?? 800;
+  // The Concierge Day ("Design your day") "from" price — the day rate every
+  // experience now funnels into — fed live into the "Start here" callout, the
+  // sticky bar, the cards and structured data so it never drifts.
+  const conciergeDayPrice = conciergePage?.startingPrice ?? 330;
+  // Every Luxor experience is now sold as part of a day (from the day rate);
+  // the Red Sea crossing keeps its own price, enquiry products their own flow.
+  const isFunnel = (slug: string, bookingType?: string | null) =>
+    !HURGHADA_SLUGS.has(slug) && bookingType !== "enquiry";
 
   // The hand-curated Concierge Day product for the ItemList structured data —
   // with a real image (required by Google for Product), a canonical URL, and the
@@ -89,13 +95,24 @@ export default async function ExperiencesPage() {
     // At-a-glance facts reduce uncertainty (duration + group size are the two
     // questions every buyer has) — a small, proven conversion lift.
     facts: [entry.duration, entry.groupSize].filter((f): f is string => Boolean(f)),
-    priceValue: entry.priceType === "included" ? "Included" : `€${priceOf(slug, entry)}`,
+    priceValue:
+      entry.priceType === "included"
+        ? "Included"
+        : isFunnel(slug, entry.bookingType)
+          ? `€${conciergeDayPrice}`
+          : `€${priceOf(slug, entry)}`,
     priceLabel: entry.priceType === "included" ? "Included" : "From",
     priceNote:
       entry.priceType === "included"
         ? "with any day"
-        : entry.priceNote || undefined,
-    ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
+        : isFunnel(slug, entry.bookingType)
+          ? "/ day"
+          : entry.priceNote || undefined,
+    ctaLabel: isFunnel(slug, entry.bookingType)
+      ? "Design your day →"
+      : entry.bookingType === "enquiry"
+        ? "Enquire →"
+        : "Reserve →",
     category: entry.category,
     location: HURGHADA_SLUGS.has(slug) ? "hurghada" : "luxor",
   }));
@@ -114,7 +131,7 @@ export default async function ExperiencesPage() {
     image: `https://luxorrising.com${entry.heroImage || "/images/medinet-habu-facade.jpg"}`,
     offers: {
       "@type": "Offer",
-      price: String(priceOf(slug, entry)),
+      price: String(isFunnel(slug, entry.bookingType) ? conciergeDayPrice : priceOf(slug, entry)),
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
       url: `https://luxorrising.com/experiences/${slug}#book`,
@@ -143,13 +160,13 @@ export default async function ExperiencesPage() {
         <Reveal className={`wrap ${styles.heroIn}`}>
           <span className="eyebrow">The Collection</span>
           <h1 className="display" style={{ margin: ".3rem 0 1.3rem" }}>
-            Everything we can open
+            Everything your Luxor
             <br />
-            for you in <em>Luxor</em>
+            day can <em>hold</em>
           </h1>
           <p>
-            Not a catalogue of tours. A collection of days — private, timed against the crowds,
-            and delivered by the people who actually hold the keys.
+            Not a catalogue of tours — the experiences we weave into one private, unhurried day.
+            Pick what calls to you, and we design the day around it.
           </p>
           <div className="divider-line" />
         </Reveal>

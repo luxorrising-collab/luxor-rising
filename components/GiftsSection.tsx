@@ -3,7 +3,6 @@
 import * as React from "react";
 import styles from "./GiftsSection.module.css";
 import { GIFT_DEFAULTS, GIFT_SHORT, type GiftData, type GiftKey } from "@/lib/gifts";
-import { CROWN_LINE, CROWN_OUTLINE, CROWN_OUTLINE_STYLE } from "./GiftMarks";
 
 // One looping video behind the whole section: the hero's real footage with every
 // frame graded to the same mean colour and the veil and crossfades already baked in
@@ -88,10 +87,14 @@ function IconAnkh() {
 }
 
 function IconCrown() {
+  // Our brand crown — three points over a horizontal ground line, as in the mark.
   return (
     <svg viewBox="0 0 120 120" className={styles.icon} role="img" aria-label="Crown">
-      <path className={styles.fill} d={CROWN_OUTLINE} style={CROWN_OUTLINE_STYLE} />
-      <path d={CROWN_LINE} />
+      <path
+        className={styles.fill}
+        d="M24 78 L34 38 L52 58 L60 28 L68 58 L86 38 L96 78 Z"
+      />
+      <path d="M24 96 H96" />
     </svg>
   );
 }

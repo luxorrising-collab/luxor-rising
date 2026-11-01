@@ -49,20 +49,11 @@ export function IconSceptre({ className }: IconProps) {
   );
 }
 
-// The crown from our logo, traced from public/images/logo-emblem.png with its sharp
-// tips and soft valleys, scaled evenly to the icon's width and sitting on the base
-// and ground line this mark has always had. Every crown on the site draws these, so
-// they can't drift apart.
-export const CROWN_OUTLINE =
-  "M24 50 L44.1 62.3 Q46.5 63.7 47.9 61.4 L60 40.1 L72.1 61.4 Q73.5 63.7 75.9 62.3 L96 50 L88 78 H32 Z";
-export const CROWN_LINE = "M24 96 H96";
-export const CROWN_OUTLINE_STYLE = { strokeLinejoin: "miter", strokeMiterlimit: 8 } as const;
-
 export function IconCrown({ className }: IconProps) {
   return (
     <svg viewBox="0 0 120 120" className={className} {...common}>
-      <path d={CROWN_OUTLINE} style={CROWN_OUTLINE_STYLE} />
-      <path d={CROWN_LINE} />
+      <path d="M24 78 L34 38 L52 58 L60 28 L68 58 L86 38 L96 78 Z" />
+      <path d="M24 96 H96" />
     </svg>
   );
 }

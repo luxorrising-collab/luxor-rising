@@ -399,7 +399,7 @@
   display: flex;
   gap: 0.9rem;
   overflow-x: auto;
-  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
   /* Top room so the hover-lift isn't clipped (overflow-x:auto forces y:auto). */
   padding: 1rem 0.2rem 1.4rem;
   -webkit-overflow-scrolling: touch;
@@ -461,7 +461,6 @@
   will-change: transform;
   flex: 0 0 clamp(300px, 84vw, 400px);
   height: clamp(440px, 64vh, 580px);
-  scroll-snap-align: center;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 28px 64px -34px rgba(42, 28, 16, 0.7);

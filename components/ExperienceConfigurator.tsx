@@ -425,8 +425,9 @@ export default function ExperienceConfigurator({
             <div className={`${styles.rrow} ${styles.rrowGuar}`}>
               <span className={styles.ric} aria-hidden>🛡</span>
               <span>
-                <b>First hour, or your money back.</b> If it isn&apos;t what we promised, tell
-                us in the first hour and we refund it — less any non-refundable bookings.
+                <b>First hour, or we refund the rest.</b> If it isn&apos;t what we promised, tell
+                us in the first hour. If we can&apos;t put it right, we stop there and refund
+                what&apos;s left after costs already committed.
               </span>
             </div>
             <div className={styles.rrow}>

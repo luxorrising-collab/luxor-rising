@@ -158,7 +158,7 @@ const SIGNATURE_INCLUDED = [
   "Your day photographed — on your phone from the first moment, not in six weeks",
   "One concierge end to end — planner, translator & fixer, on WhatsApp before you arrive and all day",
   "A signature gift, hand-picked & locally made, from your first full day",
-  "The first two hours, or we refund the day",
+  "The first two hours, or we refund the rest",
 ];
 const SIGNATURE_UNLOCKS = [
   "More experiences unlock as you add days — venture further, to Aswan and beyond",
@@ -435,7 +435,7 @@ const SIGNATURE_HANDLED = [
   "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking",
   "A signature gift, hand-picked & locally made, from your first full day",
   INSIDER_CONTACTS,
-  "The first two hours, or we refund the day",
+  "The first two hours, or we refund the rest",
 ];
 const ORIGINAL_HANDLED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day",
@@ -2412,7 +2412,7 @@ export default function DayConfigurator({
                             ? "Honest advice and real access — and we never take a cut of your deal"
                             : isLight
                               ? "The same concierge, and the same care"
-                              : "The same Signature day, gifts and promise — first two hours, or we refund the day"}
+                              : "The same Signature day, gifts and promise — first two hours, or we refund the rest"}
                         </span>
                       </div>
                     </div>
@@ -2607,9 +2607,9 @@ export default function DayConfigurator({
               <div className={`${styles.rrow} ${styles.rrowGuar}`}>
                 <span className={styles.ric} aria-hidden>🛡</span>
                 <span>
-                  <b>The first two hours, or we refund the day.</b> If your day isn&apos;t what we
-                  promised, tell us in the first two hours and we refund it — less any
-                  non-refundable bookings.
+                  <b>The first two hours, or we refund the rest.</b> If your day isn&apos;t what we
+                  promised, tell us in the first two hours. If we can&apos;t put it right, we
+                  stop there and refund what&apos;s left after costs already committed.
                 </span>
               </div>
               <div className={styles.rrow}>

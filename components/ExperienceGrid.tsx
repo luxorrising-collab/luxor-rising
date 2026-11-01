@@ -32,7 +32,7 @@ export type ExperienceCardData = {
  * A single experience card: the product's poetic title with a short description,
  * links through to the product, and plays that product's hero clip on hover.
  */
-function ExpCard({ e }: { e: ExperienceCardData }) {
+function ExpCard({ e, clone = false }: { e: ExperienceCardData; clone?: boolean }) {
   const vidRef = React.useRef<HTMLVideoElement>(null);
   const [open, setOpen] = React.useState(false);
   // "Included" sits top-left on every experience; the signature experiences also
@@ -127,7 +127,7 @@ function ExpCard({ e }: { e: ExperienceCardData }) {
         <div className={styles.expPanel}>
           {e.p && <p>{e.p}</p>}
           {e.href && (
-            <Link className={styles.expView} href={e.href} prefetch={false}>
+            <Link className={styles.expView} href={e.href} prefetch={false} tabIndex={clone ? -1 : undefined}>
               View the experience →
             </Link>
           )}
@@ -136,6 +136,7 @@ function ExpCard({ e }: { e: ExperienceCardData }) {
           <button
             type="button"
             className={styles.expReadBtn}
+            tabIndex={clone ? -1 : undefined}
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
           >
@@ -146,6 +147,8 @@ function ExpCard({ e }: { e: ExperienceCardData }) {
     </div>
   );
 }
+
+const DRIFT_PX_PER_SEC = 28;
 
 /**
  * The "What your day can hold" grid. Square cards; only the first `initial`
@@ -170,43 +173,141 @@ export default function ExperienceGrid({
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const stripRef = React.useRef<HTMLDivElement>(null);
+  const firstCloneRef = React.useRef<HTMLDivElement>(null);
+  const nudgeRef = React.useRef<(dir: 1 | -1) => void>(() => {});
 
-  // Gentle, cinematic auto-drift for the slideshow — pauses on hover / touch,
-  // reverses at each end (no jarring jump), and respects reduced-motion.
+  // Slow, looping drift for the slideshow. The cards are rendered twice, so once
+  // the first set has scrolled away the position jumps back by exactly one set and
+  // the picture doesn't change. This loop is the only thing that moves the strip:
+  // native smooth scrolling and scroll-snap would both fight it, so the arrows
+  // animate through it too. Pauses on hover, touch and an open card; under reduced
+  // motion only the arrows move it.
   React.useEffect(() => {
     if (layout !== "strip") return;
     const el = stripRef.current;
-    if (!el) return;
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const firstClone = firstCloneRef.current;
+    const first = el?.firstElementChild as HTMLElement | null;
+    if (!el || !firstClone || !first) return;
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    const setWidth = () => firstClone.offsetLeft - first.offsetLeft;
+    const looping = () => setWidth() > 0 && el.scrollWidth - el.clientWidth >= setWidth();
+
     let raf = 0;
-    let paused = false;
-    let dir = 1;
-    const pause = () => {
-      paused = true;
+    let last = 0;
+    let pos = 0;
+    let hovering = false;
+    let touching = false;
+    let inView = true;
+    let holdUntil = 0;
+    let tween: { from: number; to: number; start: number; dur: number } | null = null;
+
+    // The same picture one set further along, so there's room to scroll back.
+    const makeRoom = () => {
+      const set = setWidth();
+      if (set > 0 && el.scrollLeft < set / 2) el.scrollLeft += set;
+      pos = el.scrollLeft;
     };
-    const resume = () => {
-      paused = false;
+
+    nudgeRef.current = (dir) => {
+      if (!looping()) return;
+      const set = setWidth();
+      // Exact, unlike one card's rounded offset, so every landing stays on an edge.
+      const step = set / (el.children.length / 2);
+      const max = el.scrollWidth - el.clientWidth;
+      let from = el.scrollLeft;
+      let base = tween ? tween.to : from;
+      if (dir < 0 && base - step < 0) {
+        from += set;
+        base += set;
+      } else if (dir > 0 && base + step > max) {
+        from -= set;
+        base -= set;
+      }
+      el.scrollLeft = from;
+      // Land on a card edge, whichever way the drift had left it.
+      const to =
+        dir > 0
+          ? (Math.floor(base / step + 0.01) + 1) * step
+          : (Math.ceil(base / step - 0.01) - 1) * step;
+      const start = performance.now();
+      const dur = reduced ? 0 : 700;
+      tween = { from, to, start, dur };
+      holdUntil = start + dur + 2500;
     };
-    el.addEventListener("pointerenter", pause);
-    el.addEventListener("pointerleave", resume);
-    el.addEventListener("pointerdown", pause);
-    el.addEventListener("touchstart", pause, { passive: true });
-    // Gentle, always-on drift — perceptible but calm (~0.65px/frame ≈ 40px/s).
-    const tick = () => {
-      if (!paused && el.scrollWidth > el.clientWidth + 4) {
-        el.scrollLeft += 0.65 * dir;
-        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) dir = -1;
-        else if (el.scrollLeft <= 0) dir = 1;
+
+    const tick = (now: number) => {
+      const dt = Math.min(now - last, 50) / 1000;
+      last = now;
+      if (tween) {
+        const t = tween.dur ? Math.min(1, Math.max(0, (now - tween.start) / tween.dur)) : 1;
+        pos = tween.from + (tween.to - tween.from) * (1 - (1 - t) ** 3);
+        el.scrollLeft = pos;
+        if (t >= 1) tween = null;
+      } else if (
+        reduced ||
+        hovering ||
+        touching ||
+        !inView ||
+        now < holdUntil ||
+        el.querySelector(`.${styles.expOpen}, :focus-visible`)
+      ) {
+        pos = el.scrollLeft;
+      } else if (looping()) {
+        const set = setWidth();
+        if (Math.abs(el.scrollLeft - pos) > 2) pos = el.scrollLeft;
+        pos += DRIFT_PX_PER_SEC * dt;
+        if (pos >= set) pos -= set;
+        el.scrollLeft = pos;
       }
       raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+
+    const onEnter = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      hovering = true;
+      if (!tween) makeRoom();
+    };
+    const onLeave = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") hovering = false;
+    };
+    const onTouchStart = () => {
+      touching = true;
+      tween = null;
+      makeRoom();
+    };
+    const onTouchEnd = () => {
+      touching = false;
+      holdUntil = performance.now() + 2500;
+    };
+    // A flick keeps scrolling after the finger lifts; wait for it to settle.
+    const onScroll = () => {
+      const now = performance.now();
+      if (!tween && now < holdUntil) holdUntil = Math.max(holdUntil, now + 1500);
+    };
+    const seen = new IntersectionObserver((entries) => {
+      inView = entries.some((entry) => entry.isIntersecting);
+    });
+
+    el.addEventListener("pointerenter", onEnter);
+    el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    el.addEventListener("scroll", onScroll, { passive: true });
+    seen.observe(el);
+    raf = requestAnimationFrame((now) => {
+      last = now;
+      tick(now);
+    });
     return () => {
       cancelAnimationFrame(raf);
-      el.removeEventListener("pointerenter", pause);
-      el.removeEventListener("pointerleave", resume);
-      el.removeEventListener("pointerdown", pause);
-      el.removeEventListener("touchstart", pause);
+      seen.disconnect();
+      el.removeEventListener("pointerenter", onEnter);
+      el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchEnd);
+      el.removeEventListener("scroll", onScroll);
     };
   }, [layout]);
 
@@ -216,38 +317,44 @@ export default function ExperienceGrid({
       tone === "dark" ? `${styles.expStripItem} ${styles.expStripItemDark}` : styles.expStripItem;
     const arrowClass =
       tone === "dark" ? `${styles.stripArrow} ${styles.stripArrowDark}` : styles.stripArrow;
-    // Scroll one card at a time; pause the auto-drift briefly so the nudge lands.
-    const nudge = (dir: 1 | -1) => {
-      const el = stripRef.current;
-      if (!el) return;
-      const first = el.firstElementChild as HTMLElement | null;
-      const step = first ? first.getBoundingClientRect().width + 14 : el.clientWidth * 0.85;
-      el.scrollBy({ left: step * dir, behavior: "smooth" });
-    };
     return (
       <div className={styles.stripShell}>
         <div className={styles.expStrip} ref={stripRef}>
-          {cards.map((e) => (
-            <div className={itemClass} key={e.href || e.h}>
-              <ExpCard e={e} />
-            </div>
+          {[false, true].map((clone) => (
+            <React.Fragment key={String(clone)}>
+              {cards.map((e, i) => (
+                <div
+                  className={itemClass}
+                  key={e.href || e.h}
+                  ref={clone && i === 0 ? firstCloneRef : undefined}
+                  aria-hidden={clone || undefined}
+                >
+                  <ExpCard e={e} clone={clone} />
+                </div>
+              ))}
+              <Link
+                className={`${styles.expAll} ${itemClass}`}
+                href={designHref}
+                tabIndex={clone ? -1 : undefined}
+                aria-hidden={clone || undefined}
+              >
+                <div className={styles.expAllIn}>
+                  <div className="k">The full collection</div>
+                  <h4>Explore all experiences</h4>
+                  <p>Temples, tombs, the Nile, the desert and more — designed into your day.</p>
+                  <span className={styles.expAllCta}>Design your day →</span>
+                </div>
+              </Link>
+            </React.Fragment>
           ))}
-          <Link className={`${styles.expAll} ${itemClass}`} href={designHref}>
-            <div className={styles.expAllIn}>
-              <div className="k">The full collection</div>
-              <h4>Explore all experiences</h4>
-              <p>Temples, tombs, the Nile, the desert and more — designed into your day.</p>
-              <span className={styles.expAllCta}>Design your day →</span>
-            </div>
-          </Link>
         </div>
         <div className={styles.stripNav}>
-          <button type="button" aria-label="Previous" className={arrowClass} onClick={() => nudge(-1)}>
+          <button type="button" aria-label="Previous" className={arrowClass} onClick={() => nudgeRef.current(-1)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </button>
-          <button type="button" aria-label="Next" className={arrowClass} onClick={() => nudge(1)}>
+          <button type="button" aria-label="Next" className={arrowClass} onClick={() => nudgeRef.current(1)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M9 5l7 7-7 7" />
             </svg>

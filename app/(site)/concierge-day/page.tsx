@@ -648,8 +648,8 @@ export default async function ConciergeDayPage() {
           <h2 className="display">Your day, guaranteed — or we make it right.</h2>
           <div className={styles.grGrid}>
             <div className={styles.gr}>
-              <h4>Love the first two hours, or it&apos;s free</h4>
-              <p>Not different from any tour you&apos;ve taken? Say so before lunch, refunded in full.</p>
+              <h4>Love the first two hours, or we refund the rest</h4>
+              <p>Not different from any tour you&apos;ve taken? Say so in the first two hours. If we can&apos;t put it right, we stop there and refund what&apos;s left after costs already committed.</p>
             </div>
             <div className={styles.gr}>
               <h4>Cancel freely</h4>
@@ -712,8 +712,8 @@ export default async function ConciergeDayPage() {
             <span className={styles.finalGrEyebrow}>The Luxor Rising promise — or we make it right</span>
             <div className={styles.finalGrGrid}>
               <div className={styles.finalGr}>
-                <h4>Love the first two hours, or it&apos;s free</h4>
-                <p>Not different from any tour you&apos;ve taken? Say so before lunch, refunded in full.</p>
+                <h4>Love the first two hours, or we refund the rest</h4>
+                <p>Not different from any tour you&apos;ve taken? Say so in the first two hours. If we can&apos;t put it right, we stop there and refund what&apos;s left after costs already committed.</p>
               </div>
               <div className={styles.finalGr}>
                 <h4>Cancel freely</h4>

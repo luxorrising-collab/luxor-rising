@@ -9,7 +9,7 @@ import styles from "./DayHoldSlideshow.module.css";
  * film still. Funnels into Design Your Day.
  */
 const DEFAULT_LEAD =
-  "Temples at first light and tombs cut to last forever, the Valley of the Kings, a felucca as the river turns to gold, a fire and a feast beneath the desert stars, the hidden temple of Isis with its colour still on the ceiling — each of these is designed into a single, unhurried, private day. You choose what calls to you; your concierge quietly arranges the rest, in the order you like, with a certified Egyptologist at the monuments and every detail handled end to end. Just your day, shaped the way you'd want it.";
+  "You choose what calls to you; your concierge quietly arranges the rest, in the order you like, with a certified Egyptologist at the monuments and every detail handled end to end. Just your day, shaped the way you'd want it.";
 
 export default function DayHoldSlideshow({
   cards,

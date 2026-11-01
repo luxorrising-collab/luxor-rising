@@ -49,11 +49,20 @@ export function IconSceptre({ className }: IconProps) {
   );
 }
 
+// The crown from our logo, traced from public/images/logo-emblem.png: the outline
+// with its sharp tips and soft valleys, then the three bars beneath it. Every crown
+// on the site draws these, so they can't drift apart.
+export const CROWN_OUTLINE =
+  "M20.6 45.4 L42.6 58.8 Q45.2 60.4 46.7 57.8 L60 34.5 L73.3 57.8 Q74.8 60.4 77.4 58.8 L99.4 45.4 L90.6 76 H29.4 Z";
+export const CROWN_BARS = "M19.7 85.7 H44.2 M49.9 85.7 H71.4 M76.1 85.7 H100.2";
+export const CROWN_OUTLINE_STYLE = { strokeLinejoin: "miter", strokeMiterlimit: 8 } as const;
+export const CROWN_BARS_STYLE = { strokeLinecap: "butt" } as const;
+
 export function IconCrown({ className }: IconProps) {
   return (
     <svg viewBox="0 0 120 120" className={className} {...common}>
-      <path d="M24 78 L34 38 L52 58 L60 28 L68 58 L86 38 L96 78 Z" />
-      <path d="M24 96 H96" />
+      <path d={CROWN_OUTLINE} style={CROWN_OUTLINE_STYLE} />
+      <path d={CROWN_BARS} style={CROWN_BARS_STYLE} />
     </svg>
   );
 }

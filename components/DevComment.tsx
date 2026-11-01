@@ -185,6 +185,11 @@ export default function DevComment() {
 
   if (!mounted) return null;
   const onThisPage = notes.filter((n) => n.url === location.pathname + location.search);
+  // Pins sit at the page coordinates they were saved at, so a pin from another page,
+  // or from a wider screen, would stretch this one past its footer.
+  const pins = onThisPage.filter(
+    (n) => n.y <= document.body.offsetHeight && n.x <= document.body.offsetWidth,
+  );
 
   const btn: React.CSSProperties = {
     font: "600 12px/1 system-ui, sans-serif",
@@ -204,7 +209,7 @@ export default function DevComment() {
         data-devcomment="1"
         style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", zIndex: Z }}
       >
-        {notes.map((n, i) => (
+        {pins.map((n) => (
           <div key={n.id} style={{ position: "absolute", top: n.y, left: n.x, pointerEvents: "auto" }}>
             <button
               onClick={() => setActivePin((p) => (p === n.id ? null : n.id))}
@@ -222,7 +227,7 @@ export default function DevComment() {
                 boxShadow: "0 2px 6px rgba(0,0,0,.4)",
               }}
             >
-              {i + 1}
+              {notes.indexOf(n) + 1}
             </button>
             {activePin === n.id && (
               <div

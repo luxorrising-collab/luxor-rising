@@ -93,11 +93,11 @@ const CONSIGLIERE_INTRO =
 const CONSIGLIERE_META = "One temple & a Nile sail · concierge all day · more paid locally";
 
 // Reality Hunting — the business, land & investment day. Bespoke by nature, so
-// it always routes to the private-proposal form, anchored at €350/day. The copy
+// it always routes to the private-proposal form, anchored at the €330 day. The copy
 // leans on access + discretion + an honest local read (the exact levers the big
 // operators charge a fortune for), always framed straight — never bribery, and
 // never a cut of the deal.
-const REALITY_RATE = 350;
+const REALITY_RATE = LIGHT_DAY_RATE;
 // Title / subtitle for the card (title is the product name; the subtitle is what
 // the concierge actually does).
 const REALITY_TITLE = "Reality Hunting";

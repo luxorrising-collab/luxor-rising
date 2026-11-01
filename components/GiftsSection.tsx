@@ -334,7 +334,7 @@ export default function GiftsSection({
         <p className={styles.gmeaning}>
           {featured
             ? "You receive one signature gift on this experience. Design your day — more days, more gifts — and the whole set becomes yours to keep."
-            : "Of all the places on earth, only a few hold what Luxor holds — and some things are far more beautiful to receive than to buy. Each full concierge day carries its own signature gift, hand-picked and locally made. Design more of the day, and the set becomes yours to complete."}
+            : "Of all the places on earth, only a few hold what Luxor holds. To walk through Medinet Habu and Karnak and to be invited deeper is its own kind of passage. Some things can be bought. But it is far more beautiful to receive them. One per day, each tied in meaning to the place and experience."}
         </p>
         <a className={styles.cta} href={designHref}>
           Design your day →

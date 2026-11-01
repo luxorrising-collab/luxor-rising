@@ -12,6 +12,7 @@ import type { HeroShowItem } from "@/components/HeroShow";
 import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
+import { LIGHT_DAY_RATE } from "@/lib/pricing-math";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
 
@@ -170,7 +171,8 @@ export default async function MedinetHabuPage() {
         areaServed: "Luxor, Egypt",
         offers: {
           "@type": "Offer",
-          price: String(basePrice),
+          // This page sells the day, so search data carries the day's price.
+          price: String(LIGHT_DAY_RATE),
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
           url: "https://luxorrising.com/medinet-habu#book",

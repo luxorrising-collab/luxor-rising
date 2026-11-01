@@ -13,6 +13,7 @@ import type { HeroShowItem } from "@/components/HeroShow";
 import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
+import { LIGHT_DAY_RATE } from "@/lib/pricing-math";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
 import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
@@ -452,7 +453,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
             }
           : {
               "@type": "Offer",
-              price: String(basePrice),
+              // Funnel pages sell the day, so search data carries the day's price.
+              price: String(isLuxorFunnel ? LIGHT_DAY_RATE : basePrice),
               priceCurrency: "EUR",
               availability: "https://schema.org/InStock",
               url: `https://luxorrising.com/experiences/${slug}#book`,

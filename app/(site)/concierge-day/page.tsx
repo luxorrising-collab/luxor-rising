@@ -337,6 +337,9 @@ export default async function ConciergeDayPage() {
     .filter((s) => s.visible !== false && s.section)
     .map((s) => s.section as string);
   const orderedKeys = orderedFromCms.length > 0 ? orderedFromCms : SECTION_FALLBACK;
+  // When the "feel of it" section has no phases, drop the empty phase grid and
+  // its bordered footnote — the note stands in as the section's centred lead.
+  const hasDayShapeSteps = (page?.dayShapeSteps?.length ?? 0) > 0;
 
   const sectionMap: Record<string, ReactNode> = {
     contrast: (
@@ -371,7 +374,9 @@ export default async function ConciergeDayPage() {
     dayShape: (
       <section key="dayShape" style={{ background: "var(--color-paper)" }}>
         <Reveal className="wrap-narrow">
-          <div className="center" style={{ marginBottom: "1.4rem" }}>
+          {/* No marginBottom here: the phase grid owns the gap below (its
+              own margin-top), so the intro and grid aren't doubly spaced. */}
+          <div className="center">
             <span className="eyebrow">{page?.dayShapeEyebrow}</span>
             <h2 className="display">{page?.dayShapeTitle}</h2>
             {page?.dayShapeLead && (
@@ -379,16 +384,28 @@ export default async function ConciergeDayPage() {
                 {page.dayShapeLead}
               </p>
             )}
+            {/* With no phases to list, the note becomes the section's own lead —
+                centred under the title, not a bordered footnote hanging under an
+                empty grid. */}
+            {!hasDayShapeSteps && page?.dayShapeNote && (
+              <p className="lead" style={{ marginTop: "1rem", maxWidth: "60ch", marginInline: "auto" }}>
+                {page.dayShapeNote}
+              </p>
+            )}
           </div>
-          <div className={styles.principles}>
-            {(page?.dayShapeSteps ?? []).map((s, i) => (
-              <div className={styles.prItem} key={s.time || i}>
-                <h3 className={styles.prHead}>{s.time}</h3>
-                <p className={styles.prBody}>{s.label}</p>
+          {hasDayShapeSteps && (
+            <>
+              <div className={styles.principles}>
+                {(page?.dayShapeSteps ?? []).map((s, i) => (
+                  <div className={styles.prItem} key={s.time || i}>
+                    <h3 className={styles.prHead}>{s.time}</h3>
+                    <p className={styles.prBody}>{s.label}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
+              {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
+            </>
+          )}
         </Reveal>
       </section>
     ),

@@ -18,6 +18,27 @@ const CONCIERGE_IMAGE = `${SITE}/images/experiences/karnak-at-dawn/heroImage.jpg
 // Kept in step with the hero price hardcoded on those pages.
 const DAY_FROM = 330;
 
+// The branded "card" composition for the Meta feed image — the same graphic as
+// the Design Your Day experience cards (full-bleed hero, scrim, "Included" pill,
+// place kicker, poetic serif title, gold rule, price), rendered to a PNG by
+// /api/feed-card/[slug] and used as the catalogue image_link.
+export type FeedCard = {
+  /** Product name (front-loaded, for alt/debug). */
+  name: string;
+  /** Uppercase place line above the title, e.g. "Medinet Habu · Luxor, Egypt". */
+  kicker: string;
+  /** The poetic one-liner (the card's headline), e.g. "Begin where the world began." */
+  charm: string;
+  /** Price lead word ("From") or "" when the value stands alone. */
+  priceLead: string;
+  /** Price value, e.g. "€330 / day", "€675 · door-to-door", "By arrangement". */
+  priceValue: string;
+  /** Show the gold "Included" pill (true for the funnel Luxor experiences). */
+  included: boolean;
+  /** Local /public path of the hero, read from disk by the image route. */
+  imagePath: string;
+};
+
 export type FeedProduct = {
   id: string;
   title: string;
@@ -27,6 +48,8 @@ export type FeedProduct = {
   image: string;
   category: string;
   region: string;
+  /** Data for the branded catalogue card image. */
+  card: FeedCard;
 };
 
 const clean = (s?: string | null) => String(s ?? "").replace(/\s+/g, " ").trim();
@@ -62,6 +85,7 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
     reader.singletons.conciergeDayPage.read(),
   ]);
 
+  const conciergePrice = conciergePage?.startingPrice ?? DAY_FROM;
   const products: FeedProduct[] = [
     {
       id: "design-your-day",
@@ -69,11 +93,20 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
       description:
         "A full private day in Luxor: several experiences woven into one, your own licensed Egyptologist, and one concierge handling every ticket, transfer and timing.",
       // The "from" price the Concierge Day page advertises — kept in step with it.
-      price: conciergePage?.startingPrice ?? DAY_FROM,
+      price: conciergePrice,
       link: `${SITE}/concierge-day`,
       image: CONCIERGE_IMAGE,
       category: "Concierge day",
       region: "Luxor, Egypt",
+      card: {
+        name: "The Concierge Day",
+        kicker: "The Concierge Day · Luxor, Egypt",
+        charm: "Your private day in Luxor.",
+        priceLead: "From",
+        priceValue: `€${conciergePrice} / day`,
+        included: false,
+        imagePath: "/images/experiences/karnak-at-dawn/heroImage.jpg",
+      },
     },
   ];
 
@@ -86,7 +119,10 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
     // (Red Sea transfer) and enquiry products keep their own price. Keep the
     // feed price — and any "€X" in the description — consistent with the page.
     const isEnquiry = entry.bookingType === "enquiry";
-    const isLuxorFunnel = !isEnquiry && region !== "Red Sea, Egypt";
+    // The Hurghada ⇄ Luxor crossing funnels into Design Your Day as well now, so
+    // its card sells "from €330 / day" with the coast transfer included.
+    const isLuxorFunnel =
+      !isEnquiry && (region !== "Red Sea, Egypt" || slug === "hurghada-to-luxor-crossing");
     const price = isLuxorFunnel ? DAY_FROM : priceMap.get(slug) ?? entry.basePrice ?? 0;
     if (!price) continue;
     const rawDesc = clean(entry.metaDescription || entry.hook);
@@ -94,6 +130,20 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
       isLuxorFunnel && entry.basePrice
         ? rawDesc.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${DAY_FROM}`)
         : rawDesc;
+    // Card price mirrors the page: funnel Luxor → "from €330 / day"; the Red Sea
+    // crossing → its own door-to-door price; enquiry products → "by arrangement".
+    const priceLead = isEnquiry ? "" : "From";
+    const priceValue = isEnquiry
+      ? "By arrangement"
+      : isLuxorFunnel
+        ? `€${DAY_FROM} / day`
+        : region === "Red Sea, Egypt"
+          ? `€${price} · door-to-door`
+          : `€${price}`;
+    // The card kicker is the page's place line (minus the "single experience" tail).
+    const kicker =
+      clean(entry.heroEyebrow).replace(/\s*·\s*A single experience\s*$/i, "") ||
+      `${name} · ${region}`;
     products.push({
       id: slug,
       title: feedTitle(name, entry.title, region),
@@ -103,6 +153,15 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
       image: entry.heroImage ? `${SITE}${entry.heroImage}` : "",
       category: entry.category || "Experience",
       region,
+      card: {
+        name,
+        kicker,
+        charm: clean(entry.title) || name,
+        priceLead,
+        priceValue,
+        included: isLuxorFunnel,
+        imagePath: entry.heroImage || "",
+      },
     });
   }
   return products;
@@ -124,11 +183,14 @@ export async function buildMetaCsv(): Promise<string> {
   ];
   const rows = [cols.join(",")];
   for (const p of products) {
-    if (!p.image) continue; // Meta rejects an item with no image_link
+    if (!p.card.imagePath) continue; // no hero → no branded card, so skip it
+    // The image_link is our branded catalogue card (the Design Your Day card
+    // graphic rendered to a PNG), not the plain hero photo.
+    const imageLink = `${SITE}/api/feed-card/${p.id}`;
     rows.push(
       [
         p.id, p.title, p.description, "in stock", "new",
-        `${p.price}.00 EUR`, p.link, p.image, BRAND, p.category,
+        `${p.price}.00 EUR`, p.link, imageLink, BRAND, p.category,
         priceBand(p.price), p.region,
       ].map(esc).join(","),
     );

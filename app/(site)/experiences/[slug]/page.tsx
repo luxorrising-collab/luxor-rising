@@ -64,7 +64,11 @@ export async function generateMetadata({
   // single-experience price — so keep the "from €X" in the SEO title/description
   // consistent with what the page actually shows.
   const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
-  const isLuxorFunnel = entry.bookingType !== "enquiry" && !isRedSea;
+  // The Hurghada ⇄ Luxor crossing now funnels into Design Your Day too (the day
+  // price already includes the coast transfer), so it sells "from €330" like the
+  // rest; the paused standalone Red Sea boats would keep their own price.
+  const isLuxorFunnel =
+    entry.bookingType !== "enquiry" && (!isRedSea || slug === "hurghada-to-luxor-crossing");
   const swap = (s: string) => {
     if (isLuxorFunnel && entry.basePrice) {
       return s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), "€330");
@@ -117,10 +121,11 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
 
   // Luxor single-day experiences funnel into Design Your Day (the Medinet Habu
   // pattern): no single-experience checkout — instead a Design-your-day CTA, the
-  // "what your day can hold" slideshow, and "what we take care of". Enquiry
-  // retreats keep their enquiry flow; Red Sea / Hurghada products (the crossing)
-  // keep their own single-experience checkout.
-  const isLuxorFunnel = !isEnquiry && !isRedSea;
+  // "what your day can hold" slideshow, and "what we take care of". The Hurghada
+  // crossing funnels in too (the €330 day already includes the coast transfer).
+  // Enquiry retreats keep their enquiry flow; the paused standalone Red Sea boats
+  // would keep their own single-experience checkout.
+  const isLuxorFunnel = !isEnquiry && (!isRedSea || slug === "hurghada-to-luxor-crossing");
   // A short, clean label for the funnel copy ("Make X part of your day") — trim
   // any "— subtitle" so long product names read naturally.
   const shortName = (entry.name || entry.title).split(/\s[—–-]\s/)[0].trim();

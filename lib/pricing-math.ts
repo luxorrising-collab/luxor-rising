@@ -9,7 +9,7 @@ export type GroupSupplementTier = { minGuests: number; extraPerDay: number };
 export type ExpSupplementTier = { minGuests: number; extraPerGuest: number };
 
 /** Flat premium for the optional private photographer/videographer add-on. */
-export const PHOTO_PRO = 290;
+export const PHOTO_PRO = 190;
 
 /** Concierge day: per-day party supplement summed across the tiers up to g. */
 export function extraPerDay(g: number, groupSupplement: GroupSupplementTier[]): number {

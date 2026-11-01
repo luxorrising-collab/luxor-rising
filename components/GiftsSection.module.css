@@ -85,11 +85,13 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* A heavier, near-uniform veil: the footage reads as faint atmosphere, so a
+     bright clip and a dark one land on the same tint — no pulse as they change. */
   background: linear-gradient(
     180deg,
-    rgba(10, 7, 4, 0.58) 0%,
-    rgba(10, 7, 4, 0.6) 58%,
-    rgba(10, 7, 4, 0.72) 100%
+    rgba(10, 7, 4, 0.72) 0%,
+    rgba(10, 7, 4, 0.74) 58%,
+    rgba(10, 7, 4, 0.85) 100%
   );
 }
 

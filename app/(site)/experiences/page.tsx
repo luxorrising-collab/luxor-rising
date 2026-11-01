@@ -56,8 +56,12 @@ export default async function ExperiencesPage() {
   const conciergeDayPrice = conciergePage?.startingPrice ?? 330;
   // Every Luxor experience is now sold as part of a day (from the day rate);
   // the Red Sea crossing keeps its own price, enquiry products their own flow.
+  // The Hurghada ⇄ Luxor crossing funnels into Design Your Day too (its card and
+  // page now sell "from €330 / day"); it stays tagged as a Hurghada location for
+  // the filter. The paused standalone Red Sea boats would keep their own price.
   const isFunnel = (slug: string, bookingType?: string | null) =>
-    !HURGHADA_SLUGS.has(slug) && bookingType !== "enquiry";
+    bookingType !== "enquiry" &&
+    (!HURGHADA_SLUGS.has(slug) || slug === "hurghada-to-luxor-crossing");
 
   // The hand-curated Concierge Day product for the ItemList structured data —
   // with a real image (required by Google for Product), a canonical URL, and the

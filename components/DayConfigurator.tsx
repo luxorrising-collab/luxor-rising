@@ -155,10 +155,10 @@ const SIGNATURE_INCLUDED = [
   "Every monument entry ticket — nothing to buy, queue for or carry",
   "A full meal and hand-picked local food & coffee stops — where locals actually eat",
   "Tips and everything in between handled — nothing to think about, just a memorable stay start to finish",
-  "Your day photographed on your phone — sent the same day, not in six weeks",
+  "Your day photographed — on your phone from the first moment, not in six weeks",
   "One concierge end to end — planner, translator & fixer, on WhatsApp before you arrive and all day",
   "A signature gift, hand-picked & locally made, from your first full day",
-  "First two hours, or your money back",
+  "The first two hours, or we refund the day",
 ];
 const SIGNATURE_UNLOCKS = [
   "More experiences unlock as you add days — venture further, to Aswan and beyond",
@@ -431,11 +431,11 @@ const SIGNATURE_HANDLED = [
   "Every monument entry ticket — nothing to buy, queue for or carry",
   "A full meal and hand-picked local food & coffee stops — where locals actually eat",
   "Tips and everything in between, handled — nothing to think about",
-  "Your day photographed on your phone — sent the same day",
+  "Your day photographed — on your phone from the first moment",
   "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking",
   "A signature gift, hand-picked & locally made, from your first full day",
   INSIDER_CONTACTS,
-  "First two hours, or your money back",
+  "The first two hours, or we refund the day",
 ];
 const ORIGINAL_HANDLED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day",
@@ -547,7 +547,7 @@ const PRICE_TABLE: [string, number][] = [
   ["choosing", 150],
   ["Desert rally", 160],
   ["night in Luxor", 130],
-  ["photographer", 290],
+  ["photographer", 190],
   ["balloon", 230],
   ["Sailing lesson", 140],
   ["Egyptologist", 140],
@@ -1953,8 +1953,8 @@ export default function DayConfigurator({
                     </b>
                     <div className="muted" style={{ fontSize: ".76rem" }}>
                       We capture your private moments as they happen and never leave
-                      your side — sent the same day, in full beauty, as timeless
-                      memories.
+                      your side — on your phone from the first moment, in full beauty,
+                      as timeless memories.
                     </div>
                   </div>
                   <span className={styles.ax}>Included</span>
@@ -2412,7 +2412,7 @@ export default function DayConfigurator({
                             ? "Honest advice and real access — and we never take a cut of your deal"
                             : isLight
                               ? "The same concierge, and the same care"
-                              : "The same Signature day, gifts and promise — first two hours, or your money back"}
+                              : "The same Signature day, gifts and promise — first two hours, or we refund the day"}
                         </span>
                       </div>
                     </div>
@@ -2607,7 +2607,7 @@ export default function DayConfigurator({
               <div className={`${styles.rrow} ${styles.rrowGuar}`}>
                 <span className={styles.ric} aria-hidden>🛡</span>
                 <span>
-                  <b>First two hours, or your money back.</b> If your day isn&apos;t what we
+                  <b>The first two hours, or we refund the day.</b> If your day isn&apos;t what we
                   promised, tell us in the first two hours and we refund it — less any
                   non-refundable bookings.
                 </span>

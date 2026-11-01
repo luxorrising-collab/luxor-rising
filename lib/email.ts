@@ -799,7 +799,7 @@ function conciergeIncluded(days: number, hasTransfer: boolean, guests?: number):
       ? "Private, air-conditioned transfers throughout — upgraded to VIP on the unhurried days"
       : "Private, air-conditioned transfers throughout",
     "Every reservation, timing & fast-track entry, arranged in advance",
-    "The day photographed on the guest's own phone — same day, before dinner",
+    "The day photographed on the guest's own phone — on their phone from the first moment",
     "No hassle — nobody follows, sells, or asks for a tip; the guards know us",
     "Concierge reachable on WhatsApp all day",
   ].filter(Boolean);

@@ -214,7 +214,7 @@ export default async function ConciergeDayPage() {
   ];
   const oneOffServices = [
     { name: "A concierge managing every hour of it", worth: "priceless" },
-    { name: "Temple guards opening doors a coach never gets", worth: "priceless" },
+    { name: "Temple guards opening doors a bus never gets", worth: "priceless" },
     { name: "Private air-conditioned car & driver", worth: "effortless" },
     { name: "Monument entries, timed before the crowds", worth: "seamless" },
     { name: "A licensed Egyptologist too, at the monuments", worth: "priceless" },
@@ -538,7 +538,7 @@ export default async function ConciergeDayPage() {
               <h4>We arrange every detail</h4>
               <p>
                 One concierge handles every hour — entries timed before the crowds, private
-                transfer, and the temple guards who open doors a coach never gets. A licensed
+                transfer, and the temple guards who open doors a bus never gets. A licensed
                 Egyptologist joins you at the monuments too.
               </p>
             </div>
@@ -764,9 +764,20 @@ export default async function ConciergeDayPage() {
     },
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <>
       <JsonLd data={conciergeJsonLd} />
+      <JsonLd data={faqJsonLd} />
       <Nav ctaHref="#design" ctaLabel="Design your day" />
 
       {/* HERO */}

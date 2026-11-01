@@ -87,7 +87,7 @@ const SIGNATURE_CARDS: { key: SignatureJourney; intro: string }[] = [
 // Each Signature day is the same promise; stated once, under the cards.
 const SIGNATURE_META = "Door-to-door from the coast · the best of Luxor, your choice · insider access · a gift";
 const JOURNEY_NOTE =
-  "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a coach never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
+  "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a bus never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
 const CONSIGLIERE_INTRO =
   "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then go with the flow.";
 const CONSIGLIERE_META = "One temple & a Nile sail · concierge all day · more paid locally";
@@ -147,7 +147,7 @@ const ORIGINAL_MORE = [
 // concierge-only options below it.
 const SIGNATURE_INCLUDED = [
   "Door-to-door transfer from Hurghada, Marsa Alam or the coast — included in the price, and the private car stays with you the whole trip",
-  "Insider access & insider knowledge at the signature temples — doors opened, the real stories, and introductions to local contacts and businesses a coach never gets",
+  "Insider access & insider knowledge at the signature temples — doors opened, the real stories, and introductions to local contacts and businesses a bus never gets",
   "A hot-air balloon at dawn — included (best on day two)",
   "A signature desert sunset picnic or a felucca sail on the Nile — included",
   "Temples and tombs in any order you like — venture into the desert one day, go anywhere in range the next; just tell your concierge",
@@ -1246,7 +1246,7 @@ export default function DayConfigurator({
     handled.push("Temples & tombs in any order you like — or into the desert; just tell your concierge");
     handled.push("Every reservation and timing, planned for you");
     handled.push(
-      "Your day photographed on your own phone — you'll have them before dinner, not in six weeks"
+      "Your day photographed — on your phone from the first moment, not in six weeks"
     );
     handled.push(
       "A full meal and hand-picked local food & coffee stops — where locals actually eat"

@@ -28,9 +28,10 @@ const RATE = 0.6; // slower than real time, so each clip lingers
 const XF = Math.round(1.1 * FPS); // crossfade length, in frames
 
 const SATURATION = 0.55; // pulls blue skies and warm stone towards one palette
-const TARGET = [50, 41, 31]; // every frame's mean R, G, B: the section's fixed tint
-const KNEE = 58; // highlights roll off above this...
-const CEILING = 100; // ...and never pass this, so text always stays readable
+const TARGET = [60, 49, 37]; // every frame's mean R, G, B: the section's fixed tint
+const KNEE = 70; // highlights roll off above this...
+const CEILING = 120; // ...and never pass this, so text always stays readable
+const MAX_GAIN = 1.8; // enough to lift the darkest clips to TARGET; --check confirms it
 
 // Slightly heavier at the foot, for the text and slide controls.
 const FOOT = new Float32Array(H);
@@ -48,11 +49,11 @@ const meanAfterGain = (hist, total, gain) => {
   return sum / total;
 };
 
-// The gain that lands this channel exactly on its target mean. Capped at 1 so a
-// nearly black frame is never lifted into visible noise.
+// The gain that lands this channel exactly on its target mean. Capped so a nearly
+// black frame is never lifted into visible noise.
 function solveGain(hist, total, target) {
   let lo = 0;
-  let hi = 1;
+  let hi = MAX_GAIN;
   if (meanAfterGain(hist, total, hi) <= target) return hi;
   for (let i = 0; i < 22; i++) {
     const mid = (lo + hi) / 2;

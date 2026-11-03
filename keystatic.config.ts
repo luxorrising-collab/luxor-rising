@@ -1710,7 +1710,7 @@ export default config({
         googleFeedUrl: fields.url({
           label: "Google page feed URL (Performance Max)",
           description:
-            "Google Ads → Tools → Business data → Page feeds → upload/schedule this URL, then attach it to your Performance Max campaign (final-URL expansion).",
+            "Open this URL and save the CSV, then in Google Ads → Tools → Business data → + → Page feed, upload it and attach it in your Performance Max campaign settings → Page feeds. Google Ads can’t fetch it on a schedule, so re-upload it whenever pages are added or removed.",
         }),
         refreshUrl: fields.url({
           label: "Manual refresh",

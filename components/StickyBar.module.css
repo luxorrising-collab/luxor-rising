@@ -22,6 +22,9 @@
   margin: 0 auto;
   padding: 0 clamp(1.4rem, 5vw, 3.5rem);
 }
+.text {
+  min-width: 0;
+}
 .name {
   font-family: var(--font-display);
   font-size: 1.1rem;
@@ -50,5 +53,15 @@
   }
   .inner {
     gap: 0.6rem;
+  }
+}
+
+/* Phones: the gift badge and the CTA need the whole row, so the name steps aside. */
+@media (max-width: 420px) {
+  .inner:has(.extra) .text {
+    display: none;
+  }
+  .btn {
+    padding-inline: 1.1rem;
   }
 }

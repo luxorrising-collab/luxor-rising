@@ -105,7 +105,7 @@ export default function ConsentManager() {
             strategy="afterInteractive"
           />
           <Script id="ga4-config" strategy="afterInteractive">
-            {`gtag('js', new Date()); gtag('config', '${ga4Id}');`}
+            {`window.dataLayer = window.dataLayer || []; window.gtag = window.gtag || function(){ dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', '${ga4Id}');`}
           </Script>
         </>
       )}

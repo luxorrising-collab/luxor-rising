@@ -38,7 +38,7 @@ export default function StickyBar({
   return (
     <div className={`${styles.bar} ${shown ? "" : styles.hidden} ${className}`}>
       <div className={styles.inner}>
-        <div>
+        <div className={styles.text}>
           <span className={styles.name}>{name}</span>
           <span className={styles.meta}>{meta}</span>
         </div>

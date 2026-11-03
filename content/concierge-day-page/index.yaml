@@ -6,7 +6,7 @@ heroSubtitle: >-
   friction, nothing to carry, and nothing missed. All you do is arrive.
 heroTrustLine: 4.9 · 28+ private days arranged · trusted by travellers in Hurghada & Luxor.
 startingPrice: 330
-priceNote: / day - including door to door transfer from Hurghada or Marsa Alam
+priceNote: / day — including door-to-door transfer from Hurghada or Marsa Alam
 heroImages:
   - /images/concierge-day/heroImages/0.jpg
   - /images/concierge-day/heroImages/1.jpg
@@ -56,7 +56,7 @@ sections:
   - section: faq
     visible: true
 contrastEyebrow: Why some people leave Egypt disappointed
-contrastTitle: You came for the wonder. Not for a noise.
+contrastTitle: You came for the wonder. Not for the noise.
 contrastLead: >-
   Some visitors meet Luxor through a packed bus on someone else's clock.
   Twenty rushed minutes per temple. Shoulder to shoulder in the midday heat, and
@@ -65,9 +65,9 @@ contrastLead: >-
   trust.
 
 
-  The real Egypt the quiet, the colour, the awe passes them by. And here is the
-  part nobody says out loud: You flew thousand kilometres to a place that has
-  stood sacred for thousands of years, and you may stand here once.
+  The real Egypt — the quiet, the colour, the awe — passes them by. And here is
+  the part nobody says out loud: you flew thousands of kilometres to a place
+  that has stood sacred for millennia, and you may only stand here once.
 badWayItems:
   - A bus with 40 strangers, on someone else's clock
   - Temples hurried, shoulder to shoulder
@@ -94,11 +94,11 @@ mechanismText: >-
   when each site actually empties. Sometimes that is first light. Sometimes it
   is late afternoon, when the light is better anyway. Occasionally it is the
   middle of the day, when the heat clears a site completely and only a few
-  people can take it and if you are one of them, you get somewhere few people
+  people can take it — and if you are one of them, you get somewhere few people
   reach to yourself.
 mechanismNote: >-
   Then he goes further than a schedule: a call ahead to the guards who know him,
-  and the Egyptologist you want booked before someone else takes them not
+  and the Egyptologist you want booked before someone else takes them, not
   whoever is left that morning. And the whole thing is built around when you are
   at your best, not when a tour operator finds it convenient. That is what a
   concierge is for, and it is the difference you are paying for.
@@ -111,12 +111,12 @@ dayShapeSteps:
   - time: We start with you, not a route
     label: >-
       Before a single ticket is booked, your concierge asks what actually draws
-      you here the history, the photographs, the stillness, a milestone you're
+      you here — the history, the photographs, the stillness, a milestone you're
       marking. Everything after is arranged around that answer.
   - time: The order is chosen for the day
     label: >-
       Which temple you walk into first depends on where it is genuinely empty
-      that morning and that moves with the season and the boats. We sequence the
+      that morning — and that moves with the season and the boats. We sequence the
       day so you are always somewhere quiet, never in the crush.
   - time: One concierge, end to end
     label: >-
@@ -128,8 +128,8 @@ dayShapeSteps:
       Entries, timing, the private car, the guards, the Egyptologist, all held
       in the background by one person. You experience the day; your concierge
       carries everything underneath it.
-dreamEyebrow: More than a one day
-dreamTitle: So what your Luxor Rising day can hold
+dreamEyebrow: More than a trip
+dreamTitle: What your Luxor Rising day can hold
 dreamText: >-
   For many who come it becomes more than a trip: a homecoming, a quiet place to
   set a new direction, a way to mark an anniversary, a new chapter made into
@@ -330,7 +330,7 @@ cards:
       - "Private Egyptologist & insider access, every day"
       - "Temples, tombs, a felucca or the desert — your choice"
       - "Hot-air balloon, food stops, tips & a gift — included"
-    meta: "Door-to-door from the coast · the best of Luxor, your choice · insider access · a gift"
+    meta: "Door-to-door from the coast · the best of Luxor, your choice · insider access · a signature gift"
     priceNote: "transfer from the coast included"
     lead: "The full Luxor Rising day, arranged end to end for a trip that's meant to matter — an anniversary, a honeymoon, a milestone. A private Egyptologist and real insider access, every temple and tomb at its quietest, plus ventures beyond them: hidden desert spots, and a staged moment if you want one — a proposal timed to the light. Tips and logistics are carried underneath, so you just arrive. And quiet local introductions are there too, whenever you want them."
     expLede: "The best of what Luxor has to offer — you choose which to do each day, and add days to fit in more. One day covers the highlights; the full set unlocks across three to four."
@@ -380,7 +380,7 @@ cards:
     note: "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf."
     summary:
       - title: "Your own concierge, end to end"
-        desc: "driver, planner, translator & fixer — on WhatsApp from booking, with you all day (everything the concierge-only day gives, and more)"
+        desc: "driver, planner, translator & fixer — on WhatsApp from booking, with you all day (everything the Adventure day gives, and more)"
       - title: "The best of Luxor — your choice"
         desc: "temples, tombs, a felucca or the desert, in any order — at the quiet hour"
       - title: "Go at your own pace"
@@ -391,16 +391,16 @@ cards:
     tier: "Full day · all the sights"
     kicker: "Entries included"
     title: "Original"
-    hook: "Everything Luxor has to offer in one unhurried day — the great temples and tombs, a private felucca and the desert, every entry ticket included."
+    hook: "Everything Luxor has to offer in one unhurried day — the great temples and tombs, a private felucca and the desert, with entry to every site you visit included."
     points:
       - "Door-to-door transfer from the coast — included"
-      - "Every temple & tomb entry ticket — included"
+      - "Entry to every temple & experience you visit — included"
       - "A private felucca and a desert trip — included"
       - "Your concierge end to end, in any order you like"
     meta: "All the sites · entries included · private felucca & desert"
     priceNote: "transfer from the coast included"
-    lead: "The complete sightseeing day — every great temple and tomb of both banks, a private felucca and a trip into the desert, with every entry ticket already in the price. A private Egyptologist reads each site for you at the hour it's quietest, with insider access along the way, and tips and the logistics are handled so you never break the spell to sort anything out. Done in whatever order you like."
-    expLede: "The best of Luxor's temples and tombs, every entry in the price — you choose the order, and add days to go slower and see more."
+    lead: "The complete sightseeing day — the great temples and tombs of both banks, a private felucca and a trip into the desert, with entry to every site you visit already in the price. Each site at the hour it's quietest, with tips and the logistics handled so you never break the spell to sort anything out. Done in whatever order you like."
+    expLede: "The best of Luxor's temples and tombs, entry to each one you visit in the price — you choose the order, and add days to go slower and see more."
     experiences:
       - icon: "temple"
         name: "Karnak & Luxor Temple"
@@ -422,19 +422,18 @@ cards:
         desc: "Out past the fields, into the sand."
     included:
       - "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day"
-      - "Every entry ticket, in the price — no queues, no cash, nothing to carry"
-      - "A private Egyptologist & insider access at the sites"
+      - "Entry to every temple and experience you visit, in the price — no queues, no cash, nothing to carry"
       - "Tips and the logistics handled — nothing to break the spell"
       - "Your concierge end to end — driver, planner, translator & fixer, in any order you like"
       - "Local business contacts & off-market opportunities — land, property, projects, local knowledge and lifelong contacts, introduced friend to friend"
     caveatsLabel: "Added on request"
     caveats:
       - "The premium tombs — Nefertari, Seti I (KV17) and Tutankhamun — are special tickets, added on request"
-      - "Want a private Egyptologist, the balloon, signature gifts and insider access? That's the Signature day above"
+      - "Want the balloon, signature gifts and insider access? That's the Signature day above"
     note: "In any order you like, at the quiet hour for each — just tell your concierge."
     summary:
-      - title: "Every entry ticket included"
-        desc: "the great temples & tombs of both banks — no queues, no cash"
+      - title: "Entry to every visit included"
+        desc: "every temple, tomb & experience you visit — no queues, no cash"
       - title: "A private felucca & the desert"
         desc: "golden hour on the Nile and a trip out into the sand"
       - title: "Door-to-door from the coast"

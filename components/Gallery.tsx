@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./Gallery.module.css";
+import { isPeopleVisualisation, VISUALISATION_NOTE, VISUALISATION_TAG } from "@/lib/visualisation";
 
 export type GalleryImage = {
   src: string;
@@ -103,7 +104,10 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
               ) : (
                 <Image src={t.src} alt={t.alt} fill sizes="(max-width: 680px) 50vw, 25vw" />
               )}
-              <figcaption className={styles.caption}>{t.caption}</figcaption>
+              <figcaption className={styles.caption}>
+                {t.caption}
+                {isPeopleVisualisation(t.video) && <span className={styles.vis}>{VISUALISATION_TAG}</span>}
+              </figcaption>
             </figure>
           );
         })}
@@ -151,7 +155,10 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
               )}
             </div>
           )}
-          <figcaption>{active?.caption}</figcaption>
+          <figcaption>
+            {active?.caption}
+            {isPeopleVisualisation(active?.video) && <span className={styles.lbVis}>{VISUALISATION_NOTE}</span>}
+          </figcaption>
         </figure>
         <button
           className={`${styles.lbNav} ${styles.lbNext}`}

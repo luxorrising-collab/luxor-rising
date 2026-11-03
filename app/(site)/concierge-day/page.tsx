@@ -799,7 +799,14 @@ export default async function ConciergeDayPage() {
           <div className={styles.priceRow}>
             <span className="from">From</span>
             <span className="amt">€{page?.startingPrice ?? 800}</span>
-            <span className="per">{page?.priceNote}</span>
+            {/* "/ day" stays beside the price; the transfer note gets its own line
+                on phones so it never wraps into a tall block beside the figure. */}
+            <span className="per">{(page?.priceNote ?? "").split(/\s[—–-]\s/)[0]}</span>
+            {/\s[—–-]\s/.test(page?.priceNote ?? "") && (
+              <span className={styles.priceSub}>
+                {(page?.priceNote ?? "").split(/\s[—–-]\s/).slice(1).join(" — ")}
+              </span>
+            )}
           </div>
           <Link href="#design" className="btn btn-primary btn-lg">
             Design your day →

@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import styles from "./GalleryMosaic.module.css";
+import { isPeopleVisualisation, VISUALISATION_NOTE, VISUALISATION_TAG } from "@/lib/visualisation";
 
 type Item = { image?: string; video?: string; poster?: string; caption?: string };
 
@@ -76,7 +77,12 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
                 sizes={i === 0 ? "(max-width: 560px) 100vw, 50vw" : "(max-width: 560px) 50vw, 25vw"}
               />
             )}
-            {g.caption && <span className={styles.gmCap}>{g.caption}</span>}
+            {(g.caption || isPeopleVisualisation(g.video)) && (
+              <span className={styles.gmCap}>
+                {g.caption}
+                {isPeopleVisualisation(g.video) && <span className={styles.gmVis}>{VISUALISATION_TAG}</span>}
+              </span>
+            )}
             <span className={styles.zoom} aria-hidden>
               ⤢
             </span>
@@ -133,7 +139,12 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
                 <Image src={open.image ?? ""} alt={open.caption ?? ""} fill sizes="92vw" />
               )}
             </div>
-            {open.caption && <figcaption className={styles.lbCap}>{open.caption}</figcaption>}
+            {(open.caption || isPeopleVisualisation(open.video)) && (
+              <figcaption className={styles.lbCap}>
+                {open.caption}
+                {isPeopleVisualisation(open.video) && <span className={styles.lbVis}>{VISUALISATION_NOTE}</span>}
+              </figcaption>
+            )}
           </figure>
           {visible.length > 1 && (
             <button

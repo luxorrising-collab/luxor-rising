@@ -88,7 +88,7 @@ export default function TestimonialsCarousel({
                   aria-hidden
                   fill
                   sizes="(max-width: 760px) 82vw, 430px"
-                  quality={68}
+                  quality={75}
                   draggable={false}
                 />
               )}

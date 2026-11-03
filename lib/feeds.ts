@@ -126,7 +126,7 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
       id: "design-your-day",
       title: "The Concierge Day — your private day in Luxor",
       description:
-        `A full private day in Luxor: several experiences woven into one, your own licensed Egyptologist, and one concierge handling every ticket, transfer and timing. ${PER_DAY_NOTE}`,
+        `A full private day in Luxor: several experiences woven into one, door to door from the coast, and one concierge handling every ticket, transfer and timing. ${PER_DAY_NOTE}`,
       // The "from" price the Concierge Day page advertises — kept in step with it.
       price: conciergePrice,
       link: `${SITE}/concierge-day`,
@@ -216,15 +216,23 @@ export async function buildMetaCsv(): Promise<string> {
   return rows.join("\n") + "\n";
 }
 
-// Commercial landing pages to steer PMax to, beyond the product pages.
+// Commercial landing pages to steer PMax to, beyond the product pages. Pages that
+// don't lead into a booking (villas, the blog, legal) stay out of the feed.
 const EXTRA_PAGES: [string, string][] = [
-  ["/experiences", "collection"],
-  ["/luxor", "destination"],
-  ["/hurghada", "destination"],
+  ["/experiences", "hub;collection"],
+  ["/luxor", "hub;destination;luxor"],
+  ["/hurghada", "hub;destination;red_sea"],
   ["/private-guide", "service"],
-  ["/private-villas", "service"],
   ["/private-tours", "service"],
 ];
+
+// Page-feed labels: lowercase, underscores, several per page joined by ";" so a
+// PMax asset group can target a role (booking/experience), a theme or a place.
+const labelOf = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+const pageFeedLabels = (p: FeedProduct): string =>
+  p.id === "design-your-day"
+    ? "booking;core"
+    : ["experience", labelOf(p.category), /red sea/i.test(p.region) ? "red_sea" : "luxor"].join(";");
 
 /** Google Ads Page Feed (CSV) for Performance Max. */
 export async function buildGooglePageFeedCsv(): Promise<string> {
@@ -236,7 +244,7 @@ export async function buildGooglePageFeedCsv(): Promise<string> {
     seen.add(url);
     rows.push([url, label].map(esc).join(","));
   };
-  for (const p of products) add(p.link, p.category);
+  for (const p of products) add(p.link, pageFeedLabels(p));
   for (const [path, label] of EXTRA_PAGES) add(`${SITE}${path}`, label);
   return rows.join("\n") + "\n";
 }

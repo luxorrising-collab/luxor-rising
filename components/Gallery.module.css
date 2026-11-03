@@ -203,3 +203,23 @@
     height: 50vh;
   }
 }
+
+/* AI visualisation note under a clip's caption (model / couple clips only) */
+.vis {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.86em;
+  font-style: italic;
+  color: var(--color-gold-soft, #e5d4aa);
+  opacity: 0.92;
+}
+.lbVis {
+  display: block;
+  max-width: 46ch;
+  margin: 0.45rem auto 0;
+  font-family: var(--font-body, inherit);
+  font-style: normal;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  opacity: 0.9;
+}

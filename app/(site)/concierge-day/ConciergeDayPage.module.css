@@ -147,6 +147,32 @@
   font-size: 0.88rem;
   color: #e9dcc2;
 }
+.priceSub {
+  font-size: 0.88rem;
+  color: #e9dcc2;
+}
+.priceSub::before {
+  content: "— ";
+}
+@media (max-width: 680px) {
+  .priceRow {
+    flex-wrap: wrap;
+    row-gap: 0.15rem;
+  }
+  .priceRow .amt {
+    font-size: 2.1rem;
+  }
+  .priceSub {
+    flex-basis: 100%;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    text-wrap: balance;
+    opacity: 0.9;
+  }
+  .priceSub::before {
+    content: none;
+  }
+}
 .heroFacts {
   display: flex;
   flex-wrap: nowrap;

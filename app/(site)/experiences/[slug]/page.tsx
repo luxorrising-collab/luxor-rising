@@ -492,7 +492,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           isLuxorFunnel
             ? {
                 amount: 330,
-                note: "/ day - including door to door transfer from Hurghada or Marsa Alam",
+                note: "/ day — including door-to-door transfer from Hurghada or Marsa Alam",
               }
             : undefined
         }

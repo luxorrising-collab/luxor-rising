@@ -213,7 +213,7 @@ export default async function MedinetHabuPage() {
         hidePrice
         heroPrice={{
           amount: 330,
-          note: "/ day - including door to door transfer from Hurghada or Marsa Alam",
+          note: "/ day — including door-to-door transfer from Hurghada or Marsa Alam",
         }}
         heroCtaLabel="Design your day →"
         heroCtaHref="/concierge-day#design"

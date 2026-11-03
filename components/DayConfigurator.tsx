@@ -85,7 +85,7 @@ const SIGNATURE_CARDS: { key: SignatureJourney; intro: string }[] = [
   },
 ];
 // Each Signature day is the same promise; stated once, under the cards.
-const SIGNATURE_META = "Door-to-door from the coast · the best of Luxor, your choice · insider access · a gift";
+const SIGNATURE_META = "Door-to-door from the coast · the best of Luxor, your choice · insider access · a signature gift";
 const JOURNEY_NOTE =
   "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a bus never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
 const CONSIGLIERE_INTRO =
@@ -125,11 +125,11 @@ const REALITY_LOCAL = [
 // entries in the price. Bookable at a flat rate per day (1–4 guests).
 const ORIGINAL_RATE = ORIGINAL_DAY_RATE;
 const ORIGINAL_SUBTITLE =
-  "Everything Luxor has to offer in one unhurried day — the great temples and tombs, a private felucca and the desert, every entry ticket included.";
+  "Everything Luxor has to offer in one unhurried day — the great temples and tombs, a private felucca and the desert, with entry to every site you visit included.";
 const ORIGINAL_META = "All the sites · entries included · private felucca & desert";
 const ORIGINAL_INCLUDED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — included, the car stays with you all day",
-  "Every entry ticket included — no queues, no cash, nothing to carry",
+  "Entry to every temple and experience you visit — no queues, no cash, nothing to carry",
   "East bank — Karnak, Luxor Temple, and the Luxor & Mummification museums",
   "West bank — the Valley of the Kings (three tombs), Hatshepsut, Medinet Habu, the Ramesseum, Deir el-Medina, the Valley of the Queens and the Colossi of Memnon",
   "A private felucca on the Nile at golden hour",
@@ -139,7 +139,7 @@ const ORIGINAL_INCLUDED = [
 ];
 const ORIGINAL_MORE = [
   "The premium tombs — Nefertari, Seti I (KV17) and Tutankhamun — are special tickets, added on request",
-  "Want a private Egyptologist, the balloon, signature gifts and insider access? That's the Signature day above",
+  "Want the balloon, signature gifts and insider access? That's the Signature day above",
 ];
 
 // The Signature day, unpacked — shown when a Signature journey is selected, so
@@ -178,7 +178,7 @@ const SIGNATURE_POINTS = [
 ];
 const ORIGINAL_POINTS = [
   "Door-to-door transfer from the coast — included",
-  "Every temple & tomb entry ticket — included",
+  "Entry to every temple & experience you visit — included",
   "A private felucca and a desert trip — included",
   "Your concierge end to end, in any order you like",
 ];
@@ -439,8 +439,7 @@ const SIGNATURE_HANDLED = [
 ];
 const ORIGINAL_HANDLED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day",
-  "Every entry ticket, in the price — no queues, no cash, nothing to carry",
-  "A private Egyptologist & insider access at the sites",
+  "Entry to every temple and experience you visit, in the price — no queues, no cash, nothing to carry",
   "Tips and the logistics handled — nothing to break the spell",
   "Your concierge end to end — driver, planner, translator & fixer, in any order you like",
   INSIDER_CONTACTS,
@@ -451,7 +450,7 @@ const ORIGINAL_HANDLED = [
 const SIGNATURE_LEAD =
   "The full Luxor Rising day, arranged end to end for a trip that's meant to matter — an anniversary, a honeymoon, a milestone. A private Egyptologist and real insider access, every temple and tomb at its quietest, plus ventures beyond them: hidden desert spots, and a staged moment if you want one — a proposal timed to the light. Tips and logistics are carried underneath, so you just arrive. And quiet local introductions are there too, whenever you want them.";
 const ORIGINAL_LEAD =
-  "The complete sightseeing day — every great temple and tomb of both banks, a private felucca and a trip into the desert, with every entry ticket already in the price. A private Egyptologist reads each site for you at the hour it's quietest, with insider access along the way, and tips and the logistics are handled so you never break the spell to sort anything out. Done in whatever order you like.";
+  "The complete sightseeing day — great temples and tombs of both banks, a private felucca and a trip into the desert, with entry to every site you visit already in the price. Each site at the hour it's quietest, with tips and the logistics handled so you never break the spell to sort anything out. Done in whatever order you like.";
 const LIGHT_LEAD =
   "Your own trusted person on the ground for the day — a driver, translator and fixer who knows Luxor from the inside. Insider access and local contacts where they count, tips and the small frictions handled, and the day shaped around you. We plan it together before you arrive; then you go with the flow and pay the local costs as you go, so it stays light and flexible — and the more days you take, the more of Luxor you can fit in.";
 const REALITY_LEAD =
@@ -749,7 +748,7 @@ const SIG_EXPLEDE_DEFAULT =
 const SIG_NOTE_DEFAULT =
   "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf.";
 const ORIG_EXPLEDE_DEFAULT =
-  "The best of Luxor's temples and tombs, every entry in the price — you choose the order, and add days to go slower and see more.";
+  "The best of Luxor's temples and tombs, entry to each one you visit in the price — you choose the order, and add days to go slower and see more.";
 const ORIG_NOTE_DEFAULT = "In any order you like, at the quiet hour for each — just tell your concierge.";
 const ADV_NOTE_DEFAULT = "Go with the flow — tell us what you need, and we'll arrange it.";
 
@@ -757,7 +756,7 @@ const ADV_NOTE_DEFAULT = "Go with the flow — tell us what you need, and we'll 
 const SIG_SUMMARY_DEFAULT = [
   {
     title: "Your own concierge, end to end",
-    desc: "driver, planner, translator & fixer — on WhatsApp from booking, with you all day (everything the concierge-only day gives, and more)",
+    desc: "driver, planner, translator & fixer — on WhatsApp from booking, with you all day (everything the Adventure day gives, and more)",
   },
   {
     title: "The best of Luxor — your choice",
@@ -768,8 +767,8 @@ const SIG_SUMMARY_DEFAULT = [
 ];
 const ORIG_SUMMARY_DEFAULT = [
   {
-    title: "Every entry ticket included",
-    desc: "the great temples & tombs of both banks — no queues, no cash",
+    title: "Entry to every visit included",
+    desc: "every temple, tomb & experience you visit — no queues, no cash",
   },
   { title: "A private felucca & the desert", desc: "golden hour on the Nile and a trip out into the sand" },
   {
@@ -1815,7 +1814,7 @@ export default function DayConfigurator({
                     setBigGroup(false);
                   }}
                 >
-                  {g === 1 ? "Just me" : g === 2 ? "Two of us" : `${g} of us`}
+                  {g === 1 ? "Just me" : g === 2 ? "Two of us" : g === 3 ? "Three of us" : "Four of us"}
                 </button>
               ))}
               <button
@@ -2068,7 +2067,7 @@ export default function DayConfigurator({
               {isReality
                 ? "A full day given to what you came to build — the right people, the right doors, and an honest local read on every opportunity."
                 : isOriginal
-                  ? "Everything Luxor is famous for in one unhurried day — the great temples and tombs, a felucca and the desert, every entry handled."
+                  ? "Everything Luxor is famous for in one unhurried day — the great temples and tombs, a felucca and the desert, entry to every visit handled."
                   : isLight
                     ? "A trusted driver, translator and friend on the ground — everything handled on the spot."
                     : proposal
@@ -2086,7 +2085,7 @@ export default function DayConfigurator({
                 </>
               ) : isOriginal ? (
                 <>
-                  Every entry ticket, a private felucca and the desert — all in the price.{" "}
+                  Entry to every site you visit, a private felucca and the desert — all in the price.{" "}
                   <a href="#gifts" className={styles.inclLink}>
                     A gift to keep too →
                   </a>

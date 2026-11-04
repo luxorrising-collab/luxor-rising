@@ -435,12 +435,14 @@
 /* Phones: swipe card to card, each card nearly the height of the hero. */
 @media (max-width: 560px) {
   .expStrip {
+    gap: 0.75rem;
+    padding-inline: 6vw;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 7vw;
+    scroll-padding-inline: 6vw;
   }
   .expStrip .expStripItem {
-    flex: 0 0 86vw;
-    height: min(72svh, 640px);
+    flex: 0 0 88vw;
+    height: min(76svh, 680px);
     scroll-snap-align: center;
   }
 }
@@ -1784,11 +1786,11 @@
     display: flex;
     gap: 0.75rem;
     margin: 2rem calc(-1 * clamp(1.4rem, 5vw, 3.5rem)) 0;
-    padding: 0.2rem 7vw 0.6rem;
+    padding: 0.2rem 6vw 0.6rem;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 7vw;
+    scroll-padding-inline: 6vw;
     scrollbar-width: none;
     border-radius: 0;
     box-shadow: none;
@@ -1797,8 +1799,8 @@
     display: none;
   }
   .expGrid > * {
-    flex: 0 0 86vw;
-    height: min(72svh, 640px);
+    flex: 0 0 88vw;
+    height: min(76svh, 680px);
     aspect-ratio: auto;
     scroll-snap-align: center;
     border-radius: 12px;

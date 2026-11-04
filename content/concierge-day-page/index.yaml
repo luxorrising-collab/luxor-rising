@@ -149,7 +149,7 @@ dayJourney:
       - Up to 24 h before
       - Hurghada · Marsa Alam
       - From your hotel
-    image: /images/concierge-day/journey/pickup-red-sea-sunrise.jpg
+    image: /images/concierge-day/journey/pickup-red-sea-sunrise-hd.jpg
   - time: The road to Luxor
     subtitle: About 4 hours by private car, at an unhurried pace.
     label: >-
@@ -159,7 +159,7 @@ dayJourney:
     features:
       - About 4 h drive
       - Private car
-    image: /images/concierge-day/journey/road-to-luxor.jpg
+    image: /images/concierge-day/journey/road-to-luxor-hd.jpg
   - time: Temples and tombs
     subtitle: At your pace, each one at its quietest hour.
     label: >-
@@ -169,7 +169,7 @@ dayJourney:
     features:
       - At your pace
       - Quietest hour
-    image: /images/concierge-day/journey/temples-and-tombs.jpg
+    image: /images/concierge-day/journey/temples-and-tombs-hd.jpg
   - time: An unhurried day
     subtitle: Food stops, a slow afternoon or the desert. Just ask.
     label: >-
@@ -178,7 +178,7 @@ dayJourney:
     features:
       - Local food stops
       - Anything you ask
-    image: /images/concierge-day/journey/unhurried-desert-sun.jpg
+    image: /images/concierge-day/journey/unhurried-balcony-sunrise.jpg
   - time: Golden hour
     subtitle: A felucca on the Nile, or sunset in the dunes.
     label: >-
@@ -187,7 +187,7 @@ dayJourney:
     features:
       - Golden hour
       - Felucca or desert
-    image: /images/concierge-day/journey/golden-hour.jpg
+    image: /images/concierge-day/journey/golden-hour-hd.jpg
   - time: Home, door to door
     subtitle: Back to your hotel, up to 24 h after your day.
     label: >-
@@ -196,7 +196,7 @@ dayJourney:
     features:
       - Up to 24 h after
       - Door to door
-    image: /images/concierge-day/journey/home.jpg
+    image: /images/concierge-day/journey/home-hd.jpg
   - time: Stay longer
     subtitle: More days, more of Luxor, at a better price per day.
     label: >-
@@ -205,7 +205,7 @@ dayJourney:
     features:
       - More days
       - Better value
-    image: /images/concierge-day/journey/stay-longer.jpg
+    image: /images/concierge-day/journey/stay-longer-hd.jpg
 dreamEyebrow: More than a trip
 dreamTitle: What your Luxor Rising day can hold
 dreamText: >-

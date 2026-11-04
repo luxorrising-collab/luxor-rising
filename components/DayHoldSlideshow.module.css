@@ -143,3 +143,8 @@
   margin-top: clamp(2.8rem, 4.5vw, 4rem);
   padding: 0 clamp(1rem, 4vw, 3rem);
 }
+@media (max-width: 560px) {
+  .stripWrap {
+    padding: 0;
+  }
+}

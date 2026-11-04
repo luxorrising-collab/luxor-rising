@@ -20,6 +20,7 @@ import ConciergeChat from "@/components/ConciergeChat";
 import PrincipleList from "@/components/PrincipleList";
 import DayHoldSlideshow from "@/components/DayHoldSlideshow";
 import { buildJourneyCards } from "@/lib/journey-cards";
+import { withAspect } from "@/lib/image-aspect";
 import { DayCountProvider } from "@/components/DayCount";
 import { buildConciergeDayCards } from "@/lib/experience-cards";
 import { reader } from "@/lib/keystatic-reader";
@@ -289,8 +290,8 @@ export default async function ConciergeDayPage() {
   // The canonical Design-Your-Day gallery cards — shared with the experience
   // pages' slideshows so the two always look identical. Mirrors the CMS
   // experiences when set, else the curated fallback.
-  const journeyCards = buildJourneyCards(page?.dayJourney ?? []);
-  const expCards = buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences });
+  const journeyCards = withAspect(buildJourneyCards(page?.dayJourney ?? []));
+  const expCards = withAspect(buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences }));
   const baseGallery =
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
@@ -428,7 +429,7 @@ export default async function ConciergeDayPage() {
                 h: "Anywhere around Luxor, off the beaten track",
                 p: "Hidden temples, quiet villages, Nile islands and the open desert. Wherever calls to you, your concierge knows the way.",
                 cta: "Design your day →",
-                image: "/images/concierge-day/journey/beyond-luxor-valley.jpg",
+                image: "/images/concierge-day/journey/beyond-luxor-valley-hd.jpg",
               }}
             />
           </div>

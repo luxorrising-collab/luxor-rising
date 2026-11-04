@@ -414,12 +414,13 @@ export default async function ConciergeDayPage() {
         {/* The journey, stop by stop, in the experience pages' dark drifting
             slideshow — on our own photographs. Full-bleed, closing the section. */}
         {journeyCards.length > 0 && (
-          <div style={{ marginTop: "clamp(3rem, 6vw, 4.6rem)" }}>
+          <div style={{ marginTop: "clamp(4rem, 8.4vw, 7.5rem)" }}>
             <DayHoldSlideshow
               cards={journeyCards}
-              eyebrow="The Luxor Rising day"
-              title={page?.dayJourneyTitle || "How your day flows"}
-              lead={`Your own concierge and private car, door to door from Hurghada or Marsa Alam. From €${page?.startingPrice ?? 450} a day, flexible either way, confirmed within 24 hours.`}
+              eyebrow=""
+              title=""
+              lead=""
+              flush
               designHref="#design"
               progress
               tail={{
@@ -427,7 +428,7 @@ export default async function ConciergeDayPage() {
                 h: "Anywhere around Luxor, off the beaten track",
                 p: "Hidden temples, quiet villages, Nile islands and the open desert. Wherever calls to you, your concierge knows the way.",
                 cta: "Design your day →",
-                image: "/images/concierge-day/journey/beyond.jpg",
+                image: "/images/concierge-day/journey/beyond-luxor-valley.jpg",
               }}
             />
           </div>

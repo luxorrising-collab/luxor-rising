@@ -56,12 +56,26 @@
   }
 }
 
-/* Phones: the gift badge and the CTA need the whole row, so the name steps aside. */
-@media (max-width: 420px) {
-  .inner:has(.extra) .text {
+.ctaShort {
+  display: none;
+}
+/* Phones: a short label, so the name keeps its place beside it. */
+@media (max-width: 560px) {
+  .ctaLong {
     display: none;
+  }
+  .ctaShort {
+    display: inline;
   }
   .btn {
     padding-inline: 1.1rem;
+  }
+}
+
+/* Bars without a short label (other pages): on the narrowest phones the gift
+   badge and the CTA need the whole row, so the name steps aside. */
+@media (max-width: 420px) {
+  .inner:has(.extra):not(:has(.ctaShort)) .text {
+    display: none;
   }
 }

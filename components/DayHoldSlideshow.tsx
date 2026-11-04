@@ -22,6 +22,7 @@ export default function DayHoldSlideshow({
   progress,
   facts,
   cta,
+  flush = false,
 }: {
   cards: ExperienceCardData[];
   eyebrow?: string;
@@ -35,13 +36,16 @@ export default function DayHoldSlideshow({
   facts?: { icon: React.ReactNode; label: string }[];
   /** A call to action under the facts. */
   cta?: { href: string; label: string };
+  /** No heading: the band grows out of the section above it. */
+  flush?: boolean;
 }) {
   if (cards.length === 0) return null;
   return (
-    <div className={styles.band}>
+    <div className={`${styles.band} ${flush ? styles.flush : ""}`}>
+      {(eyebrow || title || lead || facts?.length || cta) && (
       <Reveal className={`wrap center ${styles.head}`}>
-        <span className="eyebrow">{eyebrow}</span>
-        <h2 className="display">{title}</h2>
+        {eyebrow && <span className="eyebrow">{eyebrow}</span>}
+        {title && <h2 className="display">{title}</h2>}
         {lead && <p className="lead">{lead}</p>}
         {facts && facts.length > 0 && (
           <ul className={styles.facts}>
@@ -63,6 +67,7 @@ export default function DayHoldSlideshow({
           </div>
         )}
       </Reveal>
+      )}
       <div className={styles.stripWrap}>
         <ExperienceGrid cards={cards} layout="strip" designHref={designHref} tone="dark" tail={tail} progress={progress} />
       </div>

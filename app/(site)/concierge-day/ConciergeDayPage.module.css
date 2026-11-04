@@ -432,6 +432,18 @@
   /* No scrollbar — navigation is by the centred arrows below. */
   scrollbar-width: none;
 }
+/* Phones: swipe card to card, each card nearly the height of the hero. */
+@media (max-width: 560px) {
+  .expStrip {
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 7vw;
+  }
+  .expStrip .expStripItem {
+    flex: 0 0 86vw;
+    height: min(72svh, 640px);
+    scroll-snap-align: center;
+  }
+}
 .expStrip::-webkit-scrollbar {
   display: none;
 }
@@ -1772,11 +1784,11 @@
     display: flex;
     gap: 0.75rem;
     margin: 2rem calc(-1 * clamp(1.4rem, 5vw, 3.5rem)) 0;
-    padding: 0.2rem clamp(1.4rem, 5vw, 3.5rem) 0.6rem;
+    padding: 0.2rem 7vw 0.6rem;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: clamp(1.4rem, 5vw, 3.5rem);
+    scroll-padding-inline: 7vw;
     scrollbar-width: none;
     border-radius: 0;
     box-shadow: none;
@@ -1785,8 +1797,10 @@
     display: none;
   }
   .expGrid > * {
-    flex: 0 0 88%;
-    scroll-snap-align: start;
+    flex: 0 0 86vw;
+    height: min(72svh, 640px);
+    aspect-ratio: auto;
+    scroll-snap-align: center;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 18px 40px -24px rgba(42, 28, 16, 0.55);

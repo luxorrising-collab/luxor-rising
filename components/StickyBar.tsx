@@ -8,6 +8,7 @@ export default function StickyBar({
   meta,
   ctaHref,
   ctaLabel,
+  ctaShort,
   revealOnScroll = false,
   revealAfter = 640,
   className = "",
@@ -17,6 +18,8 @@ export default function StickyBar({
   meta: string;
   ctaHref: string;
   ctaLabel: string;
+  /** A shorter label for phones, so the name keeps its place beside it. */
+  ctaShort?: string;
   revealOnScroll?: boolean;
   revealAfter?: number;
   className?: string;
@@ -44,7 +47,14 @@ export default function StickyBar({
         </div>
         {extra ? <div className={styles.extra}>{extra}</div> : null}
         <a href={ctaHref} className={`btn btn-primary ${styles.btn}`}>
-          {ctaLabel}
+          {ctaShort ? (
+            <>
+              <span className={styles.ctaLong}>{ctaLabel}</span>
+              <span className={styles.ctaShort}>{ctaShort}</span>
+            </>
+          ) : (
+            ctaLabel
+          )}
         </a>
       </div>
     </div>

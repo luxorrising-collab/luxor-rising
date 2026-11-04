@@ -2638,6 +2638,7 @@ export default function DayConfigurator({
         }
         ctaHref="#book"
         ctaLabel={proposal ? "Request your proposal →" : "See your day & price →"}
+        ctaShort={proposal ? "Request →" : "Reserve →"}
         revealOnScroll={false}
         extra={
           conc ? (

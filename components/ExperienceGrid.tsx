@@ -228,6 +228,8 @@ export default function ExperienceGrid({
     const first = el?.firstElementChild as HTMLElement | null;
     if (!el || !firstClone || !first) return;
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    // Phones swipe it themselves (scroll-snap): no drift under the thumb.
+    const still = reduced || (window.matchMedia?.("(max-width: 560px)").matches ?? false);
     const setWidth = () => firstClone.offsetLeft - first.offsetLeft;
     const looping = () => setWidth() > 0 && el.scrollWidth - el.clientWidth >= setWidth();
 
@@ -306,10 +308,15 @@ export default function ExperienceGrid({
       if (tween) {
         const t = tween.dur ? Math.min(1, Math.max(0, (now - tween.start) / tween.dur)) : 1;
         pos = tween.from + (tween.to - tween.from) * (1 - (1 - t) ** 3);
+        // scroll-snap would pull every animated step back to a card; let go of it meanwhile
+        el.style.scrollSnapType = "none";
         el.scrollLeft = pos;
-        if (t >= 1) tween = null;
+        if (t >= 1) {
+          tween = null;
+          el.style.scrollSnapType = "";
+        }
       } else if (
-        reduced ||
+        still ||
         hovering ||
         touching ||
         !inView ||

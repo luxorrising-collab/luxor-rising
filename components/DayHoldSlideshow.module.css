@@ -19,6 +19,35 @@
   pointer-events: none;
 }
 
+/* No heading: the cards straddle the edge between the paper section above
+   and the dark band, so the two read as one section. */
+.flush {
+  --edge: clamp(120px, 18vh, 180px);
+  padding-top: 0;
+  background:
+    radial-gradient(130% 105% at 50% 10%, rgba(201, 160, 99, 0.12), rgba(201, 160, 99, 0) 55%) 0 var(--edge) / 100% 100% no-repeat,
+    linear-gradient(
+      180deg,
+      var(--color-paper) 0,
+      var(--color-paper) var(--edge),
+      #1b150e var(--edge),
+      #120d09 55%,
+      #0b0806 100%
+    );
+}
+.flush::before {
+  top: var(--edge);
+}
+.flush .stripWrap {
+  margin-top: 0;
+}
+/* over the paper part, a shadow that spreads upward gets cut off by the scroll
+   box in a hard line — keep the cards' shadow below them */
+.flush [class*="expStripItem"],
+.flush [class*="expStripItem"]:hover {
+  box-shadow: 0 34px 50px -30px rgba(0, 0, 0, 0.8);
+}
+
 .head {
   position: relative;
   z-index: 1;

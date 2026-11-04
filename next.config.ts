@@ -19,8 +19,13 @@ const nextConfig: NextConfig = {
   },
   // Next 16 only serves quality values declared here; hero photos use 90 for
   // crisp full-bleed rendering, everything else stays on the default 75.
+  // deviceSizes adds the in-between widths common screens actually need
+  // (1280/1440/1680 and the 2560/2880 of Retina laptops), so a full-width
+  // photo is sent at the width it is shown instead of jumping to the next
+  // default step (2048 → 3840) and being shrunk in the browser.
   images: {
     qualities: [75, 90],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1280, 1440, 1680, 1920, 2048, 2560, 2880, 3840],
   },
   async headers() {
     const dev = process.env.NODE_ENV === "development";

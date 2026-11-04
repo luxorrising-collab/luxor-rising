@@ -16,6 +16,10 @@ import HeroShow, { type HeroShowItem } from "@/components/HeroShow";
 import GiftsSectionServer from "@/components/GiftsSectionServer";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import ExperienceGrid from "@/components/ExperienceGrid";
+import ConciergeChat from "@/components/ConciergeChat";
+import PrincipleList from "@/components/PrincipleList";
+import DayHoldSlideshow from "@/components/DayHoldSlideshow";
+import { buildJourneyCards } from "@/lib/journey-cards";
 import { DayCountProvider } from "@/components/DayCount";
 import { buildConciergeDayCards } from "@/lib/experience-cards";
 import { reader } from "@/lib/keystatic-reader";
@@ -27,7 +31,7 @@ import styles from "./ConciergeDayPage.module.css";
 export const metadata: Metadata = {
   title: "The Signature Concierge Day",
   description:
-    "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing to arrange. Or just your concierge on the ground. From €330.",
+    "A private day in Luxor, door to door from Hurghada or Marsa Alam and timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing to arrange. From €450.",
 };
 
 // The curated experience cards, hover clips, icons and tier/feature data now
@@ -285,6 +289,7 @@ export default async function ConciergeDayPage() {
   // The canonical Design-Your-Day gallery cards — shared with the experience
   // pages' slideshows so the two always look identical. Mirrors the CMS
   // experiences when set, else the curated fallback.
+  const journeyCards = buildJourneyCards(page?.dayJourney ?? []);
   const expCards = buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences });
   const baseGallery =
     (page?.gallery ?? []).length > 0
@@ -372,7 +377,13 @@ export default async function ConciergeDayPage() {
       </section>
     ),
     dayShape: (
-      <section key="dayShape" style={{ background: "var(--color-paper)" }}>
+      <section
+        key="dayShape"
+        style={{
+          background: "var(--color-paper)",
+          ...(journeyCards.length > 0 && { paddingBottom: 0 }),
+        }}
+      >
         <Reveal className="wrap-narrow">
           {/* No marginBottom here: the phase grid owns the gap below (its
               own margin-top), so the intro and grid aren't doubly spaced. */}
@@ -395,18 +406,32 @@ export default async function ConciergeDayPage() {
           </div>
           {hasDayShapeSteps && (
             <>
-              <div className={styles.principles}>
-                {(page?.dayShapeSteps ?? []).map((s, i) => (
-                  <div className={styles.prItem} key={s.time || i}>
-                    <h3 className={styles.prHead}>{s.time}</h3>
-                    <p className={styles.prBody}>{s.label}</p>
-                  </div>
-                ))}
-              </div>
+              <PrincipleList items={page?.dayShapeSteps ?? []} />
               {page?.dayShapeNote && <p className={styles.tlNote}>{page.dayShapeNote}</p>}
             </>
           )}
         </Reveal>
+        {/* The journey, stop by stop, in the experience pages' dark drifting
+            slideshow — on our own photographs. Full-bleed, closing the section. */}
+        {journeyCards.length > 0 && (
+          <div style={{ marginTop: "clamp(3rem, 6vw, 4.6rem)" }}>
+            <DayHoldSlideshow
+              cards={journeyCards}
+              eyebrow="The Luxor Rising day"
+              title={page?.dayJourneyTitle || "How your day flows"}
+              lead={`Your own concierge and private car, door to door from Hurghada or Marsa Alam. From €${page?.startingPrice ?? 450} a day, flexible either way, confirmed within 24 hours.`}
+              designHref="#design"
+              progress
+              tail={{
+                k: "Beyond the map",
+                h: "Anywhere around Luxor, off the beaten track",
+                p: "Hidden temples, quiet villages, Nile islands and the open desert. Wherever calls to you, your concierge knows the way.",
+                cta: "Design your day →",
+                image: "/images/concierge-day/journey/beyond.jpg",
+              }}
+            />
+          </div>
+        )}
       </section>
     ),
     // Merged "What your day feels like" (image) + "The feel of it" (phases) into
@@ -783,7 +808,7 @@ export default async function ConciergeDayPage() {
       {/* HERO */}
       <section className={styles.phero}>
         <div className={styles.pheroBgs}>
-          <HeroShow items={heroMedia} />
+          <HeroShow items={heroMedia} imagesOnlyOnMobile />
         </div>
         {/* HeroShow carries its own tint; this adds a light extra scrim on top
             for a middle darkness — darker than the tint alone, lighter than the
@@ -847,6 +872,7 @@ export default async function ConciergeDayPage() {
       <DayCountProvider>{orderedKeys.map((k) => sectionMap[k]).filter(Boolean)}</DayCountProvider>
 
       <FullFooter columns={FOOTER_COLUMNS} />
+      <ConciergeChat whatsappNumber={settings?.whatsappNumber || ""} context="Design Your Day" />
     </>
   );
 }

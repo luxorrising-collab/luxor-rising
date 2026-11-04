@@ -20,6 +20,12 @@ export type ExperienceCardData = {
   position?: string;
   /** Custom line icon for this experience. */
   icon?: React.ReactNode;
+  /** A step number shown top-left in place of the icon (journey cards). */
+  num?: string;
+  /** A short practical line always shown under the title (journey cards). */
+  sub?: string;
+  /** Keep the title to a single line. */
+  oneLine?: boolean;
   /** Marks a signature experience — shows a gold seal. */
   signature?: boolean;
   /** Which day packages include this experience (top-left labels). */
@@ -32,7 +38,16 @@ export type ExperienceCardData = {
  * A single experience card: the product's poetic title with a short description,
  * links through to the product, and plays that product's hero clip on hover.
  */
-function ExpCard({ e, clone = false }: { e: ExperienceCardData; clone?: boolean }) {
+function ExpCard({
+  e,
+  clone = false,
+  beyond = false,
+}: {
+  e: ExperienceCardData;
+  clone?: boolean;
+  /** Past the collapsed grid's first cards: hidden on wide screens, kept in the phone carousel. */
+  beyond?: boolean;
+}) {
   const vidRef = React.useRef<HTMLVideoElement>(null);
   const [open, setOpen] = React.useState(false);
   // "Included" sits top-left on every experience; the signature experiences also
@@ -63,7 +78,7 @@ function ExpCard({ e, clone = false }: { e: ExperienceCardData; clone?: boolean 
 
   return (
     <div
-      className={open ? `${styles.exp} ${styles.expOpen}` : styles.exp}
+      className={`${styles.exp} ${open ? styles.expOpen : ""} ${beyond ? styles.expBeyond : ""}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
@@ -88,6 +103,10 @@ function ExpCard({ e, clone = false }: { e: ExperienceCardData; clone?: boolean 
         <span className={styles.expTag} aria-label="Included in your day">
           Included
         </span>
+      ) : e.num ? (
+        <span className={styles.expNum} aria-hidden>
+          {e.num}
+        </span>
       ) : (
         e.icon && (
           <span className={styles.expIcon} aria-hidden>
@@ -110,7 +129,8 @@ function ExpCard({ e, clone = false }: { e: ExperienceCardData; clone?: boolean 
       <div className={styles.expScrim} />
       <div className={styles.expTx}>
         {e.place && e.place !== e.h && <span className={styles.expKicker}>{e.place}</span>}
-        <h4>{e.h}</h4>
+        <h4 className={e.oneLine ? styles.expOneLine : undefined}>{e.h}</h4>
+        {e.sub && <p className={styles.expSub}>{e.sub}</p>}
         <span className={styles.expRule} aria-hidden />
         {e.features && e.features.length > 0 && (
           <ul className={styles.expFeats}>
@@ -150,6 +170,14 @@ function ExpCard({ e, clone = false }: { e: ExperienceCardData; clone?: boolean 
 
 const DRIFT_PX_PER_SEC = 28;
 
+export type StripTail = { k: string; h: string; p: string; cta: string; image?: string };
+const DEFAULT_TAIL: StripTail = {
+  k: "The full collection",
+  h: "Explore all experiences",
+  p: "Temples, tombs, the Nile, the desert and more — designed into your day.",
+  cta: "Design your day →",
+};
+
 /**
  * The "What your day can hold" grid. Square cards; only the first `initial`
  * show, with a Show-all toggle — same collapse idea as the gallery, so a dozen
@@ -161,6 +189,8 @@ export default function ExperienceGrid({
   layout = "grid",
   designHref = "#design",
   tone = "light",
+  tail = DEFAULT_TAIL,
+  progress = false,
 }: {
   cards: ExperienceCardData[];
   initial?: number;
@@ -170,11 +200,20 @@ export default function ExperienceGrid({
   designHref?: string;
   /** "dark" lifts the strip cards for a dark/filmic backdrop. */
   tone?: "light" | "dark";
+  /** Wording of the strip's closing "design your day" card. */
+  tail?: StripTail;
+  /** Strip only: a gold progress rail of the cards' icons in place of the
+      arrows — it lights up as the strip drifts, and a stop jumps to its card. */
+  progress?: boolean;
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const stripRef = React.useRef<HTMLDivElement>(null);
   const firstCloneRef = React.useRef<HTMLDivElement>(null);
   const nudgeRef = React.useRef<(dir: 1 | -1) => void>(() => {});
+  const goToRef = React.useRef<(i: number) => void>(() => {});
+  // The card at the centre of the strip (the closing card counts as the end).
+  const [at, setAt] = React.useState(0);
+  const atRef = React.useRef(0);
 
   // Slow, looping drift for the slideshow. The cards are rendered twice, so once
   // the first set has scrolled away the position jumps back by exactly one set and
@@ -235,6 +274,32 @@ export default function ExperienceGrid({
       holdUntil = start + dur + 2500;
     };
 
+    goToRef.current = (i) => {
+      const set = setWidth();
+      if (set <= 0) return;
+      const step = set / (el.children.length / 2);
+      const max = el.scrollWidth - el.clientWidth;
+      // Centre card i, staying in whichever copy of the cards is showing.
+      let to = Math.floor(el.scrollLeft / set) * set + i * step - (el.clientWidth - step) / 2;
+      if (to < 0) to += set;
+      if (to > max) to -= set;
+      const start = performance.now();
+      const dur = reduced ? 0 : 900;
+      tween = { from: el.scrollLeft, to: Math.max(0, Math.min(to, max)), start, dur };
+      holdUntil = start + dur + 3500;
+    };
+
+    const report = () => {
+      const set = setWidth();
+      if (set <= 0) return;
+      const step = set / (el.children.length / 2);
+      const i = Math.floor(((el.scrollLeft + el.clientWidth / 2) % set) / step) % (el.children.length / 2);
+      if (i !== atRef.current) {
+        atRef.current = i;
+        setAt(i);
+      }
+    };
+
     const tick = (now: number) => {
       const dt = Math.min(now - last, 50) / 1000;
       last = now;
@@ -259,6 +324,7 @@ export default function ExperienceGrid({
         if (pos >= set) pos -= set;
         el.scrollLeft = pos;
       }
+      report();
       raf = requestAnimationFrame(tick);
     };
 
@@ -333,21 +399,57 @@ export default function ExperienceGrid({
                 </div>
               ))}
               <Link
-                className={`${styles.expAll} ${itemClass}`}
+                className={`${styles.expAll} ${tail.image ? styles.expAllPhoto : ""} ${itemClass}`}
                 href={designHref}
                 tabIndex={clone ? -1 : undefined}
                 aria-hidden={clone || undefined}
               >
+                {tail.image && (
+                  <>
+                    <Image src={tail.image} alt="" fill sizes="400px" className={styles.expAllImg} />
+                    <span className={styles.expAllScrim} aria-hidden />
+                  </>
+                )}
                 <div className={styles.expAllIn}>
-                  <div className="k">The full collection</div>
-                  <h4>Explore all experiences</h4>
-                  <p>Temples, tombs, the Nile, the desert and more — designed into your day.</p>
-                  <span className={styles.expAllCta}>Design your day →</span>
+                  <div className="k">{tail.k}</div>
+                  <h4>{tail.h}</h4>
+                  {tail.image && <span className={styles.expAllRule} aria-hidden />}
+                  <p>{tail.p}</p>
+                  <span className={styles.expAllCta}>{tail.cta}</span>
                 </div>
               </Link>
             </React.Fragment>
           ))}
         </div>
+        {progress ? (
+          <div className={styles.stripProg} data-hide-chat>
+            <ol className={styles.progRail}>
+              {cards.map((e, i) => {
+                const lit = i <= at;
+                return (
+                  <li key={e.h} className={`${styles.progStop} ${lit ? styles.progLit : ""} ${i === Math.min(at, cards.length - 1) ? styles.progCur : ""}`}>
+                    {i > 0 && <span className={`${styles.progSeg} ${lit ? styles.progSegLit : ""}`} aria-hidden />}
+                    <button
+                      type="button"
+                      className={styles.progNode}
+                      aria-label={`${i + 1}. ${e.h}`}
+                      aria-current={i === at ? "step" : undefined}
+                      onClick={() => goToRef.current(i)}
+                    >
+                      {e.icon}
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <p className={styles.progCap} aria-live="polite">
+              <span>
+                {String(Math.min(at, cards.length - 1) + 1).padStart(2, "0")} / {String(cards.length).padStart(2, "0")}
+              </span>
+              {cards[Math.min(at, cards.length - 1)]?.h}
+            </p>
+          </div>
+        ) : (
         <div className={styles.stripNav}>
           <button type="button" aria-label="Previous" className={arrowClass} onClick={() => nudgeRef.current(-1)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -360,33 +462,37 @@ export default function ExperienceGrid({
             </svg>
           </button>
         </div>
+        )}
       </div>
     );
   }
 
+  // Every card is rendered; on wide screens the collapsed grid hides the ones
+  // past `initial`, while phones swipe through all of them in a carousel.
   const collapsible = cards.length > initial;
-  const visible = collapsible && !expanded ? cards.slice(0, initial) : cards;
+  const collapsed = collapsible && !expanded;
 
   return (
     <>
       <div className={styles.expGrid}>
-        {visible.map((e) => (
-          <ExpCard e={e} key={e.href || e.h} />
+        {cards.map((e, i) => (
+          <ExpCard e={e} key={e.href || e.h} beyond={collapsed && i >= initial} />
         ))}
-        {(!collapsible || expanded) && (
-          <Link className={styles.expAll} href="#design">
-            <div className={styles.expAllIn}>
-              <div className="k">The full collection</div>
-              <h4>Explore all experiences</h4>
-              <p>
-                Temples, tombs, the Nile, the desert and more — design your day and we&apos;ll build
-                it from the full collection.
-              </p>
-              <span className={styles.expAllCta}>Design your day →</span>
-            </div>
-          </Link>
-        )}
+        <Link className={`${styles.expAll} ${collapsed ? styles.expBeyond : ""}`} href="#design">
+          <div className={styles.expAllIn}>
+            <div className="k">The full collection</div>
+            <h4>Explore all experiences</h4>
+            <p>
+              Temples, tombs, the Nile, the desert and more — design your day and we&apos;ll build
+              it from the full collection.
+            </p>
+            <span className={styles.expAllCta}>Design your day →</span>
+          </div>
+        </Link>
       </div>
+      <p className={styles.expSwipe} aria-hidden>
+        Swipe to see all {cards.length} →
+      </p>
       {collapsible && (
         <div className={styles.expMoreWrap}>
           <button type="button" className={styles.expMore} onClick={() => setExpanded((v) => !v)}>

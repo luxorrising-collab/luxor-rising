@@ -106,3 +106,15 @@ export function trackPurchase(p: {
     { eventID: p.transactionId },
   );
 }
+
+/** Fired when a visitor opens a WhatsApp chat with the concierge — GA4's
+    recommended `generate_lead`-style contact signal, and Meta's Contact event. */
+export function trackWhatsAppClick(p: { location: string; topic?: string }) {
+  dl({ event: "whatsapp_click", contact_method: "whatsapp", location: p.location, topic: p.topic ?? "" });
+  window.gtag?.("event", "whatsapp_click", {
+    contact_method: "whatsapp",
+    location: p.location,
+    topic: p.topic ?? "",
+  });
+  window.fbq?.("track", "Contact", { content_name: p.location });
+}

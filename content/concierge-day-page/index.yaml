@@ -5,7 +5,7 @@ heroSubtitle: >-
   Egyptologist, the Nile at golden hour, desert dinner under the stars. No
   friction, nothing to carry, and nothing missed. All you do is arrive.
 heroTrustLine: 4.9 · 28+ private days arranged · trusted by travellers in Hurghada & Luxor.
-startingPrice: 330
+startingPrice: 450
 priceNote: / day — including door-to-door transfer from Hurghada or Marsa Alam
 heroImages:
   - /images/concierge-day/heroImages/0.jpg
@@ -29,8 +29,6 @@ sections:
     visible: false
   - section: experiences
     visible: true
-  - section: consigliere
-    visible: true
   - section: howItWorks
     visible: false
   - section: builder
@@ -38,6 +36,8 @@ sections:
   - section: gifts
     visible: true
   - section: scarcity
+    visible: true
+  - section: consigliere
     visible: true
   - section: valueStack
     visible: false
@@ -128,6 +128,84 @@ dayShapeSteps:
       Entries, timing, the private car, the guards, the Egyptologist, all held
       in the background by one person. You experience the day; your concierge
       carries everything underneath it.
+dayJourneyTitle: How your day flows
+dayJourney:
+  - time: From the day you book
+    subtitle: Your concierge on WhatsApp, planning it with you.
+    label: >-
+      Tell us what draws you to Luxor and when you'd like to go. Your concierge
+      shapes the day with you, books every entry and stays one message away,
+      before, during and after.
+    features:
+      - On WhatsApp
+      - Planned with you
+    image: /images/concierge-day/journey/concierge-ahmed.jpg
+  - time: Pickup at your hotel
+    subtitle: Hurghada or Marsa Alam, up to 24 h before your day.
+    label: >-
+      Choose your time. Set off at dawn, or come the evening before so you wake
+      up fresh in Luxor, with the morning over the Nile.
+    features:
+      - Up to 24 h before
+      - Hurghada · Marsa Alam
+      - From your hotel
+    image: /images/concierge-day/journey/1.jpg
+  - time: The road to Luxor
+    subtitle: About 4 hours by private car, at an unhurried pace.
+    label: >-
+      A private, air-conditioned car through the mountains and the desert, with
+      a stop whenever you like. Sleep, take photos, or plan the day with your
+      concierge.
+    features:
+      - About 4 h drive
+      - Private car
+    image: /images/concierge-day/journey/2.jpg
+  - time: Temples and tombs
+    subtitle: At your pace, each one at its quietest hour.
+    label: >-
+      Your concierge sets the order on the day, so you walk into each temple and
+      tomb when it is emptiest. On the Signature day, your Egyptologist reads
+      the walls with you.
+    features:
+      - At your pace
+      - Quietest hour
+    image: /images/concierge-day/journey/3.jpg
+  - time: An unhurried day
+    subtitle: Food stops, a slow afternoon or the desert. Just ask.
+    label: >-
+      Stop to eat where locals eat, keep the middle of the day open and slow, or
+      venture out into the desert. Anything you'd like, just tell your concierge.
+    features:
+      - Local food stops
+      - Anything you ask
+    image: /images/concierge-day/journey/unhurried.jpg
+  - time: Golden hour
+    subtitle: A felucca on the Nile, or sunset in the dunes.
+    label: >-
+      End the day as the light turns gold: a private felucca on the river, or a
+      quiet spot in the desert as the sun goes down.
+    features:
+      - Golden hour
+      - Felucca or desert
+    image: /images/concierge-day/journey/4.jpg
+  - time: Home, door to door
+    subtitle: Back to your hotel, up to 24 h after your day.
+    label: >-
+      Head back the same night, or stay over and leave the next day. The car
+      takes you to your hotel door, whenever suits you.
+    features:
+      - Up to 24 h after
+      - Door to door
+    image: /images/concierge-day/journey/5.jpg
+  - time: Stay longer
+    subtitle: More days, more of Luxor, at a better price per day.
+    label: >-
+      Add days to see more of Luxor at a slower pace. The longer you stay, the
+      lower the price per day.
+    features:
+      - More days
+      - Better value
+    image: /images/concierge-day/journey/6.jpg
 dreamEyebrow: More than a trip
 dreamTitle: What your Luxor Rising day can hold
 dreamText: >-
@@ -259,6 +337,14 @@ faq:
       for the hour too: being inside at 6:15 instead of 9:30 takes a private car,
       tickets bought ahead and people on the ground. And one concierge owns your
       whole day, so when something slips, it's his to fix, not yours.
+  - question: What time is pickup, and how long is the drive?
+    answer: >-
+      Pickup is flexible: we collect you from your hotel in Hurghada or Marsa Alam
+      whenever suits you, up to 24 hours before your day, so you can start fresh
+      in Luxor in the morning. The drive takes about four hours from Hurghada and a
+      little more from Marsa Alam, at an unhurried pace in a private
+      air-conditioned car. The return is just as flexible: we bring you back to
+      your hotel door to door whenever suits you, up to 24 hours after your day.
   - question: Is Luxor safe to visit right now?
     answer: >-
       As of November 2026, the UK government excludes Luxor and the Valley of the
@@ -283,6 +369,24 @@ faq:
       Egyptologist at the monuments on the days that include one. The Adventure day
       is led by your concierge, a trusted driver, translator and fixer. We select,
       brief and coordinate everyone, and stay reachable all day.
+  - question: Can children come, and what if heat or walking is hard for us?
+    answer: >-
+      Yes. Children are welcome and count towards the four guests. Tell us their
+      ages, and anything that makes heat, steps or long walks hard, when you book:
+      your concierge paces the day around it, keeps the car close and plans the
+      breaks. Some tombs have steep steps and narrow passages, so he'll suggest the
+      ones that suit you.
+  - question: What should we wear and bring?
+    answer: >-
+      Comfortable shoes, light clothes (covered shoulders are respectful at the
+      sites), a hat, sunglasses and sunscreen. Bring your passport too: the road
+      from the coast has routine police checkpoints. The day runs in English; if
+      you'd like another language, ask when you book.
+  - question: What about food and dietary needs?
+    answer: >-
+      On the Signature day a full meal and local food stops are included; the
+      Adventure day includes a local food and coffee stop. Tell us about any
+      dietary needs or allergies, and your concierge will choose places that suit.
   - question: Are there any hidden costs? What do we pay on the day?
     answer: >-
       You see the price as you build, and what's left to pay depends on the day you
@@ -292,6 +396,15 @@ faq:
       Seti I and Tutankhamun) are added on request. On the Adventure day, one temple
       and a Nile sail are covered; bring local cash for any further tickets,
       experiences and tips.
+  - question: How far ahead should we book, and when is our date confirmed?
+    answer: >-
+      Right now every date is open, from tomorrow onwards. Choose your date,
+      reserve with a 50% deposit or pay in full, and we confirm your order within
+      24 hours. Booking less than two days ahead? Pay in full to confirm.
+  - question: We're more than four, or want several days. Can you do it?
+    answer: >-
+      Yes. Choose "5 or more" guests or "5+ days" in the builder, and your
+      concierge sends a private proposal shaped around your group.
   - question: What if something goes wrong on the day?
     answer: >-
       Message your concierge. A late car, a closed site or a change of heart is his
@@ -317,7 +430,7 @@ faq:
 finalEyebrow: Your date is waiting
 finalTitle: Give us one day. We'll give you the one you remember.
 finalText: >-
-  Private, effortless, and guaranteed — from €330. Pick your date before it's
+  Private, effortless, and guaranteed — from €450. Pick your date before it's
   taken.
 cards:
   signature:
@@ -368,7 +481,6 @@ cards:
       - "Your day photographed — on your phone from the first moment"
       - "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking"
       - "A signature gift, hand-picked & locally made, from your first full day"
-      - "Local business contacts & off-market opportunities — land, property, projects, local knowledge and lifelong contacts, introduced friend to friend"
       - "The first two hours, or we refund the rest"
     caveatsLabel: "As you add days"
     caveats:
@@ -425,7 +537,6 @@ cards:
       - "Entry to every temple and experience you visit, in the price — no queues, no cash, nothing to carry"
       - "Tips and the logistics handled — nothing to break the spell"
       - "Your concierge end to end — driver, planner, translator & fixer, in any order you like"
-      - "Local business contacts & off-market opportunities — land, property, projects, local knowledge and lifelong contacts, introduced friend to friend"
     caveatsLabel: "Added on request"
     caveats:
       - "The premium tombs — Nefertari, Seti I (KV17) and Tutankhamun — are special tickets, added on request"
@@ -471,7 +582,6 @@ cards:
       - "Anything that comes up, sorted on the spot — bookings, timings and the little hiccups"
       - "Someone who knows the place — and gets you in, from temple doors to the best tables"
       - "Tickets, queues and timings handled as you go"
-      - "Local business contacts & off-market opportunities — land, property, projects, local knowledge and lifelong contacts, introduced friend to friend"
       - "Still reachable after you fly home"
       - "A small gift from your concierge"
     caveatsLabel: "Paid locally, on the day"

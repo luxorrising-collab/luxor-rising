@@ -47,6 +47,67 @@
   letter-spacing: 0.006em;
 }
 
+/* the product's key facts — icon chips under the lead */
+.facts {
+  list-style: none;
+  margin: clamp(1.6rem, 3vw, 2.2rem) auto 0;
+  padding: 0;
+  max-width: 54rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem 0.6rem;
+}
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem 0.5rem 0.8rem;
+  border: 1px solid rgba(229, 212, 170, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.84rem;
+  color: #f6efe3;
+  white-space: nowrap;
+}
+.factIco {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--color-gold);
+}
+.factIco svg {
+  width: 100%;
+  height: 100%;
+}
+.cta {
+  margin-top: clamp(1.6rem, 3vw, 2.1rem);
+}
+/* phones: a compact icon list instead of a stack of pills */
+@media (max-width: 560px) {
+  .facts {
+    display: grid;
+    justify-content: start;
+    gap: 0.6rem;
+    max-width: 21rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(229, 212, 170, 0.22);
+    border-radius: 14px;
+    text-align: left;
+  }
+  .fact {
+    padding: 0;
+    border: 0;
+    background: none;
+    white-space: normal;
+    font-size: 0.86rem;
+    align-items: flex-start;
+  }
+  .factIco {
+    margin-top: 2px;
+  }
+}
+
 .stripWrap {
   position: relative;
   z-index: 1;

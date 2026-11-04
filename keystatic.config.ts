@@ -1046,6 +1046,26 @@ export default config({
           { label: "How the day is arranged", itemLabel: (p) => p.fields.time.value || "Principle" }
         ),
         dayShapeNote: fields.text({ label: "Shape-of-day closing line", multiline: true }),
+        // The journey itself, shown as a timeline under the principles.
+        dayJourneyTitle: fields.text({ label: "Journey timeline heading" }),
+        dayJourney: fields.array(
+          fields.object({
+            time: fields.text({ label: "Moment", description: 'e.g. "Pickup · flexible" or "Evening"' }),
+            subtitle: fields.text({ label: "Practical subtitle (always visible)" }),
+            label: fields.text({ label: "More detail (under Read more)", multiline: true }),
+            features: fields.array(fields.text({ label: "Feature" }), {
+              label: "Feature chips",
+              description: 'Short facts shown on the photo with an icon, e.g. "Up to 24 h before", "About 4 h drive"',
+              itemLabel: (p) => p.value || "Feature",
+            }),
+            image: fields.image({
+              label: "Photo",
+              directory: "public/images/concierge-day/journey",
+              publicPath: "/images/concierge-day/journey/",
+            }),
+          }),
+          { label: "Journey timeline", itemLabel: (p) => p.fields.time.value || "Moment" }
+        ),
 
         dreamEyebrow: fields.text({ label: "Experiences section eyebrow" }),
         dreamTitle: fields.text({ label: "Experiences section title" }),

@@ -1,0 +1,185 @@
+/* Checkout date field + month calendar. Matches the old native input (gold-soft
+   border, white, 10px radius); the green dot marks an available date. */
+.wrap {
+  --avail: #4c8a5a;
+  margin-top: 0.4rem;
+}
+
+.field {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border: 1.5px solid var(--color-gold-soft);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+.field:focus-visible,
+.field.isOpen {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 160, 99, 0.18);
+}
+.field.err {
+  border-color: #c0563f;
+  box-shadow: 0 0 0 2px rgba(192, 86, 63, 0.15);
+}
+.ph {
+  color: var(--color-muted);
+  font-weight: 500;
+}
+.val {
+  min-width: 0;
+}
+.avail {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--avail);
+}
+.avail i,
+.legend i,
+.day i {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--avail);
+}
+
+.cal {
+  margin-top: 0.5rem;
+  border: 1px solid var(--color-gold-soft);
+  border-radius: 12px;
+  background: #fff;
+  padding: 0.75rem 0.7rem 0.6rem;
+  box-shadow: 0 10px 28px rgba(42, 28, 16, 0.1);
+}
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 0.4rem;
+}
+.head button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--color-line);
+  background: transparent;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+.head button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.wd {
+  text-align: center;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 0.2rem 0 0.35rem;
+}
+.day {
+  position: relative;
+  aspect-ratio: 1;
+  max-height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+.day:hover:not(:disabled) {
+  background: var(--color-cream);
+}
+.day:disabled {
+  color: rgba(42, 28, 16, 0.25);
+  cursor: default;
+}
+.day.stay {
+  background: var(--color-cream-deep);
+  border-radius: 8px;
+}
+.day.sel {
+  background: var(--color-gold-deep);
+  color: #fff;
+}
+.day.sel i {
+  background: #fff;
+}
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.55rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.74rem;
+  color: var(--color-muted);
+}
+
+.confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.55rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(76, 138, 90, 0.08);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+.confirm b {
+  font-weight: 700;
+}
+.tick {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--avail);
+  color: #fff;
+  font-size: 0.66rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}

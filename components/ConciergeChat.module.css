@@ -1,0 +1,237 @@
+/* Floating concierge chat: an ink-and-gold launcher above the sticky booking
+   bar, opening a small card that hands off to WhatsApp. */
+.root {
+  --avail: #4c8a5a;
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px));
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.7rem;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+.root.shown {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Launcher — avatar + two-line label on wide screens, just the avatar on phones */
+.launch {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem 1.1rem 0.4rem 0.4rem;
+  border: 1px solid rgba(201, 160, 99, 0.55);
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  box-shadow: 0 12px 32px rgba(42, 28, 16, 0.32);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.launch:hover {
+  transform: translateY(-2px);
+}
+.launchAvatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #3d2a18, var(--color-ink));
+  box-shadow: inset 0 0 0 1.5px var(--color-gold);
+}
+.launchAvatar :global(img) {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+.dot {
+  position: absolute;
+  right: 1px;
+  bottom: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--avail);
+  box-shadow: 0 0 0 2px var(--color-ink);
+}
+.launchText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+.launchText b {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.launchText span {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+}
+
+/* Card */
+.card {
+  width: min(340px, calc(100vw - 32px));
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--color-paper);
+  box-shadow: 0 22px 60px rgba(42, 28, 16, 0.35);
+  border: 1px solid rgba(201, 160, 99, 0.4);
+  animation: rise 0.28s ease;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 0.9rem;
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+.avatar {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 0 1.5px var(--color-gold);
+}
+.avatar :global(img) {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.who b {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+.who span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  color: var(--color-gold-soft);
+}
+.who i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--avail);
+}
+.close {
+  align-self: flex-start;
+  border: 0;
+  background: transparent;
+  color: var(--color-cream);
+  opacity: 0.7;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+.close:hover {
+  opacity: 1;
+}
+
+.body {
+  padding: 1rem 0.9rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  background:
+    linear-gradient(rgba(253, 250, 243, 0.92), rgba(253, 250, 243, 0.92)),
+    var(--color-cream);
+}
+.bubble {
+  align-self: flex-start;
+  max-width: 92%;
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px 14px 14px 14px;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+.topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+.topic {
+  padding: 0.42rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: #fff;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.topic:hover {
+  background: var(--color-gold-deep);
+  color: #fff;
+}
+
+.foot {
+  padding: 0.8rem 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.num {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 680px) {
+  .launch {
+    padding: 0.35rem;
+  }
+  .launchText {
+    display: none;
+  }
+}

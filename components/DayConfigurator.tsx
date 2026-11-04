@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./DayConfigurator.module.css";
 import StickyBar from "./StickyBar";
+import AvailabilityDate from "./AvailabilityDate";
 import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
 import { trackBeginCheckout } from "@/lib/analytics";
@@ -415,11 +416,6 @@ const ADVENTURE_EXPS = [
   },
 ];
 
-// Shown in the "Also included" list of every bookable card — the local-access
-// layer, stated honestly (no guarantee, no commission).
-const INSIDER_CONTACTS =
-  "Local business contacts & off-market opportunities — land, property, projects, local knowledge and lifelong contacts, introduced friend to friend";
-
 // Operational inclusions for the brochure — kept separate from the experiences
 // above, so nothing is said twice.
 const SIGNATURE_HANDLED = [
@@ -434,7 +430,6 @@ const SIGNATURE_HANDLED = [
   "Your day photographed — on your phone from the first moment",
   "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking",
   "A signature gift, hand-picked & locally made, from your first full day",
-  INSIDER_CONTACTS,
   "The first two hours, or we refund the rest",
 ];
 const ORIGINAL_HANDLED = [
@@ -442,7 +437,6 @@ const ORIGINAL_HANDLED = [
   "Entry to every temple and experience you visit, in the price — no queues, no cash, nothing to carry",
   "Tips and the logistics handled — nothing to break the spell",
   "Your concierge end to end — driver, planner, translator & fixer, in any order you like",
-  INSIDER_CONTACTS,
 ];
 
 // The executive summary at the top of each brochure — a detailed read of what
@@ -471,7 +465,6 @@ const LIGHT_INCLUDED = [
   "Anything that comes up, sorted on the spot — bookings, timings and the little hiccups",
   "Someone who knows the place — and gets you in, from temple doors to the best tables",
   "Tickets, queues and timings handled as you go",
-  INSIDER_CONTACTS,
   "Still reachable after you fly home",
   "A small gift from your concierge",
 ];
@@ -1092,7 +1085,7 @@ export default function DayConfigurator({
   const [error, setError] = useState("");
   const [agreed, setAgreed] = useState(false);
   const dateFieldRef = useRef<HTMLDivElement>(null);
-  const dateInputRef = useRef<HTMLInputElement>(null);
+  const dateInputRef = useRef<HTMLButtonElement>(null);
 
   // Mobile-phone photography is always included and free; the paid finishing
   // touch is a professional photographer/videographer (PHOTO_PRO — a flat
@@ -1296,6 +1289,15 @@ export default function DayConfigurator({
   const showSavings = !conc && sepTotal > total;
 
   const glabel = group + (group > 1 ? " guests" : " guest");
+
+  // The booked stay in short form: one day, or "Sat 14 – Mon 16 Nov · 3 days".
+  const stayText = (() => {
+    if (!tripDate) return "";
+    if (days < 2) return fmtDate(tripDate);
+    const end = new Date(tripDate + "T12:00:00");
+    end.setDate(end.getDate() + days - 1);
+    return `${fmtDate(tripDate)} – ${fmtDate(end.toISOString().slice(0, 10))} · ${days} days`;
+  })();
 
   const cancelText = tripDate
     ? (() => {
@@ -2514,18 +2516,16 @@ export default function DayConfigurator({
             {/* date — moved into the card so checkout is self-contained */}
             <div className={styles.sumSubRow}>
               <span className={styles.sumSub}>Your date</span>
-              <span className={styles.sumScar}>Only one group a day</span>
+              <span className={styles.sumScar}>All dates available now</span>
             </div>
-            <div ref={dateFieldRef} className={`${styles.sumDate} ${dateError ? styles.err : ""}`}>
-              <input
-                ref={(el) => {
-                  dateInputRef.current = el;
-                  setMinDate(el);
-                }}
-                type="date"
+            <div ref={dateFieldRef}>
+              <AvailabilityDate
+                ref={dateInputRef}
                 value={tripDate}
-                onChange={(e) => {
-                  setTripDate(e.target.value);
+                days={days}
+                error={dateError}
+                onChange={(d) => {
+                  setTripDate(d);
                   setDateError(false);
                   if (error) setError("");
                 }}
@@ -2534,7 +2534,7 @@ export default function DayConfigurator({
 
             {/* pay + CTA — kept tight and high so the button never drops below the fold */}
             <div className={styles.sumSub}>How you&apos;d like to pay</div>
-            <div className={styles.payOpts}>
+            <div className={styles.payOpts} data-hide-chat>
               {depositAllowed && (
                 <div
                   className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
@@ -2558,7 +2558,7 @@ export default function DayConfigurator({
                 A deposit isn&apos;t available this close to your date — pay in full to confirm.
               </div>
             )}
-            <label className={styles.sumConsent}>
+            <label className={styles.sumConsent} data-hide-chat>
               <input
                 type="checkbox"
                 checked={agreed}
@@ -2634,7 +2634,7 @@ export default function DayConfigurator({
         meta={
           proposal
             ? "private proposal · reply in 24h"
-            : `your ${isLight ? "day" : "journey"}: ${euro(total)}${tripDate ? " · " + fmtDate(tripDate) : ""} · 7-day free cancellation`
+            : `your ${isLight ? "day" : "journey"}: ${euro(total)}${tripDate ? " · " + stayText : ""} · 7-day free cancellation`
         }
         ctaHref="#book"
         ctaLabel={proposal ? "Request your proposal →" : "See your day & price →"}

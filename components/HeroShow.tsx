@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./HeroShow.module.css";
 
@@ -25,16 +25,36 @@ export type HeroShowItem = {
  * Perf & accessibility, mirroring BackgroundVideo:
  *  - prefers-reduced-motion → the first item only, no cycling.
  *  - Data-Saver → it still crossfades, but video items show their poster image
- *    instead of downloading the clip. (Mobile plays the clips, cropped to fill.)
+ *    instead of downloading the clip.
+ *  - imagesOnlyOnMobile → phones drop the clips entirely and run a still-image
+ *    slideshow, so the first screen never waits on video.
+ *  - Only the slide on screen, the one leaving and the next one are mounted;
+ *    a slide stays mounted once shown, so nothing downloads twice and the rest
+ *    of the clips never load up front.
  */
-export default function HeroShow({ items }: { items: HeroShowItem[] }) {
+export default function HeroShow({
+  items: allItems,
+  imagesOnlyOnMobile = false,
+}: {
+  items: HeroShowItem[];
+  imagesOnlyOnMobile?: boolean;
+}) {
   // [active, previous] — the leaving slide is held fully opaque beneath the
   // incoming one (z-stacked) so the crossfade never opens a gap that would let
   // the tint flicker or lighten mid-fade.
   const [[active, prev], setAV] = useState<[number, number]>([0, 0]);
   const [cycle, setCycle] = useState(false);
   const [enableVideo, setEnableVideo] = useState(false);
+  const [stillsOnly, setStillsOnly] = useState(false);
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+  const items = useMemo(
+    () => (stillsOnly ? allItems.filter((it) => it.type === "image") : allItems),
+    [stillsOnly, allItems],
+  );
+  // Slides play in order, so everything up to the next one has been (or is
+  // about to be) shown; after the first loop, all of them have.
+  const [looped, setLooped] = useState(false);
+  const isMounted = (i: number) => looped || i <= active + 1;
 
   // Decide capabilities after mount so SSR and the first client render agree.
   useEffect(() => {
@@ -43,15 +63,21 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
       ?.saveData;
     if (mq("(prefers-reduced-motion: reduce)")) return; // stay on the first item
     setCycle(true);
-    // Play the clips on mobile too (cropped to fill); only Data-Saver falls
-    // back to posters.
+    if (imagesOnlyOnMobile && mq("(max-width: 760px)")) {
+      setStillsOnly(true);
+      return;
+    }
+    // Data-Saver falls back to posters.
     setEnableVideo(!saveData);
-  }, []);
+  }, [imagesOnlyOnMobile]);
 
   const FADE = 0.7;
   useEffect(() => {
     if (!cycle || items.length < 2) return;
-    const advance = () => setAV(([a]) => [(a + 1) % items.length, a]);
+    const advance = () => {
+      if (active + 1 >= items.length) setLooped(true);
+      setAV(([a]) => [(a + 1) % items.length, a]);
+    };
     const isVideo = items[active].type === "video" && enableVideo;
     const el = isVideo ? videoRefs.current[active] : null;
 
@@ -110,6 +136,7 @@ export default function HeroShow({ items }: { items: HeroShowItem[] }) {
     <div className={styles.show} aria-hidden="true">
       {items.map((it, i) => {
         const asVideo = it.type === "video" && enableVideo;
+        if (!isMounted(i)) return <div key={i} className={styles.layer} style={{ opacity: 0 }} />;
         return (
           <div
             key={i}

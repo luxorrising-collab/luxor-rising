@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./HeroShow.module.css";
 
@@ -10,6 +10,9 @@ export type HeroShowItem = {
   /** First-frame image for a video — also used in place of the video on
       mobile / data-saver, so the slideshow still runs without the download. */
   poster?: string;
+  /** A video cropped to the tall phone frame (same footage, ~⅓ of the bytes),
+      played on portrait phones in place of `src`. */
+  mobileSrc?: string;
   alt?: string;
   /** object-position for the cover crop, e.g. "38% 50%" — point the crop at the
       subject so a tall mobile frame keeps the face/hero in view. */
@@ -24,56 +27,92 @@ export type HeroShowItem = {
  *
  * Perf & accessibility, mirroring BackgroundVideo:
  *  - prefers-reduced-motion → the first item only, no cycling.
- *  - Data-Saver → it still crossfades, but video items show their poster image
- *    instead of downloading the clip.
- *  - imagesOnlyOnMobile → phones drop the clips entirely and run a still-image
- *    slideshow, so the first screen never waits on video.
+ *  - The first photo paints on its own: cycling (and so any clip download)
+ *    starts only after the page has loaded and the browser is idle, so video
+ *    never competes with the first screen or the page's scripts.
+ *  - Portrait phones play `mobileSrc` — the clip pre-cropped to the tall frame,
+ *    the same pixels they'd see anyway at about a third of the bytes.
+ *  - Data-Saver or a 2G connection → it still crossfades, but video items show
+ *    their poster image instead of downloading the clip.
  *  - Only the slide on screen, the one leaving and the next one are mounted;
  *    a slide stays mounted once shown, so nothing downloads twice and the rest
  *    of the clips never load up front.
+ *  - Scrolled out of view (or a hidden tab) → it pauses: no clip plays, decodes
+ *    or downloads while the visitor reads the rest of the page.
  */
-export default function HeroShow({
-  items: allItems,
-  imagesOnlyOnMobile = false,
-}: {
-  items: HeroShowItem[];
-  imagesOnlyOnMobile?: boolean;
-}) {
+export default function HeroShow({ items }: { items: HeroShowItem[] }) {
   // [active, previous] — the leaving slide is held fully opaque beneath the
   // incoming one (z-stacked) so the crossfade never opens a gap that would let
   // the tint flicker or lighten mid-fade.
   const [[active, prev], setAV] = useState<[number, number]>([0, 0]);
   const [cycle, setCycle] = useState(false);
   const [enableVideo, setEnableVideo] = useState(false);
-  const [stillsOnly, setStillsOnly] = useState(false);
+  const [phoneCut, setPhoneCut] = useState(false);
+  const [onScreen, setOnScreen] = useState(true);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
-  const items = useMemo(
-    () => (stillsOnly ? allItems.filter((it) => it.type === "image") : allItems),
-    [stillsOnly, allItems],
-  );
   // Slides play in order, so everything up to the next one has been (or is
   // about to be) shown; after the first loop, all of them have.
   const [looped, setLooped] = useState(false);
   const isMounted = (i: number) => looped || i <= active + 1;
 
-  // Decide capabilities after mount so SSR and the first client render agree.
+  // Decide capabilities after mount so SSR and the first client render agree,
+  // and only once the page has loaded and gone idle.
   useEffect(() => {
     const mq = (q: string) => window.matchMedia?.(q).matches ?? false;
-    const saveData = (navigator as unknown as { connection?: { saveData?: boolean } }).connection
-      ?.saveData;
     if (mq("(prefers-reduced-motion: reduce)")) return; // stay on the first item
-    setCycle(true);
-    if (imagesOnlyOnMobile && mq("(max-width: 760px)")) {
-      setStillsOnly(true);
-      return;
-    }
-    // Data-Saver falls back to posters.
-    setEnableVideo(!saveData);
-  }, [imagesOnlyOnMobile]);
+    const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } })
+      .connection;
+    const lean = !!conn?.saveData || /(^|-)2g$/.test(conn?.effectiveType ?? "");
+    let idle = 0;
+    let cancelled = false;
+    const start = () => {
+      if (cancelled) return;
+      // tall screens (phones) get the clip pre-cropped to their frame
+      setPhoneCut(mq("(max-aspect-ratio: 3/5)"));
+      setEnableVideo(!lean);
+      setCycle(true);
+    };
+    const whenIdle = () => {
+      const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number })
+        .requestIdleCallback;
+      if (ric) idle = ric(start, { timeout: 1500 });
+      else idle = window.setTimeout(start, 300);
+    };
+    if (document.readyState === "complete") whenIdle();
+    else window.addEventListener("load", whenIdle, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", whenIdle);
+      window.clearTimeout(idle);
+    };
+  }, []);
+
+  // Pause while the hero is off screen or the tab is hidden.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    let inView = true;
+    const sync = () => setOnScreen(inView && document.visibilityState === "visible");
+    const io = new IntersectionObserver(([e]) => {
+      inView = e.isIntersecting;
+      sync();
+    });
+    io.observe(el);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
 
   const FADE = 0.7;
   useEffect(() => {
     if (!cycle || items.length < 2) return;
+    if (!onScreen) {
+      videoRefs.current[active]?.pause();
+      return;
+    }
     const advance = () => {
       if (active + 1 >= items.length) setLooped(true);
       setAV(([a]) => [(a + 1) % items.length, a]);
@@ -126,14 +165,14 @@ export default function HeroShow({
       el.removeEventListener("ended", go);
       window.clearTimeout(safety);
     };
-  }, [active, cycle, enableVideo, items]);
+  }, [active, cycle, enableVideo, items, onScreen]);
 
   // A leaving clip keeps playing through its fade-out, then stops once it ends;
   // it's reset to the first frame whenever it becomes active again. Since clips
   // alternate with photos, only one is ever on screen at a time.
 
   return (
-    <div className={styles.show} aria-hidden="true">
+    <div className={styles.show} aria-hidden="true" ref={rootRef}>
       {items.map((it, i) => {
         const asVideo = it.type === "video" && enableVideo;
         if (!isMounted(i)) return <div key={i} className={styles.layer} style={{ opacity: 0 }} />;
@@ -158,7 +197,7 @@ export default function HeroShow({
                 preload="auto"
                 style={it.position ? { objectPosition: it.position } : undefined}
               >
-                <source src={it.src} type="video/mp4" />
+                <source src={phoneCut && it.mobileSrc ? it.mobileSrc : it.src} type="video/mp4" />
               </video>
             ) : (
               <Image

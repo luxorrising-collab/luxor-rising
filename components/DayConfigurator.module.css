@@ -3159,6 +3159,89 @@
   line-height: 1.45;
   color: rgba(243, 231, 207, 0.82);
 }
+/* the real site name under an expressive one, and the row's "Included" chip */
+.expExpTxt .expExpMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  margin-top: 0.1rem;
+}
+.expExpTxt .expExpPlace {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+}
+.expExpTxt .expExpTag {
+  padding: 0.08rem 0.5rem 0.1rem;
+  border: 1px solid rgba(201, 160, 99, 0.45);
+  border-radius: 999px;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: #f3e7cf;
+}
+/* "Your day, start to finish" — the day as numbered steps */
+.flowList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.8rem;
+}
+@media (max-width: 560px) {
+  .flowList {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+}
+.flowList li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.flowNum {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  color: var(--color-gold-soft);
+  min-width: 1.6em;
+}
+.flowTxt {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.flowTxt b {
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: #fff;
+}
+.flowTxt span {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(243, 231, 207, 0.72);
+}
+.flowTxt .flowSub {
+  color: rgba(243, 231, 207, 0.95);
+}
+.flowNotes {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px solid rgba(201, 160, 99, 0.22);
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(243, 231, 207, 0.85);
+}
+.flowNotes b {
+  color: #fff;
+  font-weight: 600;
+}
 /* Also-included / caveats — icon + line, one per row */
 .expInc {
   list-style: none;

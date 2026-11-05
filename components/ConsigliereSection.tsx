@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import styles from "./ConsigliereSection.module.css";
 
@@ -16,6 +16,10 @@ type ConsigliereSectionProps = {
   title: string;
   lead?: string;
   image?: string;
+  /** A tall crop of the same photo for phones, framed on the person — the
+   *  section is far taller than wide there, so the wide photo would be
+   *  stretched soft and the person cropped off. */
+  mobileImage?: string;
   /** Optional split background — one slice per person. */
   images?: ConsigliereSlice[];
   /** Accepted for compatibility; not rendered (the how-it-works flow lives on
@@ -38,6 +42,7 @@ export default function ConsigliereSection({
   title,
   lead,
   image,
+  mobileImage,
   images,
   points = [],
   moreHref = "/private-guide",
@@ -65,7 +70,11 @@ export default function ConsigliereSection({
         </div>
       ) : image ? (
         <div className={styles.consCoverBg}>
-          <Image src={image} alt={eyebrow || ""} fill sizes="100vw" priority={false} />
+          {mobileImage ? (
+            <CoverPicture image={image} mobileImage={mobileImage} alt={eyebrow || ""} />
+          ) : (
+            <Image src={image} alt={eyebrow || ""} fill sizes="(max-width: 860px) 160vw, 100vw" />
+          )}
         </div>
       ) : null}
       <div className={slices ? styles.consSlicesScrim : styles.consCoverScrim} />
@@ -98,5 +107,22 @@ export default function ConsigliereSection({
         </Link>
       </div>
     </section>
+  );
+}
+
+// Phones get the tall crop (drawn ~1.5× the screen width, since the band is
+// much taller than wide); wider screens the full landscape photo.
+function CoverPicture({ image, mobileImage, alt }: { image: string; mobileImage: string; alt: string }) {
+  const phoneSizes = "150vw";
+  const {
+    props: { srcSet: phoneSet },
+  } = getImageProps({ src: mobileImage, alt, fill: true, sizes: phoneSizes });
+  const { props } = getImageProps({ src: image, alt, fill: true, sizes: "(max-width: 860px) 160vw, 100vw" });
+  return (
+    <picture>
+      <source media="(max-width: 560px)" srcSet={phoneSet} sizes={phoneSizes} />
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- alt is in props */}
+      <img {...props} />
+    </picture>
   );
 }

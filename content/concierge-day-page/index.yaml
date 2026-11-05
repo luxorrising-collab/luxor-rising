@@ -29,6 +29,8 @@ sections:
     visible: false
   - section: experiences
     visible: true
+  - section: consigliere
+    visible: true
   - section: howItWorks
     visible: false
   - section: builder
@@ -36,8 +38,6 @@ sections:
   - section: gifts
     visible: true
   - section: scarcity
-    visible: true
-  - section: consigliere
     visible: true
   - section: valueStack
     visible: false
@@ -128,7 +128,15 @@ dayShapeSteps:
       Entries, timing, the private car, the guards, the Egyptologist, all held
       in the background by one person. You experience the day; your concierge
       carries everything underneath it.
+dayJourneyShow: false
 dayJourneyTitle: How your day flows
+dayFlowNotes:
+  - h: Anywhere around Luxor, off the beaten track.
+    p: >-
+      Hidden temples, quiet villages, Nile islands and the open desert. Wherever
+      calls to you, your concierge knows the way.
+  - h: Coming from Cairo?
+    p: We can help you arrange the train or a bus to Luxor.
 dayJourney:
   - time: From the day you book
     subtitle: Your concierge on WhatsApp, planning it with you.
@@ -446,29 +454,75 @@ cards:
     meta: "Door-to-door from the coast · the best of Luxor, your choice · insider access · a signature gift"
     priceNote: "transfer from the coast included"
     lead: "The full Luxor Rising day, arranged end to end for a trip that's meant to matter — an anniversary, a honeymoon, a milestone. A private Egyptologist and real insider access, every temple and tomb at its quietest, plus ventures beyond them: hidden desert spots, and a staged moment if you want one — a proposal timed to the light. Tips and logistics are carried underneath, so you just arrive. And quiet local introductions are there too, whenever you want them."
-    expLede: "The best of what Luxor has to offer — you choose which to do each day, and add days to fit in more. One day covers the highlights; the full set unlocks across three to four."
+    expLede: "Every experience here is included, and every one can be swapped: choose what you want each day, change your mind as you go, and your concierge fits each one to its quietest hour. One day covers the highlights; add days to fit in more."
     experiences:
       - icon: "temple"
-        name: "Karnak & the great temples"
-        desc: "The greatest temple ever built, at the quiet hour — read for you by your Egyptologist."
+        name: "Stand in the largest temple ever built, before anyone else arrives."
+        place: "Karnak Temple, at dawn"
+        desc: ""
+      - icon: "temple"
+        name: "The temple in the middle of the living city."
+        place: "Luxor Temple, at dusk"
+        desc: ""
       - icon: "ticket"
-        name: "The Valley of the Kings"
-        desc: "Three royal tombs, chosen and read for you where the valley is still empty."
+        name: "Walk into the tombs that were built to be hidden forever."
+        place: "Valley of the Kings · three royal tombs"
+        desc: ""
       - icon: "temple"
-        name: "Medinet Habu & Hatshepsut"
-        desc: "Our signature temple with colour still on the walls, and the terraces of the queen who ruled as king."
+        name: "Begin where the world began."
+        place: "Medinet Habu"
+        desc: ""
+        tag: "insider access"
+      - icon: "temple"
+        name: "Meet the woman who called herself king."
+        place: "Temple of Hatshepsut"
+        desc: ""
+      - icon: "ticket"
+        name: "The fallen giant, and some of the most beautiful tombs in Egypt."
+        place: "Ramesseum & Valley of the Queens"
+        desc: ""
+      - icon: "ticket"
+        name: "The village of the men who built the royal tombs."
+        place: "Deir el-Medina"
+        desc: ""
+      - icon: "temple"
+        name: "The two giants that once sang at dawn."
+        place: "Colossi of Memnon"
+        desc: ""
+      - icon: "key"
+        name: "The hidden temple almost no visitor ever finds."
+        place: "Deir el-Shelwit · temple of Isis"
+        desc: ""
+        tag: "insider access · from day 3"
       - icon: "sail"
-        name: "A private felucca — or the desert"
-        desc: "Golden hour on the Nile, or a sunset picnic in the dunes. Your choice."
+        name: "Let the Nile carry you into the gold."
+        place: "Private felucca sail at sunset"
+        desc: ""
+      - icon: "sail"
+        name: "Take the tiller. Sail the Nile yourself."
+        place: "Sailing lesson on the Nile"
+        desc: ""
+        tag: "insider access · from day 4"
+      - icon: "desert"
+        name: "A fire, a feast, and more stars than you've ever seen."
+        place: "Private desert safari & stars"
+        desc: ""
+        tag: "insider access"
       - icon: "balloon"
-        name: "A hot-air balloon at dawn"
-        desc: "Float over the valley and the temples in the first light. Best on day two."
-      - icon: "sail"
-        name: "Aswan, Philae & the islands"
-        desc: "A venture further south — the island temple of Isis and the Nile at its gentlest."
+        name: "Rise over the Valley of the Kings at dawn."
+        place: "Hot-air balloon over Luxor"
+        desc: ""
+        tag: "best on day 2"
       - icon: "temple"
-        name: "Dendera & Abydos"
-        desc: "The best-preserved temple ceiling in Egypt, and the temple of Osiris beyond Luxor."
+        name: "The drive north almost nobody makes, and everybody should."
+        place: "Dendera & Abydos"
+        desc: ""
+        tag: "a day beyond Luxor"
+      - icon: "sail"
+        name: "Venture south to the island temple of Isis."
+        place: "Aswan, Philae & the islands"
+        desc: ""
+        tag: "a day beyond Luxor"
     included:
       - "Door-to-door transfer from Hurghada, Marsa Alam or the coast — the car stays with you"
       - "Your own licensed Egyptologist, at the monuments — every day"

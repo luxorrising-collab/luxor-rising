@@ -709,7 +709,17 @@ function itemClasses(it: PlanItem) {
 // Every word of the three product cards can be overridden from the CMS; where a
 // field is left empty, the built-in default below is used, so nothing ever
 // renders blank. Experience icons are chosen from the IC set by key.
-export type CardExperienceContent = { icon?: string | null; name?: string | null; desc?: string | null };
+export type CardExperienceContent = {
+  icon?: string | null;
+  name?: string | null;
+  /** The real name of the site or experience, under the expressive name. */
+  place?: string | null;
+  desc?: string | null;
+  /** Shown after "Included ·" on the row's chip, e.g. "from day 3". */
+  tag?: string | null;
+};
+/** One step of the day, shown in every card's "Your day, start to finish". */
+export type DayFlowStep = { h: string; sub?: string; p?: string };
 export type CardSummaryContent = { title?: string | null; desc?: string | null };
 export type CardContent = {
   summary?: readonly CardSummaryContent[] | null;
@@ -846,7 +856,7 @@ const DEFAULT_CARDS = {
   },
 };
 
-type ResolvedExp = { icon: ReactNode; name: string; desc: string };
+type ResolvedExp = { icon: ReactNode; name: string; desc: string; place?: string; tag?: string };
 type ResolvedSummary = { title: string; desc: string };
 type ResolvedCard = {
   summary: ResolvedSummary[];
@@ -881,6 +891,8 @@ const resolveExps = (
     icon: (e.icon && IC[e.icon as keyof typeof IC]) || IC.check,
     name: (e.name ?? "").trim(),
     desc: (e.desc ?? "").trim(),
+    place: (e.place ?? "").trim() || undefined,
+    tag: (e.tag ?? "").trim() || undefined,
   }));
 };
 const resolveSummary = (
@@ -948,6 +960,10 @@ type DayConfiguratorProps = {
   whatsappNumber?: string;
   /** Editable card copy from Keystatic — any field left empty uses the default. */
   cards?: CardsContent;
+  /** The day, step by step (the page's journey steps), shown inside every card. */
+  dayFlow?: DayFlowStep[];
+  /** Closing lines under the steps (e.g. off the beaten track, coming from Cairo). */
+  dayFlowNotes?: { h: string; p: string }[];
 };
 
 export default function DayConfigurator({
@@ -971,6 +987,8 @@ export default function DayConfigurator({
   socialProof = "4.9 · 28+ private days arranged",
   whatsappNumber = "",
   cards,
+  dayFlow = [],
+  dayFlowNotes = [],
 }: DayConfiguratorProps) {
   // Resolve each card's copy: CMS value where set, built-in default otherwise.
   const SIG = resolveCard(cards?.signature, DEFAULT_CARDS.signature);
@@ -1482,7 +1500,7 @@ export default function DayConfigurator({
   // included, everything handled, and any honest caveats — each with a symbol.
   const renderBrochure = (opts: {
     lead: string;
-    experiences?: { icon: ReactNode; name: string; desc: string }[];
+    experiences?: ResolvedExp[];
     expLede?: string;
     included: string[];
     caveats?: { label: string; items: string[] };
@@ -1501,11 +1519,47 @@ export default function DayConfigurator({
                   <span className={styles.expExpIco}>{e.icon}</span>
                   <span className={styles.expExpTxt}>
                     <b>{e.name}</b>
-                    <span>{e.desc}</span>
+                    {e.place && (
+                      <span className={styles.expExpMeta}>
+                        <span className={styles.expExpPlace}>{e.place}</span>
+                        <span className={styles.expExpTag}>
+                          <span aria-hidden>✓</span> Included{e.tag ? ` · ${e.tag}` : ""}
+                        </span>
+                      </span>
+                    )}
+                    {e.desc && <span>{e.desc}</span>}
                   </span>
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+        {dayFlow.length > 0 && (
+          <div className={styles.expBlock}>
+            <span className={styles.expEyebrow}>Your day, start to finish</span>
+            <ol className={styles.flowList}>
+              {dayFlow.map((f, i) => (
+                <li key={f.h}>
+                  <span className={styles.flowNum} aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className={styles.flowTxt}>
+                    <b>{f.h}</b>
+                    {f.sub && <span className={styles.flowSub}>{f.sub}</span>}
+                    {f.p && <span>{f.p}</span>}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            {dayFlowNotes.length > 0 && (
+              <ul className={styles.flowNotes}>
+                {dayFlowNotes.map((n) => (
+                  <li key={n.h}>
+                    <b>{n.h}</b> <span>{n.p}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
         <div className={styles.expBlock}>

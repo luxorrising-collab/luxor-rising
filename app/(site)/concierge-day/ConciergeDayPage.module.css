@@ -1769,68 +1769,20 @@
     grid-template-columns: 1fr 1fr;
   }
 }
-/* the collapsed grid's extra cards — shown only in the phone carousel */
-@media (min-width: 561px) {
-  .expBeyond {
-    display: none;
-  }
-}
-.expSwipe {
+/* the collapsed grid's extra cards — shown once "Show all" opens the grid */
+.expBeyond {
   display: none;
 }
-/* Phones: the experiences become one swipe carousel — native scroll-snap, no
-   script, photos lazy-loaded as they come into view, the hover clips never
-   load. One card at a time, the next one peeking in. */
+/* Phones: the long, single-column scroll of full-width cards. Photos load lazily
+   as they near the screen, the hover clips never load, and cards off screen
+   skip layout & paint (content-visibility) so the long scroll stays smooth. */
 @media (max-width: 560px) {
   .expGrid {
-    display: flex;
-    gap: 0.75rem;
-    margin: 2rem calc(-1 * clamp(1.4rem, 5vw, 3.5rem)) 0;
-    padding: 0.2rem 6vw 0.6rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 6vw;
-    scrollbar-width: none;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .expGrid::-webkit-scrollbar {
-    display: none;
+    grid-template-columns: 1fr;
   }
   .expGrid > * {
-    flex: 0 0 88vw;
-    height: min(76svh, 680px);
-    aspect-ratio: auto;
-    scroll-snap-align: center;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 18px 40px -24px rgba(42, 28, 16, 0.55);
-  }
-  /* the corner labels sit side by side on the narrower carousel card */
-  .expGrid .expTag {
-    top: 0.8rem;
-    left: 0.8rem;
-    padding: 0.26rem 0.55rem 0.28rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.08em;
-  }
-  .expGrid .expTagRight {
-    left: auto;
-    right: 0.8rem;
-  }
-  .expMoreWrap {
-    display: none;
-  }
-  .expSwipe {
-    display: block;
-    margin: 0.9rem 0 0;
-    text-align: center;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-gold-deep);
+    content-visibility: auto;
+    contain-intrinsic-size: auto 100vw auto 125vw;
   }
   .exp,
   .expAll {

@@ -68,8 +68,16 @@ const cardFields = (label: string) =>
       experiences: fields.array(
         fields.object({
           icon: fields.select({ label: "Icon", options: CARD_ICON_OPTIONS, defaultValue: "check" }),
-          name: fields.text({ label: "Name" }),
+          name: fields.text({
+            label: "Name",
+            description: 'Our expressive name, e.g. "Take the tiller. Sail the Nile yourself."',
+          }),
+          place: fields.text({
+            label: "Real name (optional)",
+            description: 'The site or experience, e.g. "Sailing lesson on the Nile". When set, the row also shows an "Included" chip.',
+          }),
           desc: fields.text({ label: "Description", multiline: true }),
+          tag: fields.text({ label: "Chip note (optional)", description: 'Added after "Included ·", e.g. "from day 3"' }),
         }),
         { label: "Experiences included", itemLabel: (p) => p.fields.name.value || "Experience" }
       ),
@@ -856,6 +864,12 @@ export default config({
           directory: "public/images/hosts",
           publicPath: "/images/hosts/",
         }),
+        consigliereImageMobile: fields.image({
+          label: "Consigliere portrait — phones",
+          description: "A tall crop of the same photo, framed on the person, used on phones (the band is much taller than wide there).",
+          directory: "public/images/hosts",
+          publicPath: "/images/hosts/",
+        }),
         consiglierePoints: fields.array(
           fields.object({
             title: fields.text({ label: "Title" }),
@@ -1047,7 +1061,22 @@ export default config({
         ),
         dayShapeNote: fields.text({ label: "Shape-of-day closing line", multiline: true }),
         // The journey itself, shown as a timeline under the principles.
+        dayJourneyShow: fields.checkbox({
+          label: "Show the journey slideshow",
+          description: "Off: the slideshow is hidden, but its steps still appear inside each booking card.",
+          defaultValue: false,
+        }),
         dayJourneyTitle: fields.text({ label: "Journey timeline heading" }),
+        dayFlowNotes: fields.array(
+          fields.object({
+            h: fields.text({ label: "Lead-in (bold)" }),
+            p: fields.text({ label: "Text", multiline: true }),
+          }),
+          {
+            label: 'Booking cards: lines under "Your day, start to finish"',
+            itemLabel: (p) => p.fields.h.value || "Line",
+          }
+        ),
         dayJourney: fields.array(
           fields.object({
             time: fields.text({ label: "Moment", description: 'e.g. "Pickup · flexible" or "Evening"' }),

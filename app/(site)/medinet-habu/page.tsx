@@ -249,6 +249,7 @@ export default async function MedinetHabuPage() {
         consigliereTitle={globals?.consigliereTitle}
         consigliereLead={globals?.consigliereLead}
         consigliereImage={globals?.consigliereImage || undefined}
+        consigliereImageMobile={globals?.consigliereImageMobile || undefined}
         consiglierePoints={(globals?.consiglierePoints ?? []).map((p) => ({ title: p.title, description: p.description }))}
         guaranteeEyebrow={globals?.guaranteeEyebrow ?? "Our promise"}
         guaranteeTitle={globals?.guaranteeTitle ?? "Reserved with confidence — or we make it right."}

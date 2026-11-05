@@ -136,6 +136,7 @@ export type ExperienceTemplateProps = {
   consigliereTitle?: string;
   consigliereLead?: string;
   consigliereImage?: string;
+  consigliereImageMobile?: string;
   consiglierePoints?: ConsigliereePoint[];
   guaranteeEyebrow: string;
   guaranteeTitle: string;
@@ -201,6 +202,7 @@ export default function ExperienceTemplate({
   consigliereTitle,
   consigliereLead,
   consigliereImage,
+  consigliereImageMobile,
   consiglierePoints = [],
   guaranteeEyebrow,
   guaranteeTitle,
@@ -368,6 +370,7 @@ export default function ExperienceTemplate({
           title={consigliereTitle}
           lead={consigliereLead}
           image={consigliereImage}
+          mobileImage={consigliereImageMobile}
           points={consiglierePoints}
         />
       )}

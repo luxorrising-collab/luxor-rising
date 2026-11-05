@@ -28,6 +28,7 @@ consigliereLead: >-
   the car, the tickets, the right hour, the doors — so all you have to do is be
   present. You manage nothing. You just flow.
 consigliereImage: /images/hosts/consigliereImage.jpg
+consigliereImageMobile: /images/hosts/consigliereImage-mobile.jpg
 consiglierePoints:
   - title: A guide who understands your journey
     description: >-

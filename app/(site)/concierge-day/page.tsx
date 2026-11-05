@@ -267,8 +267,11 @@ export default async function ConciergeDayPage() {
   // Real footage from the day (graded, stabilised, cropped 16:9, gently slowed)
   // crossfading between the static hero images — same HeroShow tint and timing.
   void dayClips;
-  const realClip = (name: string, position = "50% 50%") =>
-    dayClip(`/videos/real/${name}.mp4`, `/videos/real/${name}-poster.jpg`, position);
+  // Each also has a copy pre-cropped to the tall phone frame (/videos/real/m/).
+  const realClip = (name: string, position = "50% 50%") => ({
+    ...dayClip(`/videos/real/${name}.mp4`, `/videos/real/${name}-poster.jpg`, position),
+    mobileSrc: `/videos/real/m/${name}.mp4`,
+  });
   const daySeq = [
     realClip("stargazing"),
     realClip("felucca"),
@@ -290,7 +293,9 @@ export default async function ConciergeDayPage() {
   // The canonical Design-Your-Day gallery cards — shared with the experience
   // pages' slideshows so the two always look identical. Mirrors the CMS
   // experiences when set, else the curated fallback.
-  const journeyCards = withAspect(buildJourneyCards(page?.dayJourney ?? []));
+  // The "How your day flows" slideshow is switchable in the CMS; its steps also
+  // feed the "Your day, start to finish" list inside each booking card.
+  const journeyCards = page?.dayJourneyShow ? withAspect(buildJourneyCards(page?.dayJourney ?? [])) : [];
   const expCards = withAspect(buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences }));
   const baseGallery =
     (page?.gallery ?? []).length > 0
@@ -472,6 +477,7 @@ export default async function ConciergeDayPage() {
         title={product?.consigliereTitle ?? ""}
         lead={product?.consigliereLead}
         image={product?.consigliereImage || "/images/hosts/ahmed-nile-sunset.jpg"}
+        mobileImage={product?.consigliereImageMobile || undefined}
         points={(product?.consiglierePoints ?? []).map((p) => ({
           title: p.title,
           description: p.description,
@@ -615,6 +621,12 @@ export default async function ConciergeDayPage() {
             socialProof={socialProof}
             whatsappNumber={settings?.whatsappNumber || ""}
             cards={page?.cards}
+            dayFlow={(page?.dayJourney ?? [])
+              .filter((d) => d.time)
+              .map((d) => ({ h: d.time, sub: d.subtitle || undefined, p: d.label || undefined }))}
+            dayFlowNotes={(page?.dayFlowNotes ?? [])
+              .filter((n) => n.h)
+              .map((n) => ({ h: n.h, p: n.p }))}
           />
         </div>
       </section>
@@ -810,7 +822,7 @@ export default async function ConciergeDayPage() {
       {/* HERO */}
       <section className={styles.phero}>
         <div className={styles.pheroBgs}>
-          <HeroShow items={heroMedia} imagesOnlyOnMobile />
+          <HeroShow items={heroMedia} />
         </div>
         {/* HeroShow carries its own tint; this adds a light extra scrim on top
             for a middle darkness — darker than the tint alone, lighter than the

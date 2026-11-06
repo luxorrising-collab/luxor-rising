@@ -778,7 +778,29 @@
   object-fit: cover;
   object-position: center;
   z-index: 0;
-  transition: transform 1.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+  transition:
+    transform 1.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+    opacity 0.9s ease;
+}
+/* a soft, blurred preview at once; the photo fades in over it when it arrives */
+.expBlur {
+  position: absolute;
+  inset: -12px;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(14px);
+  transform: scale(1.05);
+  transition: opacity 1.2s ease 0.3s;
+}
+.expBlurOff {
+  opacity: 0;
+}
+.exp :global(img).expImgWait {
+  opacity: 0;
+}
+.exp :global(img).expImgOn {
+  opacity: 1;
 }
 /* The product's hero image at rest, its film on hover — a slow, cinematic push-in. */
 .expVid {
@@ -794,7 +816,8 @@
   transition: opacity 0.7s ease, transform 7s ease;
   pointer-events: none;
 }
-.exp:hover .expVid {
+.exp:hover .expVid,
+.exp.expOpen .expVid {
   opacity: 1;
   transform: scale(1.07);
 }
@@ -1779,6 +1802,18 @@
 @media (max-width: 560px) {
   .expGrid {
     grid-template-columns: 1fr;
+    gap: 1.1rem;
+    overflow: visible;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .expGrid > * {
+    aspect-ratio: 3 / 4;
+    border-radius: 14px;
+    box-shadow: 0 22px 44px -26px rgba(42, 28, 16, 0.6);
+  }
+  .expGrid .expTx {
+    padding: 1.5rem 1.4rem 1.6rem;
   }
   .exp,
   .expAll {

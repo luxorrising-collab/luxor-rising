@@ -45,8 +45,8 @@ export type ExperienceCardData = {
 // object-fit: cover draws a photo at whichever is larger: the card's width,
 // or its height × the photo's aspect. Ask next/image for that width, so wide
 // photos in tall cards aren't fetched at card width and stretched soft.
-// Card boxes: phone strip 88vw × 76vh; strip 400px × ~64vh; grid 4:5 at full
-// width on phones, 1/2 on tablets, 1/3 on desktop.
+// Card boxes: phone strip 88vw × 76vh; strip 400px × ~64vh; grid 3:4 at full
+// width on phones, 4:5 at 1/2 on tablets and 1/3 on desktop.
 function cardSizes(a: number | undefined, strip: boolean) {
   if (!a) return "(max-width: 760px) 100vw, 33vw";
   const k = a.toFixed(3);
@@ -54,7 +54,7 @@ function cardSizes(a: number | undefined, strip: boolean) {
     const phone = a > 0.55 ? `calc(76vh * ${k})` : "88vw";
     return `(max-width: 560px) ${phone}, ${a > 0.69 ? `calc(64vh * ${k})` : "400px"}`;
   }
-  const phone = a > 0.8 ? `${(115 * a).toFixed(1)}vw` : "92vw";
+  const phone = a > 0.75 ? `${(122.7 * a).toFixed(1)}vw` : "92vw";
   const tablet = a > 0.8 ? `${(62.5 * a).toFixed(1)}vw` : "50vw";
   const desktop = a > 0.8 ? `${(41.25 * a).toFixed(1)}vw` : "33vw";
   return `(max-width: 560px) ${phone}, (max-width: 920px) ${tablet}, ${desktop}`;
@@ -80,6 +80,15 @@ function ExpCard({
   // competes with the photos on the way in.
   const [armed, setArmed] = React.useState(false);
   const hovering = React.useRef(false);
+  const opened = React.useRef(false);
+  // The photo fades in over its blurred preview once it has arrived.
+  const [loaded, setLoaded] = React.useState(false);
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  React.useEffect(() => {
+    // already decoded before hydration (cache): no load event will come
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) setLoaded(true);
+  }, []);
   // "Included" sits top-left on every experience; the signature experiences also
   // get a "Signature experience" label top-right.
   const tiers = e.tiers ?? [];
@@ -94,14 +103,25 @@ function ExpCard({
       /* autoplay can be refused; the hero image stays */
     }
   };
-  const onEnter = () => {
-    hovering.current = true;
+  const start = () => {
     if (!e.clip) return;
     if (!armed) setArmed(true);
     else play(vidRef.current);
   };
+  const onEnter = () => {
+    hovering.current = true;
+    start();
+  };
+  const toggleOpen = () => {
+    const next = !open;
+    opened.current = next;
+    setOpen(next);
+    if (next) start();
+    else if (!hovering.current) vidRef.current?.pause();
+  };
   const onLeave = () => {
     hovering.current = false;
+    if (opened.current) return;
     const v = vidRef.current;
     if (v) {
       try {
@@ -118,20 +138,28 @@ function ExpCard({
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
+      {e.blur && (
+        <span
+          className={`${styles.expBlur} ${loaded ? styles.expBlurOff : ""}`}
+          style={{ backgroundImage: `url("${e.blur}")` }}
+          aria-hidden
+        />
+      )}
       <Image
+        ref={imgRef}
         src={e.src}
         alt=""
         fill
         sizes={cardSizes(e.aspect, strip)}
-        placeholder={e.blur ? "blur" : "empty"}
-        blurDataURL={e.blur}
+        className={e.blur ? (loaded ? styles.expImgOn : styles.expImgWait) : undefined}
+        onLoad={() => setLoaded(true)}
       />
       {e.clip && armed && (
         <video
           ref={(v) => {
             vidRef.current = v;
             // first hover: start as soon as the clip is on the page
-            if (v && hovering.current && v.paused) play(v);
+            if (v && (hovering.current || opened.current) && v.paused) play(v);
           }}
           className={styles.expVid}
           muted
@@ -205,7 +233,7 @@ function ExpCard({
             className={styles.expReadBtn}
             tabIndex={clone ? -1 : undefined}
             aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
+            onClick={toggleOpen}
           >
             {open ? "Close" : "Read more"}
           </button>

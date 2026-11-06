@@ -20,7 +20,7 @@ import ConciergeChat from "@/components/ConciergeChat";
 import PrincipleList from "@/components/PrincipleList";
 import DayHoldSlideshow from "@/components/DayHoldSlideshow";
 import { buildJourneyCards } from "@/lib/journey-cards";
-import { withAspect } from "@/lib/image-aspect";
+import { withAspect, withPreviews } from "@/lib/image-aspect";
 import { DayCountProvider } from "@/components/DayCount";
 import { buildConciergeDayCards } from "@/lib/experience-cards";
 import { reader } from "@/lib/keystatic-reader";
@@ -296,7 +296,7 @@ export default async function ConciergeDayPage() {
   // The "How your day flows" slideshow is switchable in the CMS; its steps also
   // feed the "Your day, start to finish" list inside each booking card.
   const journeyCards = page?.dayJourneyShow ? withAspect(buildJourneyCards(page?.dayJourney ?? [])) : [];
-  const expCards = withAspect(buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences }));
+  const expCards = await withPreviews(buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences }));
   const baseGallery =
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))

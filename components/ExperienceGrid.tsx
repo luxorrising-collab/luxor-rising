@@ -28,6 +28,8 @@ export type ExperienceCardData = {
   oneLine?: boolean;
   /** The photo's width ÷ height (server-read), so its sizes fit the crop. */
   aspect?: number;
+  /** A tiny blurred preview (data URL), shown while the photo loads. */
+  blur?: string;
   /** Marks a signature experience — shows a gold seal. */
   signature?: boolean;
   /** Which day packages include this experience (top-left labels). */
@@ -73,12 +75,16 @@ function ExpCard({
 }) {
   const vidRef = React.useRef<HTMLVideoElement>(null);
   const [open, setOpen] = React.useState(false);
+  // The hover clip (and its poster) is only put on the page once a mouse first
+  // rests on the card — so touch phones never download any of it, and nothing
+  // competes with the photos on the way in.
+  const [armed, setArmed] = React.useState(false);
+  const hovering = React.useRef(false);
   // "Included" sits top-left on every experience; the signature experiences also
   // get a "Signature experience" label top-right.
   const tiers = e.tiers ?? [];
   const showIncluded = tiers.length > 0;
-  const onEnter = () => {
-    const v = vidRef.current;
+  const play = (v: HTMLVideoElement | null) => {
     if (!v) return;
     try {
       v.currentTime = 0;
@@ -88,7 +94,14 @@ function ExpCard({
       /* autoplay can be refused; the hero image stays */
     }
   };
+  const onEnter = () => {
+    hovering.current = true;
+    if (!e.clip) return;
+    if (!armed) setArmed(true);
+    else play(vidRef.current);
+  };
   const onLeave = () => {
+    hovering.current = false;
     const v = vidRef.current;
     if (v) {
       try {
@@ -105,10 +118,21 @@ function ExpCard({
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
-      <Image src={e.src} alt="" fill sizes={cardSizes(e.aspect, strip)} />
-      {e.clip && (
+      <Image
+        src={e.src}
+        alt=""
+        fill
+        sizes={cardSizes(e.aspect, strip)}
+        placeholder={e.blur ? "blur" : "empty"}
+        blurDataURL={e.blur}
+      />
+      {e.clip && armed && (
         <video
-          ref={vidRef}
+          ref={(v) => {
+            vidRef.current = v;
+            // first hover: start as soon as the clip is on the page
+            if (v && hovering.current && v.paused) play(v);
+          }}
           className={styles.expVid}
           muted
           loop
@@ -529,7 +553,7 @@ export default function ExperienceGrid({
       {collapsible && (
         <div className={styles.expMoreWrap}>
           <button type="button" className={styles.expMore} onClick={() => setExpanded((v) => !v)}>
-            {expanded ? "Show fewer" : `Show all ${cards.length} experiences`}
+            {expanded ? "Show fewer" : "Show more experiences"}
           </button>
         </div>
       )}

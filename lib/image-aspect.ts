@@ -60,3 +60,34 @@ export function imageAspect(src: string): number | undefined {
 /** Cards with their photo's aspect attached (see ExperienceGrid's sizes). */
 export const withAspect = <T extends { src: string }>(cards: T[]): (T & { aspect?: number })[] =>
   cards.map((c) => ({ ...c, aspect: imageAspect(c.src) }));
+
+const blurCache = new Map<string, string | undefined>();
+
+/** A ~16px-wide blurred WebP of an image in public/, as a data URL — shown at
+ *  once while the real photo loads, so a card never appears as an empty box.
+ *  Undefined when the file can't be read (or sharp isn't available). */
+export async function imageBlur(src: string): Promise<string | undefined> {
+  if (!src.startsWith("/")) return undefined;
+  if (blurCache.has(src)) return blurCache.get(src);
+  let out: string | undefined;
+  try {
+    const sharp = (await import("sharp")).default;
+    const buf = await sharp(path.join(process.cwd(), "public", decodeURIComponent(src)))
+      .rotate()
+      .resize(16)
+      .webp({ quality: 50 })
+      .toBuffer();
+    out = `data:image/webp;base64,${buf.toString("base64")}`;
+  } catch {
+    out = undefined;
+  }
+  blurCache.set(src, out);
+  return out;
+}
+
+/** Cards with their photo's aspect and a blurred preview attached. */
+export async function withPreviews<T extends { src: string }>(
+  cards: T[],
+): Promise<(T & { aspect?: number; blur?: string })[]> {
+  return Promise.all(cards.map(async (c) => ({ ...c, aspect: imageAspect(c.src), blur: await imageBlur(c.src) })));
+}

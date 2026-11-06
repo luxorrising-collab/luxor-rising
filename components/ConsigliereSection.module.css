@@ -130,6 +130,19 @@
   margin-bottom: 0.4rem;
   line-height: 1;
 }
+/* the heading is a button only so phones can fold it; wider screens show a plain heading */
+.consToggle {
+  all: unset;
+  display: block;
+  width: 100%;
+  cursor: default;
+}
+.consHeadTxt {
+  display: block;
+}
+.consChevron {
+  display: none;
+}
 .consPillar h4 {
   font-family: var(--font-display);
   font-size: 1.16rem;
@@ -143,11 +156,65 @@
   line-height: 1.55;
   color: #ece1cf;
 }
+/* phones: the same accordion as "The feel of it" (same type sizes, rules and
+   spacing), with the pillar's symbol before each heading */
 @media (max-width: 720px) {
   .consPillars {
     grid-template-columns: 1fr;
-    gap: 1.1rem;
-    max-width: 460px;
+    gap: 0;
+    margin-top: 1.6rem;
+  }
+  .consPillar {
+    padding-top: 0;
+    border-top: 1px solid rgba(227, 207, 164, 0.55);
+  }
+  .consPillar:last-child {
+    border-bottom: 1px solid rgba(227, 207, 164, 0.55);
+  }
+  .consPillar h4 {
+    font-size: 1.24rem;
+    line-height: 1.25;
+    margin-bottom: 0;
+  }
+  .consToggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0.1rem;
+    cursor: pointer;
+  }
+  .consToggle:focus-visible {
+    outline: 2px solid var(--color-gold-soft);
+    outline-offset: 2px;
+  }
+  .consToggle .consPillarIcon {
+    display: inline-block;
+    margin: 0;
+    flex: 0 0 auto;
+  }
+  .consHeadTxt {
+    flex: 1 1 auto;
+  }
+  .consChevron {
+    display: block;
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-right: 1.5px solid var(--color-gold-soft);
+    border-bottom: 1.5px solid var(--color-gold-soft);
+    transform: translateY(-3px) rotate(45deg);
+    transition: transform 0.25s;
+  }
+  .consOpen .consChevron {
+    transform: translateY(2px) rotate(-135deg);
+  }
+  .consPillar:not(.consOpen) .consBody {
+    display: none;
+  }
+  .consPillar .consBody {
+    padding: 0 0.1rem 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
   }
 }
 /* concise benefit strip — replaces the long points grid */

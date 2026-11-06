@@ -1,8 +1,7 @@
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import styles from "./ConsigliereSection.module.css";
-
-const CONS_ICONS = ["✦", "❖", "◆"];
+import ConsPillars from "./ConsPillars";
 
 export type ConsigliereePoint = { title: string; description: string };
 export type ConsHowItWorks = {
@@ -89,19 +88,7 @@ export default function ConsigliereSection({
         {eyebrow && <span className="eyebrow">{eyebrow}</span>}
         <h2 className="display">{title}</h2>
         {lead && <p className={styles.consCoverLead}>{lead}</p>}
-        {pillars.length > 0 && (
-          <div className={styles.consPillars}>
-            {pillars.map((p, i) => (
-              <div className={styles.consPillar} key={p.title || i}>
-                <span className={styles.consPillarIcon} aria-hidden>
-                  {CONS_ICONS[i % CONS_ICONS.length]}
-                </span>
-                <h4>{p.title}</h4>
-                <p>{p.description}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        {pillars.length > 0 && <ConsPillars items={pillars} />}
         <Link href={moreHref} className={styles.consMore}>
           {moreLabel}
         </Link>

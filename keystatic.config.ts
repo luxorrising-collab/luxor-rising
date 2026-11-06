@@ -77,9 +77,21 @@ const cardFields = (label: string) =>
             description: 'The site or experience, e.g. "Sailing lesson on the Nile". When set, the row also shows an "Included" chip.',
           }),
           desc: fields.text({ label: "Description", multiline: true }),
-          tag: fields.text({ label: "Chip note (optional)", description: 'Added after "Included ·", e.g. "from day 3"' }),
+          tag: fields.text({ label: "Chip note (optional)", description: 'Added after "Included ·", e.g. "insider access"' }),
+          group: fields.text({
+            label: "Group (optional)",
+            description:
+              "Rows with the same group fold together under its name, e.g. a model day. Leave Name empty to list just the real names (e.g. everything that can be swapped in).",
+          }),
         }),
         { label: "Experiences included", itemLabel: (p) => p.fields.name.value || "Experience" }
+      ),
+      experienceGroups: fields.array(
+        fields.object({
+          name: fields.text({ label: "Group name", description: "Exactly as typed in the experiences' Group field" }),
+          desc: fields.text({ label: "Description", multiline: true }),
+        }),
+        { label: "Experience groups: a line under each name", itemLabel: (p) => p.fields.name.value || "Group" }
       ),
       included: fields.array(fields.text({ label: "Line" }), {
         label: '"Also included" lines',

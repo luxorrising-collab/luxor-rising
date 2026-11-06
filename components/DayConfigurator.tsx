@@ -163,7 +163,7 @@ const SIGNATURE_INCLUDED = [
 ];
 const SIGNATURE_UNLOCKS = [
   "More experiences unlock as you add days — venture further, to Aswan and beyond",
-  "Signature bonuses on us — the hidden temple of Isis (day 3), a Nile sailing lesson (day 4)",
+  "Signature bonuses on us — the hidden temple of Isis and a Nile sailing lesson",
   "A second and third gift — the full set of three",
   "A private photoshoot of your day, from three days",
   "A better per-day price the longer you stay",
@@ -715,8 +715,11 @@ export type CardExperienceContent = {
   /** The real name of the site or experience, under the expressive name. */
   place?: string | null;
   desc?: string | null;
-  /** Shown after "Included ·" on the row's chip, e.g. "from day 3". */
+  /** Shown after "Included ·" on the row's chip, e.g. "insider access". */
   tag?: string | null;
+  /** Rows sharing a group fold together under its name (a model day). A group
+   *  whose rows have no expressive name lists just the real names. */
+  group?: string | null;
 };
 /** One step of the day, shown in every card's "Your day, start to finish". */
 export type DayFlowStep = { h: string; sub?: string; p?: string };
@@ -733,6 +736,8 @@ export type CardContent = {
   lead?: string | null;
   expLede?: string | null;
   experiences?: readonly CardExperienceContent[] | null;
+  /** A line under each group's name in "Experiences included" (by group name). */
+  experienceGroups?: readonly { name?: string | null; desc?: string | null }[] | null;
   included?: readonly (string | null)[] | null;
   caveatsLabel?: string | null;
   caveats?: readonly (string | null)[] | null;
@@ -814,6 +819,7 @@ const DEFAULT_CARDS = {
     lead: SIGNATURE_LEAD,
     expLede: SIG_EXPLEDE_DEFAULT,
     experiences: SIGNATURE_EXPS,
+    groupDescs: {},
     included: SIGNATURE_HANDLED,
     caveatsLabel: "As you add days",
     caveats: SIGNATURE_UNLOCKS,
@@ -831,6 +837,7 @@ const DEFAULT_CARDS = {
     lead: ORIGINAL_LEAD,
     expLede: ORIG_EXPLEDE_DEFAULT,
     experiences: ORIGINAL_EXPS,
+    groupDescs: {},
     included: ORIGINAL_HANDLED,
     caveatsLabel: "Added on request",
     caveats: ORIGINAL_MORE,
@@ -848,6 +855,7 @@ const DEFAULT_CARDS = {
     lead: LIGHT_LEAD,
     expLede: "",
     experiences: ADVENTURE_EXPS,
+    groupDescs: {},
     included: LIGHT_INCLUDED,
     caveatsLabel: "Paid locally, on the day",
     caveats: LIGHT_LOCAL,
@@ -856,7 +864,7 @@ const DEFAULT_CARDS = {
   },
 };
 
-type ResolvedExp = { icon: ReactNode; name: string; desc: string; place?: string; tag?: string };
+type ResolvedExp = { icon: ReactNode; name: string; desc: string; place?: string; tag?: string; group?: string };
 type ResolvedSummary = { title: string; desc: string };
 type ResolvedCard = {
   summary: ResolvedSummary[];
@@ -870,6 +878,7 @@ type ResolvedCard = {
   lead: string;
   expLede: string;
   experiences: ResolvedExp[];
+  groupDescs: Record<string, string>;
   included: string[];
   caveatsLabel: string;
   caveats: string[];
@@ -885,7 +894,7 @@ const resolveExps = (
   cms: readonly CardExperienceContent[] | null | undefined,
   def: readonly ResolvedExp[],
 ): ResolvedExp[] => {
-  const clean = (cms ?? []).filter((e) => (e?.name ?? "").trim());
+  const clean = (cms ?? []).filter((e) => (e?.name ?? "").trim() || (e?.place ?? "").trim());
   if (!clean.length) return [...def];
   return clean.map((e) => ({
     icon: (e.icon && IC[e.icon as keyof typeof IC]) || IC.check,
@@ -893,6 +902,7 @@ const resolveExps = (
     desc: (e.desc ?? "").trim(),
     place: (e.place ?? "").trim() || undefined,
     tag: (e.tag ?? "").trim() || undefined,
+    group: (e.group ?? "").trim() || undefined,
   }));
 };
 const resolveSummary = (
@@ -917,6 +927,11 @@ const resolveCard = (cms: CardContent | null | undefined, def: ResolvedCard): Re
   // value only falls back when the default itself is non-empty.
   expLede: cms?.expLede && cms.expLede.trim() ? cms.expLede : def.expLede,
   experiences: resolveExps(cms?.experiences, def.experiences),
+  groupDescs: Object.fromEntries(
+    (cms?.experienceGroups ?? [])
+      .filter((g) => (g?.name ?? "").trim() && (g?.desc ?? "").trim())
+      .map((g) => [(g.name ?? "").trim(), (g.desc ?? "").trim()]),
+  ),
   included: cmsArr(cms?.included, def.included),
   caveatsLabel: cmsStr(cms?.caveatsLabel, def.caveatsLabel),
   caveats: cmsArr(cms?.caveats, def.caveats),
@@ -1495,12 +1510,72 @@ export default function DayConfigurator({
     </div>
   );
 
+  // Experiences folded into model days (groups of three), then a last group
+  // that simply names everything else that can be swapped in.
+  const renderGroups = (exps: ResolvedExp[], descs: Record<string, string> = {}) => {
+    const groups: { name: string; items: ResolvedExp[] }[] = [];
+    for (const e of exps) {
+      const g = e.group ?? "";
+      const last = groups[groups.length - 1];
+      if (last && last.name === g) last.items.push(e);
+      else groups.push({ name: g, items: [e] });
+    }
+    return (
+      <div className={styles.expGroups}>
+        {groups.map((g, gi) => {
+          const namesOnly = g.items.every((e) => !e.name);
+          return (
+            <details className={styles.expGroup} key={g.name} open={gi < 2}>
+              <summary>
+                <span className={styles.expGroupTxt}>
+                  <b>{g.name}</b>
+                  <span>
+                    {descs[g.name] || g.items.map((e) => e.place || e.name).join(" · ")}
+                  </span>
+                </span>
+                <span className={styles.foldChev} aria-hidden />
+              </summary>
+              {namesOnly ? (
+                <ul className={styles.expSwapList}>
+                  {g.items.map((e) => (
+                    <li key={e.place}>{e.place}</li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className={`${styles.expExps} ${styles.expExpsIn}`}>
+                  {g.items.map((e) => (
+                    <li key={e.name}>
+                      <span className={styles.expExpIco}>{e.icon}</span>
+                      <span className={styles.expExpTxt}>
+                        <b>{e.name}</b>
+                        {e.place && (
+                          <span className={styles.expExpMeta}>
+                            <span className={styles.expExpPlace}>{e.place}</span>
+                            <span className={styles.expExpTag}>
+                              <span aria-hidden>✓</span> Included{e.tag ? ` · ${e.tag}` : ""}
+                            </span>
+                          </span>
+                        )}
+                        {e.desc && <span>{e.desc}</span>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </details>
+          );
+        })}
+      </div>
+    );
+  };
+
   // A card's expansion — the brochure. No hero or title (the card above is the
   // header), so it reads as one continuous card: a lead line, the experiences
   // included, everything handled, and any honest caveats — each with a symbol.
   const renderBrochure = (opts: {
     lead: string;
     experiences?: ResolvedExp[];
+    groupDescs?: Record<string, string>;
     expLede?: string;
     included: string[];
     caveats?: { label: string; items: string[] };
@@ -1513,6 +1588,9 @@ export default function DayConfigurator({
           <div className={styles.expBlock}>
             <span className={styles.expEyebrow}>Experiences included</span>
             {opts.expLede && <p className={styles.expLede}>{opts.expLede}</p>}
+            {opts.experiences.some((e) => e.group) ? (
+              renderGroups(opts.experiences, opts.groupDescs)
+            ) : (
             <ul className={styles.expExps}>
               {opts.experiences.map((e) => (
                 <li key={e.name}>
@@ -1532,33 +1610,6 @@ export default function DayConfigurator({
                 </li>
               ))}
             </ul>
-          </div>
-        )}
-        {dayFlow.length > 0 && (
-          <div className={styles.expBlock}>
-            <span className={styles.expEyebrow}>Your day, start to finish</span>
-            <ol className={styles.flowList}>
-              {dayFlow.map((f, i) => (
-                <li key={f.h}>
-                  <span className={styles.flowNum} aria-hidden>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className={styles.flowTxt}>
-                    <b>{f.h}</b>
-                    {f.sub && <span className={styles.flowSub}>{f.sub}</span>}
-                    {f.p && <span>{f.p}</span>}
-                  </span>
-                </li>
-              ))}
-            </ol>
-            {dayFlowNotes.length > 0 && (
-              <ul className={styles.flowNotes}>
-                {dayFlowNotes.map((n) => (
-                  <li key={n.h}>
-                    <b>{n.h}</b> <span>{n.p}</span>
-                  </li>
-                ))}
-              </ul>
             )}
           </div>
         )}
@@ -1587,6 +1638,37 @@ export default function DayConfigurator({
           </div>
         )}
         {opts.note && <p className={styles.expNote}>{opts.note}</p>}
+        {dayFlow.length > 0 && (
+          <div className={styles.expBlock}>
+            <span className={styles.expEyebrow}>Your day, start to finish</span>
+            <div className={styles.flowList}>
+              {dayFlow.map((f, i) => (
+                <details className={styles.flowStep} key={f.h}>
+                  <summary>
+                    <span className={styles.flowNum} aria-hidden>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className={styles.flowTxt}>
+                      <b>{f.h}</b>
+                      {f.sub && <span className={styles.flowSub}>{f.sub}</span>}
+                    </span>
+                    {f.p && <span className={styles.foldChev} aria-hidden />}
+                  </summary>
+                  {f.p && <p className={styles.flowMore}>{f.p}</p>}
+                </details>
+              ))}
+            </div>
+            {dayFlowNotes.length > 0 && (
+              <ul className={styles.flowNotes}>
+                {dayFlowNotes.map((n) => (
+                  <li key={n.h}>
+                    <b>{n.h}</b> <span>{n.p}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1658,6 +1740,7 @@ export default function DayConfigurator({
               renderBrochure({
                 lead: SIG.lead,
                 experiences: SIG.experiences,
+                groupDescs: SIG.groupDescs,
                 expLede: SIG.expLede,
                 included: SIG.included,
                 caveats: { label: SIG.caveatsLabel, items: SIG.caveats },

@@ -3181,25 +3181,97 @@
   letter-spacing: 0.04em;
   color: #f3e7cf;
 }
-/* "Your day, start to finish" — the day as numbered steps */
-.flowList {
+/* model days — each folds open to its three experiences */
+.expGroups {
+  display: grid;
+  border-top: 1px solid rgba(201, 160, 99, 0.25);
+}
+.expGroup {
+  border-bottom: 1px solid rgba(201, 160, 99, 0.25);
+}
+.expGroup summary,
+.flowStep summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+.expGroup summary::-webkit-details-marker,
+.flowStep summary::-webkit-details-marker {
+  display: none;
+}
+.expGroup summary {
+  padding: 0.85rem 0.1rem;
+}
+.expGroupTxt {
+  flex: 1 1 auto;
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.expGroupTxt b {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #fff;
+}
+.expGroupTxt span {
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--color-gold-soft);
+}
+.foldChev {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--color-gold-soft);
+  border-bottom: 1.5px solid var(--color-gold-soft);
+  transform: translateY(-3px) rotate(45deg);
+  transition: transform 0.25s;
+}
+details[open] > summary .foldChev {
+  transform: translateY(2px) rotate(-135deg);
+}
+.expExpsIn {
+  padding: 0.2rem 0 1.1rem 0.1rem;
+}
+.expSwapList {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.1rem 0.1rem 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.expSwapList li {
+  padding: 0.22rem 0.65rem 0.26rem;
+  border: 1px solid rgba(201, 160, 99, 0.4);
+  border-radius: 999px;
+  font-size: 0.76rem;
+  color: #f3e7cf;
+}
+/* "Your day, start to finish" — packed numbered steps, each folds open */
+.flowList {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem 1.8rem;
+  column-gap: 1.8rem;
+  border-top: 1px solid rgba(201, 160, 99, 0.25);
 }
 @media (max-width: 560px) {
   .flowList {
     grid-template-columns: 1fr;
-    gap: 0.9rem;
   }
 }
-.flowList li {
-  display: flex;
-  gap: 0.75rem;
+.flowStep {
+  border-bottom: 1px solid rgba(201, 160, 99, 0.25);
+}
+.flowStep summary {
+  padding: 0.7rem 0.1rem;
   align-items: flex-start;
+}
+.flowStep summary .foldChev {
+  margin-top: 0.45rem;
 }
 .flowNum {
   flex: 0 0 auto;
@@ -3210,8 +3282,9 @@
   min-width: 1.6em;
 }
 .flowTxt {
+  flex: 1 1 auto;
   display: grid;
-  gap: 0.15rem;
+  gap: 0.1rem;
   min-width: 0;
 }
 .flowTxt b {
@@ -3219,13 +3292,17 @@
   font-size: 0.86rem;
   color: #fff;
 }
-.flowTxt span {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: rgba(243, 231, 207, 0.72);
-}
 .flowTxt .flowSub {
-  color: rgba(243, 231, 207, 0.95);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(243, 231, 207, 0.78);
+}
+.flowMore {
+  margin: 0;
+  padding: 0 0.1rem 0.9rem 2.6rem;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: rgba(243, 231, 207, 0.72);
 }
 .flowNotes {
   list-style: none;

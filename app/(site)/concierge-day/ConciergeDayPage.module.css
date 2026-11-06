@@ -1773,16 +1773,12 @@
 .expBeyond {
   display: none;
 }
-/* Phones: the long, single-column scroll of full-width cards. Photos load lazily
-   as they near the screen, the hover clips never load, and cards off screen
-   skip layout & paint (content-visibility) so the long scroll stays smooth. */
+/* Phones: the long, single-column scroll of full-width cards. Photos load
+   lazily ahead of the scroll, over a blurred preview, and the hover clips
+   never load. */
 @media (max-width: 560px) {
   .expGrid {
     grid-template-columns: 1fr;
-  }
-  .expGrid > * {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 100vw auto 125vw;
   }
   .exp,
   .expAll {

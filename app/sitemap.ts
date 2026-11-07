@@ -1,3 +1,4 @@
+import { articleTags } from "@/lib/article-tags";
 import type { MetadataRoute } from "next";
 import { reader } from "@/lib/keystatic-reader";
 
@@ -58,6 +59,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           : now,
       changeFrequency: "yearly",
       priority: 0.6,
+    });
+  }
+  const tagSlugs = new Set<string>();
+  for (const a of articles) {
+    if (a.entry.draft) continue;
+    for (const t of articleTags(a.entry.tags)) tagSlugs.add(t.slug);
+  }
+  for (const t of tagSlugs) {
+    urls.push({
+      url: `${BASE}/insiders-guide/tag/${t}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.4,
     });
   }
   for (const d of destinations) {

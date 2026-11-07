@@ -185,7 +185,7 @@ const cardClip = (dir: string, name: string, position: string) => ({
   position,
 });
 // The single hero clip that plays when a card is hovered (cut from the brand film).
-const SLUG_TO_CLIP: Record<string, { src: string; poster: string; position: string }> = {
+export const SLUG_TO_CLIP: Record<string, { src: string; poster: string; position: string }> = {
   "karnak-at-dawn": cardClip("temple", "yoga", "50% 40%"),
   "valley-of-the-kings": cardClip("temple", "entering", "34% 45%"),
   "felucca-sunset-sail": cardClip("nile", "felucca", "30% 45%"),

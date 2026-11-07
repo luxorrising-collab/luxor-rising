@@ -356,6 +356,92 @@ export default config({
           directory: "public/images/articles",
           publicPath: "/images/articles/",
         }),
+        gallery: fields.array(
+          fields.object({
+            image: fields.image({
+              label: "Photo",
+              directory: "public/images/articles",
+              publicPath: "/images/articles/",
+            }),
+            alt: fields.text({ label: "What the photo shows (alt text)" }),
+          }),
+          {
+            label: "Gallery (full width, under the headline)",
+            description:
+              "Optional. 3–5 photos shown edge to edge below the headline, in place of the hero image (the first is the large one). Leave empty to show the hero image.",
+            itemLabel: (p) => p.fields.alt.value || "Photo",
+          }
+        ),
+        bookCard: fields.object(
+          {
+            title: fields.text({ label: "Title", description: 'e.g. "Medinet Habu, before anyone else"' }),
+            text: fields.text({ label: "Text", multiline: true }),
+            href: fields.text({ label: "Link", description: 'e.g. "/medinet-habu" (default "/concierge-day")' }),
+            ctaLabel: fields.text({ label: "Button label", description: 'Default "Design your day →"' }),
+            kicker: fields.text({ label: "Small line over the title", description: 'e.g. "Medinet Habu · Luxor\'s West Bank"' }),
+            experience: fields.text({ label: "Experience slug (for its chips)", description: 'e.g. "medinet-habu"' }),
+            image: fields.text({
+              label: "Photo path",
+              description: 'A real photo of the experience, e.g. "/images/experiences/medinet-habu/heroImage.jpg". Defaults to the hero image.',
+            }),
+          },
+          {
+            label: "Booking card (sticky sidebar + halfway CTA)",
+            description: "Optional. Leave empty for the general Design-your-day card.",
+          }
+        ),
+        visit: fields.object(
+          {
+            title: fields.text({ label: "Title", description: 'e.g. "Medinet Habu at a glance"' }),
+            where: fields.text({ label: "Where" }),
+            hours: fields.text({ label: "Opening hours" }),
+            best: fields.text({ label: "Best time" }),
+            ticket: fields.text({ label: "Ticket" }),
+            duration: fields.text({ label: "Time to allow" }),
+            built: fields.text({ label: "Built" }),
+            note: fields.text({ label: "Small print (source, 'check before you go')", multiline: true }),
+            plan: fields.select({
+              label: "Site plan",
+              options: [
+                { label: "None", value: "" },
+                { label: "Medinet Habu (walking route)", value: "medinet-habu" },
+              ],
+              defaultValue: "",
+            }),
+          },
+          {
+            label: "Plan your visit (infographic)",
+            description: 'Optional. Shown before the "How to …" section. Leave empty to hide.',
+          }
+        ),
+        tags: fields.array(fields.text({ label: "Tag", description: 'Plain words, e.g. "Medinet Habu" — shown as #MedinetHabu' }), {
+          label: "Tags (hashtags)",
+          description:
+            "5–10 themes this article covers. Each becomes a #hashtag link to a page listing every article with that tag. Reuse existing tags where they fit, so articles group together.",
+          itemLabel: (p) => p.value || "Tag",
+        }),
+        relatedExperiences: fields.array(fields.text({ label: "Experience slug" }), {
+          label: "Experiences to offer at the end",
+          description: 'e.g. "medinet-habu", "deir-el-shelwit". Shown as cards under "Stand in it, don\'t just read about it".',
+          itemLabel: (p) => p.value || "Experience",
+        }),
+        place: fields.object(
+          {
+            name: fields.text({ label: "Place name", description: 'e.g. "Medinet Habu"' }),
+            lat: fields.text({ label: "Latitude", description: "e.g. 25.7194" }),
+            lng: fields.text({ label: "Longitude", description: "e.g. 32.6008" }),
+            sameAs: fields.text({ label: "Reference page", description: "e.g. its Wikipedia URL" }),
+          },
+          {
+            label: "The place this article is about (for Google & AI search)",
+            description: "Optional. Tells search engines which real place the article covers.",
+          }
+        ),
+        factCheck: fields.text({
+          label: "Fact-check line",
+          description:
+            'Optional. Shown with a ✓ in the byline. Leave empty for "Fact-checked by Dr. Nour, licensed Egyptologist".',
+        }),
         category: fields.select({
           label: "Category",
           options: ARTICLE_CATEGORIES,

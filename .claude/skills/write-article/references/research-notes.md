@@ -47,8 +47,9 @@ trust (honesty, sources, named experts) is itself a conversion lever.
   a ~220 EGP Queens ticket. Confirm current cap and price.
 
 ### Medinet Habu (mortuary temple of Ramesses III, west bank)
-- Ticket ~**220 EGP** (~110 EGP student) as of 2026; older listings show 100 EGP.
-- Hours ~**6:00–17:00** (winter may close 16:00). Confirm the day before.
+- Ticket **EGP 230** foreign adult / EGP 110 student — official Ministry page, checked 2026-11-06 (aggregators still show 220).
+- Hours **06:00–17:00 daily** per the Ministry page (no separate winter hours listed). Confirm the day before.
+- Meaning (fact-checked 2026-11-06): small Amun temple sits on the Mound of Djeme (Theban creation mound, burial of the Ogdoad); Decade Festival attested from the New Kingdom, best documented Late/Graeco-Roman; earliest shrine by the Middle Kingdom (~2000 BC); migdol gate probably ceremonial; 18 m wall height is a reconstruction; 'second death' = final annihilation, not 'being forgotten'.
 - Known for exceptionally well-preserved reliefs and surviving pigment; Syrian-
   style fortified gate; Sea Peoples battle reliefs. A 2026 restoration of a golden
   shrine (Ramesses III / Amun-Ra) was reported. ~20–30 min by car from central
@@ -86,3 +87,13 @@ trust (honesty, sources, named experts) is itself a conversion lever.
 > inconsistent dates. For prices and hours, prefer official sources and our own
 > on-the-ground check, and say "we confirm before every guest's day" rather than
 > publishing a number we can't stand behind.
+
+### Valley of the Kings — re-verified 2026-11-07
+- Standard ticket **EGP 750** foreign adult / EGP 375 student, 3 tombs from ~10 open (mid-2026: KV1, 2, 6, 8, 11, 14, 15, 16, 43, 47). Hours 06:00–17:00 (some sources 16:00 in winter). Card payment only; tram ~EGP 20.
+- Extra tickets: Tutankhamun KV62 EGP 700; Seti I KV17 EGP 2,000 (no student discount); Ramesses V/VI KV9 EGP 220 (best value). Tomb of Ay WV23 EGP 200; Amenhotep III WV22 reopened Oct 2025.
+- **Nefertari QV66 closed for conservation since March 2024**, no reopening announced (Aug 2026). Valley of the Queens is beside Medinet Habu.
+- Tutankhamun treasure: Grand Egyptian Museum, opened Nov 2025, "more than 5,000 objects".
+
+### Isis & Osiris — verified 2026-11-07
+- Full narrative (chest, Byblos, 14 pieces) = Plutarch (c. AD 100) only; Egyptian sources allude (Pyramid Texts, Great Hymn on Louvre stela C 286). Isis name written with throne sign; "personification of the throne" is a disputed theory — soften. "Great of Magic" also used for other goddesses.
+- Deir el-Shelwit: Roman temple of Isis ~4 km S of Medinet Habu; propylon Galba–Domitian, sanctuary Hadrian; ARCE conserved, opened Jan 2014. Love songs: Ramesside, some ostraca from Deir el-Medina.

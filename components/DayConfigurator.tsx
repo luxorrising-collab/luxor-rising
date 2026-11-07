@@ -999,7 +999,7 @@ export default function DayConfigurator({
   priceTable,
   brandTable,
   supplementTable,
-  socialProof = "4.9 · 28+ private days arranged",
+  socialProof = "5.0 · 32+ private days arranged",
   whatsappNumber = "",
   cards,
   dayFlow = [],

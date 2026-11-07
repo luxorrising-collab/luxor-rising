@@ -10,6 +10,8 @@ import NewsletterForm from "@/components/NewsletterForm";
 import { reader } from "@/lib/keystatic-reader";
 import { ARTICLE_CATEGORY_LABELS, ARTICLE_AUTHORS } from "@/lib/article-labels";
 import GuideClient, { type CmsArticlePost } from "./GuideClient";
+import TagChips from "@/components/TagChips";
+import { articleTags, type ArticleTag } from "@/lib/article-tags";
 import styles from "./InsidersGuidePage.module.css";
 
 export const metadata: Metadata = {
@@ -45,6 +47,20 @@ export default async function InsidersGuidePage() {
   // "Featured" above) is shown alongside the curated placeholder posts in
   // the grid below — new articles created in Keystatic land here
   // automatically.
+  // every tag across the published articles, most-used first
+  const tagMap = new Map<string, { tag: ArticleTag; n: number }>();
+  for (const a of allArticles) {
+    for (const t of articleTags(a.entry.tags)) {
+      const cur = tagMap.get(t.slug) ?? { tag: t, n: 0 };
+      cur.n += 1;
+      tagMap.set(t.slug, cur);
+    }
+  }
+  const allTags = [...tagMap.values()]
+    .sort((a, b) => b.n - a.n || a.tag.label.localeCompare(b.tag.label))
+    .map((v) => v.tag);
+  const tagCounts = Object.fromEntries([...tagMap.entries()].map(([k, v]) => [k, v.n]));
+
   const cmsPosts: CmsArticlePost[] = allArticles
     .filter((a) => a.slug !== featured?.slug && a.entry.title)
     .map(({ slug, entry }) => ({
@@ -138,6 +154,12 @@ export default async function InsidersGuidePage() {
               authorName={featuredAuthor}
             />
           </Reveal>
+        )}
+
+        {allTags.length > 0 && (
+          <div style={{ margin: "2.4rem 0 0" }}>
+            <TagChips tags={allTags} label="Browse by tag" counts={tagCounts} />
+          </div>
         )}
 
         {cmsPosts.length > 0 && <GuideClient cmsPosts={cmsPosts} />}

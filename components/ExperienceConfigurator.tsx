@@ -90,7 +90,7 @@ export default function ExperienceConfigurator({
   glanceIncludes,
   includeItems,
   feelText,
-  socialProof = "4.9 · 28+ private days arranged",
+  socialProof = "5.0 · 32+ private days arranged",
   image,
   title,
   region = "Luxor",

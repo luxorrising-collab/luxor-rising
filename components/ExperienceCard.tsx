@@ -78,15 +78,19 @@ export default function ExperienceCard({
           {place && <span className={styles.overPlace}>{place}</span>}
           <span className={styles.overH}>{title}</span>
         </span>
-        {badge && (
-          <span className={`${styles.badge} ${badgeVariant === "signature" ? styles.sig : ""}`}>
-            {badgeVariant === "signature" ? `★ ${badge}` : badge}
-          </span>
-        )}
-        {scarcity && (
-          <span className={styles.scarce}>
-            <span className={styles.pulse} />
-            {scarcity}
+        {(badge || scarcity) && (
+          <span className={styles.flags}>
+            {badge && (
+              <span className={`${styles.badge} ${badgeVariant === "signature" ? styles.sig : ""}`}>
+                {badgeVariant === "signature" ? `★ ${badge}` : badge}
+              </span>
+            )}
+            {scarcity && (
+              <span className={styles.scarce}>
+                <span className={styles.pulse} />
+                {scarcity}
+              </span>
+            )}
           </span>
         )}
       </div>

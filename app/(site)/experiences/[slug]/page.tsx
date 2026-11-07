@@ -491,8 +491,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         heroPrice={
           isLuxorFunnel
             ? {
+                label: "Included in a private day from",
                 amount: experienceFrom(slug).price,
-                note: "/ day — including door-to-door transfer from Hurghada or Marsa Alam",
+                note: "· transfer included",
               }
             : undefined
         }

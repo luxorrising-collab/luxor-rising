@@ -35,8 +35,11 @@ export default async function InsidersGuidePage() {
   ]);
   // Drafts live in the CMS but never appear in the public guide.
   const allArticles = all.filter((a) => !a.entry.draft);
-  const featured = [...allArticles].sort((a, b) =>
-    (b.entry.publishedAt ?? "").localeCompare(a.entry.publishedAt ?? "")
+  // the ticked "Featured" article leads; otherwise the newest
+  const featured = [...allArticles].sort(
+    (a, b) =>
+      Number(Boolean(b.entry.featured)) - Number(Boolean(a.entry.featured)) ||
+      (b.entry.publishedAt ?? "").localeCompare(a.entry.publishedAt ?? "")
   )[0];
   const featuredAuthor = featured ? ARTICLE_AUTHORS[featured.entry.author]?.name ?? featured.entry.author : "Ahmed";
   const featuredCategoryLabel = featured
@@ -71,6 +74,8 @@ export default async function InsidersGuidePage() {
       title: entry.title,
       excerpt: entry.excerpt,
       authorName: ARTICLE_AUTHORS[entry.author]?.name ?? entry.author,
+      authorImage: ARTICLE_AUTHORS[entry.author]?.image,
+      category: ARTICLE_CATEGORY_LABELS[entry.category] ?? undefined,
       readTime: entry.readingTime,
     }));
 
@@ -158,6 +163,8 @@ export default async function InsidersGuidePage() {
               title={featured.entry.title}
               excerpt={featured.entry.excerpt ?? ""}
               authorName={featuredAuthor}
+              authorImage={featured ? ARTICLE_AUTHORS[featured.entry.author]?.image : undefined}
+              authorRole={featured ? ARTICLE_AUTHORS[featured.entry.author]?.role : undefined}
             />
           </Reveal>
         )}

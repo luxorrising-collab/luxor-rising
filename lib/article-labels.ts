@@ -25,6 +25,8 @@ export type ArticleAuthor = {
 export const ARTICLE_AUTHORS: Record<string, ArticleAuthor> = {
   "Luxor Rising": {
     name: "Luxor Rising",
+    image: "/images/about/luxor-rising-avatar.jpg",
+    role: "Research & fact-checking",
     bio: "Written on the ground in Luxor by our concierge team, and fact-checked by a licensed Egyptologist before we publish.",
   },
   Marian: {
@@ -38,6 +40,8 @@ export const ARTICLE_AUTHORS: Record<string, ArticleAuthor> = {
   },
   ahmed: {
     name: "Ahmed",
+    image: "/images/about/ahmed-avatar.jpg",
+    role: "On the ground in Luxor",
     bio: "Our consigliere in Luxor. Born on the west bank, twenty minutes from the Valley gate.",
   },
   "dr-nour": {

@@ -120,7 +120,8 @@ export default async function ExperiencesPage() {
     alt: entry.name || entry.title,
     title: entry.title,
     // Drop the trailing "· A single experience" — redundant on the listing page.
-    place: entry.heroEyebrow.replace(/\s*·\s*A single experience\s*$/i, ""),
+    // the site's name only; where it is lives in the badge, so nothing repeats
+    place: entry.heroEyebrow.replace(/\s*·\s*A single experience\s*$/i, "").split("·")[0].trim(),
     hook: entry.hook,
     badge: [whereOf(slug), entry.badge].filter(Boolean).join(" · "),
     scarcity: entry.scarcityNote || undefined,

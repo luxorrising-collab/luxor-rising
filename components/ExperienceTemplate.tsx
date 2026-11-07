@@ -106,7 +106,7 @@ export type ExperienceTemplateProps = {
   /** Design-Your-Day funnel: hide the single-experience price everywhere. */
   hidePrice?: boolean;
   /** Show a Design-Your-Day-framed price in the hero instead (amount + note). */
-  heroPrice?: { amount: number; note: string };
+  heroPrice?: { amount: number; note: string; label?: string };
   /** Override the primary hero CTA (label + target). */
   heroCtaLabel?: string;
   heroCtaHref?: string;
@@ -239,7 +239,7 @@ export default function ExperienceTemplate({
           <div className={styles.heroSub}>{hook}</div>
           {heroPrice ? (
             <div className={styles.priceRow}>
-              <span className="from">From</span>
+              <span className="from">{heroPrice.label ?? "From"}</span>
               <span className="amt">€{heroPrice.amount}</span>
               <span className="per">{heroPrice.note}</span>
             </div>

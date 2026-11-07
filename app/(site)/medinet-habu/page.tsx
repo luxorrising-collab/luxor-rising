@@ -212,8 +212,9 @@ export default async function MedinetHabuPage() {
         heroEyebrow={entry.heroEyebrow}
         hidePrice
         heroPrice={{
+          label: "Included in a private day from",
           amount: 330,
-          note: "/ day — including door-to-door transfer from Hurghada or Marsa Alam",
+          note: "· transfer included",
         }}
         heroCtaLabel="Design your day →"
         heroCtaHref="/concierge-day#design"

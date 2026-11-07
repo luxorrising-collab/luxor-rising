@@ -112,6 +112,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
               title={entry.title}
               excerpt={entry.excerpt ?? ""}
               authorName={ARTICLE_AUTHORS[entry.author]?.name ?? entry.author}
+              authorImage={ARTICLE_AUTHORS[entry.author]?.image}
               readTime={entry.readingTime ?? ""}
               category={ARTICLE_CATEGORY_LABELS[entry.category] ?? undefined}
             />

@@ -346,6 +346,11 @@ export default config({
           description:
             "While ticked, the article is invisible on the site, in the guide listing and in the sitemap — but still editable here. Untick to publish. New auto-generated drafts arrive ticked.",
         }),
+        featured: fields.checkbox({
+          label: "Featured (the \"Start here\" article at the top of the guide)",
+          defaultValue: false,
+          description: "Tick one article. If none is ticked, the newest is featured.",
+        }),
         excerpt: fields.text({
           label: "Excerpt",
           multiline: true,

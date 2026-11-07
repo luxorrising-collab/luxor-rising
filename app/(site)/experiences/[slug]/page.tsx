@@ -13,7 +13,7 @@ import type { HeroShowItem } from "@/components/HeroShow";
 import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
-import { experienceFrom } from "@/lib/experience-cards";
+import { experienceFrom, experienceWhere, SLUG_TO_TIERS } from "@/lib/experience-cards";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
 import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
@@ -494,6 +494,16 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
                 label: "Included in a private day from",
                 amount: experienceFrom(slug).price,
                 note: "· transfer included",
+              }
+            : undefined
+        }
+        heroLabels={
+          isLuxorFunnel
+            ? {
+                location: experienceWhere(slug),
+                tiers: [...(SLUG_TO_TIERS[slug] ?? [])].reverse(),
+                from: experienceFrom(slug).price,
+                transfer: true,
               }
             : undefined
         }

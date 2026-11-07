@@ -359,3 +359,25 @@ export function buildConciergeDayCards(opts: {
     };
   });
 }
+
+// Where each experience happens: a short, searchable location for cards and heroes.
+const WEST_BANK_SLUGS = new Set([
+  "medinet-habu",
+  "hatshepsut-temple",
+  "deir-el-medina",
+  "deir-el-shelwit",
+  "ramesseum-valley-of-queens",
+  "valley-of-the-kings",
+  "hot-air-balloon-luxor",
+]);
+const NILE_SLUGS = new Set(["felucca-sunset-sail", "banana-island-felucca", "nile-dinner-cruise", "sailing-lesson-nile"]);
+const DESERT_SLUGS = new Set(["private-desert-safari", "desert-astronomy-night", "camel-bedouin-breakfast"]);
+export function experienceWhere(slug: string): string {
+  if (slug === "dendera-abydos") return "Dendera & Abydos, Egypt";
+  if (slug === "hurghada-to-luxor-crossing") return "Hurghada to Luxor, Egypt";
+  if (slug === "thirty-days-in-the-desert") return "Egyptian desert";
+  if (WEST_BANK_SLUGS.has(slug)) return "Luxor's West Bank, Egypt";
+  if (NILE_SLUGS.has(slug)) return "On the Nile, Luxor";
+  if (DESERT_SLUGS.has(slug)) return "Luxor desert, Egypt";
+  return "Luxor, Egypt";
+}

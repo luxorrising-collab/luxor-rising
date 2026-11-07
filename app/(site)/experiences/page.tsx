@@ -1,4 +1,4 @@
-import { experienceFrom, SLUG_TO_TIERS } from "@/lib/experience-cards";
+import { experienceFrom, experienceWhere, SLUG_TO_TIERS } from "@/lib/experience-cards";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -85,33 +85,6 @@ export default async function ExperiencesPage() {
     },
   };
 
-  // Where each experience happens — a short, searchable location on every card.
-  const WEST_BANK = new Set([
-    "medinet-habu",
-    "hatshepsut-temple",
-    "deir-el-medina",
-    "deir-el-shelwit",
-    "ramesseum-valley-of-queens",
-    "valley-of-the-kings",
-    "hot-air-balloon-luxor",
-  ]);
-  const NILE = new Set(["felucca-sunset-sail", "banana-island-felucca", "nile-dinner-cruise", "sailing-lesson-nile"]);
-  const DESERT = new Set(["private-desert-safari", "desert-astronomy-night", "camel-bedouin-breakfast"]);
-  const whereOf = (slug: string) =>
-    slug === "dendera-abydos"
-      ? "Dendera & Abydos, Egypt"
-      : slug === "hurghada-to-luxor-crossing"
-        ? "Hurghada to Luxor, Egypt"
-        : slug === "thirty-days-in-the-desert"
-          ? "Egyptian desert"
-          : WEST_BANK.has(slug)
-            ? "Luxor's West Bank, Egypt"
-            : NILE.has(slug)
-              ? "On the Nile, Luxor"
-              : DESERT.has(slug)
-                ? "Luxor desert, Egypt"
-                : "Luxor, Egypt";
-
   const cmsItems: CmsExperienceItem[] = gridExperiences.map(({ slug, entry }) => ({
     // Medinet Habu lives at the top level; link straight there rather than
     // bouncing through the /experiences/[slug] redirect.
@@ -123,7 +96,7 @@ export default async function ExperiencesPage() {
     // the site's name only; where it is lives in the badge, so nothing repeats
     place: entry.heroEyebrow.replace(/\s*·\s*A single experience\s*$/i, "").split("·")[0].trim(),
     hook: entry.hook,
-    badge: [whereOf(slug), entry.badge].filter(Boolean).join(" · "),
+    badge: [experienceWhere(slug), entry.badge].filter(Boolean).join(" · "),
     scarcity: entry.scarcityNote || undefined,
     // At-a-glance facts reduce uncertainty (duration + group size are the two
     // questions every buyer has) — a small, proven conversion lift.

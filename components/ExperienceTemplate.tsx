@@ -107,6 +107,9 @@ export type ExperienceTemplateProps = {
   hidePrice?: boolean;
   /** Show a Design-Your-Day-framed price in the hero instead (amount + note). */
   heroPrice?: { amount: number; note: string; label?: string };
+  /** Labels shown in the hero in place of the price line: where, the tiers
+   *  that include it, the price and the transfer. */
+  heroLabels?: { location?: string; tiers?: string[]; from?: number; transfer?: boolean };
   /** Override the primary hero CTA (label + target). */
   heroCtaLabel?: string;
   heroCtaHref?: string;
@@ -183,6 +186,7 @@ export default function ExperienceTemplate({
   isEnquiry = false,
   hidePrice = false,
   heroPrice,
+  heroLabels,
   heroCtaLabel,
   heroCtaHref = "#book",
   postContent,
@@ -237,7 +241,27 @@ export default function ExperienceTemplate({
           <span className="eyebrow">{heroEyebrow}</span>
           <h1 className="display">{title}</h1>
           <div className={styles.heroSub}>{hook}</div>
-          {heroPrice ? (
+          {heroLabels ? (
+            <ul className={styles.heroLabels} aria-label="At a glance">
+              {heroLabels.location && <li className={styles.hlWhere}>{heroLabels.location}</li>}
+              {heroLabels.tiers && heroLabels.tiers.length > 0 && (
+                <li className={styles.hlTiers}>
+                  <span className={styles.hlTiersLabel}>Included in</span>
+                  {heroLabels.tiers.map((t) => (
+                    <span key={t} className={`${styles.hlTier} ${t === "Signature" ? styles.hlSig : ""}`}>
+                      {t}
+                    </span>
+                  ))}
+                </li>
+              )}
+              {heroLabels.from ? (
+                <li className={styles.hlPrice}>
+                  From <b>€{heroLabels.from}</b> a day
+                </li>
+              ) : null}
+              {heroLabels.transfer && <li>Door-to-door transfer included</li>}
+            </ul>
+          ) : heroPrice ? (
             <div className={styles.priceRow}>
               <span className="from">{heroPrice.label ?? "From"}</span>
               <span className="amt">€{heroPrice.amount}</span>

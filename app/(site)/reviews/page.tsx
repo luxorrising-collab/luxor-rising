@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Nav from "@/components/Nav";
 import { SiteFooter as FullFooter } from "@/components/FooterServer";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import JsonLd from "@/components/JsonLd";
 import PartnersTrackRecord from "@/components/reviews/PartnersTrackRecord";
 import GuestStoriesCarousel from "@/components/reviews/GuestStoriesCarousel";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
+import { reader } from "@/lib/keystatic-reader";
 import { sourceStats } from "@/lib/partners";
 import { getReviews } from "@/lib/reviews-server";
 import { getPartners } from "@/lib/partners-server";
@@ -27,11 +30,14 @@ function fmtMonth(d: string | null) {
 }
 
 export default async function ReviewsPage() {
-  const [reviews, partners, socialProof] = await Promise.all([
+  const [reviews, partners, socialProof, productSettings] = await Promise.all([
     getReviews(),
     getPartners(),
     getSocialProof(),
+    reader.singletons.productPageSettings.read(),
   ]);
+  // the same "moments" carousel as Design Your Day and the product pages
+  const moments = (productSettings?.testimonials ?? []).filter((t) => t.quote && t.author);
 
   const directSources = partners.filter((p) => p.channel === "direct");
   const partnerSources = partners.filter((p) => p.channel !== "direct");
@@ -114,9 +120,28 @@ export default async function ReviewsPage() {
         </div>
       </section>
 
-      {/* A few guest days, told in full — shown one at a time as a carousel. */}
+      {/* Moments: short lines from our guests, the coverflow used across the site. */}
+      {moments.length > 0 && (
+        <section className={styles.momentsBand} aria-label="Moments from our guests">
+          <div className={styles.momentsBg} aria-hidden="true">
+            <Image src="/images/reviews/desert-sun.jpg" alt="" fill sizes="100vw" />
+          </div>
+          <div className={styles.momentsInner}>
+            <TestimonialsCarousel items={moments} reviewsHref="#stories" />
+          </div>
+        </section>
+      )}
+
+      {/* The guest days, told in full: equal cards, each opening in place. */}
       {stories.length > 0 && (
-        <section className={`wrap ${styles.storiesSection}`}>
+        <section className={`wrap ${styles.storiesSection}`} id="stories">
+          <div className={styles.sectionHead}>
+            <span className="eyebrow">Guest stories</span>
+            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
+              Read the whole stories
+            </h2>
+            <p>Every story here comes from a guest whose days we arranged, in their own words.</p>
+          </div>
           <GuestStoriesCarousel stories={stories} />
         </section>
       )}

@@ -20,6 +20,8 @@ export type ExperienceCardProps = {
   ctaLabel: string;
   ctaVariant?: "primary" | "secondary";
   compact?: boolean;
+  /** The Design-Your-Day tiers that include this experience. */
+  tiers?: string[];
 };
 
 export default function ExperienceCard({
@@ -40,6 +42,7 @@ export default function ExperienceCard({
   ctaLabel,
   ctaVariant = "primary",
   compact = false,
+  tiers,
 }: ExperienceCardProps) {
   const btnClass = `btn ${ctaVariant === "primary" ? "btn-primary" : "btn-line"}`;
 
@@ -67,9 +70,14 @@ export default function ExperienceCard({
   }
 
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${styles.film}`}>
       <div className={styles.im}>
         <Image src={src} alt={alt} fill sizes="(max-width: 1000px) 100vw, 33vw" loading="lazy" />
+        <span className={styles.grain} aria-hidden="true" />
+        <span className={styles.overTitle}>
+          {place && <span className={styles.overPlace}>{place}</span>}
+          <span className={styles.overH}>{title}</span>
+        </span>
         {badge && (
           <span className={`${styles.badge} ${badgeVariant === "signature" ? styles.sig : ""}`}>
             {badgeVariant === "signature" ? `★ ${badge}` : badge}
@@ -84,8 +92,17 @@ export default function ExperienceCard({
       </div>
       <div className={styles.body}>
         {meta && <div className={styles.meta}>{meta}</div>}
-        {place && <div className={styles.place}>{place}</div>}
-        <h3>{title}</h3>
+        {tiers && tiers.length > 0 && (
+          <div className={styles.tiers} aria-label={`Included in ${tiers.join(", ")}`}>
+            <span className={styles.tiersLabel}>Included in</span>
+            {tiers.map((t) => (
+              <span key={t} className={`${styles.tier} ${t === "Signature" ? styles.tierSig : ""}`}>
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+        <h3 className={styles.srOnly}>{title}</h3>
         <p className={styles.hook}>{hook}</p>
         {facts && facts.length > 0 && (
           <div className={styles.facts}>

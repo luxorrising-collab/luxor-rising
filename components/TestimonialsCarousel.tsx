@@ -30,6 +30,15 @@ export default function TestimonialsCarousel({
   const n = items.length;
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
+  // On wide screens the coverflow opens up to five cards in view.
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 980px)");
+    const on = () => setWide(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
 
   useEffect(() => {
     if (n <= 1 || paused) return;
@@ -53,6 +62,13 @@ export default function TestimonialsCarousel({
     const base = "translate(-50%, -50%)";
     if (off === 0)
       return { left: "50%", transform: `${base} scale(1)`, opacity: 1, filter: "none", zIndex: 4, pointerEvents: "auto" };
+    if (wide) {
+      if (a === 1)
+        return { left: `${50 + dir * 25}%`, transform: `${base} scale(0.86)`, opacity: 0.85, filter: "brightness(0.78)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
+      if (a === 2)
+        return { left: `${50 + dir * 45}%`, transform: `${base} scale(0.72)`, opacity: 0.55, filter: "brightness(0.6) blur(0.4px)", zIndex: 2, pointerEvents: "auto", cursor: "pointer" };
+      return { left: `${50 + dir * 66}%`, transform: `${base} scale(0.6)`, opacity: 0, filter: "blur(2px)", zIndex: 1, pointerEvents: "none" };
+    }
     if (a === 1)
       return { left: `${50 + dir * 33}%`, transform: `${base} scale(0.82)`, opacity: 0.62, filter: "brightness(0.7) blur(0.4px)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
     if (a === 2)

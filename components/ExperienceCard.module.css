@@ -194,3 +194,148 @@
   font-weight: 600;
   letter-spacing: 0.04em;
 }
+
+/* ── filmic card: the photo carries the title, the body is a dark film strip ── */
+.film {
+  background: #17100a;
+  border: 1px solid rgba(213, 178, 108, 0.22);
+  border-radius: 6px;
+  color: rgba(250, 243, 228, 0.88);
+  box-shadow: 0 30px 60px -40px rgba(14, 9, 3, 0.75);
+}
+.film:hover {
+  box-shadow: 0 40px 70px -40px rgba(14, 9, 3, 0.85), inset 0 0 0 1px rgba(229, 212, 170, 0.45);
+}
+.film .im {
+  aspect-ratio: 4 / 3;
+  background: #120b05;
+}
+.film .im::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(14, 9, 3, 0.35) 0%, rgba(14, 9, 3, 0) 26%),
+    linear-gradient(180deg, rgba(14, 9, 3, 0) 40%, rgba(14, 9, 3, 0.72) 74%, #17100a 100%);
+  pointer-events: none;
+}
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+}
+.tiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.85rem;
+}
+.tiersLabel {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(229, 212, 170, 0.6);
+  margin-right: 0.15rem;
+}
+.tier {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(250, 243, 228, 0.92);
+  background: rgba(14, 9, 3, 0.55);
+  border: 1px solid rgba(229, 212, 170, 0.35);
+  padding: 0.24rem 0.5rem;
+  border-radius: 999px;
+  backdrop-filter: blur(3px);
+}
+.tierSig {
+  background: rgba(201, 160, 99, 0.9);
+  border-color: rgba(201, 160, 99, 0.9);
+  color: var(--color-ink);
+}
+.film .badge {
+  z-index: 3;
+}
+.film .scarce {
+  z-index: 3;
+  bottom: auto;
+  top: 2.6rem;
+}
+.overTitle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 0 1.4rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.overPlace {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-gold-soft);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+}
+.overH {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.16;
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+}
+.srOnly {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.film .body {
+  padding: 1rem 1.4rem 1.4rem;
+}
+.film .hook {
+  color: rgba(250, 243, 228, 0.72);
+}
+.film .facts {
+  color: rgba(250, 243, 228, 0.6);
+  border-bottom-color: rgba(229, 212, 170, 0.16);
+}
+.film .facts b {
+  color: rgba(250, 243, 228, 0.9);
+}
+.film .price small {
+  color: rgba(229, 212, 170, 0.75);
+  letter-spacing: 0.08em;
+}
+.film .price b {
+  color: #fff;
+}
+.film .price i {
+  color: rgba(250, 243, 228, 0.6);
+}
+.film .foot :global(.btn-line) {
+  color: var(--color-gold-soft);
+  border-color: rgba(229, 212, 170, 0.55);
+}
+.film .foot :global(.btn) {
+  white-space: nowrap;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+.film .badge {
+  max-width: calc(100% - 1.6rem);
+}

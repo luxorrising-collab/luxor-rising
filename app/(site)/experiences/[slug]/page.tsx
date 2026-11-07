@@ -13,7 +13,7 @@ import type { HeroShowItem } from "@/components/HeroShow";
 import EnquiryForm from "@/components/EnquiryForm";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
-import { LIGHT_DAY_RATE } from "@/lib/pricing-math";
+import { experienceFrom } from "@/lib/experience-cards";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
 import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
@@ -72,7 +72,7 @@ export async function generateMetadata({
     entry.bookingType !== "enquiry" && (!isRedSea || slug === "hurghada-to-luxor-crossing");
   const swap = (s: string) => {
     if (isLuxorFunnel && entry.basePrice) {
-      return s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), "€330");
+      return s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${experienceFrom(slug).price}`);
     }
     return entry.basePrice && basePrice !== entry.basePrice
       ? s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${basePrice}`)
@@ -454,7 +454,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           : {
               "@type": "Offer",
               // Funnel pages sell the day, so search data carries the day's price.
-              price: String(isLuxorFunnel ? LIGHT_DAY_RATE : basePrice),
+              price: String(isLuxorFunnel ? experienceFrom(slug).price : basePrice),
               priceCurrency: "EUR",
               availability: "https://schema.org/InStock",
               url: `https://luxorrising.com/experiences/${slug}#book`,
@@ -491,7 +491,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         heroPrice={
           isLuxorFunnel
             ? {
-                amount: 330,
+                amount: experienceFrom(slug).price,
                 note: "/ day — including door-to-door transfer from Hurghada or Marsa Alam",
               }
             : undefined
@@ -527,7 +527,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         }
         configurator={
           isLuxorFunnel ? (
-            <DesignYourDayCta />
+            <DesignYourDayCta price={experienceFrom(slug).price} />
           ) : isEnquiry ? (
             <div className="wrap-narrow" style={{ paddingTop: "1.5rem" }}>
               {entry.takenCareOf.length > 0 && (
@@ -620,7 +620,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         }
         finalText={
           isLuxorFunnel
-            ? `${shortName} is one of the ways to spend a Luxor Rising day — design the whole day around it, private and arranged end to end, from €330.`
+            ? `${shortName} is one of the ways to spend a Luxor Rising day — design the whole day around it, private and arranged end to end, from €${experienceFrom(slug).price}.`
             : isEnquiry
               ? "Fully bespoke and arranged end to end. Tell us what you’re carrying — we reply personally, within 24 hours."
               : `Private, certified-guided, and arranged end to end — from €${basePrice}.`

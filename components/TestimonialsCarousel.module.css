@@ -187,3 +187,13 @@
     height: clamp(420px, 118vw, 470px);
   }
 }
+
+/* wide screens: a broader stage, five cards in view */
+@media (min-width: 980px) {
+  .wrap {
+    max-width: 1240px;
+  }
+  .slide {
+    width: 34%;
+  }
+}

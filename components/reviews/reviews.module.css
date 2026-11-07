@@ -659,3 +659,46 @@
     font-size: 0.98rem;
   }
 }
+
+/* Moments: a full-width, hero-sized band under the page hero, the coverflow
+   carousel set on a darkened Nile at dusk. */
+.momentsBand {
+  position: relative;
+  isolation: isolate;
+  min-height: min(92vh, 860px);
+  display: flex;
+  align-items: center;
+  padding: 4rem 0 3.4rem;
+  margin-top: 2.4rem;
+  overflow: hidden;
+  background: #140d07;
+  border-top: 1px solid rgba(201, 160, 99, 0.55);
+  border-bottom: 1px solid rgba(201, 160, 99, 0.55);
+}
+.momentsBg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.momentsBg img {
+  object-fit: cover;
+  filter: sepia(0.1) saturate(0.95) contrast(1.08) brightness(0.62);
+}
+.momentsBg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(110% 90% at 50% 45%, rgba(20, 13, 7, 0.2) 30%, rgba(14, 9, 3, 0.85) 100%),
+    linear-gradient(180deg, rgba(14, 9, 3, 0.5), rgba(14, 9, 3, 0.25) 40%, rgba(14, 9, 3, 0.7));
+}
+.momentsInner {
+  width: 100%;
+  padding: 0 clamp(1rem, 4vw, 3rem);
+}
+.momentsBand :global(a) {
+  color: var(--color-gold-soft);
+}
+.momentsBand :global(a:hover) {
+  color: #fff;
+}

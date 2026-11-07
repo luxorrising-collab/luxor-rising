@@ -12,7 +12,8 @@ import ArticleVisit, { type ArticleVisitInfo } from "./ArticleVisit";
 import { SLUG_TO_FEATURES, SLUG_TO_CLIP } from "@/lib/experience-cards";
 import ArticleFilmCard from "./ArticleFilmCard";
 import ArticleImage from "./ArticleImage";
-import ExperienceCard from "./ExperienceCard";
+import DayHoldSlideshow from "./DayHoldSlideshow";
+import type { ExperienceCardData } from "./ExperienceGrid";
 import TagChips from "./TagChips";
 import type { ArticleTag } from "@/lib/article-tags";
 import styles from "./ArticleTemplate.module.css";
@@ -96,6 +97,10 @@ export type ArticleTemplateProps = {
   faqs?: ArticleFaq[];
   sources?: ArticleSource[];
   relatedExperiences?: ArticleRelatedExperience[];
+  /** The Design Your Day gallery cards, the article's experiences first. */
+  dayCards?: ExperienceCardData[];
+  /** The booking card's experience, offered as a second, smaller card. */
+  bookExperience?: { href: string; name: string; image?: string };
   /** #hashtags, each linking to every article with that tag. */
   tags?: ArticleTag[];
   moreArticles?: ArticleMore[];
@@ -126,7 +131,8 @@ export default function ArticleTemplate({
   visit,
   faqs,
   sources,
-  relatedExperiences,
+  dayCards,
+  bookExperience,
   moreArticles,
   tags,
   contentNode,
@@ -206,11 +212,6 @@ export default function ArticleTemplate({
         </div>
         <h1 className="display">{title}</h1>
         {excerpt && <p className={styles.standfirst}>{excerpt}</p>}
-        {tags && tags.length > 0 && (
-          <div className={styles.headTags}>
-            <TagChips tags={tags.slice(0, 6)} />
-          </div>
-        )}
       </header>
 
       <div className={styles.byline}>
@@ -334,6 +335,20 @@ export default function ArticleTemplate({
               <p className={styles.bcTrust}>Door-to-door transfer included · free cancellation up to 7 days before</p>
             </div>
           </div>
+          {bookExperience && (
+            <Link href={bookExperience.href} className={styles.expMini}>
+              {bookExperience.image && (
+                <span className={styles.expMiniIm}>
+                  <Image src={bookExperience.image} alt="" fill sizes="84px" />
+                </span>
+              )}
+              <span className={styles.expMiniTx}>
+                <span className={styles.expMiniEyebrow}>The experience</span>
+                <b>{bookExperience.name}</b>
+                <span className={styles.expMiniGo}>See the experience →</span>
+              </span>
+            </Link>
+          )}
           {toc.length > 2 && <ArticleToc items={toc} />}
         </aside>
       </div>
@@ -375,32 +390,15 @@ export default function ArticleTemplate({
         />
       )}
 
-      {relatedExperiences && relatedExperiences.length > 0 && (
-        <section className={styles.rel}>
-          <div className={styles.relHead}>
-            <span className={styles.relEyebrow}>From the page to the place</span>
-            <h2 className="display">Stand in it, don&apos;t just read about it</h2>
-            <p>Every experience in this guide, private and timed for the quiet hour, from €{fromPrice ?? 330} a day.</p>
-          </div>
-          <div className={styles.relGrid}>
-            {relatedExperiences.map((e) => (
-              <ExperienceCard
-                key={e.href}
-                compact
-                href={e.href}
-                src={e.src}
-                alt={e.title}
-                title={e.title}
-                place={e.place}
-                hook={e.hook}
-                priceLabel="From"
-                priceValue={`€${fromPrice ?? 330}`}
-                priceNote="/ day, private"
-                ctaLabel="See the day"
-              />
-            ))}
-          </div>
-        </section>
+      {dayCards && dayCards.length > 0 && (
+        <div className={styles.relBand}>
+          <DayHoldSlideshow
+            cards={dayCards}
+            eyebrow="From the page to the place"
+            title="Stand in it, don't just read about it"
+            lead={`Every experience in this guide, private and timed for the quiet hour, in a day shaped around you. From €${fromPrice ?? 330} a day, door-to-door transfer included.`}
+          />
+        </div>
       )}
 
       {moreArticles && moreArticles.length > 0 && (

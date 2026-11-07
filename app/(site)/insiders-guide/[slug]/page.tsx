@@ -7,8 +7,9 @@ import JsonLd from "@/components/JsonLd";
 import ArticleTemplate from "@/components/ArticleTemplate";
 import { reader } from "@/lib/keystatic-reader";
 import { ARTICLE_CATEGORY_LABELS, ARTICLE_AUTHORS } from "@/lib/article-labels";
-import { dydExpHref } from "@/lib/experience-cards";
+import { dydExpHref, buildConciergeDayCards } from "@/lib/experience-cards";
 import { articleTags } from "@/lib/article-tags";
+import { ORIGINAL_DAY_RATE } from "@/lib/pricing-math";
 
 async function getEntry(slug: string) {
   const entry = await reader.collections.articles.read(slug, { resolveLinkedFiles: true });
@@ -56,10 +57,12 @@ export async function generateMetadata({
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [entry, pricingRules, allArticles] = await Promise.all([
+  const [entry, pricingRules, allArticles, conciergePage, experiences] = await Promise.all([
     getEntry(slug),
     reader.singletons.pricingRules.read(),
     reader.collections.articles.all(),
+    reader.singletons.conciergeDayPage.read(),
+    reader.collections.experiences.all(),
   ]);
   // Drafts exist in the CMS but must not be reachable on the live site
   // (on the local dev server they open, so a draft can be read before publishing).
@@ -113,6 +116,26 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       }),
     )
   ).filter((x): x is NonNullable<typeof x> => x !== null);
+
+  // the Design-Your-Day gallery cards, with this article's experiences first
+  const relatedHrefs = (entry.relatedExperiences ?? []).filter(Boolean).map((x) => dydExpHref(x));
+  const allDayCards = buildConciergeDayCards({ cmsExperiences: conciergePage?.experiences, experiences });
+  const dayCards = [
+    ...relatedHrefs.flatMap((h) => allDayCards.filter((c) => c.href === h)),
+    ...allDayCards.filter((c) => !c.href || !relatedHrefs.includes(c.href)),
+  ];
+
+  // the booking card's experience, as a second card
+  const bookExpSlug = entry.bookCard?.experience?.trim();
+  const bookExpEntry = bookExpSlug ? await reader.collections.experiences.read(bookExpSlug) : null;
+  const bookExperience =
+    bookExpSlug && bookExpEntry && bookExpEntry.isActive !== false
+      ? {
+          href: dydExpHref(bookExpSlug),
+          name: bookExpEntry.name || bookExpEntry.title || bookExpSlug,
+          image: bookExpEntry.heroImage || undefined,
+        }
+      : undefined;
 
   const moreArticles = allArticles
     .filter((a) => a.slug !== slug && !a.entry.draft)
@@ -229,9 +252,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           .map((g) => ({ src: g.image, alt: g.alt || "" }))}
         keyTakeaways={entry.keyTakeaways ? [...entry.keyTakeaways] : undefined}
         bookCard={entry.bookCard ?? undefined}
-        fromPrice={pricingRules?.lightDayRate ?? 330}
+        fromPrice={ORIGINAL_DAY_RATE}
         visit={entry.visit ?? undefined}
         relatedExperiences={relatedExperiences}
+        dayCards={dayCards}
+        bookExperience={bookExperience}
         moreArticles={moreArticles}
         tags={tags}
         faqs={faqs.map((f) => ({ question: f.question, answer: f.answer }))}

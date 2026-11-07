@@ -119,11 +119,17 @@ export default async function InsidersGuidePage() {
           {(page?.authors ?? []).map((author) => (
             <div className={styles.who} key={author.name}>
               <div className={styles.av} aria-hidden="true">
-                {author.initial}
+                {author.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={author.image} alt="" width={52} height={52} />
+                ) : (
+                  author.initial
+                )}
               </div>
               <div className={styles.whoT}>
                 <b>{author.name}</b>
-                <span>{author.role}</span>
+                <span className={styles.whoRole}>{author.role}</span>
+                {author.note && <span className={styles.whoNote}>{author.note}</span>}
               </div>
             </div>
           ))}

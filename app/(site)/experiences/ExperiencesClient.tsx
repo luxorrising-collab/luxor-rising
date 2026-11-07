@@ -26,6 +26,7 @@ export type CmsExperienceItem = Pick<
   | "priceLabel"
   | "priceNote"
   | "ctaLabel"
+  | "tiers"
 > & { category?: string; location?: string };
 
 // Single experiences are now fully managed in Keystatic and injected via

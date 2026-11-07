@@ -1,3 +1,4 @@
+import { LIGHT_DAY_RATE, ORIGINAL_DAY_RATE } from "@/lib/pricing-math";
 import type { ReactNode } from "react";
 import type { ExperienceCardData } from "@/components/ExperienceGrid";
 
@@ -9,19 +10,48 @@ export type Tier = "Signature" | "Original" | "Adventure";
 
 // Which Design-Your-Day packages include each experience — shown as the "Included"
 // label plus (for the signature experiences) a "Signature experience" label.
+const ALL: Tier[] = ["Signature", "Original", "Adventure"];
+const ORIG: Tier[] = ["Signature", "Original"];
+const SIG: Tier[] = ["Signature"];
 export const SLUG_TO_TIERS: Record<string, Tier[]> = {
-  "karnak-at-dawn": ["Signature", "Original", "Adventure"],
-  "valley-of-the-kings": ["Signature", "Original"],
-  "felucca-sunset-sail": ["Signature", "Original", "Adventure"],
-  "private-desert-safari": ["Signature", "Original"],
-  "medinet-habu": ["Signature", "Original", "Adventure"],
-  "hatshepsut-temple": ["Signature", "Original", "Adventure"],
-  "hot-air-balloon-luxor": ["Signature"],
-  "deir-el-shelwit": ["Signature"],
-  "luxor-by-night": ["Signature"],
-  "nile-dinner-cruise": ["Signature"],
-  "camel-bedouin-breakfast": ["Signature"],
+  // from Adventure (€330): in every day
+  "karnak-at-dawn": ALL,
+  "luxor-temple": ALL,
+  "medinet-habu": ALL,
+  "hatshepsut-temple": ALL,
+  "felucca-sunset-sail": ALL,
+  "hurghada-to-luxor-crossing": ALL,
+  "deir-el-medina": ALL,
+  "deir-el-shelwit": ALL,
+  "ramesseum-valley-of-queens": ALL,
+  "valley-of-the-kings": ALL,
+  "camel-bedouin-breakfast": ALL,
+  "reality-hunting": ALL,
+  // from Original (€450)
+  "luxor-by-night": ORIG,
+  "banana-island-felucca": ORIG,
+  "hot-air-balloon-luxor": ORIG,
+  "nile-dinner-cruise": ORIG,
+  "desert-astronomy-night": ORIG,
+  // Signature only (€800)
+  "private-desert-safari": SIG,
+  "dendera-abydos": SIG,
+  "sailing-lesson-nile": SIG,
 };
+
+/** The day rate each tier starts from (Adventure, Original, Signature). */
+export const TIER_FROM: Record<Tier, number> = {
+  Adventure: LIGHT_DAY_RATE,
+  Original: ORIGINAL_DAY_RATE,
+  Signature: 800,
+};
+
+/** The lowest day tier that includes this experience, and its "from" price. */
+export function experienceFrom(slug: string): { tier: Tier; price: number } {
+  const tiers = SLUG_TO_TIERS[slug] ?? ORIG;
+  const tier: Tier = tiers.includes("Adventure") ? "Adventure" : tiers.includes("Original") ? "Original" : "Signature";
+  return { tier, price: TIER_FROM[tier] };
+}
 
 // The signature experiences — marked with a "Signature experience" label.
 export const SIGNATURE_SLUGS = new Set([

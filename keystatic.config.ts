@@ -1508,8 +1508,10 @@ export default config({
         authors: fields.array(
           fields.object({
             initial: fields.text({ label: "Avatar initial", description: "Single letter, e.g. \"A\"" }),
+            image: fields.text({ label: "Avatar image path", description: 'Optional, e.g. "/images/about/founder-avatar.jpg"' }),
             name: fields.text({ label: "Name" }),
             role: fields.text({ label: "Role line" }),
+            note: fields.text({ label: "Short description", description: "One short line under the role" }),
           }),
           {
             label: "Authority strip authors",

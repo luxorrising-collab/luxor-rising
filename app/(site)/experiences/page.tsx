@@ -1,3 +1,4 @@
+import { experienceFrom, SLUG_TO_TIERS } from "@/lib/experience-cards";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -84,6 +85,33 @@ export default async function ExperiencesPage() {
     },
   };
 
+  // Where each experience happens — a short, searchable location on every card.
+  const WEST_BANK = new Set([
+    "medinet-habu",
+    "hatshepsut-temple",
+    "deir-el-medina",
+    "deir-el-shelwit",
+    "ramesseum-valley-of-queens",
+    "valley-of-the-kings",
+    "hot-air-balloon-luxor",
+  ]);
+  const NILE = new Set(["felucca-sunset-sail", "banana-island-felucca", "nile-dinner-cruise", "sailing-lesson-nile"]);
+  const DESERT = new Set(["private-desert-safari", "desert-astronomy-night", "camel-bedouin-breakfast"]);
+  const whereOf = (slug: string) =>
+    slug === "dendera-abydos"
+      ? "Dendera & Abydos, Egypt"
+      : slug === "hurghada-to-luxor-crossing"
+        ? "Hurghada to Luxor, Egypt"
+        : slug === "thirty-days-in-the-desert"
+          ? "Egyptian desert"
+          : WEST_BANK.has(slug)
+            ? "Luxor's West Bank, Egypt"
+            : NILE.has(slug)
+              ? "On the Nile, Luxor"
+              : DESERT.has(slug)
+                ? "Luxor desert, Egypt"
+                : "Luxor, Egypt";
+
   const cmsItems: CmsExperienceItem[] = gridExperiences.map(({ slug, entry }) => ({
     // Medinet Habu lives at the top level; link straight there rather than
     // bouncing through the /experiences/[slug] redirect.
@@ -94,7 +122,7 @@ export default async function ExperiencesPage() {
     // Drop the trailing "· A single experience" — redundant on the listing page.
     place: entry.heroEyebrow.replace(/\s*·\s*A single experience\s*$/i, ""),
     hook: entry.hook,
-    badge: entry.badge || undefined,
+    badge: [whereOf(slug), entry.badge].filter(Boolean).join(" · "),
     scarcity: entry.scarcityNote || undefined,
     // At-a-glance facts reduce uncertainty (duration + group size are the two
     // questions every buyer has) — a small, proven conversion lift.
@@ -103,16 +131,22 @@ export default async function ExperiencesPage() {
       entry.priceType === "included"
         ? "Included"
         : isFunnel(slug, entry.bookingType)
-          ? `€${conciergeDayPrice}`
+          ? `€${experienceFrom(slug).price}`
           : `€${priceOf(slug, entry)}`,
-    priceLabel: entry.priceType === "included" ? "Included" : "From",
+    priceLabel:
+      entry.priceType === "included"
+        ? "Included"
+        : isFunnel(slug, entry.bookingType)
+          ? "Design it into your day from"
+          : "From",
+    tiers: isFunnel(slug, entry.bookingType) ? [...(SLUG_TO_TIERS[slug] ?? [])].reverse() : undefined,
     priceNote:
       entry.priceType === "included"
         ? "with any day"
         : isFunnel(slug, entry.bookingType)
           ? "/ day"
           : entry.priceNote || undefined,
-    ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "Reserve →",
+    ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "View experience →",
     category: entry.category,
     location: HURGHADA_SLUGS.has(slug) ? "hurghada" : "luxor",
   }));
@@ -131,7 +165,7 @@ export default async function ExperiencesPage() {
     image: `https://luxorrising.com${entry.heroImage || "/images/medinet-habu-facade.jpg"}`,
     offers: {
       "@type": "Offer",
-      price: String(isFunnel(slug, entry.bookingType) ? conciergeDayPrice : priceOf(slug, entry)),
+      price: String(isFunnel(slug, entry.bookingType) ? experienceFrom(slug).price : priceOf(slug, entry)),
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
       url: `https://luxorrising.com/experiences/${slug}#book`,

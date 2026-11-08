@@ -107,9 +107,9 @@ export type ExperienceTemplateProps = {
   hidePrice?: boolean;
   /** Show a Design-Your-Day-framed price in the hero instead (amount + note). */
   heroPrice?: { amount: number; note: string; label?: string };
-  /** Labels shown in the hero in place of the price line: where, the tiers
-   *  that include it, the price and the transfer. */
-  heroLabels?: { location?: string; tiers?: string[]; from?: number; transfer?: boolean };
+  /** Labels shown in the hero in place of the price line: the tiers that
+   *  include it, the price, the day and the transfer. */
+  heroLabels?: { tiers?: string[]; from?: number; transfer?: boolean };
   /** Override the primary hero CTA (label + target). */
   heroCtaLabel?: string;
   heroCtaHref?: string;
@@ -243,7 +243,6 @@ export default function ExperienceTemplate({
           <div className={styles.heroSub}>{hook}</div>
           {heroLabels ? (
             <ul className={styles.heroLabels} aria-label="At a glance">
-              {heroLabels.location && <li className={styles.hlWhere}>{heroLabels.location}</li>}
               {heroLabels.tiers && heroLabels.tiers.length > 0 && (
                 <li className={styles.hlTiers}>
                   <span className={styles.hlTiersLabel}>Included in</span>
@@ -254,12 +253,20 @@ export default function ExperienceTemplate({
                   ))}
                 </li>
               )}
-              {heroLabels.from ? (
-                <li className={styles.hlPrice}>
-                  From <b>€{heroLabels.from}</b> a day
+              <li>
+                {heroLabels.from ? (
+                  <>
+                    From <b className={styles.hlAmt}>€{heroLabels.from}</b> a{" "}
+                  </>
+                ) : null}
+                Luxor Rising day
+              </li>
+              {heroLabels.transfer && (
+                <li>
+                  <span className={styles.hlDesk}>Delivered end to end</span>
+                  <span className={styles.hlMob}>End to end</span>
                 </li>
-              ) : null}
-              {heroLabels.transfer && <li>Door-to-door transfer included</li>}
+              )}
             </ul>
           ) : heroPrice ? (
             <div className={styles.priceRow}>

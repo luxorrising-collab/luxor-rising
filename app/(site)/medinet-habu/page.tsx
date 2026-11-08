@@ -9,7 +9,7 @@ import DayHoldSlideshow from "@/components/DayHoldSlideshow";
 import DesignYourDayCta from "@/components/DesignYourDayCta";
 import TakenCareOfSection from "@/components/TakenCareOfSection";
 import type { HeroShowItem } from "@/components/HeroShow";
-import { buildConciergeDayCards, dydExpHref, experienceFrom, experienceWhere, SLUG_TO_TIERS } from "@/lib/experience-cards";
+import { buildConciergeDayCards, dydExpHref, experienceFrom, SLUG_TO_TIERS } from "@/lib/experience-cards";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { LIGHT_DAY_RATE } from "@/lib/pricing-math";
@@ -217,7 +217,6 @@ export default async function MedinetHabuPage() {
           note: "· transfer included",
         }}
         heroLabels={{
-          location: experienceWhere(SLUG),
           tiers: [...(SLUG_TO_TIERS[SLUG] ?? [])].reverse(),
           from: experienceFrom(SLUG).price,
           transfer: true,

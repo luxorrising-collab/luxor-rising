@@ -202,8 +202,10 @@ export default function ArticleTemplate({
         <Link href="/">Home</Link>
         <span>/</span>
         <Link href={breadcrumbHref}>{breadcrumbLabel}</Link>
-        <span>/</span>
-        {title}
+        <span className={styles.crumbHere}>/</span>
+        <em className={styles.crumbHere} aria-current="page">
+          {title}
+        </em>
       </nav>
 
       <header className={styles.head}>

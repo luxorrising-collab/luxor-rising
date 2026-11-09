@@ -118,3 +118,19 @@ export function trackWhatsAppClick(p: { location: string; topic?: string }) {
   });
   window.fbq?.("track", "Contact", { content_name: p.location });
 }
+
+/** Estimated worth of one enquiry, in EUR, so Google Ads can weigh an enquiry
+    against a paid booking when it bids. Roughly: average booking (~€700) ×
+    the share of enquiries that book (~15%). Adjust as real numbers come in. */
+export const LEAD_VALUE_EUR = 100;
+
+/** Fired when an enquiry form is sent successfully — GA4's recommended
+    `generate_lead` event (import it into Google Ads as a conversion) and
+    Meta's Lead event. */
+export function trackLead(p: { form: string; topic?: string; value?: number }) {
+  const value = p.value ?? LEAD_VALUE_EUR;
+  const currency = "EUR";
+  dl({ event: "generate_lead", form: p.form, topic: p.topic ?? "", value, currency });
+  window.gtag?.("event", "generate_lead", { form: p.form, topic: p.topic ?? "", value, currency });
+  window.fbq?.("track", "Lead", { content_name: p.form, value, currency });
+}

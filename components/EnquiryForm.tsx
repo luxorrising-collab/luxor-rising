@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./EnquiryForm.module.css";
+import { trackLead } from "@/lib/analytics";
 
 export default function EnquiryForm({ note, topic }: { note?: string; topic?: string }) {
   const [sent, setSent] = useState(false);
@@ -37,6 +38,7 @@ export default function EnquiryForm({ note, topic }: { note?: string; topic?: st
       });
       if (res.ok) {
         setSent(true);
+        trackLead({ form: "enquiry", topic: topic ?? "" });
         return;
       }
       setError(

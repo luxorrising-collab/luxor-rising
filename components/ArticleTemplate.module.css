@@ -1,9 +1,13 @@
 /* breadcrumb */
 .crumb {
-  padding: 2.4rem 0 0;
+  /* clear the fixed site header (about 66–72px), then breathe */
+  padding: calc(72px + 1.6rem) 0 0;
   font-size: 0.76rem;
   color: var(--color-muted);
   letter-spacing: 0.03em;
+}
+.crumb em {
+  font-style: normal;
 }
 .crumb a:hover {
   color: var(--color-gold-deep);
@@ -15,8 +19,27 @@
 
 /* head */
 .head {
-  padding: 4.2rem 0 3.2rem;
+  padding: 2.8rem 0 3.2rem;
   max-width: 860px;
+}
+/* on a phone: one short line, Home / Insider's Guide, easy to tap */
+@media (max-width: 640px) {
+  .crumb {
+    padding-top: calc(72px + 1rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .crumb a {
+    display: inline-block;
+    padding: 0.5rem 0;
+  }
+  .crumbHere {
+    display: none;
+  }
+  .head {
+    padding-top: 1.4rem;
+  }
 }
 .kicker {
   font-size: 0.7rem;

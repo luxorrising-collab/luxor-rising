@@ -8,7 +8,7 @@ import StickyBar from "./StickyBar";
 import AvailabilityDate from "./AvailabilityDate";
 import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
-import { trackBeginCheckout } from "@/lib/analytics";
+import { trackBeginCheckout, trackLead } from "@/lib/analytics";
 import { dayTotal, lightTotal, LIGHT_DAY_RATE, ORIGINAL_DAY_RATE, PHOTO_PRO } from "@/lib/pricing-math";
 
 type DayCount = 1 | 2 | 3 | 4;
@@ -1402,6 +1402,7 @@ export default function DayConfigurator({
       });
       if (res.ok) {
         setEqSent(true);
+        trackLead({ form: "design-your-day", topic: "concierge-day" });
       } else {
         setError("We couldn't send that just now. Please try again, or write to us on WhatsApp.");
       }

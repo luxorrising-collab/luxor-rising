@@ -40,7 +40,10 @@ export async function generateMetadata({
       title,
       description,
       url: `/insiders-guide/${slug}`,
-      images: entry.heroImage ? [{ url: entry.heroImage, alt: entry.title }] : undefined,
+      // A branded share image: the hero photo, a warm tint and the article's share line.
+      images: entry.heroImage
+        ? [{ url: `/api/og/article/${slug}`, width: 1200, height: 630, alt: entry.title }]
+        : undefined,
       publishedTime: entry.publishedAt || undefined,
       modifiedTime: entry.updatedAt || entry.publishedAt || undefined,
       authors: [ARTICLE_AUTHORS[entry.author]?.name ?? entry.author],
@@ -50,7 +53,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: entry.heroImage ? [entry.heroImage] : undefined,
+      images: entry.heroImage ? [`/api/og/article/${slug}`] : undefined,
     },
   };
 }

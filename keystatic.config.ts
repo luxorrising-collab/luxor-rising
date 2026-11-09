@@ -356,6 +356,12 @@ export default config({
           multiline: true,
           description: "Short summary shown on article cards and in previews.",
         }),
+        shareLine: fields.text({
+          label: "Share line",
+          description:
+            "One quiet line printed on the share image (Facebook, Instagram, WhatsApp). Not the headline, which Facebook already shows under the image. About 30–55 characters, e.g. \"Every ten days, the world began again.\" Leave empty for the image with the brand only.",
+          validation: { length: { max: 70 } },
+        }),
         heroImage: fields.image({
           label: "Hero image",
           directory: "public/images/articles",

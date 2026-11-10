@@ -22,8 +22,10 @@
   text-align: center;
   overflow: hidden;
   border-radius: 18px;
-  background: #1a120a;
-  border: 1px solid rgba(213, 178, 108, 0.28);
+  /* Solid dark bronze: the card reads as a cast metal plate, the guest's photo
+     only faintly worked into it underneath, like an engraving. */
+  background: linear-gradient(135deg, #24170a 0%, #4a3118 34%, #2f1e0e 56%, #53381e 78%, #22150a 100%);
+  border: 1.5px solid #4a3118;
   box-shadow: 0 26px 60px rgba(26, 16, 6, 0.42);
   transform-origin: center center;
   transition: left 0.6s cubic-bezier(0.2, 0.7, 0.3, 1),
@@ -39,18 +41,26 @@
   object-fit: cover;
   z-index: 0;
   user-select: none;
+  /* The photo takes the bronze's colour and keeps only its light and shade. */
+  filter: grayscale(1) contrast(1.25);
+  mix-blend-mode: luminosity;
+  opacity: 0.28;
 }
 .tint {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-      180deg,
-      rgba(20, 13, 6, 0.34) 0%,
-      rgba(20, 13, 6, 0.46) 42%,
-      rgba(18, 11, 5, 0.88) 100%
+  /* Brushed-metal sheen over the plate, darker towards the foot for the name. */
+  background: radial-gradient(110% 60% at 28% 0%, rgba(240, 200, 140, 0.13) 0%, rgba(240, 200, 140, 0) 60%),
+    linear-gradient(
+      135deg,
+      rgba(46, 29, 14, 0.55) 0%,
+      rgba(90, 60, 30, 0.35) 36%,
+      rgba(58, 37, 18, 0.5) 58%,
+      rgba(100, 68, 37, 0.35) 78%,
+      rgba(44, 27, 13, 0.6) 100%
     ),
-    radial-gradient(120% 90% at 50% 30%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.28) 100%);
+    linear-gradient(180deg, rgba(30, 19, 9, 0) 55%, rgba(30, 19, 9, 0.55) 100%);
 }
 .body {
   position: relative;
@@ -73,9 +83,10 @@
   font-style: italic;
   font-size: clamp(1.16rem, 2.2vw, 1.6rem);
   line-height: 1.4;
-  color: #fbf3e6;
+  color: #f4e6c8;
   text-wrap: balance;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+  /* struck into the metal: a dark edge above, a faint light edge below */
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 226, 170, 0.14);
 }
 .sig {
   position: relative;

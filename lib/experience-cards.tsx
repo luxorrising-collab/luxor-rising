@@ -219,14 +219,14 @@ export const SLUG_TO_CLIP: Record<string, { src: string; poster: string; positio
   "karnak-at-dawn": cardClip("temple", "yoga", "50% 40%"),
   "valley-of-the-kings": cardClip("temple", "entering", "34% 45%"),
   "felucca-sunset-sail": cardClip("nile", "felucca", "30% 45%"),
-  "private-desert-safari": cardClip("desert", "desert-camp", "36% 45%"),
+  "private-desert-safari": cardClip("desert", "desert-stars", "46% 45%"),
   "medinet-habu": cardClip("temple", "table", "50% 50%"),
   "hot-air-balloon-luxor": cardClip("sky", "balloon", "68% 45%"),
   "deir-el-shelwit": cardClip("temple", "reading", "50% 45%"),
   "luxor-by-night": cardClip("nile", "dinner", "60% 45%"),
   "hatshepsut-temple": cardClip("temple", "entering", "34% 45%"),
   "nile-dinner-cruise": cardClip("nile", "dinner", "60% 45%"),
-  "camel-bedouin-breakfast": cardClip("desert", "desert-stars", "46% 45%"),
+  "camel-bedouin-breakfast": cardClip("desert", "desert-camp", "36% 45%"),
 };
 
 // A custom line icon per experience, chosen to suit each one — shown on its card.

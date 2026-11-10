@@ -734,6 +734,26 @@
   left: auto;
   right: 0.95rem;
 }
+/* "Included in" + day chips (Signature in gold), as on the experience hero. */
+.expTiers {
+  gap: 0.3rem;
+  padding: 0.22rem 0.24rem 0.22rem 0.66rem;
+}
+.expTiersLabel {
+  margin-right: 0.1rem;
+  color: rgba(229, 212, 170, 0.85);
+}
+.expTier {
+  padding: 0.2rem 0.42rem;
+  border-radius: 999px;
+  border: 1px solid rgba(229, 212, 170, 0.35);
+  line-height: 1;
+}
+.expTierSig {
+  background: rgba(201, 160, 99, 0.9);
+  border-color: rgba(201, 160, 99, 0.9);
+  color: var(--color-ink);
+}
 /* Signature experiences get the gold accent + a small star. */
 .expTagSig {
   border-color: rgba(229, 212, 170, 0.75);
@@ -1823,6 +1843,17 @@
      selling chips can be a touch larger and easier to read. */
   .expTag {
     font-size: 0.7rem;
+  }
+  /* "Included in" + three day chips must fit one line on a narrow phone. */
+  .expTiers {
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    gap: 0.22rem;
+  }
+  .expTier {
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 0.2rem 0.34rem;
   }
   .expFeat {
     font-size: 0.68rem;

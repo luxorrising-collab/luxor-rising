@@ -89,8 +89,10 @@ function ExpCard({
     const img = imgRef.current;
     if (img?.complete && img.naturalWidth > 0) setLoaded(true);
   }, []);
-  // "Included" sits top-left on every experience; the signature experiences also
-  // get a "Signature experience" label top-right.
+  // "Included in" + the days that include it sits top-left, the same chips as
+  // the experience page hero (Signature in gold). It is the only place
+  // Signature is named, so a Signature-only experience reads "Included in
+  // Signature" and nothing else.
   const tiers = e.tiers ?? [];
   const showIncluded = tiers.length > 0;
   const play = (v: HTMLVideoElement | null) => {
@@ -173,10 +175,15 @@ function ExpCard({
           <source src={e.clip} type="video/mp4" />
         </video>
       )}
-      {/* "Included" — top-left on every experience. */}
+      {/* "Included in" + day chips — top-left on every experience. */}
       {showIncluded ? (
-        <span className={styles.expTag} aria-label="Included in your day">
-          Included
+        <span className={`${styles.expTag} ${styles.expTiers}`} aria-label={`Included in ${tiers.join(", ")}`}>
+          <span className={styles.expTiersLabel}>Included in</span>
+          {tiers.map((t) => (
+            <span key={t} className={`${styles.expTier} ${t === "Signature" ? styles.expTierSig : ""}`}>
+              {t}
+            </span>
+          ))}
         </span>
       ) : e.num ? (
         <span className={styles.expNum} aria-hidden>
@@ -189,8 +196,8 @@ function ExpCard({
           </span>
         )
       )}
-      {/* "Signature experience" — top-right, only on the signature experiences. */}
-      {e.signature && (
+      {/* "Signature experience" — top-right, only where no day chips name it already. */}
+      {e.signature && !showIncluded && (
         <span
           className={`${styles.expTag} ${styles.expTagRight} ${styles.expTagSig}`}
           aria-label="A signature experience"

@@ -3,43 +3,33 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./ConciergeChat.module.css";
-import { trackWhatsAppClick } from "@/lib/analytics";
+import { trackLead } from "@/lib/analytics";
 
-// A quiet "ask us" chat that hands the conversation to WhatsApp, where a real
-// person at Luxor Rising answers. It says "us", not "your concierge": the
-// concierge comes with a booked day, so before booking the guest talks to us. It stays out of the hero (appears once the
-// visitor scrolls), sits above the sticky booking bar, and opens a small card
-// with conversation starters that pre-fill the first WhatsApp message.
+// A quiet "ask us" chat. It says "us", not "your concierge": the concierge comes
+// with a booked day, so before booking the guest talks to Luxor Rising. No phone
+// number is shown and nothing is pre-written: the guest leaves their name, email
+// and (if they like) a WhatsApp number, writes in their own words, and we reply
+// personally. It goes through /api/enquiry like every other form, so it lands in
+// Supabase and counts as a lead. It stays out of the hero (appears once the
+// visitor scrolls) and sits above the sticky booking bar.
 
-const TOPICS = [
-  { label: "Is my date free?", text: "Is my date free? We're thinking of " },
-  { label: "Which day suits us?", text: "Which day would suit us best? We are " },
-  { label: "Pickup from my hotel", text: "Could you pick us up from our hotel? We're staying at " },
-  { label: "Something else", text: "" },
-];
-
-const WaGlyph = () => (
-  <svg viewBox="0 0 24 24" aria-hidden width="18" height="18">
-    <path
-      fill="currentColor"
-      d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"
-    />
-  </svg>
-);
+const isEmail = (s: string) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s);
 
 export default function ConciergeChat({
-  whatsappNumber,
   context = "Design Your Day",
   revealAfter = 520,
 }: {
-  whatsappNumber: string;
-  /** Which page the guest is on — opens their first message and tags the event. */
+  /** Kept for the page's existing call; the number is no longer shown. */
+  whatsappNumber?: string;
+  /** Which page the guest is on — stored with the message and tags the event. */
   context?: string;
   revealAfter?: number;
 }) {
-  const digits = whatsappNumber.replace(/\D/g, "").replace(/^00/, "");
   const [shown, setShown] = useState(false);
   const [open, setOpen] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
   // Steps aside while the payment controls are on screen, so it never covers them.
   const [yield_, setYield] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -77,17 +67,47 @@ export default function ConciergeChat({
     };
   }, [open]);
 
-  if (!digits) return null;
-
-  const link = (topic: string) =>
-    `https://wa.me/${digits}?text=${encodeURIComponent(`Hello Luxor Rising, I'm looking at ${context}. ${topic}`.trim())}`;
-  const go = (topic: string) => trackWhatsAppClick({ location: context, topic });
-  const pretty = whatsappNumber.trim().startsWith("+") ? whatsappNumber.trim() : `+${digits}`;
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const name = String(fd.get("name") ?? "").trim();
+    const email = String(fd.get("email") ?? "").trim();
+    const phone = String(fd.get("phone") ?? "").trim();
+    const text = String(fd.get("message") ?? "").trim();
+    if (!name || !isEmail(email) || !text) {
+      setError("Please add your name, a valid email and your message.");
+      return;
+    }
+    setSending(true);
+    setError("");
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          message: [text, phone && `WhatsApp: ${phone}`, `(Sent from the chat on ${context})`]
+            .filter(Boolean)
+            .join("\n\n"),
+          topic: "ask-us",
+          company: String(fd.get("company") ?? ""), // honeypot — left blank by people
+        }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setSent(true);
+      trackLead({ form: "ask-us", topic: context });
+    } catch {
+      setError("We couldn't send that just now. Please try again, or email luxor.rising.com@gmail.com.");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <div ref={rootRef} className={`${styles.root} ${(shown && !yield_) || open ? styles.shown : ""}`}>
       {open && (
-        <div className={styles.card} role="dialog" aria-label="Chat with Luxor Rising">
+        <div className={styles.card} role="dialog" aria-label="Write to Luxor Rising">
           <div className={styles.head}>
             <span className={styles.avatar}>
               <Image src="/images/logo-emblem.png" alt="" width={40} height={40} />
@@ -102,39 +122,45 @@ export default function ConciergeChat({
               ✕
             </button>
           </div>
-          <div className={styles.body}>
-            <p className={styles.bubble}>Hello, and welcome.</p>
-            <p className={styles.bubble}>
-              Ask anything about your day: your date, pickup from your hotel, which day suits you. You&apos;ll
-              get a personal reply on WhatsApp.
-            </p>
-            <div className={styles.topics}>
-              {TOPICS.map((t) => (
-                <a
-                  key={t.label}
-                  href={link(t.text)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.topic}
-                  onClick={() => go(t.label)}
-                >
-                  {t.label}
-                </a>
-              ))}
+
+          {sent ? (
+            <div className={styles.body}>
+              <p className={styles.bubble}>Thank you — your message is with us.</p>
+              <p className={styles.bubble}>
+                We&apos;ll read it personally and reply within 24 hours, by email or on WhatsApp if you left your
+                number.
+              </p>
             </div>
-          </div>
-          <div className={styles.foot}>
-            <a
-              href={link("")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`btn btn-primary ${styles.cta}`}
-              onClick={() => go("open")}
-            >
-              <WaGlyph /> Chat on WhatsApp
-            </a>
-            <span className={styles.num}>Opens WhatsApp · {pretty}</span>
-          </div>
+          ) : (
+            <form className={styles.form} onSubmit={onSubmit} noValidate>
+              <div className={styles.body}>
+                <p className={styles.bubble}>Hello, and welcome.</p>
+                <p className={styles.bubble}>
+                  Write to us in your own words: your date, your hotel, anything on your mind. We reply
+                  personally.
+                </p>
+              </div>
+              <div className={styles.fields}>
+                {/* Honeypot: hidden from people, catches bots. */}
+                <input type="text" name="company" tabIndex={-1} autoComplete="off" className={styles.hp} aria-hidden />
+                <textarea name="message" rows={3} placeholder="Your message" aria-label="Your message" required />
+                <input type="text" name="name" placeholder="Your name" aria-label="Your name" autoComplete="name" required />
+                <input type="email" name="email" placeholder="Email" aria-label="Email" autoComplete="email" required />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="WhatsApp (optional)"
+                  aria-label="WhatsApp number (optional)"
+                  autoComplete="tel"
+                />
+                {error && <p className={styles.err}>{error}</p>}
+                <button type="submit" className={`btn btn-primary ${styles.cta}`} disabled={sending}>
+                  {sending ? "Sending…" : "Send"}
+                </button>
+                <span className={styles.num}>We reply within 24 hours, by email or WhatsApp</span>
+              </div>
+            </form>
+          )}
         </div>
       )}
 
@@ -142,7 +168,7 @@ export default function ConciergeChat({
         type="button"
         className={styles.launch}
         aria-expanded={open}
-        aria-label={open ? "Close the chat" : "Ask us on WhatsApp"}
+        aria-label={open ? "Close" : "Write to us"}
         onClick={() => setOpen((o) => !o)}
       >
         <span className={styles.launchAvatar}>

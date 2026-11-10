@@ -32,7 +32,7 @@ import styles from "./ConciergeDayPage.module.css";
 export const metadata: Metadata = {
   title: "The Signature Concierge Day",
   description:
-    "A private day in Luxor, door to door from Hurghada or Marsa Alam and timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing to arrange. From €450.",
+    "A private day in Luxor, door to door from Hurghada or Marsa Alam and timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing to arrange. From €330.",
 };
 
 // The curated experience cards, hover clips, icons and tier/feature data now

@@ -22,6 +22,7 @@ const TOPIC_LABEL: Record<string, string> = {
   "private-guide": "Private guide",
   "private-villas": "Private villas",
   "concierge-day": "Concierge day",
+  "ask-us": "Ask us (chat)",
 };
 
 // Map the form's group label to an approximate party size.

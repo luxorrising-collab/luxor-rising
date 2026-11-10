@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./TestimonialsCarousel.module.css";
@@ -19,7 +19,10 @@ export type Moment = {
  *  neighbours scaled back and faded for depth. The author repeats (mostly one
  *  guest for now) so it's kept quiet here — full attribution + verification live
  *  on the reviews page, linked below. Auto-advances, pauses on hover/focus, and
- *  respects prefers-reduced-motion. */
+ *  respects prefers-reduced-motion.
+ *  On wide screens the stage runs the full width of the page: the middle three
+ *  cards keep their places, and the cards beyond them carry on outward, smaller
+ *  and fading gradually into the page at both edges. */
 export default function TestimonialsCarousel({
   items,
   reviewsHref = "/reviews",
@@ -32,6 +35,17 @@ export default function TestimonialsCarousel({
   const [paused, setPaused] = useState(false);
   // On wide screens the coverflow opens up to five cards in view.
   const [wide, setWide] = useState(false);
+  // The width of the centre column the middle three cards are laid out on; on
+  // wide screens every position is measured from it, so they never move.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [cw, setCw] = useState(0);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setCw(el.clientWidth));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 980px)");
     const on = () => setWide(mq.matches);
@@ -62,12 +76,24 @@ export default function TestimonialsCarousel({
     const base = "translate(-50%, -50%)";
     if (off === 0)
       return { left: "50%", transform: `${base} scale(1)`, opacity: 1, filter: "none", zIndex: 4, pointerEvents: "auto" };
-    if (wide) {
+    if (wide && cw) {
+      // Positions in px from the centre of the full-width stage.
+      const card = cw * 0.34;
+      const at = (x: number) => `calc(50% + ${dir * x}px)`;
       if (a === 1)
-        return { left: `${50 + dir * 25}%`, transform: `${base} scale(0.86)`, opacity: 0.85, filter: "brightness(0.78)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
-      if (a === 2)
-        return { left: `${50 + dir * 45}%`, transform: `${base} scale(0.72)`, opacity: 0.55, filter: "brightness(0.6) blur(0.4px)", zIndex: 2, pointerEvents: "auto", cursor: "pointer" };
-      return { left: `${50 + dir * 66}%`, transform: `${base} scale(0.6)`, opacity: 0, filter: "blur(2px)", zIndex: 1, pointerEvents: "none" };
+        return { left: at(cw * 0.25), width: card, transform: `${base} scale(0.86)`, opacity: 0.85, filter: "brightness(0.78)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
+      // Beyond the middle three: each card a little smaller, overlapping the one
+      // before it by the same share, and dimmer, until they leave the screen.
+      let x = cw * 0.25;
+      let prev = 0.86;
+      let sc = prev;
+      for (let k = 2; k <= a; k++) {
+        sc = Math.max(0.5, 0.72 - 0.05 * (k - 2));
+        x += ((prev + sc) / 2) * card * 0.75;
+        prev = sc;
+      }
+      const dim = Math.max(0.28, 0.6 - 0.07 * (a - 2));
+      return { left: at(x), width: card, transform: `${base} scale(${sc})`, opacity: Math.max(0.35, 0.8 - 0.08 * (a - 2)), filter: `brightness(${dim})`, zIndex: Math.max(0, 3 - a + 1), pointerEvents: a === 2 ? "auto" : "none", cursor: "pointer" };
     }
     if (a === 1)
       return { left: `${50 + dir * 33}%`, transform: `${base} scale(0.82)`, opacity: 0.62, filter: "brightness(0.7) blur(0.4px)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
@@ -78,7 +104,9 @@ export default function TestimonialsCarousel({
 
   return (
     <div
+      ref={wrapRef}
       className={styles.wrap}
+      style={{ "--cw": `${cw}px` } as React.CSSProperties}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -96,7 +124,7 @@ export default function TestimonialsCarousel({
               aria-hidden={!isCenter}
               onClick={!isCenter ? () => go(i) : undefined}
             >
-              {t.image && Math.min((((i - idx) % n) + n) % n, (((idx - i) % n) + n) % n) <= 2 && (
+              {t.image && Math.min((((i - idx) % n) + n) % n, (((idx - i) % n) + n) % n) <= (wide ? 6 : 2) && (
                 <Image
                   className={styles.img}
                   src={t.image}

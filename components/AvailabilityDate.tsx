@@ -164,8 +164,8 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
               </p>
               <p className={styles.hostBio}>
                 He has spent twenty years opening doors in Luxor, for archaeologists, film crews and
-                travellers along the Nile who wanted to see Luxor and Aswan properly. He meets you in
-                person, drives you and holds every detail of your {days > 1 ? "days" : "day"}.
+                travellers along the Nile who wanted to see it properly. He meets you in person, and
+                holds every detail of your {days > 1 ? "days" : "day"}.
               </p>
             </div>
           </div>

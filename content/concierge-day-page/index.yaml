@@ -337,14 +337,16 @@ scarcityText: >-
   we cap how many days we take. It keeps the experience unhurried, and it means
   popular dates go early. If your date matters, claim it now.
 faq:
-  - question: Why does this cost more than a tour?
+  - question: What's included in the price?
     answer: >-
-      Because the price pays for a day that goes right, and that takes people. We
-      pay our partners well so that our guests come first with them, and we book
-      the best Egyptologist available for your date, not whoever is left. It pays
-      for the hour too: being inside at 6:15 instead of 9:30 takes a private car,
-      tickets bought ahead and people on the ground. And one concierge owns your
-      whole day, so when something slips, it's his to fix, not yours.
+      The whole day, door to door. A private car from your hotel in Hurghada or
+      Marsa Alam and back, one concierge who holds every detail, and each site at
+      the hour it is quietest. The Signature day adds your own licensed
+      Egyptologist, insider access, every entry and tip, meals where locals eat,
+      the Signature-only experiences and a signature gift. The Original day
+      includes entry to every site you visit, with tips paid locally. The
+      Adventure day includes one temple and a Nile sail, with the rest paid
+      locally as you go. Each card above shows exactly what its day includes.
   - question: What time is pickup, and how long is the drive?
     answer: >-
       Pickup is flexible: we collect you from your hotel in Hurghada or Marsa Alam
@@ -438,7 +440,7 @@ faq:
 finalEyebrow: Your date is waiting
 finalTitle: Give us one day. We'll give you the one you remember.
 finalText: >-
-  Private, effortless, and guaranteed — from €450. Pick your date before it's
+  Private, effortless, and guaranteed — from €330. Pick your date before it's
   taken.
 cards:
   signature:

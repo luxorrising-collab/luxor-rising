@@ -1,5 +1,5 @@
 /* Floating concierge chat: an ink-and-gold launcher above the sticky booking
-   bar, opening a small card that hands off to WhatsApp. */
+   bar, opening a small card where the guest writes to us in their own words. */
 .root {
   --avail: #4c8a5a;
   position: fixed;
@@ -183,36 +183,45 @@
   line-height: 1.45;
   color: var(--color-ink);
 }
-.topics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.35rem;
+.form {
+  margin: 0;
 }
-.topic {
-  padding: 0.42rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-gold);
-  color: var(--color-gold-deep);
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-decoration: none;
-  background: #fff;
-  transition:
-    background 0.2s,
-    color 0.2s;
-}
-.topic:hover {
-  background: var(--color-gold-deep);
-  color: #fff;
-}
-
-.foot {
-  padding: 0.8rem 0.9rem 0.9rem;
+.fields {
+  padding: 0.7rem 0.9rem 0.9rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0.45rem;
+}
+.fields input,
+.fields textarea {
+  width: 100%;
+  border: 1px solid var(--color-gold-soft);
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-ink);
+  background: #fff;
+  resize: vertical;
+}
+.fields input:focus,
+.fields textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 160, 99, 0.18);
+}
+.hp {
+  position: absolute !important;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.err {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #a5432e;
 }
 .cta {
   display: inline-flex;

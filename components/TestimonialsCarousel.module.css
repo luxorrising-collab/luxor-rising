@@ -188,12 +188,38 @@
   }
 }
 
-/* wide screens: a broader stage, five cards in view */
+/* wide screens: the stage runs the full width of the page. The middle three
+   cards sit on the 1240px centre column (--cw, measured in JS); the cards beyond
+   carry on outward and fade gradually into the page at both edges. */
 @media (min-width: 980px) {
   .wrap {
     max-width: 1240px;
   }
   .slide {
     width: 34%;
+  }
+  .stage {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 calc(50% - var(--cw) * 0.5),
+      #000 calc(50% + var(--cw) * 0.5),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 calc(50% - var(--cw) * 0.5),
+      #000 calc(50% + var(--cw) * 0.5),
+      transparent 100%
+    );
+  }
+  .prev {
+    left: calc(50% - var(--cw) * 0.5 + 4px);
+  }
+  .next {
+    right: calc(50% - var(--cw) * 0.5 + 4px);
   }
 }

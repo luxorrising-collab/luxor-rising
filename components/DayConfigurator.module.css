@@ -3181,6 +3181,37 @@
   letter-spacing: 0.04em;
   color: #f3e7cf;
 }
+/* the gold label, only on experiences the Signature day alone includes */
+.expExpTxt .expSigTag {
+  padding: 0.08rem 0.5rem 0.1rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* "Show all N experiences", then "Explore every experience →" */
+.expMore {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid rgba(201, 160, 99, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-gold-soft);
+  font: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-decoration: none;
+}
+.expMore:hover {
+  border-color: var(--color-gold);
+  color: #fff;
+}
 /* model days — each folds open to its three experiences */
 .expGroups {
   display: grid;

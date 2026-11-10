@@ -130,7 +130,7 @@ const ORIGINAL_SUBTITLE =
 const ORIGINAL_META = "All the sites · entries included · private felucca & desert";
 const ORIGINAL_INCLUDED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — included, the car stays with you all day",
-  "Entry to every temple and experience you visit — no queues, no cash, nothing to carry",
+  "Entry to every temple and experience you visit — no queues, nothing to buy at the gate",
   "East bank — Karnak, Luxor Temple, and the Luxor & Mummification museums",
   "West bank — the Valley of the Kings (three tombs), Hatshepsut, Medinet Habu, the Ramesseum, Deir el-Medina, the Valley of the Queens and the Colossi of Memnon",
   "A private felucca on the Nile at golden hour",
@@ -158,12 +158,14 @@ const SIGNATURE_INCLUDED = [
   "Tips and everything in between handled — nothing to think about, just a memorable stay start to finish",
   "Your day photographed — on your phone from the first moment, not in six weeks",
   "One concierge end to end — planner, translator & fixer, on WhatsApp before you arrive and all day",
+  "Properly hosted and welcomed — met in person and looked after like a guest in someone's home",
+  "Anything else you wish for — just ask your concierge, and we make it happen",
   "A signature gift, hand-picked & locally made, from your first full day",
   "The first two hours, or we refund the rest",
 ];
 const SIGNATURE_UNLOCKS = [
   "More experiences unlock as you add days — venture further, to Aswan and beyond",
-  "Signature bonuses on us — the hidden temple of Isis and a Nile sailing lesson",
+  "Signature experiences included — learn to sail the Nile yourself, or a fire and a feast under the desert stars",
   "A second and third gift — the full set of three",
   "A private photoshoot of your day, from three days",
   "A better per-day price the longer you stay",
@@ -421,12 +423,13 @@ const ADVENTURE_EXPS = [
 const SIGNATURE_HANDLED = [
   "Door-to-door transfer from Hurghada, Marsa Alam or the coast — the car stays with you",
   "Your own licensed Egyptologist, at the monuments — every day",
+  "Not only a quiet hour, a quiet space — room to sit in silence with yourself, kept as private as Luxor allows",
   "Insider access & knowledge — the doors most never reach and the real stories behind the walls",
   "A venture past the monuments — hidden spots in the desert and a sunset few ever see",
   "Staged moments on request — a proposal, an anniversary, a surprise timed to the light",
   "Every monument entry ticket — nothing to buy, queue for or carry",
   "A full meal and hand-picked local food & coffee stops — where locals actually eat",
-  "Tips and everything in between, handled — nothing to think about",
+  "Tips included — the quiet gestures that open doors a little wider, all carried for you",
   "Your day photographed — on your phone from the first moment",
   "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking",
   "A signature gift, hand-picked & locally made, from your first full day",
@@ -434,7 +437,7 @@ const SIGNATURE_HANDLED = [
 ];
 const ORIGINAL_HANDLED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day",
-  "Entry to every temple and experience you visit, in the price — no queues, no cash, nothing to carry",
+  "Entry to every temple and experience you visit, in the price — no queues, nothing to buy at the gate",
   "Tips and the logistics handled — nothing to break the spell",
   "Your concierge end to end — driver, planner, translator & fixer, in any order you like",
 ];
@@ -442,7 +445,7 @@ const ORIGINAL_HANDLED = [
 // The executive summary at the top of each brochure — a detailed read of what
 // the day actually is and who it's for. Never a repeat of the card's own line.
 const SIGNATURE_LEAD =
-  "The full Luxor Rising day, arranged end to end for a trip that's meant to matter — an anniversary, a honeymoon, a milestone. A private Egyptologist and real insider access, every temple and tomb at its quietest, plus ventures beyond them: hidden desert spots, and a staged moment if you want one — a proposal timed to the light. Tips and logistics are carried underneath, so you just arrive. And quiet local introductions are there too, whenever you want them.";
+  "The full Luxor Rising day, arranged end to end for a trip that's meant to matter: an anniversary, a honeymoon, a milestone. One concierge, your own Egyptologist and real insider access, with every temple and tomb at its quietest, and a space to sit in silence with yourself, as private as Luxor allows. Then venture beyond them: hidden desert spots, a fire and a feast under the stars, the Nile sailed by your own hand, and a staged moment if you want one, even a proposal timed to the light. Meals where locals eat, quiet local introductions whenever you want them, and every tip and detail carried underneath. You simply arrive.";
 const ORIGINAL_LEAD =
   "The complete sightseeing day — great temples and tombs of both banks, a private felucca and a trip into the desert, with entry to every site you visit already in the price. Each site at the hour it's quietest, with tips and the logistics handled so you never break the spell to sort anything out. Done in whatever order you like.";
 const LIGHT_LEAD =
@@ -750,9 +753,11 @@ export type CardsContent = {
 };
 
 const SIG_HOOK_DEFAULT =
-  "A full guided day with nothing to arrange: door-to-door from the coast, a private Egyptologist and insider access, the temples and tombs in the order you like, a hot-air balloon at dawn, local food stops, tips handled, and a signature gift to keep.";
+  "The full Luxor Rising day, for a trip that's meant to matter. One concierge, your own Egyptologist and real insider access, every temple and tomb at its quietest, and the experiences only Signature includes. You simply arrive.";
 const SIG_EXPLEDE_DEFAULT =
-  "The best of what Luxor has to offer — you choose which to do each day, and add days to fit in more. One day covers the highlights; the full set unlocks across three to four.";
+  "Every experience below is included. See as much as you wish, never rushed and always in depth, and stay more days to experience everything with time to take it in. Swap any of them freely: just tell us what matters to you.";
+/** How many experiences a brochure shows before "Show all". */
+const EXP_FIRST = 6;
 const SIG_NOTE_DEFAULT =
   "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf.";
 const ORIG_EXPLEDE_DEFAULT =
@@ -776,7 +781,7 @@ const SIG_SUMMARY_DEFAULT = [
 const ORIG_SUMMARY_DEFAULT = [
   {
     title: "Entry to every visit included",
-    desc: "every temple, tomb & experience you visit — no queues, no cash",
+    desc: "every temple, tomb & experience you visit — no queues, nothing to buy at the gate",
   },
   { title: "A private felucca & the desert", desc: "golden hour on the Nile and a trip out into the sand" },
   {
@@ -1072,6 +1077,8 @@ export default function DayConfigurator({
               : img.journeyLight;
   const { days, setDays } = useDayCount();
   const [group, setGroup] = useState(2);
+  // Which brochures show their whole experience list (first EXP_FIRST otherwise).
+  const [expAll, setExpAll] = useState<Record<string, boolean>>({});
   const [journey, setJourney] = useState<Journey>("medinet");
   // Which card's detail panel is open. Nothing is expanded until the guest taps a
   // card; selecting (for the booking summary) and expanding happen on that tap.
@@ -1276,7 +1283,7 @@ export default function DayConfigurator({
     handled.push(
       "A full meal and hand-picked local food & coffee stops — where locals actually eat"
     );
-    handled.push("Tips and everything in between, handled — nothing to think about");
+    handled.push("Tips included — the quiet gestures that open doors a little wider, all carried for you");
     handled.push("Your concierge on WhatsApp — before you arrive & all day");
 
     return {
@@ -1574,6 +1581,8 @@ export default function DayConfigurator({
   // header), so it reads as one continuous card: a lead line, the experiences
   // included, everything handled, and any honest caveats — each with a symbol.
   const renderBrochure = (opts: {
+    /** Which card this is, so each remembers its own "Show all". */
+    id: string;
     lead: string;
     experiences?: ResolvedExp[];
     groupDescs?: Record<string, string>;
@@ -1592,8 +1601,9 @@ export default function DayConfigurator({
             {opts.experiences.some((e) => e.group) ? (
               renderGroups(opts.experiences, opts.groupDescs)
             ) : (
+            <>
             <ul className={styles.expExps}>
-              {opts.experiences.map((e) => (
+              {(expAll[opts.id] ? opts.experiences : opts.experiences.slice(0, EXP_FIRST)).map((e) => (
                 <li key={e.name}>
                   <span className={styles.expExpIco}>{e.icon}</span>
                   <span className={styles.expExpTxt}>
@@ -1602,8 +1612,10 @@ export default function DayConfigurator({
                       <span className={styles.expExpMeta}>
                         <span className={styles.expExpPlace}>{e.place}</span>
                         <span className={styles.expExpTag}>
-                          <span aria-hidden>✓</span> Included{e.tag ? ` · ${e.tag}` : ""}
+                          <span aria-hidden>✓</span> Included
                         </span>
+                        {/* The gold label marks only what the Signature day alone includes. */}
+                        {e.tag === "Signature" && <span className={styles.expSigTag}>Signature</span>}
                       </span>
                     )}
                     {e.desc && <span>{e.desc}</span>}
@@ -1611,6 +1623,21 @@ export default function DayConfigurator({
                 </li>
               ))}
             </ul>
+            {opts.experiences.length > EXP_FIRST &&
+              (expAll[opts.id] ? (
+                <a className={styles.expMore} href="/experiences">
+                  Explore every experience →
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.expMore}
+                  onClick={() => setExpAll((m) => ({ ...m, [opts.id]: true }))}
+                >
+                  Show all {opts.experiences.length} experiences
+                </button>
+              ))}
+            </>
             )}
           </div>
         )}
@@ -1739,6 +1766,7 @@ export default function DayConfigurator({
 
             {expanded === "signature" &&
               renderBrochure({
+                id: "signature",
                 lead: SIG.lead,
                 experiences: SIG.experiences,
                 groupDescs: SIG.groupDescs,
@@ -1801,6 +1829,7 @@ export default function DayConfigurator({
 
             {expanded === "original" &&
               renderBrochure({
+                id: "original",
                 lead: ORIG.lead,
                 experiences: ORIG.experiences,
                 expLede: ORIG.expLede,
@@ -1862,6 +1891,7 @@ export default function DayConfigurator({
 
             {expanded === "light" &&
               renderBrochure({
+                id: "adventure",
                 lead: ADV.lead,
                 experiences: ADV.experiences,
                 expLede: ADV.expLede,
@@ -1927,6 +1957,7 @@ export default function DayConfigurator({
 
             {expanded === "reality" &&
               renderBrochure({
+                id: "reality",
                 lead: REALITY_LEAD,
                 included: REALITY_INCLUDED,
                 caveats: { label: "How it works", items: REALITY_LOCAL },
@@ -2354,12 +2385,12 @@ export default function DayConfigurator({
                 )}
                 {plan.bonus.length > 0 && (
                   <>
-                    <li className={`${styles.dh} ${styles.dhBonus}`}>Signature bonuses · on us</li>
+                    <li className={`${styles.dh} ${styles.dhBonus}`}>Signature experiences · included</li>
                     {plan.bonus.map((it, i) => (
                       <li key={"b" + i} className={itemClasses(it)}>
                         {itemText(it)}
                         {typeof it === "object" && it.bonus && (
-                          <span className={styles.bpill}>bonus</span>
+                          <span className={styles.bpill}>Signature</span>
                         )}
                       </li>
                     ))}

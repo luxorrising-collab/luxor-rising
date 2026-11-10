@@ -5,8 +5,9 @@ import Image from "next/image";
 import styles from "./ConciergeChat.module.css";
 import { trackWhatsAppClick } from "@/lib/analytics";
 
-// A quiet "ask your concierge" chat that hands the conversation to WhatsApp,
-// where a real person answers. It stays out of the hero (appears once the
+// A quiet "ask us" chat that hands the conversation to WhatsApp, where a real
+// person at Luxor Rising answers. It says "us", not "your concierge": the
+// concierge comes with a booked day, so before booking the guest talks to us. It stays out of the hero (appears once the
 // visitor scrolls), sits above the sticky booking bar, and opens a small card
 // with conversation starters that pre-fill the first WhatsApp message.
 
@@ -86,13 +87,13 @@ export default function ConciergeChat({
   return (
     <div ref={rootRef} className={`${styles.root} ${(shown && !yield_) || open ? styles.shown : ""}`}>
       {open && (
-        <div className={styles.card} role="dialog" aria-label="Chat with your concierge">
+        <div className={styles.card} role="dialog" aria-label="Chat with Luxor Rising">
           <div className={styles.head}>
             <span className={styles.avatar}>
               <Image src="/images/logo-emblem.png" alt="" width={40} height={40} />
             </span>
             <span className={styles.who}>
-              <b>Your Luxor Rising concierge</b>
+              <b>Luxor Rising</b>
               <span>
                 <i aria-hidden /> A real person, never a bot
               </span>
@@ -141,7 +142,7 @@ export default function ConciergeChat({
         type="button"
         className={styles.launch}
         aria-expanded={open}
-        aria-label={open ? "Close the concierge chat" : "Ask your concierge on WhatsApp"}
+        aria-label={open ? "Close the chat" : "Ask us on WhatsApp"}
         onClick={() => setOpen((o) => !o)}
       >
         <span className={styles.launchAvatar}>
@@ -149,7 +150,7 @@ export default function ConciergeChat({
           <i className={styles.dot} aria-hidden />
         </span>
         <span className={styles.launchText}>
-          <b>Ask your concierge</b>
+          <b>Ask us</b>
           <span>A real person replies</span>
         </span>
       </button>

@@ -1,7 +1,7 @@
 /* Checkout date field + month calendar. Matches the old native input (gold-soft
-   border, white, 10px radius); the green dot marks an available date. */
+   border, white, 10px radius). No availability marks; once a date is picked, a
+   short welcome introduces Ahmed, the guest's concierge. */
 .wrap {
-  --avail: #4c8a5a;
   margin-top: 0.4rem;
 }
 
@@ -41,24 +41,11 @@
 }
 .avail {
   flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--avail);
-}
-.avail i,
-.legend i,
-.day i {
-  flex: 0 0 auto;
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--avail);
+  color: var(--color-gold-deep);
 }
 
 .cal {
@@ -141,33 +128,26 @@
   background: var(--color-gold-deep);
   color: #fff;
 }
-.day.sel i {
-  background: #fff;
-}
-.legend {
+.welcome {
+  margin-top: 0.6rem;
+  padding: 0.8rem 0.85rem 0.75rem;
+  border: 1px solid var(--color-gold-soft);
+  border-radius: 12px;
+  background: var(--color-cream);
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0.55rem 0 0;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--color-line);
-  font-size: 0.74rem;
-  color: var(--color-muted);
+  flex-direction: column;
+  gap: 0.65rem;
 }
-
-.confirm {
+.congrats {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  margin: 0.55rem 0 0;
-  padding: 0.55rem 0.7rem;
-  border-radius: 10px;
-  background: rgba(76, 138, 90, 0.08);
-  font-size: 0.8rem;
+  margin: 0;
+  font-size: 0.86rem;
   line-height: 1.4;
   color: var(--color-ink);
 }
-.confirm b {
+.congrats b {
   font-weight: 700;
 }
 .tick {
@@ -175,11 +155,55 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--avail);
+  background: var(--color-gold-deep);
   color: #fff;
   font-size: 0.66rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-top: 1px;
+}
+.host {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.host img {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--color-gold-soft);
+}
+.host > div {
+  min-width: 0;
+}
+.hostName {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--color-ink);
+}
+.hostName span {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-gold-deep);
+}
+.hostBio {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+.welcomeNote {
+  margin: 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.74rem;
+  color: var(--color-muted);
 }

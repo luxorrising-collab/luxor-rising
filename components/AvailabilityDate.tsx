@@ -4,9 +4,10 @@ import { forwardRef, useMemo, useState } from "react";
 import styles from "./AvailabilityDate.module.css";
 
 // The checkout date field — a small month calendar in place of the browser's
-// native picker, so every open date can carry its "available" mark. Right now
-// a concierge is free on every date from tomorrow, so all of them are open;
-// the earliest bookable day is tomorrow (local time).
+// native picker. Every date from tomorrow (local time) is open, but the calendar
+// shows no "available" marks: a wide-open calendar reads as a day nobody books.
+// Once a date is picked, the guest is congratulated and meets Ahmed, who will be
+// their concierge personally.
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
@@ -91,11 +92,7 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
               ? `${fmtShort(value)} – ${fmtShort(end)}`
               : fmtLongDate(value)}
         </span>
-        {value && (
-          <span className={styles.avail}>
-            <i aria-hidden /> {days > 1 ? `${days} days` : "Available"}
-          </span>
-        )}
+        {value && days > 1 && <span className={styles.avail}>{days} days</span>}
       </button>
 
       {open && (
@@ -128,42 +125,52 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
                   disabled={past}
                   className={`${styles.day} ${sel ? styles.sel : ""} ${inStay ? styles.stay : ""}`}
                   aria-pressed={sel}
-                  aria-label={`${fmtLongDate(key)}${past ? "" : ", available"}`}
+                  aria-label={fmtLongDate(key)}
                   onClick={() => {
                     onChange(key);
                     setOpen(false);
                   }}
                 >
                   {d.getDate()}
-                  {!past && <i aria-hidden />}
                 </button>
               );
             })}
           </div>
-          <p className={styles.legend}>
-            <i aria-hidden />
-            <span>Available — a concierge is free on every open date</span>
-          </p>
         </div>
       )}
 
       {value && !open && (
-        <p className={styles.confirm}>
-          <span className={styles.tick} aria-hidden>
-            ✓
-          </span>
-          {days > 1 ? (
-            <span>
-              Your concierge is available for all <b>{days} days</b>, from <b>{fmtLongDate(value)}</b> to{" "}
-              <b>{fmtLongDate(end)}</b>. We&apos;ll confirm your order within 24 hours.
+        <div className={styles.welcome} role="status">
+          <p className={styles.congrats}>
+            <span className={styles.tick} aria-hidden>
+              ✓
             </span>
-          ) : (
-            <span>
-              Your concierge is available on <b>{fmtLongDate(value)}</b>. We&apos;ll confirm your order
-              within 24 hours.
-            </span>
-          )}
-        </p>
+            {days > 1 ? (
+              <span>
+                Wonderful — <b>{fmtLongDate(value)}</b> to <b>{fmtLongDate(end)}</b> are yours.
+              </span>
+            ) : (
+              <span>
+                Wonderful — <b>{fmtLongDate(value)}</b> is yours.
+              </span>
+            )}
+          </p>
+          <div className={styles.host}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/about/ahmed-avatar.jpg" alt="Ahmed, your concierge" width={64} height={64} />
+            <div>
+              <p className={styles.hostName}>
+                Ahmed <span>· your concierge, personally</span>
+              </p>
+              <p className={styles.hostBio}>
+                He has spent twenty years opening doors in Luxor, for archaeologists, film crews and
+                travellers along the Nile who wanted to see Luxor and Aswan properly. He meets you in
+                person, drives you and holds every detail of your {days > 1 ? "days" : "day"}.
+              </p>
+            </div>
+          </div>
+          <p className={styles.welcomeNote}>We&apos;ll confirm your order within 24 hours.</p>
+        </div>
       )}
     </div>
   );

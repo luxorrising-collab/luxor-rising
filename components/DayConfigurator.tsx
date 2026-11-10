@@ -2685,7 +2685,6 @@ export default function DayConfigurator({
             {/* date — moved into the card so checkout is self-contained */}
             <div className={styles.sumSubRow}>
               <span className={styles.sumSub}>Your date</span>
-              <span className={styles.sumScar}>All dates available now</span>
             </div>
             <div ref={dateFieldRef}>
               <AvailabilityDate

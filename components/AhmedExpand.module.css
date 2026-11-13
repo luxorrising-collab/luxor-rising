@@ -1,0 +1,211 @@
+/* Ahmed's profile inside the concierge band: a quiet glass panel over the dark
+   photo, left-aligned even though the band itself is centred. */
+.box {
+  margin: 1.8rem auto 0;
+  max-width: 760px;
+  text-align: left;
+  border: 1px solid rgba(227, 207, 164, 0.32);
+  border-radius: 14px;
+  background: rgba(20, 12, 6, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+/* Closed: one clean row, the whole row is the tap target. */
+.toggle {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  min-height: 84px;
+  padding: 0.9rem 1.2rem;
+  cursor: pointer;
+}
+.toggle:focus-visible {
+  outline: 2px solid var(--color-gold-soft);
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+.avatar {
+  flex: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1.5px var(--color-gold-soft);
+}
+.avatar :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.kicker {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+}
+.who b {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.15;
+}
+.chevron {
+  margin-left: auto;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(227, 207, 164, 0.45);
+  position: relative;
+  transition: transform 0.25s, background 0.2s;
+}
+.chevron::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--color-gold-soft);
+  border-bottom: 1.5px solid var(--color-gold-soft);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.toggle:hover .chevron {
+  background: rgba(227, 207, 164, 0.12);
+}
+.open .chevron {
+  transform: rotate(180deg);
+}
+
+/* Opened: one continuous text, quotes set apart lightly. */
+.body {
+  padding: 0 1.4rem 1.3rem calc(1.2rem + 60px + 1rem);
+  animation: reveal 0.3s ease;
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+.text {
+  margin: 0 0 1rem;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #efe4d2;
+  max-width: 62ch;
+}
+.quote {
+  margin: 0 0 1.1rem;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(201, 160, 99, 0.85);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.12rem;
+  line-height: 1.5;
+  color: #fff;
+  max-width: 58ch;
+}
+/* One signature for the whole text, at its foot. */
+.signed {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-gold-soft);
+}
+
+.cta {
+  margin-top: 1.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+}
+.cta span {
+  font-size: 0.84rem;
+  color: #d9ccb6;
+}
+.close {
+  all: unset;
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+  color: #d9ccb6;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(227, 207, 164, 0.5);
+}
+.close:focus-visible {
+  outline: 2px solid var(--color-gold-soft);
+  outline-offset: 2px;
+}
+
+/* Phones: full-width panel, text starts under the portrait, generous line
+   height, a full-width button, and the close link at the foot. */
+@media (max-width: 640px) {
+  .box {
+    margin-top: 1.4rem;
+    border-radius: 12px;
+  }
+  .toggle {
+    min-height: 76px;
+    padding: 0.8rem 0.9rem;
+    gap: 0.8rem;
+  }
+  .avatar {
+    width: 52px;
+    height: 52px;
+  }
+  .who b {
+    font-size: 1.22rem;
+  }
+  .kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+  .chevron {
+    width: 30px;
+    height: 30px;
+  }
+  .body {
+    padding: 0.2rem 1rem 1.1rem;
+  }
+  .text {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .quote {
+    font-size: 1.08rem;
+  }
+  .cta :global(.btn) {
+    width: 100%;
+    text-align: center;
+    /* keep "Design your day with Ahmed" on one line on a phone */
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    font-size: 0.78rem;
+  }
+  .cta span {
+    width: 100%;
+    text-align: center;
+  }
+  .close {
+    display: block;
+    text-align: center;
+    margin: 0.8rem auto 0;
+  }
+}

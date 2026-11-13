@@ -478,6 +478,7 @@ export default async function ConciergeDayPage() {
         lead={product?.consigliereLead}
         image={product?.consigliereImage || "/images/hosts/ahmed-nile-sunset.jpg"}
         mobileImage={product?.consigliereImageMobile || undefined}
+        profile
         points={(product?.consiglierePoints ?? []).map((p) => ({
           title: p.title,
           description: p.description,

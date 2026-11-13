@@ -2,6 +2,7 @@
 
 import { forwardRef, useMemo, useState } from "react";
 import styles from "./AvailabilityDate.module.css";
+import { AHMED } from "@/lib/ahmed-profile";
 
 // The checkout date field — a small month calendar in place of the browser's
 // native picker. Every date from tomorrow (local time) is open, but the calendar
@@ -45,6 +46,7 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
   ref,
 ) {
   const [open, setOpen] = useState(false);
+  const [more, setMore] = useState(false);
   // Tomorrow, and the last month we let anyone page to (18 months out).
   const minDay = useMemo(() => {
     const t = new Date();
@@ -157,18 +159,40 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
           </p>
           <div className={styles.host}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/about/ahmed-avatar.jpg" alt="Ahmed, your concierge" width={64} height={64} />
+            <img src={AHMED.avatar} alt="Ahmed, your concierge" width={64} height={64} />
             <div>
               <p className={styles.hostName}>
-                Ahmed <span>· your concierge, personally</span>
+                Ahmed <span>· free on your {days > 1 ? "dates" : "date"}, personally</span>
               </p>
               <p className={styles.hostBio}>
                 He has spent twenty years opening doors in Luxor, for archaeologists, film crews and
                 travellers along the Nile who wanted to see it properly. He meets you in person, and
                 holds every detail of your {days > 1 ? "days" : "day"}.
               </p>
+              <button type="button" className={styles.moreBtn} aria-expanded={more} onClick={() => setMore((m) => !m)}>
+                {more ? "Less about Ahmed" : "More about Ahmed"}
+                <span className={styles.moreChevron} aria-hidden />
+              </button>
             </div>
           </div>
+          {more && (
+            <div className={styles.morePoints}>
+              <span className={styles.moreRole}>{AHMED.role}</span>
+              <b>{AHMED.headline}</b>
+              {AHMED.blocks.map((b, i) =>
+                b.kind === "text" ? (
+                  <p className={styles.moreText} key={i}>
+                    {b.text}
+                  </p>
+                ) : (
+                  <blockquote className={styles.moreQuote} key={i}>
+                    <p>&ldquo;{b.text}&rdquo;</p>
+                  </blockquote>
+                ),
+              )}
+              <span className={styles.moreSigned}>— {AHMED.quoteBy}</span>
+            </div>
+          )}
           <p className={styles.welcomeNote}>We&apos;ll confirm your order within 24 hours.</p>
         </div>
       )}

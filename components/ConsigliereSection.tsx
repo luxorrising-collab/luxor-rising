@@ -2,6 +2,7 @@ import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import styles from "./ConsigliereSection.module.css";
 import ConsPillars from "./ConsPillars";
+import AhmedExpand from "./AhmedExpand";
 
 export type ConsigliereePoint = { title: string; description: string };
 export type ConsHowItWorks = {
@@ -28,6 +29,8 @@ type ConsigliereSectionProps = {
   moreHref?: string;
   moreLabel?: string;
   disclosure?: string;
+  /** Show Ahmed's profile as expandable info under the pillars. */
+  profile?: boolean;
 };
 
 /**
@@ -46,6 +49,7 @@ export default function ConsigliereSection({
   points = [],
   moreHref = "/private-guide",
   moreLabel = "Meet your concierge →",
+  profile = false,
 }: ConsigliereSectionProps) {
   if (!title) return null;
   const slices = images && images.length > 1 ? images : null;
@@ -89,6 +93,7 @@ export default function ConsigliereSection({
         <h2 className="display">{title}</h2>
         {lead && <p className={styles.consCoverLead}>{lead}</p>}
         {pillars.length > 0 && <ConsPillars items={pillars} />}
+        {profile && <AhmedExpand />}
         <Link href={moreHref} className={styles.consMore}>
           {moreLabel}
         </Link>

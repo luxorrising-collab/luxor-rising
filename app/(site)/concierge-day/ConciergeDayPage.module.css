@@ -1888,3 +1888,52 @@
     font-size: 0.9rem;
   }
 }
+
+/* Phones: the card's second photo, crossfading slowly over the first while the
+   card is in view (in place of the hover clip, which phones never load). */
+.exp :global(img).expImg2 {
+  opacity: 0;
+  z-index: 0;
+  transition: opacity 1.6s ease;
+}
+.exp :global(img).expImg2On {
+  opacity: 1;
+}
+
+/* In the visitor's day: a gold outline and a small "In your day" label beside the tick. */
+.expAdded::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border: 2px solid var(--color-gold);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* the card's actions: add to my day, then read more */
+.expActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 1rem;
+  margin-top: 0.55rem;
+  position: relative;
+  z-index: 3;
+}
+.expActions .expReadBtn {
+  margin-top: 0;
+}
+
+/* "A full day" / "4 days" beside the place, on multi-day experiences */
+.expMultiDay {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem 0.12rem;
+  border-radius: 2px;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-soft);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  vertical-align: middle;
+}

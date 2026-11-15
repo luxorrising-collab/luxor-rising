@@ -1,12 +1,22 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import styles from "../app/(site)/concierge-day/ConciergeDayPage.module.css";
+import { AddToDay } from "./MyDay";
+import { useMyDay } from "@/lib/my-day";
+import { dayLength } from "@/lib/day-plan";
 
 export type ExperienceCardData = {
+  /** The product this card shows (for its phone crops). */
+  slug?: string;
   src: string;
+  /** Portrait 3:4 crop of the photo for phones (scripts/build-card-crops.mjs). */
+  phone?: string;
+  /** A second portrait crop: on phones the card crossfades to it, in place of
+      the hover clip that phones never load. */
+  phone2?: string;
   h: string;
   p: string;
   k?: string;
@@ -60,6 +70,40 @@ function cardSizes(a: number | undefined, strip: boolean) {
   return `(max-width: 560px) ${phone}, (max-width: 920px) ${tablet}, ${desktop}`;
 }
 
+// Phones get the portrait crop at the card's own width; wider screens keep the
+// original photo (art direction through <picture>).
+const phoneSizes = (strip: boolean) => (strip ? "calc(76vh * 0.75)" : "92vw");
+function phoneProps(src: string, strip: boolean) {
+  const { props } = getImageProps({ src, alt: "", fill: true, sizes: phoneSizes(strip), quality: 75 });
+  return props;
+}
+function CardPicture({
+  e,
+  strip,
+  imgRef,
+  className,
+  onLoad,
+}: {
+  e: ExperienceCardData;
+  strip: boolean;
+  imgRef: React.RefObject<HTMLImageElement | null>;
+  className?: string;
+  onLoad: () => void;
+}) {
+  const desktopSizes = cardSizes(e.aspect, strip);
+  const {
+    props: { srcSet: desktop },
+  } = getImageProps({ src: e.src, alt: "", fill: true, sizes: desktopSizes, quality: 75 });
+  const { srcSet: phone, ...rest } = phoneProps(e.phone!, strip);
+  return (
+    <picture>
+      <source media="(min-width: 561px)" srcSet={desktop} sizes={desktopSizes} />
+      {/* eslint-disable-next-line jsx-a11y/alt-text */}
+      <img {...rest} srcSet={phone} ref={imgRef} className={className} onLoad={onLoad} />
+    </picture>
+  );
+}
+
 function ExpCard({
   e,
   clone = false,
@@ -75,6 +119,9 @@ function ExpCard({
 }) {
   const vidRef = React.useRef<HTMLVideoElement>(null);
   const [open, setOpen] = React.useState(false);
+  // In the visitor's day (the site-wide basket): a gold outline and a tick.
+  const { has } = useMyDay();
+  const added = !!e.slug && has(e.slug);
   // The hover clip (and its poster) is only put on the page once a mouse first
   // rests on the card — so touch phones never download any of it, and nothing
   // competes with the photos on the way in.
@@ -89,6 +136,39 @@ function ExpCard({
     const img = imgRef.current;
     if (img?.complete && img.naturalWidth > 0) setLoaded(true);
   }, []);
+  // Phones: no video. Once the card's own photo has arrived and the card has
+  // sat in view a moment, its second photo loads and the two crossfade slowly,
+  // like the product hero — only while the card is on screen.
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const [second, setSecond] = React.useState(false);
+  const [secondReady, setSecondReady] = React.useState(false);
+  const [showSecond, setShowSecond] = React.useState(false);
+  const [inView, setInView] = React.useState(false);
+  React.useEffect(() => {
+    const el = cardRef.current;
+    if (!el || !e.phone2 || clone) return;
+    const mq = (q: string) => window.matchMedia?.(q).matches ?? false;
+    if (!mq("(max-width: 560px)") || mq("(prefers-reduced-motion: reduce)")) return;
+    const conn = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
+    if (conn?.saveData) return;
+    const io = new IntersectionObserver(([en]) => setInView(en.isIntersecting), { threshold: 0.55 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [e.phone2, clone]);
+  React.useEffect(() => {
+    if (!inView || !loaded) return;
+    if (!second) {
+      const t = window.setTimeout(() => setSecond(true), 1600);
+      return () => window.clearTimeout(t);
+    }
+    if (!secondReady) return;
+    const t = window.setInterval(() => setShowSecond((v) => !v), 4800);
+    const first = window.setTimeout(() => setShowSecond(true), 400);
+    return () => {
+      window.clearInterval(t);
+      window.clearTimeout(first);
+    };
+  }, [inView, loaded, second, secondReady]);
   // "Included in" + the days that include it sits top-left, the same chips as
   // the experience page hero (Signature in gold). It is the only place
   // Signature is named, so a Signature-only experience reads "Included in
@@ -136,7 +216,8 @@ function ExpCard({
 
   return (
     <div
-      className={`${styles.exp} ${open ? styles.expOpen : ""} ${beyond ? styles.expBeyond : ""}`}
+      ref={cardRef}
+      className={`${styles.exp} ${open ? styles.expOpen : ""} ${beyond ? styles.expBeyond : ""} ${added ? styles.expAdded : ""}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
@@ -147,15 +228,33 @@ function ExpCard({
           aria-hidden
         />
       )}
-      <Image
-        ref={imgRef}
-        src={e.src}
-        alt=""
-        fill
-        sizes={cardSizes(e.aspect, strip)}
-        className={e.blur ? (loaded ? styles.expImgOn : styles.expImgWait) : undefined}
-        onLoad={() => setLoaded(true)}
-      />
+      {e.phone ? (
+        <CardPicture
+          e={e}
+          strip={strip}
+          imgRef={imgRef}
+          className={e.blur ? (loaded ? styles.expImgOn : styles.expImgWait) : undefined}
+          onLoad={() => setLoaded(true)}
+        />
+      ) : (
+        <Image
+          ref={imgRef}
+          src={e.src}
+          alt=""
+          fill
+          sizes={cardSizes(e.aspect, strip)}
+          className={e.blur ? (loaded ? styles.expImgOn : styles.expImgWait) : undefined}
+          onLoad={() => setLoaded(true)}
+        />
+      )}
+      {second && e.phone2 && (
+        // eslint-disable-next-line jsx-a11y/alt-text
+        <img
+          {...phoneProps(e.phone2, strip)}
+          className={`${styles.expImg2} ${showSecond ? styles.expImg2On : ""}`}
+          onLoad={() => setSecondReady(true)}
+        />
+      )}
       {e.clip && armed && (
         <video
           ref={(v) => {
@@ -209,8 +308,14 @@ function ExpCard({
         </span>
       )}
       <div className={styles.expScrim} />
+
       <div className={styles.expTx}>
-        {e.place && e.place !== e.h && <span className={styles.expKicker}>{e.place}</span>}
+        {e.place && e.place !== e.h && (
+          <span className={styles.expKicker}>
+            {e.place}
+            {e.slug && dayLength(e.slug) && <span className={styles.expMultiDay}>{dayLength(e.slug)}</span>}
+          </span>
+        )}
         <h4 className={e.oneLine ? styles.expOneLine : undefined}>{e.h}</h4>
         {e.sub && <p className={styles.expSub}>{e.sub}</p>}
         <span className={styles.expRule} aria-hidden />
@@ -234,17 +339,23 @@ function ExpCard({
             </Link>
           )}
         </div>
-        {(e.p || e.href) && (
-          <button
-            type="button"
-            className={styles.expReadBtn}
-            tabIndex={clone ? -1 : undefined}
-            aria-expanded={open}
-            onClick={toggleOpen}
-          >
-            {open ? "Close" : "Read more"}
-          </button>
-        )}
+        <div className={styles.expActions}>
+          {/* Add to the visitor's day: in the text area, never over the labels or the clip. */}
+          {e.slug && (
+            <AddToDay slug={e.slug} name={e.place || e.h} variant="pill" tabIndex={clone ? -1 : undefined} />
+          )}
+          {(e.p || e.href) && (
+            <button
+              type="button"
+              className={styles.expReadBtn}
+              tabIndex={clone ? -1 : undefined}
+              aria-expanded={open}
+              onClick={toggleOpen}
+            >
+              {open ? "Close" : "Read more"}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

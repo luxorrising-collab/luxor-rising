@@ -8,6 +8,9 @@ import StickyBar from "./StickyBar";
 import AvailabilityDate from "./AvailabilityDate";
 import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
+import { MyDayPicks } from "./MyDay";
+import { DAY_PICKS_EVENT, planDays as estimateDays, readDayPicks, useMyDay } from "@/lib/my-day";
+import { dayLength } from "@/lib/day-plan";
 import { trackBeginCheckout, trackLead } from "@/lib/analytics";
 import { dayTotal, lightTotal, LIGHT_DAY_RATE, ORIGINAL_DAY_RATE, PHOTO_PRO } from "@/lib/pricing-math";
 
@@ -718,6 +721,8 @@ export type CardExperienceContent = {
   /** The real name of the site or experience, under the expressive name. */
   place?: string | null;
   desc?: string | null;
+  /** The product it shows: the tile photo and the "add to my day" key. */
+  slug?: string | null;
   /** Shown after "Included ·" on the row's chip, e.g. "insider access". */
   tag?: string | null;
   /** Rows sharing a group fold together under its name (a model day). A group
@@ -756,8 +761,8 @@ const SIG_HOOK_DEFAULT =
   "The full Luxor Rising day, for a trip that's meant to matter. One concierge, your own Egyptologist and real insider access, every temple and tomb at its quietest, and the experiences only Signature includes. You simply arrive.";
 const SIG_EXPLEDE_DEFAULT =
   "Every experience below is included. See as much as you wish, never rushed and always in depth, and stay more days to experience everything with time to take it in. Swap any of them freely: just tell us what matters to you.";
-/** How many experiences a brochure shows before "Show all". */
-const EXP_FIRST = 6;
+/** How many experiences a brochure shows before "Show all" (two rows of tiles). */
+const EXP_FIRST = 8;
 const SIG_NOTE_DEFAULT =
   "Every experience is private and licensed-guided, arranged end to end — nothing is shared or off the shelf.";
 const ORIG_EXPLEDE_DEFAULT =
@@ -869,7 +874,7 @@ const DEFAULT_CARDS = {
   },
 };
 
-type ResolvedExp = { icon: ReactNode; name: string; desc: string; place?: string; tag?: string; group?: string };
+type ResolvedExp = { icon: ReactNode; name: string; desc: string; place?: string; tag?: string; group?: string; slug?: string };
 type ResolvedSummary = { title: string; desc: string };
 type ResolvedCard = {
   summary: ResolvedSummary[];
@@ -908,6 +913,7 @@ const resolveExps = (
     place: (e.place ?? "").trim() || undefined,
     tag: (e.tag ?? "").trim() || undefined,
     group: (e.group ?? "").trim() || undefined,
+    slug: (e.slug ?? "").trim() || undefined,
   }));
 };
 const resolveSummary = (
@@ -1076,6 +1082,32 @@ export default function DayConfigurator({
               ? img.journeyOriginal
               : img.journeyLight;
   const { days, setDays } = useDayCount();
+  // The visitor's picks from across the site ("add to my day").
+  const myDay = useMyDay();
+  const planDays = (n: number) => {
+    if (n <= 4) {
+      setMoreDays(false);
+      setDays(n as DayCount);
+    } else {
+      setMoreDays(true);
+      setMoreDaysCount(n);
+    }
+  };
+  // The day count follows the picks: set on arrival and whenever one is added
+  // or removed (3–4 experiences a day). The guest can still change it after.
+  useEffect(() => {
+    const apply = () => {
+      const { days: d } = estimateDays(readDayPicks().map((p) => p.slug));
+      if (d > 0) planDays(d);
+    };
+    const t = window.setTimeout(apply, 0);
+    window.addEventListener(DAY_PICKS_EVENT, apply);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener(DAY_PICKS_EVENT, apply);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [group, setGroup] = useState(2);
   // Which brochures show their whole experience list (first EXP_FIRST otherwise).
   const [expAll, setExpAll] = useState<Record<string, boolean>>({});
@@ -1368,7 +1400,11 @@ export default function DayConfigurator({
           : isLight
             ? "Adventure (concierge only — one temple of choice & a Nile sail included)"
             : "Signature (full guided day — the best of Luxor your choice, insider access, Egyptologist, balloon & a gift)",
-      conc ? "" : "Experiences: temples, tombs, a felucca or the desert — your choice, in any order",
+      myDay.picks.length
+        ? `Chosen (${myDay.picks.length}, about ${myDay.days} day${myDay.days > 1 ? "s" : ""}): ${myDay.picks.map((p) => p.name).join(", ")}`
+        : conc
+          ? ""
+          : "Experiences: temples, tombs, a felucca or the desert — your choice, in any order",
       "Door-to-door transfer from the coast (Hurghada / Marsa Alam): included",
       photo ? "Add-on: private photographer / videographer" : "",
     ]
@@ -1556,15 +1592,13 @@ export default function DayConfigurator({
                       <span className={styles.expExpIco}>{e.icon}</span>
                       <span className={styles.expExpTxt}>
                         <b>{e.name}</b>
-                        {e.place && (
-                          <span className={styles.expExpMeta}>
-                            <span className={styles.expExpPlace}>{e.place}</span>
-                            <span className={styles.expExpTag}>
-                              <span aria-hidden>✓</span> Included{e.tag ? ` · ${e.tag}` : ""}
-                            </span>
+                        {e.desc && <span className={styles.expExpLine}>{e.desc}</span>}
+                        <span className={styles.expExpMeta}>
+                          <span className={styles.expExpTag}>
+                            <span aria-hidden>✓</span> Included{e.tag ? ` · ${e.tag}` : ""}
                           </span>
-                        )}
-                        {e.desc && <span>{e.desc}</span>}
+                          {e.place && <span className={styles.expExpPlace}>{e.place}</span>}
+                        </span>
                       </span>
                     </li>
                   ))}
@@ -1602,27 +1636,46 @@ export default function DayConfigurator({
               renderGroups(opts.experiences, opts.groupDescs)
             ) : (
             <>
-            <ul className={styles.expExps}>
-              {(expAll[opts.id] ? opts.experiences : opts.experiences.slice(0, EXP_FIRST)).map((e) => (
-                <li key={e.name}>
-                  <span className={styles.expExpIco}>{e.icon}</span>
-                  <span className={styles.expExpTxt}>
-                    <b>{e.name}</b>
-                    {e.place && (
-                      <span className={styles.expExpMeta}>
-                        <span className={styles.expExpPlace}>{e.place}</span>
-                        <span className={styles.expExpTag}>
-                          <span aria-hidden>✓</span> Included
-                        </span>
-                        {/* The gold label marks only what the Signature day alone includes. */}
-                        {e.tag === "Signature" && <span className={styles.expSigTag}>Signature</span>}
+            {/* The visitor's picks (from anywhere on the site), with the days they need. */}
+            <MyDayPicks onPlanDays={planDays} currentDays={moreDays ? moreDaysCount : days} />
+            {/* Photo tiles: the poetic line over the picture; tap to add it to your day. */}
+            <div className={styles.expTiles}>
+              {(expAll[opts.id] ? opts.experiences : opts.experiences.slice(0, EXP_FIRST)).map((e) => {
+                const on = !!e.slug && myDay.has(e.slug);
+                return (
+                  <button
+                    type="button"
+                    key={e.name}
+                    className={`${styles.expTile} ${on ? styles.expTileOn : ""}`}
+                    aria-pressed={on}
+                    disabled={!e.slug}
+                    onClick={() => e.slug && myDay.toggle({ slug: e.slug, name: e.name })}
+                  >
+                    {e.slug && (
+                      <Image src={`/images/cards/${e.slug}.jpg`} alt="" fill sizes="(max-width: 560px) 50vw, 220px" />
+                    )}
+                    <span className={styles.expTileScrim} aria-hidden />
+                    {e.tag === "Signature" && <span className={styles.expTileSig}>Signature</span>}
+                    {e.slug && (
+                      <span className={styles.expTileAdd} aria-hidden>
+                        {on ? "✓ In your day" : "+ Add"}
                       </span>
                     )}
-                    {e.desc && <span>{e.desc}</span>}
-                  </span>
-                </li>
-              ))}
-            </ul>
+                    <span className={styles.expTileTx}>
+                      <span className={styles.expTileName}>{e.name}</span>
+                      {e.desc && <span className={styles.expTileLine}>{e.desc}</span>}
+                      {(e.place || (e.slug && dayLength(e.slug))) && (
+                        <span className={styles.expTilePlace}>
+                          {[e.place, e.slug && dayLength(e.slug) && e.place !== "4 days" ? dayLength(e.slug) : null]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
             {opts.experiences.length > EXP_FIRST &&
               (expAll[opts.id] ? (
                 <a className={styles.expMore} href="/experiences">
@@ -2025,6 +2078,13 @@ export default function DayConfigurator({
               <div className={styles.stepN}>3</div>
               <h3>How many days with us?</h3>
             </div>
+            {myDay.days > 0 && (
+              <p className={styles.daysHint}>
+                Set to {myDay.days} day{myDay.days > 1 ? "s" : ""} for your {myDay.picks.length} pick
+                {myDay.picks.length > 1 ? "s" : ""}: three to four experiences a day is the right pace. Change it any
+                time.
+              </p>
+            )}
             <div className={styles.daysGrid}>
               {([1, 2, 3, 4] as DayCount[]).map((d) => {
                 const sv =

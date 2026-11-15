@@ -310,3 +310,77 @@
     transition: none;
   }
 }
+
+/* the "my day" count on the phone menu button */
+.burgerCount {
+  position: absolute;
+  top: 2px;
+  right: -2px;
+  pointer-events: none;
+}
+.burgerCount > span {
+  margin-left: 0;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  font-size: 0.62rem;
+}
+
+/* "Design your day" + the visitor's day, as one seamless pair of squares */
+.ctaGroup {
+  display: inline-flex;
+  align-items: stretch;
+}
+.cart {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: -1px;
+  padding: 0 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 0 2px 2px 0;
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ctaGroup .cta:has(+ .cart) {
+  border-radius: 2px 0 0 2px;
+}
+.cart svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.cart:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+.cart:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.nav.solid .cart {
+  border-color: var(--color-gold-deep);
+  color: var(--color-gold-deep);
+}
+.nav.solid .cart:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+/* phones: the CTA folds into the menu, the basket square stays beside the burger */
+@media (max-width: 920px) {
+  .cart {
+    height: 2.4rem;
+    margin-left: 0;
+    border-radius: 2px;
+  }
+}
+.ctaGroup > .cta:not(:last-child) {
+  border-radius: 2px 0 0 2px;
+}

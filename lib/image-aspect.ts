@@ -85,9 +85,30 @@ export async function imageBlur(src: string): Promise<string | undefined> {
   return out;
 }
 
-/** Cards with their photo's aspect and a blurred preview attached. */
-export async function withPreviews<T extends { src: string }>(
+/** The portrait (3:4) phone crop of a product photo, made by
+ *  scripts/build-card-crops.mjs — undefined if it hasn't been built. */
+export function cardCrop(slug: string | undefined, second = false): string | undefined {
+  if (!slug) return undefined;
+  const rel = `/images/cards/${slug}${second ? "-2" : ""}.jpg`;
+  return fs.existsSync(path.join(process.cwd(), "public", rel)) ? rel : undefined;
+}
+
+/** Cards with their photo's aspect, a blurred preview and (for products) the
+ *  portrait phone crops attached — the phone fetches exactly the card's shape,
+ *  and the second crop drives the gentle crossfade in place of a video. */
+export async function withPreviews<T extends { src: string; slug?: string }>(
   cards: T[],
-): Promise<(T & { aspect?: number; blur?: string })[]> {
-  return Promise.all(cards.map(async (c) => ({ ...c, aspect: imageAspect(c.src), blur: await imageBlur(c.src) })));
+): Promise<(T & { aspect?: number; blur?: string; phone?: string; phone2?: string })[]> {
+  return Promise.all(
+    cards.map(async (c) => {
+      const phone = cardCrop(c.slug);
+      return {
+        ...c,
+        aspect: imageAspect(c.src),
+        blur: await imageBlur(c.src),
+        phone,
+        phone2: phone ? cardCrop(c.slug, true) : undefined,
+      };
+    }),
+  );
 }

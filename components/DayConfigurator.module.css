@@ -3146,32 +3146,45 @@
 }
 .expExpTxt {
   display: grid;
-  gap: 0.1rem;
+  gap: 0.22rem;
   min-width: 0;
 }
+/* the product name: a small, scannable label */
 .expExpTxt b {
   font-weight: 600;
-  font-size: 0.86rem;
-  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #f3e7cf;
+  line-height: 1.3;
 }
 .expExpTxt span {
   font-size: 0.8rem;
   line-height: 1.45;
   color: rgba(243, 231, 207, 0.82);
 }
-/* the real site name under an expressive one, and the row's "Included" chip */
+/* the poetic line: the voice of the experience, in brand gold */
+.expExpTxt .expExpLine {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.12rem;
+  line-height: 1.28;
+  color: var(--color-gold-soft);
+  text-wrap: pretty;
+}
+/* place · included, always on one line in the same spot */
 .expExpTxt .expExpMeta {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 0.3rem 0.6rem;
-  margin-top: 0.1rem;
+  gap: 0.55rem;
+  margin-top: 0.05rem;
+  white-space: nowrap;
 }
 .expExpTxt .expExpPlace {
-  font-size: 0.66rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-gold-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: rgba(243, 231, 207, 0.66);
 }
 .expExpTxt .expExpTag {
   padding: 0.08rem 0.5rem 0.1rem;
@@ -3416,4 +3429,136 @@ details[open] > summary .foldChev {
   left: 0;
   color: var(--color-gold-soft);
   font-weight: 700;
+}
+
+/* "Experiences included" as photo tiles: the poetic line over the picture,
+   tap a tile to add it to your day (the site-wide basket). */
+.expTiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.7rem;
+}
+@media (max-width: 760px) {
+  .expTiles {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem;
+  }
+}
+.expTile {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #2a1d10;
+  border: 1px solid rgba(227, 207, 164, 0.18);
+  transition: transform 0.25s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+}
+.expTile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(227, 207, 164, 0.45);
+}
+.expTile:focus-visible {
+  outline: 2px solid var(--color-gold-soft);
+  outline-offset: 3px;
+}
+.expTile :global(img) {
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.expTile:hover :global(img) {
+  transform: scale(1.05);
+}
+.expTileScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 7, 4, 0.25) 0%, rgba(10, 7, 4, 0) 30%, rgba(10, 7, 4, 0.88) 100%);
+}
+.expTileSig {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.12rem 0.5rem 0.14rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.expTileAdd {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(20, 13, 6, 0.5);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.expTileTx {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 0.85rem 0.8rem 0.8rem;
+  display: grid;
+  gap: 0.22rem;
+}
+.expTileName {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.expTileLine {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.22;
+  color: var(--color-gold-soft);
+  text-wrap: pretty;
+}
+.expTilePlace {
+  font-size: 0.66rem;
+  color: rgba(243, 231, 207, 0.72);
+}
+/* in your day: gold outline, gold pill */
+.expTileOn {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 1.5px var(--color-gold), 0 14px 30px -18px rgba(201, 160, 99, 0.7);
+}
+.expTileOn .expTileAdd {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+@media (max-width: 560px) {
+  .expTileLine {
+    font-size: 0.92rem;
+  }
+  .expTileTx {
+    padding: 0.7rem 0.65rem 0.65rem;
+  }
+}
+
+/* under "How many days with us?": why the count is already set */
+.daysHint {
+  margin: -0.2rem 0 0.9rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--color-gold-deep);
+}
+
+/* the tile's add control: the same square shape as the hero button */
+.expTileAdd {
+  border-radius: 2px;
 }

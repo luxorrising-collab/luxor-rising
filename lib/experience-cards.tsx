@@ -237,6 +237,19 @@ const CARD_TO_SLUG: Record<string, string> = {
   "Hatshepsut at Deir el-Bahari": "hatshepsut-temple",
   "A private Nile dinner cruise": "nile-dinner-cruise",
   "Dawn camel ride & Bedouin breakfast": "camel-bedouin-breakfast",
+  "Philae — Temple of Isis by boat": "philae-temple-aswan",
+  "Esna — the restored ceiling": "esna-temple-ceiling",
+  "Edfu — the Temple of Horus": "edfu-temple-of-horus",
+  "Kom Ombo on the Nile": "kom-ombo-temple",
+  "The Temple Road to Aswan": "luxor-to-aswan-temples-private",
+  "El Kab — the vulture goddess": "el-kab-nekhbet",
+  "The Unfinished Obelisk": "unfinished-obelisk-nubian-museum",
+  "Abu Simbel at first light": "abu-simbel-private-road-trip",
+  "Elephantine Island": "elephantine-island-satet-aswan",
+  "A Nubian village by boat": "nubian-village-aswan-boat",
+  "The Tombs of the Nobles": "tombs-of-the-nobles-aswan-st-simeon",
+  "The Goddess Route": "goddess-route-egypt",
+  "El Quseir & Wadi el-Gemal": "el-quseir-wadi-el-gemal",
 };
 
 const cardClip = (dir: string, name: string, position: string) => ({
@@ -373,6 +386,7 @@ export function buildConciergeDayCards(opts: {
     const entry = slug ? expEntryBySlug.get(slug) : undefined;
     const clip = slug ? SLUG_TO_CLIP[slug] : undefined;
     return {
+      slug,
       src: (entry?.heroImage as string | undefined) || c.src,
       h: (entry?.title as string | undefined) || c.h,
       place: c.h,
@@ -426,7 +440,7 @@ export function experienceWhere(slug: string): string {
   if (slug === "dendera-abydos") return "Dendera & Abydos, Egypt";
   if (slug === "hurghada-to-luxor-crossing") return "Hurghada to Luxor, Egypt";
   if (slug === "thirty-days-in-the-desert") return "Egyptian desert";
-  if (WEST_BANK_SLUGS.has(slug)) return "Luxor's West Bank, Egypt";
+  if (WEST_BANK_SLUGS.has(slug)) return "Luxor, Egypt";
   if (NILE_SLUGS.has(slug)) return "On the Nile, Luxor";
   if (DESERT_SLUGS.has(slug)) return "Luxor desert, Egypt";
   return "Luxor, Egypt";

@@ -1,0 +1,696 @@
+/* "My day" — the add control, the menu count, the toast and the builder picks. */
+.add {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+}
+.add:focus-visible {
+  outline: 2px solid var(--color-gold-soft);
+  outline-offset: 3px;
+}
+.add:active {
+  transform: scale(0.97);
+}
+
+/* hero: the ghost button beside the main call to action */
+.hero {
+  padding: 0.95rem 1.5rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  color: #fff;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hero:hover {
+  border-color: var(--color-gold-soft);
+  color: var(--color-gold-soft);
+}
+.hero.on {
+  border-color: var(--color-gold);
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* card: a round button in the card's corner */
+.card {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  z-index: 6;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: rgba(20, 13, 6, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.card:hover {
+  border-color: var(--color-gold-soft);
+  color: var(--color-gold-soft);
+}
+.card.on {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 1rem;
+}
+
+/* tile: a small pill on a builder tile */
+.tile {
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(20, 13, 6, 0.5);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.tile:hover {
+  border-color: var(--color-gold-soft);
+}
+.tile.on {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* the gold count beside "Design your day" */
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding: 0 0.3rem;
+  margin-left: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  animation: pop 0.35s ease;
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+  }
+  70% {
+    transform: scale(1.15);
+  }
+}
+
+/* the confirmation toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 0.75rem 0.8rem 0.75rem 0.9rem;
+  border-radius: 14px;
+  background: #1c130a;
+  border: 1px solid rgba(201, 160, 99, 0.55);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  color: #f3e7cf;
+  animation: rise 0.3s ease;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+.toastTick {
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.toastTx {
+  display: grid;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  min-width: 0;
+}
+.toastTx b {
+  color: #fff;
+}
+.toastTx em {
+  font-style: normal;
+  font-size: 0.76rem;
+  color: #cbbfa8;
+}
+.toastGo {
+  flex: none;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .toast {
+    width: calc(100vw - 24px);
+    flex-wrap: wrap;
+  }
+  .toastGo {
+    margin-left: auto;
+  }
+}
+
+/* builder: the visitor's picks */
+.picks {
+  margin: 0 0 1.2rem;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 160, 99, 0.55);
+  background: rgba(201, 160, 99, 0.08);
+}
+.picksHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+.picksTitle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+}
+.picksSig {
+  padding: 0.05rem 0.45rem 0.08rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.6rem;
+}
+.picksPlan {
+  all: unset;
+  cursor: pointer;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+.picksList {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.picksList li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 99, 0.6);
+  color: #f3e7cf;
+  font-size: 0.78rem;
+}
+.picksList button {
+  all: unset;
+  cursor: pointer;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gold-soft);
+  font-size: 0.9rem;
+}
+.picksList button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.picksClear {
+  all: unset;
+  cursor: pointer;
+  margin-top: 0.6rem;
+  font-size: 0.72rem;
+  color: #cbbfa8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* never select or highlight anything around the control on quick taps */
+.add,
+.heroBtn {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* hero: the site's own ghost button (square, like "Design your day"), gold once added */
+.heroBtn {
+  cursor: pointer;
+  font-family: inherit;
+}
+.heroOn,
+.heroOn:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* pill: a labelled control in a card's text area */
+.pill {
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 99, 0.85);
+  color: var(--color-gold-soft);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pill:hover {
+  background: rgba(201, 160, 99, 0.14);
+  color: #fff;
+}
+.pill.on {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* toast: "View" opens the drawer */
+.toastView {
+  all: unset;
+  cursor: pointer;
+  flex: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #f3e7cf;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* the header's "Your day · n" chip */
+.dayBtn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.4rem;
+  padding: 0 0.4rem 0 0.75rem;
+  margin-right: 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-deep);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  animation: pop 0.35s ease;
+}
+.dayBtn svg {
+  width: 1rem;
+  height: 1rem;
+}
+.dayBtn:hover {
+  background: rgba(201, 160, 99, 0.12);
+}
+.dayBtn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.dayBtnN {
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+@media (max-width: 560px) {
+  .dayBtnTx {
+    display: none;
+  }
+  .dayBtn {
+    padding: 0 0.3rem 0 0.55rem;
+    margin-right: 0.3rem;
+  }
+}
+
+/* the drawer: a side panel on wide screens, a bottom sheet on phones */
+.drawerWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+.drawerShade {
+  all: unset;
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 9, 5, 0.5);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+}
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100vw);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: calc(1.3rem + env(safe-area-inset-top, 0px)) 1.4rem calc(1.3rem + env(safe-area-inset-bottom, 0px));
+  background: #1a120a;
+  color: #f3e7cf;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+}
+.drawerHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.drawerKicker {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: #fff;
+}
+.drawerClose {
+  all: unset;
+  cursor: pointer;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid rgba(227, 207, 164, 0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--color-gold-soft);
+}
+.drawerSum {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+}
+.drawerList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.drawerList li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 160, 99, 0.35);
+}
+.drawerItem {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #fff;
+  text-decoration: none;
+}
+.drawerThumb {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #2a1d10;
+}
+.drawerThumb img {
+  object-fit: cover;
+}
+.drawerName {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+.drawerRemove {
+  all: unset;
+  cursor: pointer;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gold-soft);
+  font-size: 1.15rem;
+}
+.drawerRemove:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.drawerNote {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #cbbfa8;
+}
+.drawerFoot {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 0.6rem;
+}
+.drawerFoot :global(.btn) {
+  text-align: center;
+}
+.drawerKeep {
+  all: unset;
+  cursor: pointer;
+  text-align: center;
+  padding: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f3e7cf;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.drawerEmpty {
+  display: grid;
+  gap: 0.8rem;
+  color: #d9ccb6;
+}
+.drawerEmpty p {
+  margin: 0;
+}
+@media (max-width: 560px) {
+  .drawer {
+    top: auto;
+    left: 0;
+    width: 100vw;
+    max-height: 86vh;
+    border-radius: 18px 18px 0 0;
+    animation: sheetUp 0.3s ease;
+  }
+}
+@keyframes sheetUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+/* drawer item: the name, then the poetic line in gold */
+.drawerText {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.drawerList .drawerName {
+  font-family: inherit;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.drawerLine {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.25;
+  color: var(--color-gold-soft);
+}
+
+/* One shape everywhere: the square button of the product hero. */
+.pill,
+.tile {
+  border-radius: 2px;
+}
+
+/* ── the day plan bar ── */
+.dayBar {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.7rem 0 0.2rem;
+}
+.dayTrack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 4px;
+}
+.dayTrack > li {
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+.daySeg {
+  display: block;
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(227, 207, 164, 0.18);
+  overflow: hidden;
+}
+.daySeg i {
+  display: block;
+  height: 100%;
+  background: var(--color-gold);
+  transition: width 0.4s ease;
+}
+.dayWhole .daySeg i {
+  background: repeating-linear-gradient(135deg, var(--color-gold) 0 6px, #b88a4a 6px 12px);
+}
+.dayLbl {
+  display: grid;
+  font-size: 0.62rem;
+  line-height: 1.25;
+  color: #cbbfa8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dayLbl b {
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f3e7cf;
+}
+.dayMore {
+  flex: 0 0 auto !important;
+  font-size: 0.7rem;
+  color: var(--color-gold-soft);
+  align-self: start;
+  margin-top: -0.3rem;
+}
+.dayHint {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--color-gold-soft);
+}
+.dayBarCompact {
+  margin: 0.35rem 0 0;
+}
+.dayBarCompact .daySeg {
+  height: 4px;
+}
+/* "A full day" / "4 days" beside a multi-day experience */
+.multiDay {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.08rem 0.4rem 0.1rem;
+  border-radius: 2px;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-soft);
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  vertical-align: middle;
+}
+
+/* the day bar as a grid: segments on row 1, labels (spanning runs) on row 2 */
+.dayGrid {
+  display: grid;
+  column-gap: 4px;
+  row-gap: 0.3rem;
+  align-items: start;
+}
+.dayGrid .daySeg {
+  display: block;
+}
+.dayWhole i {
+  background: repeating-linear-gradient(135deg, var(--color-gold) 0 6px, #b88a4a 6px 12px) !important;
+}
+.dayGrid .dayMore {
+  margin-top: -0.35rem;
+}
+/* day labels wrap rather than cut off in narrow segments */
+.dayGrid .dayLbl {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}

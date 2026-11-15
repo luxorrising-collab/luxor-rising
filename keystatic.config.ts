@@ -77,6 +77,10 @@ const cardFields = (label: string) =>
             description: 'The site or experience, e.g. "Sailing lesson on the Nile". When set, the row also shows an "Included" chip.',
           }),
           desc: fields.text({ label: "Description", multiline: true }),
+          slug: fields.text({
+            label: "Product slug (optional)",
+            description: 'The experience it shows, e.g. "karnak-at-dawn": gives the tile its photo and lets guests add it to their day.',
+          }),
           tag: fields.text({ label: "Chip note (optional)", description: 'Added after "Included ·", e.g. "insider access"' }),
           group: fields.text({
             label: "Group (optional)",

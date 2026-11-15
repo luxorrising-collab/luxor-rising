@@ -4,6 +4,7 @@ import "../globals.css";
 import ConsentProvider from "@/components/consent/ConsentProvider";
 import ConsentManager from "@/components/consent/ConsentManager";
 import DevComment from "@/components/DevComment";
+import { MyDayDrawer, MyDayToast } from "@/components/MyDay";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import JsonLd from "@/components/JsonLd";
 import { reader } from "@/lib/keystatic-reader";
@@ -59,10 +60,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [t, settings] = await Promise.all([
+  const [t, settings, dayPage, allExperiences] = await Promise.all([
     reader.singletons.tracking.read(),
     reader.singletons.siteSettings.read(),
+    reader.singletons.conciergeDayPage.read(),
+    reader.collections.experiences.all(),
   ]);
+  // Each experience's poetic line for the "Your day" drawer: the builder's own
+  // line where it has one, otherwise the product's headline.
+  const dayLines: Record<string, string> = {};
+  for (const { slug, entry } of allExperiences) if (entry.isActive && entry.title) dayLines[slug] = entry.title;
+  for (const e of dayPage?.cards?.signature?.experiences ?? []) if (e.slug && e.desc) dayLines[e.slug] = e.desc;
   const trackingConfig: ConsentConfig = t
     ? {
         enabled: t.enabled,
@@ -118,6 +126,9 @@ export default async function RootLayout({
           {children}
           <ConsentBanner />
         </ConsentProvider>
+        {/* "Added to your day" confirmation, on every page */}
+        <MyDayToast />
+        <MyDayDrawer lines={dayLines} />
         {process.env.NODE_ENV === "development" && <DevComment />}
       </body>
     </html>

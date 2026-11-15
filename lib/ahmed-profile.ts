@@ -19,7 +19,7 @@ export const AHMED = {
     },
     {
       kind: "text",
-      text: "He is a guide in the deeper sense of the word: he can open the doors of the mighty temples of Luxor and Aswan for you, and show you how to sail the Nile at sunset. An adventurer at heart, with a light heart and unbroken faith. Someone you can share your journey with and speak your truth with, who listens openly and understands deeply, and someone you can call in an emergency, who starts solving it at once.",
+      text: "He is a guide in the deeper sense of the word: he can open the doors of the mighty temples of Luxor and Aswan for you, and show you how to sail the Nile at sunset. An adventurer with a light heart and unbroken faith. Someone you can share your journey with and speak your truth with, who listens openly and understands deeply, and someone you can call in an emergency, who starts solving it at once.",
     },
     {
       kind: "quote",

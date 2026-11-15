@@ -27,6 +27,9 @@ export type CmsExperienceItem = Pick<
   | "priceNote"
   | "ctaLabel"
   | "tiers"
+  | "daySlug"
+  | "dayName"
+  | "dayLength"
 > & { category?: string; location?: string };
 
 // Single experiences are now fully managed in Keystatic and injected via
@@ -64,6 +67,7 @@ const FILTERS = [
 
 const LOCATIONS = [
   { value: "luxor", label: "Luxor" },
+  { value: "aswan", label: "Aswan" },
   { value: "hurghada", label: "Hurghada" },
 ];
 
@@ -85,8 +89,8 @@ export default function ExperiencesClient({
   conciergeDayPrice?: number;
 }) {
   const [filter, setFilter] = useState("all");
-  // Both destinations on by default; you can toggle one off (never both).
-  const [locs, setLocs] = useState<Set<string>>(() => new Set(["luxor", "hurghada"]));
+  // Every destination on by default; you can toggle one off (never both).
+  const [locs, setLocs] = useState<Set<string>>(() => new Set(["luxor", "aswan", "hurghada"]));
   const toggleLoc = (v: string) =>
     setLocs((prev) => {
       const next = new Set(prev);
@@ -133,7 +137,7 @@ export default function ExperiencesClient({
           <p>
             The heart of Luxor Rising — one private day with <b>several experiences</b> woven into
             it. A signature temple at dawn like <b>Medinet Habu</b> or <b>Karnak</b> while the
-            coaches still queue, then the tombs, the river or the desert. One concierge handles
+            buses still queue, then the tombs, the river or the desert. One concierge handles
             every ticket, transfer and timing.
           </p>
           <div className={styles.conciergeMeta}>
@@ -203,9 +207,9 @@ export default function ExperiencesClient({
             <span className={styles.tag}>Private · from €330 a day</span>
           </div>
           <p className={styles.secSub}>
-            Each one is a private experience, woven into one unhurried Luxor Rising day — your own
-            licensed Egyptologist, insider access, and everything arranged end to end. Pick what
-            calls to you, and <Link href="/concierge-day">design the day around it</Link>.
+            Each one is a private experience, woven into one unhurried Luxor Rising day — insider access and
+            everything arranged end to end. Tap <b>+</b> on what calls to you to add it to your day,
+            then <Link href="/concierge-day#design">design the day around it</Link>.
           </p>
           <div className={styles.grid}>
             {visibleSingleDay.map((item) => (

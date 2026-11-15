@@ -190,11 +190,16 @@
 }
 @media (max-width: 600px) {
   .heroLabels {
-    gap: 0.25em;
-    font-size: 2.2vw;
-    /* run nearly edge to edge on a phone, so the row fits on one line */
-    margin-inline: -0.9rem;
-    max-width: none;
+    gap: 0.35em;
+    font-size: 2.7vw;
+    /* stay inside the headline's margins on a phone; wrap rather than bleed */
+    margin-inline: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+    row-gap: 0.4em;
+    overflow: visible;
+    contain: none;
+    animation: none;
   }
   .heroLabels > li {
     gap: 0.25em;
@@ -647,4 +652,14 @@
   max-width: 22ch;
   margin: 0 auto;
   font-style: italic;
+}
+
+/* phones: the two hero actions stack at the same full width */
+@media (max-width: 600px) {
+  .heroCta > a,
+  .heroCta > button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }

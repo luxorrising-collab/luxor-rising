@@ -1,4 +1,5 @@
 import { experienceFrom, experienceWhere, SLUG_TO_TIERS } from "@/lib/experience-cards";
+import { dayLength } from "@/lib/day-plan";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -36,6 +37,24 @@ const HURGHADA_SLUGS = new Set([
   "red-sea-boat-snorkelling",
   "hurghada-to-luxor-crossing",
 ]);
+
+// Location tags for the filter (separate from HURGHADA_SLUGS, which also decides
+// the funnel): Aswan and the temple road south, and the coast products that
+// still funnel into Design Your Day.
+const ASWAN_LOCATION = new Set([
+  "philae-temple-aswan",
+  "elephantine-island-satet-aswan",
+  "unfinished-obelisk-nubian-museum",
+  "nubian-village-aswan-boat",
+  "tombs-of-the-nobles-aswan-st-simeon",
+  "abu-simbel-private-road-trip",
+  "edfu-temple-of-horus",
+  "kom-ombo-temple",
+  "luxor-to-aswan-temples-private",
+]);
+const COAST_LOCATION = new Set(["el-quseir-wadi-el-gemal", "private-airport-pickup"]);
+const locationOf = (slug: string) =>
+  HURGHADA_SLUGS.has(slug) || COAST_LOCATION.has(slug) ? "hurghada" : ASWAN_LOCATION.has(slug) ? "aswan" : "luxor";
 
 export default async function ExperiencesPage() {
   const [allExperiences, priceMap, conciergePage, socialProof] = await Promise.all([
@@ -96,7 +115,16 @@ export default async function ExperiencesPage() {
     // the site's name only; where it is lives in the badge, so nothing repeats
     place: entry.heroEyebrow.replace(/\s*·\s*A single experience\s*$/i, "").split("·")[0].trim(),
     hook: entry.hook,
-    badge: [experienceWhere(slug), entry.badge].filter(Boolean).join(" · "),
+    // The location, plus the product's badge unless it only repeats the place
+    // ("Luxor") or names a bank (redundant): never "Luxor, Egypt · Luxor".
+    badge: [
+      experienceWhere(slug),
+      entry.badge && !/bank/i.test(entry.badge) && !experienceWhere(slug).toLowerCase().includes(entry.badge.toLowerCase())
+        ? entry.badge
+        : null,
+    ]
+      .filter(Boolean)
+      .join(" · "),
     scarcity: entry.scarcityNote || undefined,
     // At-a-glance facts reduce uncertainty (duration + group size are the two
     // questions every buyer has) — a small, proven conversion lift.
@@ -122,7 +150,14 @@ export default async function ExperiencesPage() {
           : entry.priceNote || undefined,
     ctaLabel: entry.bookingType === "enquiry" ? "Enquire →" : "View experience →",
     category: entry.category,
-    location: HURGHADA_SLUGS.has(slug) ? "hurghada" : "luxor",
+    location: locationOf(slug),
+    // the site-wide "add to my day" basket (not for transfers or enquiry products)
+    daySlug:
+      isFunnel(slug, entry.bookingType) && slug !== "private-airport-pickup" && slug !== "hurghada-to-luxor-crossing"
+        ? slug
+        : undefined,
+    dayLength: dayLength(slug),
+    dayName: (entry.name || entry.title).replace(/^"|"$/g, "").split(/s[—–-]s/)[0].trim(),
   }));
 
   // Structured data: the full live catalogue (curated + every CMS product),

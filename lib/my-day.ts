@@ -1,0 +1,84 @@
+"use client";
+
+// "My day": the experiences a visitor has added while browsing, remembered in
+// this browser across pages and tabs (localStorage), like a basket. They travel
+// into Design Your Day (shown there and sent with the booking or enquiry).
+
+import { useSyncExternalStore } from "react";
+import { planDays } from "./day-plan";
+
+export type DayPick = { slug: string; name: string };
+
+const KEY = "lr-my-day";
+const EVT = "lr-my-day-change";
+const EMPTY: DayPick[] = [];
+
+let cacheRaw: string | null = null;
+let cacheVal: DayPick[] = EMPTY;
+
+function read(): DayPick[] {
+  try {
+    const raw = window.localStorage.getItem(KEY);
+    if (raw === cacheRaw) return cacheVal;
+    cacheRaw = raw;
+    const parsed = raw ? JSON.parse(raw) : [];
+    cacheVal = Array.isArray(parsed)
+      ? parsed.filter((p): p is DayPick => p && typeof p.slug === "string" && typeof p.name === "string")
+      : EMPTY;
+  } catch {
+    cacheVal = EMPTY;
+  }
+  return cacheVal;
+}
+
+function write(next: DayPick[], added?: DayPick) {
+  try {
+    window.localStorage.setItem(KEY, JSON.stringify(next));
+  } catch {
+    /* storage blocked (private mode): the picks simply aren't remembered */
+  }
+  window.dispatchEvent(new CustomEvent(EVT, { detail: { added } }));
+}
+
+function subscribe(cb: () => void) {
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === KEY) cb();
+  };
+  window.addEventListener(EVT, cb);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener(EVT, cb);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+export function useMyDay() {
+  const picks = useSyncExternalStore(subscribe, read, () => EMPTY);
+  const has = (slug: string) => picks.some((p) => p.slug === slug);
+  const add = (pick: DayPick) => {
+    const cur = read();
+    if (!cur.some((p) => p.slug === pick.slug)) write([...cur, pick], pick);
+  };
+  const remove = (slug: string) => write(read().filter((p) => p.slug !== slug));
+  const toggle = (pick: DayPick) => (read().some((p) => p.slug === pick.slug) ? remove(pick.slug) : add(pick));
+  const clear = () => write([]);
+  return { picks, has, add, remove, toggle, clear, ...planDays(picks.map((p) => p.slug)) };
+}
+
+/** The current picks, read straight from storage (outside React). */
+export const readDayPicks = (): DayPick[] => (typeof window === "undefined" ? EMPTY : read());
+/** Fired on every change to the picks (this tab). */
+export const DAY_PICKS_EVENT = EVT;
+
+/** Listen for "added" moments (for the confirmation toast). */
+export function onDayPickAdded(cb: (pick: DayPick) => void) {
+  const h = (e: Event) => {
+    const added = (e as CustomEvent<{ added?: DayPick }>).detail?.added;
+    if (added) cb(added);
+  };
+  window.addEventListener(EVT, h);
+  return () => window.removeEventListener(EVT, h);
+}
+
+// How many days the picks need lives in ./day-plan (shared with server cards).
+export { planDays, dayLength, type DaySegment } from "./day-plan";

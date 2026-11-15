@@ -353,3 +353,68 @@
   letter-spacing: 0.12em;
 }
 
+
+/* In the visitor's day (the "+" in the corner pressed): a gold outline and label. */
+.card:has(button[aria-pressed="true"]) {
+  outline: 2px solid var(--color-gold);
+  outline-offset: -2px;
+}
+
+
+/* the two actions, side by side and equal: add to my day, view */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line);
+}
+.actions > * {
+  box-sizing: border-box;
+  height: 2.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+  border-radius: 2px;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+.addBtn {
+  border: 1px solid var(--color-gold-deep);
+  color: var(--color-gold-deep);
+}
+.addBtn[aria-pressed="true"] {
+  color: var(--color-ink);
+}
+.viewBtn {
+  margin: 0;
+}
+/* "A full day" / "4 days" beside the days that include it */
+.multiDay {
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 2px;
+  color: var(--color-gold-deep);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* narrow phones: the short label, so both buttons stay equal and whole */
+.lblShort {
+  display: none;
+}
+@media (max-width: 420px) {
+  .lblFull {
+    display: none;
+  }
+  .lblShort {
+    display: inline;
+  }
+}

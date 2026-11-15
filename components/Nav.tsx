@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MAIN_NAV } from "./mainNav";
+import { MyDayButton } from "./MyDay";
 import styles from "./Nav.module.css";
 
 export type NavLink = { href: string; label: string; blurb?: string; children?: NavLink[] };
@@ -131,9 +132,15 @@ export default function Nav({
             })}
           </nav>
         )}
-        <Link href={ctaHref} className={`${styles.cta} ${hasLinks ? styles.ctaCollapsible : ""}`}>
-          {ctaLabel}
-        </Link>
+        {/* The call to action with the visitor's day attached on its right: one
+            group, so the bar keeps its proportions. The basket square appears once
+            something is picked and opens the drawer. */}
+        <div className={styles.ctaGroup}>
+          <Link href={ctaHref} className={`${styles.cta} ${hasLinks ? styles.ctaCollapsible : ""}`}>
+            {ctaLabel}
+          </Link>
+          <MyDayButton className={styles.cart} />
+        </div>
         {hasLinks && (
           <button
             type="button"

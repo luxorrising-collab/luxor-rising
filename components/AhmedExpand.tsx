@@ -6,11 +6,20 @@ import { AHMED } from "@/lib/ahmed-profile";
 import styles from "./AhmedExpand.module.css";
 
 // Ahmed's profile, folded into the concierge band (over its dark photo). Closed:
-// one clean row with his round portrait, name, role and the title. Opened: one
+// it sits like the pillars above it: a thin gold rule, his portrait, name, role,
+// the title and a quiet "Read his story" link, with no box around it. Opened: one
 // continuous text, with only Marian's own experiences set apart as quotes, the
 // call to design the day with him, and a close link at the foot so phones never
 // have to scroll back up. Left-aligned inside the centred band.
-export default function AhmedExpand({ designHref = "#design" }: { designHref?: string }) {
+export default function AhmedExpand({
+  designHref = "#design",
+  moreHref = "/private-guide",
+  moreLabel = "Meet your concierge →",
+}: {
+  designHref?: string;
+  moreHref?: string;
+  moreLabel?: string;
+}) {
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -43,8 +52,11 @@ export default function AhmedExpand({ designHref = "#design" }: { designHref?: s
             {AHMED.name} · {AHMED.role}
           </span>
           <b>{AHMED.headline}</b>
+          <span className={styles.more}>
+            {open ? "Close his story" : "Read his story"}
+            <span className={styles.chevron} aria-hidden />
+          </span>
         </span>
-        <span className={styles.chevron} aria-hidden />
       </button>
 
       {open && (
@@ -65,8 +77,11 @@ export default function AhmedExpand({ designHref = "#design" }: { designHref?: s
             <a href={designHref} className="btn btn-primary">
               Design your day with {AHMED.name}
             </a>
-            <span>Popular dates go early.</span>
+            <a href={moreHref} className={styles.meet}>
+              {moreLabel}
+            </a>
           </div>
+          <p className={styles.note}>Popular dates go early.</p>
           <button type="button" className={styles.close} onClick={() => toggle(false)}>
             Close profile
           </button>

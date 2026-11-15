@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./ExperienceCard.module.css";
+import { AddToDay } from "./MyDay";
 
 export type ExperienceCardProps = {
   href: string;
@@ -22,6 +23,11 @@ export type ExperienceCardProps = {
   compact?: boolean;
   /** The Design-Your-Day tiers that include this experience. */
   tiers?: string[];
+  /** Add to the visitor's day (the site-wide basket) from the card. */
+  daySlug?: string;
+  dayName?: string;
+  /** "A full day" / "4 days" for experiences that are a day or more on their own. */
+  dayLength?: string;
 };
 
 export default function ExperienceCard({
@@ -43,6 +49,9 @@ export default function ExperienceCard({
   ctaVariant = "primary",
   compact = false,
   tiers,
+  daySlug,
+  dayName,
+  dayLength,
 }: ExperienceCardProps) {
   const btnClass = `btn ${ctaVariant === "primary" ? "btn-primary" : "btn-line"}`;
 
@@ -104,6 +113,7 @@ export default function ExperienceCard({
                 {t}
               </span>
             ))}
+            {dayLength && <span className={styles.multiDay}>{dayLength}</span>}
           </div>
         )}
         <h3 className={styles.srOnly}>{title}</h3>
@@ -115,15 +125,34 @@ export default function ExperienceCard({
             ))}
           </div>
         )}
-        <div className={styles.foot}>
-          <div className={styles.price}>
-            <small>{priceLabel}</small>
-            <b>{priceValue}</b> {priceNote && <i>{priceNote}</i>}
+        {daySlug ? (
+          <>
+            {/* price on its own line, then the two actions side by side, equal */}
+            <div className={styles.price}>
+              <small>{priceLabel}</small>
+              <b>{priceValue}</b> {priceNote && <i>{priceNote}</i>}
+            </div>
+            <div className={styles.actions}>
+              <AddToDay slug={daySlug} name={dayName || title} variant="pill" className={styles.addBtn} />
+              <Link href={href} className={`btn btn-primary ${styles.viewBtn}`} aria-label={`${ctaLabel.replace("→", "").trim()}: ${title}`}>
+                <span className={styles.lblFull}>{ctaLabel}</span>
+                <span className={styles.lblShort} aria-hidden>
+                  View →
+                </span>
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className={styles.foot}>
+            <div className={styles.price}>
+              <small>{priceLabel}</small>
+              <b>{priceValue}</b> {priceNote && <i>{priceNote}</i>}
+            </div>
+            <Link href={href} className={btnClass}>
+              {ctaLabel}
+            </Link>
           </div>
-          <Link href={href} className={btnClass}>
-            {ctaLabel}
-          </Link>
-        </div>
+        )}
       </div>
     </article>
   );

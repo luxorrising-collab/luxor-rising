@@ -1,3 +1,4 @@
+import { AddToDay } from "./MyDay";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -105,6 +106,8 @@ export type ExperienceTemplateProps = {
   /** Override the primary hero CTA (label + target). */
   heroCtaLabel?: string;
   heroCtaHref?: string;
+  /** Show "+ Add to my day" (the site-wide basket) in place of "Why it matters". */
+  addToDay?: { slug: string; name: string };
   /** A block rendered right after the Reserve/checkout section (above the
       gifts/presents section) — e.g. "What we take care of". */
   postContent?: React.ReactNode;
@@ -181,6 +184,7 @@ export default function ExperienceTemplate({
   heroLabels,
   heroCtaLabel,
   heroCtaHref = "#book",
+  addToDay,
   postContent,
   preBook,
   pageEnd,
@@ -280,9 +284,13 @@ export default function ExperienceTemplate({
             <Link href={heroCtaHref} className="btn btn-primary btn-lg">
               {heroCtaLabel ?? (isEnquiry ? "Request an invitation →" : "Reserve this experience →")}
             </Link>
-            <Link href="#content" className="btn btn-ghost btn-lg">
-              Why it matters
-            </Link>
+            {addToDay ? (
+              <AddToDay slug={addToDay.slug} name={addToDay.name} variant="hero" />
+            ) : (
+              <Link href="#content" className="btn btn-ghost btn-lg">
+                Why it matters
+              </Link>
+            )}
           </div>
           <Link href="/reviews" className={styles.heroTrust} title="Read our reviews">
             <span className="stars">★ ★ ★ ★ ★</span> {socialProof} ↗

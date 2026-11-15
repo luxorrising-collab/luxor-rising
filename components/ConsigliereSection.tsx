@@ -93,10 +93,14 @@ export default function ConsigliereSection({
         <h2 className="display">{title}</h2>
         {lead && <p className={styles.consCoverLead}>{lead}</p>}
         {pillars.length > 0 && <ConsPillars items={pillars} />}
-        {profile && <AhmedExpand />}
-        <Link href={moreHref} className={styles.consMore}>
-          {moreLabel}
-        </Link>
+        {/* With the profile, "Meet your concierge" lives inside it (opened). */}
+        {profile ? (
+          <AhmedExpand moreHref={moreHref} moreLabel={moreLabel} />
+        ) : (
+          <Link href={moreHref} className={styles.consMore}>
+            {moreLabel}
+          </Link>
+        )}
       </div>
     </section>
   );

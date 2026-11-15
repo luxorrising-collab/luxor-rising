@@ -223,6 +223,7 @@ export default async function MedinetHabuPage() {
         }}
         heroCtaLabel="Design your day →"
         heroCtaHref="/concierge-day#design"
+        addToDay={{ slug: "medinet-habu", name: "Medinet Habu" }}
         heroImage={entry.heroImage ?? ""}
         heroMedia={heroMedia}
         glanceLead={entry.glanceLead}

@@ -535,6 +535,12 @@ export default config({
           multiline: true,
           description: "Short, punchy line shown on experience cards and as the hero subtitle.",
         }),
+        shareLine: fields.text({
+          label: "Share line",
+          description:
+            "One quiet line printed on the share image (Facebook, Instagram, WhatsApp). Not the title, which Facebook already shows under the image. About 30–55 characters, e.g. \"A temple of Isis that almost no one finds.\" Leave empty to show the experience name.",
+          validation: { length: { max: 70 } },
+        }),
 
         // Hero
         heroEyebrow: fields.text({

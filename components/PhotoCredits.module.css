@@ -1,0 +1,17 @@
+.credits {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem max(1.25rem, env(safe-area-inset-left, 0px)) 1.5rem;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+.credits a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+  text-underline-offset: 2px;
+}
+.credits a:hover {
+  color: var(--color-gold-deep);
+}

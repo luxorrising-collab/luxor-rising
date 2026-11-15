@@ -41,21 +41,13 @@ function buildGalleryTiles(
     width: 1600,
     height: 1000,
   }));
-  // First clip is the 2×2 feature; the rest are spread through the photos as
-  // 2-wide tiles. grid-auto-flow:dense backfills any cell a span would leave
-  // empty, so the mosaic stays gap-free for any count.
-  const rest = vids.slice(1);
-  const tiles: GalleryImage[] = [{ ...vids[0], span: "feat" }];
-  const step = Math.max(1, Math.floor(imgs.length / (rest.length + 1)));
-  let vi = 0;
-  imgs.forEach((img, i) => {
-    tiles.push(img);
-    if (vi < rest.length && (i + 1) % step === 0 && i < imgs.length - 1) {
-      tiles.push({ ...rest[vi], span: "wide" });
-      vi++;
-    }
-  });
-  while (vi < rest.length) tiles.push({ ...rest[vi++], span: "wide" });
+  // Real photographs first (the first one as the 2×2 feature), then the
+  // visualisation clips at the end as 2-wide tiles, so guests see the place
+  // itself before any "yours with a pro photographer" film. grid-auto-flow:dense
+  // backfills any cell a span would leave empty, so the mosaic stays gap-free.
+  if (imgs.length === 0) return [{ ...vids[0], span: "feat" }, ...vids.slice(1).map((v) => ({ ...v, span: "wide" as const }))];
+  const tiles: GalleryImage[] = [{ ...imgs[0], span: "feat" }, ...imgs.slice(1)];
+  vids.forEach((v) => tiles.push({ ...v, span: "wide" }));
   return tiles;
 }
 

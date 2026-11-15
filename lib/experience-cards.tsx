@@ -37,6 +37,22 @@ export const SLUG_TO_TIERS: Record<string, Tier[]> = {
   "private-desert-safari": SIG,
   "dendera-abydos": SIG,
   "sailing-lesson-nile": SIG,
+  // Aswan and the temple road south (2026-11): Original where entry and boat
+  // fit the day, Signature where access or cost is uncertain ("if unsure, Signature").
+  "philae-temple-aswan": ORIG,
+  "unfinished-obelisk-nubian-museum": ORIG,
+  "esna-temple-ceiling": ORIG,
+  "edfu-temple-of-horus": ORIG,
+  "kom-ombo-temple": ORIG,
+  "el-kab-nekhbet": ORIG,
+  "luxor-to-aswan-temples-private": ORIG,
+  "elephantine-island-satet-aswan": SIG,
+  "nubian-village-aswan-boat": SIG,
+  "tombs-of-the-nobles-aswan-st-simeon": SIG,
+  "abu-simbel-private-road-trip": SIG,
+  "goddess-route-egypt": SIG,
+  "el-quseir-wadi-el-gemal": SIG,
+  "private-airport-pickup": ORIG,
 };
 
 /** The day rate each tier starts from (Adventure, Original, Signature). */
@@ -139,6 +155,20 @@ export const SLUG_TO_FEATURES: Record<string, Feat[]> = {
   "hatshepsut-temple": [INSIDER, f(FEAT.dawn, "First light"), f(FEAT.temple, "Cliff terraces"), f(FEAT.guide, "Licensed guide")],
   "nile-dinner-cruise": [INSIDER, f(FEAT.night, "After dark"), f(FEAT.food, "Private table"), f(FEAT.nile, "On the river")],
   "camel-bedouin-breakfast": [INSIDER, f(FEAT.dawn, "First light"), f(FEAT.food, "Bedouin breakfast"), f(FEAT.desert, "In the sand")],
+  "philae-temple-aswan": [INSIDER, f(FEAT.nile, "By private boat"), f(FEAT.dawn, "At opening"), f(FEAT.temple, "Temple of Isis")],
+  "unfinished-obelisk-nubian-museum": [INSIDER, f(FEAT.temple, "The great quarry"), f(FEAT.ticket, "Two visits")],
+  "elephantine-island-satet-aswan": [INSIDER, f(FEAT.nile, "By felucca"), f(FEAT.guide, "Licensed guide")],
+  "nubian-village-aswan-boat": [INSIDER, f(FEAT.nile, "By private boat"), f(FEAT.food, "Tea with a family")],
+  "tombs-of-the-nobles-aswan-st-simeon": [INSIDER, f(FEAT.desert, "Desert monastery"), f(FEAT.crowd, "Near-empty")],
+  "abu-simbel-private-road-trip": [INSIDER, f(FEAT.dawn, "First light"), f(FEAT.temple, "Ramesses II")],
+  "esna-temple-ceiling": [INSIDER, f(FEAT.temple, "Restored ceiling"), f(FEAT.crowd, "Before the boats")],
+  "edfu-temple-of-horus": [INSIDER, f(FEAT.temple, "Most complete temple"), f(FEAT.dawn, "At opening")],
+  "kom-ombo-temple": [INSIDER, f(FEAT.nile, "On the river"), f(FEAT.temple, "Two gods")],
+  "el-kab-nekhbet": [INSIDER, f(FEAT.crowd, "Near-empty"), f(FEAT.temple, "Painted tombs")],
+  "luxor-to-aswan-temples-private": [INSIDER, f(FEAT.temple, "Esna, Edfu, Kom Ombo"), f(FEAT.ticket, "Door to door")],
+  "goddess-route-egypt": [INSIDER, f(FEAT.temple, "Hathor to Isis"), f(FEAT.guide, "Licensed guide")],
+  "el-quseir-wadi-el-gemal": [INSIDER, f(FEAT.desert, "Wadi el-Gemal"), f(FEAT.temple, "Ottoman fort")],
+  "private-airport-pickup": [INSIDER, f(FEAT.ticket, "Met at arrivals")],
 };
 
 // True when an experience is a Red-Sea / Hurghada (private-boat) product — these
@@ -372,7 +402,27 @@ const WEST_BANK_SLUGS = new Set([
 ]);
 const NILE_SLUGS = new Set(["felucca-sunset-sail", "banana-island-felucca", "nile-dinner-cruise", "sailing-lesson-nile"]);
 const DESERT_SLUGS = new Set(["private-desert-safari", "desert-astronomy-night", "camel-bedouin-breakfast"]);
+const ASWAN_SLUGS = new Set([
+  "philae-temple-aswan",
+  "unfinished-obelisk-nubian-museum",
+  "elephantine-island-satet-aswan",
+  "nubian-village-aswan-boat",
+  "tombs-of-the-nobles-aswan-st-simeon",
+]);
+const WHERE: Record<string, string> = {
+  "esna-temple-ceiling": "Esna, Egypt",
+  "edfu-temple-of-horus": "Edfu, Egypt",
+  "kom-ombo-temple": "Kom Ombo, Egypt",
+  "el-kab-nekhbet": "El Kab, Egypt",
+  "luxor-to-aswan-temples-private": "Luxor to Aswan, Egypt",
+  "abu-simbel-private-road-trip": "Abu Simbel, Egypt",
+  "goddess-route-egypt": "Upper Egypt",
+  "el-quseir-wadi-el-gemal": "El Quseir, Egypt",
+  "private-airport-pickup": "Hurghada & Marsa Alam, Egypt",
+};
 export function experienceWhere(slug: string): string {
+  if (WHERE[slug]) return WHERE[slug];
+  if (ASWAN_SLUGS.has(slug)) return "Aswan, Egypt";
   if (slug === "dendera-abydos") return "Dendera & Abydos, Egypt";
   if (slug === "hurghada-to-luxor-crossing") return "Hurghada to Luxor, Egypt";
   if (slug === "thirty-days-in-the-desert") return "Egyptian desert";

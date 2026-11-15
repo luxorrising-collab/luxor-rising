@@ -63,3 +63,7 @@ next-env.d.ts
 /public/videos/day-feel.mp4
 /public/videos/day-feel-poster.jpg
 .dev-notes.json
+
+# Private research (may contain internal costs) — never commit
+research_notes/
+reports/

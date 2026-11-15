@@ -327,12 +327,8 @@ export default async function ConciergeDayPage() {
     { video: "/videos/desert/yoga.mp4", poster: "/videos/desert/yoga-poster.jpg", caption: "A quiet moment in the sand" },
   ];
   const galleryItems: { image?: string; video?: string; poster?: string; caption?: string }[] = [];
-  let gci = 0;
-  baseGallery.forEach((img) => {
-    galleryItems.push(img);
-    if (gci < galleryClips.length) galleryItems.push(galleryClips[gci++]);
-  });
-  while (gci < galleryClips.length) galleryItems.push(galleryClips[gci++]);
+  // Real photographs first, the visualisation clips at the end.
+  galleryItems.push(...baseGallery, ...galleryClips);
   const builderImages = {
     journeyMedinet: page?.builderJourneyMedinetImage || undefined,
     journeyKarnak: page?.builderJourneyKarnakImage || undefined,

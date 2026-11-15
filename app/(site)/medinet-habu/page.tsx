@@ -53,14 +53,14 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Luxor Rising",
       title,
       description,
-      images: entry.heroImage ? [entry.heroImage] : undefined,
+      images: entry.heroImage ? [{ url: `/api/og/experience/${SLUG}`, width: 1200, height: 630, alt: entry.name || entry.title }] : undefined,
       url: `/${SLUG}`,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: entry.heroImage ? [entry.heroImage] : undefined,
+      images: entry.heroImage ? [`/api/og/experience/${SLUG}`] : undefined,
     },
   };
 }
@@ -237,7 +237,7 @@ export default async function MedinetHabuPage() {
         galleryVideos={galleryVideos}
         bookEyebrow="Design your day"
         bookTitle="Make Medinet Habu part of your day"
-        bookLead="Medinet Habu isn't sold as a ticket — it's one of the ways to spend a Luxor Rising day. Build the whole day around it: the temples and tombs you choose, in the order you like, with a private Egyptologist, insider access and everything arranged end to end."
+        bookLead="Make Medinet Habu part of your day. Choose what you'd love to see, and your concierge plans the rest — the order, the timing, the car and every detail, arranged end to end. You see the price as you build."
         bookNote={undefined}
         configurator={<DesignYourDayCta />}
         valueStackRows={entry.valueStackRows.map((r) => ({ label: r.label, price: r.price }))}

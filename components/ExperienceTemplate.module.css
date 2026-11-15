@@ -49,7 +49,7 @@
   position: relative;
   z-index: 2;
   color: #fff;
-  max-width: 760px;
+  max-width: 960px;
   padding-top: 7rem;
   padding-bottom: clamp(2.6rem, 6vw, 4.5rem);
 }
@@ -60,7 +60,15 @@
   color: #fff;
   text-shadow: 0 2px 40px rgba(0, 0, 0, 0.4);
   margin: 0.6rem 0 0;
-  max-width: 15ch;
+  /* Wide enough that every product headline sits within three lines. */
+  max-width: 21ch;
+  text-wrap: balance;
+}
+@media (max-width: 600px) {
+  .heroContent h1 {
+    font-size: clamp(1.9rem, 8.4vw, 2.6rem);
+    max-width: none;
+  }
 }
 .heroSub {
   font-family: var(--font-display);
@@ -406,16 +414,24 @@
   gap: 1rem;
   align-items: flex-start;
 }
-.see .ix {
+/* The symbols (✦ ❖ ◆ ✧) differ in width, so each sits in the same fixed box,
+   centred on the title's first line: every title starts at the same x and the
+   icon lines up with it, on phones and desktops alike. */
+.see :global(.ix) {
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.35rem;
   color: var(--color-gold-deep);
   line-height: 1;
   flex: none;
-  margin-top: 0.1rem;
+  width: 1.75rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .see h4 {
   font-size: 1.05rem;
+  line-height: 1.7rem;
   color: var(--color-ink);
   margin-bottom: 0.3rem;
 }

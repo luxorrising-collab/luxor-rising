@@ -1,3 +1,4 @@
+import PhotoCredits from "@/components/PhotoCredits";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Nav from "@/components/Nav";
@@ -89,7 +90,8 @@ export async function generateMetadata({
       siteName: "Luxor Rising",
       title,
       description,
-      images: entry.heroImage ? [entry.heroImage] : undefined,
+      // A branded share image: the hero photo, a warm tint, the price and the share line.
+      images: entry.heroImage ? [{ url: `/api/og/experience/${slug}`, width: 1200, height: 630, alt: entry.name || entry.title }] : undefined,
       url: `/experiences/${slug}`,
     },
   };
@@ -280,6 +282,21 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       { type: "video", ...clip("temple", "yoga"), position: "50% 40%" },
       { type: "video", ...clip("temple", "table"), position: "50% 50%" },
     ],
+    // Aswan, the temple road south and the coast (2026-11): open-licence photos.
+    "philae-temple-aswan": templeHero(0, 1),
+    "unfinished-obelisk-nubian-museum": templeHero(0, 1),
+    "elephantine-island-satet-aswan": templeHero(0, 1),
+    "tombs-of-the-nobles-aswan-st-simeon": templeHero(0, 1),
+    "abu-simbel-private-road-trip": templeHero(0, 1),
+    "esna-temple-ceiling": templeHero(0, 1),
+    "edfu-temple-of-horus": templeHero(0, 1),
+    "kom-ombo-temple": templeHero(0, 1),
+    "el-kab-nekhbet": templeHero(0, 1),
+    "luxor-to-aswan-temples-private": templeHero(0, 1),
+    "goddess-route-egypt": templeHero(0, 1),
+    "el-quseir-wadi-el-gemal": templeHero(0, 1),
+    "private-airport-pickup": templeHero(0, 1),
+    "nubian-village-aswan-boat": nileHero(0, 1),
     "thirty-days-in-the-desert": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("desert", "desert-stars"), position: "46% 45%" },
@@ -354,6 +371,19 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "red-sea-boat-snorkelling": seaGallery,
     // No gallery photos — a clips-only gallery, with the drive.
     "deir-el-shelwit": templeGallery,
+    "philae-temple-aswan": templeGallery,
+    "unfinished-obelisk-nubian-museum": templeGallery,
+    "elephantine-island-satet-aswan": templeGallery,
+    "tombs-of-the-nobles-aswan-st-simeon": templeGallery,
+    "abu-simbel-private-road-trip": templeGallery,
+    "esna-temple-ceiling": templeGallery,
+    "edfu-temple-of-horus": templeGallery,
+    "kom-ombo-temple": templeGallery,
+    "el-kab-nekhbet": templeGallery,
+    "luxor-to-aswan-temples-private": templeGallery,
+    "goddess-route-egypt": templeGallery,
+    "el-quseir-wadi-el-gemal": templeGallery,
+    "nubian-village-aswan-boat": nileGallery,
     "thirty-days-in-the-desert": [
       { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Your camp in the sand, far from everything." },
       { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set in the wild." },
@@ -522,7 +552,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         bookTitle={isLuxorFunnel ? `Make ${shortName} part of your day` : entry.bookTitle}
         bookLead={
           isLuxorFunnel
-            ? `${shortName} isn't sold as a ticket — it's one of the ways to spend a Luxor Rising day. Build the whole day around it: the temples and tombs you choose, in the order you like, with a private Egyptologist, insider access and everything arranged end to end.`
+            ? `Make ${shortName} part of your day. Choose what you'd love to see, and your concierge plans the rest — the order, the timing, the car and every detail, arranged end to end. You see the price as you build.`
             : entry.bookLead
         }
         bookNote={isLuxorFunnel ? undefined : entry.bookNote || undefined}
@@ -647,6 +677,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         showValueAnchor={globals?.showValueAnchor ?? false}
       />
 
+      <PhotoCredits slug={slug} />
       <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );

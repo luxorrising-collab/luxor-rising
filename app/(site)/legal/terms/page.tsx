@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <>
-      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
       <div className="wrap">
         <nav className={styles.crumb} aria-label="Breadcrumb">
           <Link href="/">Home</Link>
@@ -256,7 +256,7 @@ export default function TermsPage() {
           </p>
 
           <p style={{ marginTop: "2.4rem" }}>
-            <Link href="/concierge-day" className="btn btn-primary">
+            <Link href="/concierge-day#design" className="btn btn-primary">
               Design your day →
             </Link>
           </p>

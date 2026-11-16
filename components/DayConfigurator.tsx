@@ -91,7 +91,7 @@ const SIGNATURE_CARDS: { key: SignatureJourney; intro: string }[] = [
 // Each Signature day is the same promise; stated once, under the cards.
 const SIGNATURE_META = "Door-to-door from the coast · the best of Luxor, your choice · insider access · a signature gift";
 const JOURNEY_NOTE =
-  "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a bus never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with signature bonuses and a gift along the way.";
+  "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a bus never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with a signature gift along the way.";
 const CONSIGLIERE_INTRO =
   "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then go with the flow.";
 const CONSIGLIERE_META = "One temple & a Nile sail · concierge all day · more paid locally";
@@ -1082,6 +1082,10 @@ export default function DayConfigurator({
               ? img.journeyOriginal
               : img.journeyLight;
   const { days, setDays } = useDayCount();
+  // Which steps the guest has actually answered (defaults don't count), so
+  // "Reserve" walks them through each one in turn and never skips a step.
+  const [touched, setTouched] = useState({ card: false, guests: false, days: false });
+  const touch = (k: "card" | "guests" | "days") => setTouched((t) => (t[k] ? t : { ...t, [k]: true }));
   // The visitor's picks from across the site ("add to my day").
   const myDay = useMyDay();
   const planDays = (n: number) => {
@@ -1134,6 +1138,7 @@ export default function DayConfigurator({
         : SIG.title;
   // Tap a card → select it for the summary AND toggle its detail panel.
   const pickCard = (key: "signature" | "original" | "light" | "reality", j: Journey) => {
+    touch("card");
     setJourney(j);
     setExpanded((prev) => (prev === key ? null : key));
   };
@@ -1281,20 +1286,12 @@ export default function DayConfigurator({
         t: "Authentic local contacts — hosts, artisans & storytellers, introduced for you",
         local: true,
       });
-      bonus.push({
-        t: "Deir el-Shelwit — the hidden temple of Isis (€120), included",
-        sig: true,
-        bonus: true,
-      });
+      pool.push({ t: "Deir el-Shelwit — the hidden temple of Isis", sig: true });
     }
     if (days >= 4) {
       pool.push("Valley of the Workers — Deir el-Medina");
       if (journey !== "balloon") pool.push("Hot-air balloon at dawn over Luxor");
-      bonus.push({
-        t: "Sailing lesson on the Nile — take the tiller yourself (€140), included",
-        sig: true,
-        bonus: true,
-      });
+      pool.push({ t: "Sailing lesson on the Nile — take the tiller yourself", sig: true });
     }
     // Kept in step with the Signature card's promises — nothing here is offered
     // that the card (face + "Also included") doesn't already promise.
@@ -1387,7 +1384,7 @@ export default function DayConfigurator({
   };
 
   // What the guest chose, in one line — sent with a booking or a proposal request.
-  function configSummary() {
+  function configSummary(withPicks = true) {
     const g = bigGroup ? bigGroupCount : group;
     const d = moreDays ? moreDaysCount : days;
     return [
@@ -1400,8 +1397,8 @@ export default function DayConfigurator({
           : isLight
             ? "Adventure (concierge only — one temple of choice & a Nile sail included)"
             : "Signature (full guided day — the best of Luxor your choice, insider access, Egyptologist, balloon & a gift)",
-      myDay.picks.length
-        ? `Chosen (${myDay.picks.length}, about ${myDay.days} day${myDay.days > 1 ? "s" : ""}): ${myDay.picks.map((p) => p.name).join(", ")}`
+      withPicks && myDay.picks.length
+        ? `Your experiences (${myDay.picks.length}, about ${myDay.days} day${myDay.days > 1 ? "s" : ""}): ${myDay.picks.map((p) => p.name).join(" / ")}`
         : conc
           ? ""
           : "Experiences: temples, tombs, a felucca or the desert — your choice, in any order",
@@ -1440,6 +1437,7 @@ export default function DayConfigurator({
             .filter(Boolean)
             .join("\n\n"),
           topic: "concierge-day",
+          picks: myDay.picks.map((p) => p.slug),
           company: String(new FormData(form).get("company") ?? ""),
         }),
       });
@@ -1453,6 +1451,28 @@ export default function DayConfigurator({
       setError("We couldn't reach the server. Please check your connection and try again.");
     }
     setLoading(false);
+  }
+
+  // The sticky "Reserve": the next step the guest hasn't answered, then the date,
+  // then the booking column. Each target gets a short gold highlight.
+  function goToNextStep(e: React.MouseEvent) {
+    e.preventDefault();
+    const next = !touched.card ? "card" : !touched.guests ? "guests" : !touched.days ? "days" : !tripDate ? "date" : "book";
+    const el =
+      next === "date"
+        ? dateFieldRef.current
+        : next === "book"
+          ? document.getElementById("book")
+          : document.querySelector<HTMLElement>(`[data-step="${next}"]`);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - (next === "date" ? window.innerHeight / 3 : 90);
+    window.scrollTo({ top, behavior: "smooth" });
+    el.classList.remove(styles.stepFlash);
+    // restart the highlight
+    void el.offsetWidth;
+    el.classList.add(styles.stepFlash);
+    window.setTimeout(() => el.classList.remove(styles.stepFlash), 1800);
+    if (next === "date") window.setTimeout(() => dateInputRef.current?.focus({ preventScroll: true }), 600);
   }
 
   async function handleReserve(e: React.MouseEvent) {
@@ -1478,7 +1498,7 @@ export default function DayConfigurator({
       : isOriginal
         ? `concierge-original-${days}d`
         : `concierge-day-${days}d`;
-    const preferences = configSummary();
+    const preferences = configSummary(false);
     trackBeginCheckout({
       value: total,
       currency: "EUR",
@@ -1499,6 +1519,7 @@ export default function DayConfigurator({
           date: tripDate,
           cancelPath: "/concierge-day#build",
           preferences,
+          picks: myDay.picks.map((p) => p.slug),
         }),
       });
       const data = await res.json();
@@ -1767,7 +1788,7 @@ export default function DayConfigurator({
       <div className={styles.cfgGrid}>
         <div>
           {/* Step 1: the feel of the day — the dream first, the logistics after */}
-          <div className={styles.step}>
+          <div className={styles.step} data-step="card">
             <div className={styles.stepH}>
               <div className={styles.stepN}>1</div>
               <h3>What should your day feel like?</h3>
@@ -2029,7 +2050,7 @@ export default function DayConfigurator({
           </div>
 
           {/* Step 2: who's coming — 5+ turns the checkout into a proposal request */}
-          <div className={styles.step}>
+          <div className={styles.step} data-step="guests">
             <div className={styles.stepH}>
               <div className={styles.stepN}>2</div>
               <h3>Who&apos;s coming?</h3>
@@ -2042,6 +2063,7 @@ export default function DayConfigurator({
                   aria-pressed={!bigGroup && group === g}
                   className={`${styles.grp} ${!bigGroup && group === g ? styles.sel : ""}`}
                   onClick={() => {
+                    touch("guests");
                     setGroup(g);
                     setBigGroup(false);
                   }}
@@ -2053,7 +2075,10 @@ export default function DayConfigurator({
                 type="button"
                 aria-pressed={bigGroup}
                 className={`${styles.grp} ${bigGroup ? styles.sel : ""}`}
-                onClick={() => setBigGroup(true)}
+                onClick={() => {
+                  touch("guests");
+                  setBigGroup(true);
+                }}
               >
                 5 or more
               </button>
@@ -2081,7 +2106,7 @@ export default function DayConfigurator({
           </div>
 
           {/* Step 3: how many days — 5+ also becomes a proposal */}
-          <div className={styles.step}>
+          <div className={styles.step} data-step="days">
             <div className={styles.stepH}>
               <div className={styles.stepN}>3</div>
               <h3>How many days with us?</h3>
@@ -2113,6 +2138,7 @@ export default function DayConfigurator({
                     aria-pressed={on}
                     className={`${styles.dayTile} ${on ? styles.sel : ""}`}
                     onClick={() => {
+                      touch("days");
                       setDays(d);
                       setMoreDays(false);
                     }}
@@ -2133,6 +2159,7 @@ export default function DayConfigurator({
                 aria-pressed={moreDays}
                 className={`${styles.dayTile} ${styles.dayTileMore} ${moreDays ? styles.sel : ""}`}
                 onClick={() => {
+                  touch("days");
                   setMoreDays(true);
                   setDays(4);
                 }}
@@ -2313,6 +2340,21 @@ export default function DayConfigurator({
                       ? "The same Signature day, made to measure — shaped around your group, at your pace."
                       : FEEL[days]}
             </p>
+            {myDay.picks.length > 0 && (
+              <div className={styles.sumPicks}>
+                <span className={styles.sumPicksHead}>
+                  Your experiences · {myDay.picks.length} · about {myDay.days} day{myDay.days > 1 ? "s" : ""}
+                </span>
+                <ol className={styles.sumPicksList}>
+                  {myDay.picks.map((p) => (
+                    <li key={p.slug}>{p.name}</li>
+                  ))}
+                </ol>
+                <span className={styles.sumPicksNote}>
+                  Your concierge shapes the order and timing with you before the day.
+                </span>
+              </div>
+            )}
             <p className={styles.visGiftLine}>
               {isReality ? (
                 <>
@@ -2873,6 +2915,7 @@ export default function DayConfigurator({
             : `your ${isLight ? "day" : "journey"}: ${euro(total)}${tripDate ? " · " + stayText : ""} · 7-day free cancellation`
         }
         ctaHref="#book"
+        onCtaClick={goToNextStep}
         ctaLabel={proposal ? "Request your proposal →" : "See your day & price →"}
         ctaShort={proposal ? "Request →" : "Reserve →"}
         revealOnScroll={false}

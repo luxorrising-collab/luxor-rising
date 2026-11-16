@@ -428,7 +428,7 @@ export default function ArticleTemplate({
       <StickyBar
         name="Design your day"
         meta="private · from dawn · free cancellation up to 7 days before"
-        ctaHref="/concierge-day"
+        ctaHref="/concierge-day#design"
         ctaLabel="Start →"
         revealOnScroll
         revealAfter={700}

@@ -50,7 +50,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Nav ctaHref="/concierge-day" ctaLabel="Design your day" />
+      <Nav ctaHref="/concierge-day#design" ctaLabel="Design your day" />
 
       {/* HERO */}
       <section className={styles.hero}>
@@ -310,7 +310,7 @@ export default async function HomePage() {
       <StickyBar
         name={page?.stickyBarPrice ?? "From €800"}
         meta={page?.stickyBarMeta ?? ""}
-        ctaHref="/concierge-day"
+        ctaHref="/concierge-day#design"
         ctaLabel="Design your day →"
         revealOnScroll
         revealAfter={480}

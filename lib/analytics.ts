@@ -27,6 +27,27 @@ function contentIds(items: AnalyticsItem[]) {
   return items.map((i) => i.item_id);
 }
 
+/**
+ * "Add to my day" (the site-wide basket) — GA4's add_to_cart / remove_from_cart
+ * and Meta's AddToCart. No price: an experience is part of a day, priced in
+ * Design Your Day, so the value lands with begin_checkout and purchase.
+ */
+export function trackCartChange(p: { action: "add" | "remove"; item: AnalyticsItem & { item_category?: string }; listName?: string }) {
+  const event = p.action === "add" ? "add_to_cart" : "remove_from_cart";
+  const item = { item_category: "experience", quantity: 1, ...p.item, ...(p.listName ? { item_list_name: p.listName } : {}) };
+  dl({ ecommerce: null });
+  dl({ event, ecommerce: { currency: "EUR", items: [item] } });
+  window.gtag?.("event", event, { currency: "EUR", items: [item] });
+  if (p.action === "add") {
+    window.fbq?.("track", "AddToCart", {
+      content_type: "product",
+      content_ids: [p.item.item_id],
+      content_name: p.item.item_name,
+      currency: "EUR",
+    });
+  }
+}
+
 /** Fired when the visitor commits to pay (Reserve click / checkout opens). */
 export function trackBeginCheckout(p: {
   value: number;

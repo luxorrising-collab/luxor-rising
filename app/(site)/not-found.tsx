@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <>
-      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
       <section style={{ minHeight: "68vh", display: "flex", alignItems: "center" }}>
         <div className="wrap-narrow center">
           <span className="eyebrow">404</span>

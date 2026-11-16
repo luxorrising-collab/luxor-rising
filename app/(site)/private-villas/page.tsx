@@ -244,7 +244,7 @@ export default async function PrivateVillasPage() {
             <Link href="#request" className="btn btn-primary btn-lg">
               Request availability →
             </Link>
-            <Link href="/concierge-day" className="btn btn-line btn-lg">
+            <Link href="/concierge-day#design" className="btn btn-line btn-lg">
               Design your day
             </Link>
           </div>

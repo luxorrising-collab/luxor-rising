@@ -14,6 +14,7 @@ export default function StickyBar({
   revealAfter = 640,
   className = "",
   extra,
+  onCtaClick,
 }: {
   name: string;
   meta: string;
@@ -26,6 +27,8 @@ export default function StickyBar({
   className?: string;
   /* optional node rendered between the text and the CTA (e.g. a gift badge) */
   extra?: React.ReactNode;
+  /** Take over the CTA (e.g. walk the builder's steps in turn). */
+  onCtaClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const [shown, setShown] = useState(!revealOnScroll);
 
@@ -50,7 +53,7 @@ export default function StickyBar({
         {/* the call to action with the visitor's day attached (phones; the
             header carries it on wider screens) */}
         <div className={styles.ctaGroup}>
-          <a href={ctaHref} className={`btn btn-primary ${styles.btn}`}>
+          <a href={ctaHref} className={`btn btn-primary ${styles.btn}`} onClick={onCtaClick}>
             {ctaShort ? (
               <>
                 <span className={styles.ctaLong}>{ctaLabel}</span>

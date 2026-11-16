@@ -4,7 +4,8 @@ import "../globals.css";
 import ConsentProvider from "@/components/consent/ConsentProvider";
 import ConsentManager from "@/components/consent/ConsentManager";
 import DevComment from "@/components/DevComment";
-import { MyDayDrawer, MyDayToast } from "@/components/MyDay";
+import { MyDayDrawer, MyDayNames, MyDayToast } from "@/components/MyDay";
+import { getDayCatalogue } from "@/lib/day-names";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import JsonLd from "@/components/JsonLd";
 import { reader } from "@/lib/keystatic-reader";
@@ -65,9 +66,16 @@ export default async function RootLayout({
     reader.singletons.siteSettings.read(),
     reader.collections.experiences.all(),
   ]);
-  // Each experience's poetic title (the product's own) for the "Your day" drawer.
+  // The canonical picks list: each experience's name (as in the builder) and
+  // its product's own poetic title, for the "Your day" drawer and basket.
+  const catalogue = await getDayCatalogue();
   const dayLines: Record<string, string> = {};
-  for (const { slug, entry } of allExperiences) if (entry.isActive && entry.title) dayLines[slug] = entry.title;
+  const dayNames: Record<string, string> = {};
+  for (const p of Object.values(catalogue)) {
+    dayLines[p.slug] = p.title;
+    dayNames[p.slug] = p.name;
+  }
+  void allExperiences;
   const trackingConfig: ConsentConfig = t
     ? {
         enabled: t.enabled,
@@ -124,6 +132,7 @@ export default async function RootLayout({
           <ConsentBanner />
         </ConsentProvider>
         {/* "Added to your day" confirmation, on every page */}
+        <MyDayNames names={dayNames} />
         <MyDayToast />
         <MyDayDrawer lines={dayLines} />
         {process.env.NODE_ENV === "development" && <DevComment />}

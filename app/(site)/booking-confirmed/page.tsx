@@ -1,3 +1,4 @@
+import { resolvePicks } from "@/lib/day-names";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Stripe from "stripe";
@@ -24,6 +25,7 @@ type Order = {
   slug: string;
   name: string;
   email: string | null;
+  picks?: string[];
 };
 
 // Retrieve the real, PAID amount from Stripe — never trust a client-supplied
@@ -46,6 +48,7 @@ async function getPaidOrder(
       slug: s.metadata?.slug || "experience",
       name: fallbackName || "Luxor Rising experience",
       email: s.customer_details?.email ?? null,
+      picks: (await resolvePicks((s.metadata?.picks || "").split(",").filter(Boolean))).map((p) => p.name),
     };
   } catch {
     return null; // never block the thank-you page on an analytics lookup
@@ -157,13 +160,32 @@ export default async function BookingConfirmedPage({
             Your concierge will be in touch within 24 hours to lock in the exact timing and every
             last detail.
           </p>
+          {order?.picks && order.picks.length > 0 && (
+            <div
+              style={{
+                maxWidth: "34rem",
+                margin: "0 auto 1.8rem",
+                padding: "1rem 1.2rem",
+                border: "1px solid var(--color-line)",
+                borderRadius: 10,
+                textAlign: "left",
+              }}
+            >
+              <span className="eyebrow">Your experiences</span>
+              <ol style={{ margin: ".5rem 0 0", paddingLeft: "1.2rem", display: "grid", gap: ".25rem" }}>
+                {order.picks.map((n) => (
+                  <li key={n}>{n}</li>
+                ))}
+              </ol>
+            </div>
+          )}
           <div
             style={{ display: "flex", gap: ".8rem", justifyContent: "center", flexWrap: "wrap" }}
           >
             <Link href="/experiences" className="btn btn-primary btn-lg">
               Browse more experiences
             </Link>
-            <Link href="/concierge-day" className="btn btn-line btn-lg">
+            <Link href="/concierge-day#design" className="btn btn-line btn-lg">
               Build a whole day
             </Link>
           </div>

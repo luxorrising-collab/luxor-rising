@@ -533,7 +533,7 @@ export default function ExperienceTemplate({
             <Link href={finalCtaHref} className="btn btn-primary btn-lg">
               {finalCtaLabel}
             </Link>
-            <Link href="/concierge-day" className="btn btn-line btn-lg">
+            <Link href="/concierge-day#design" className="btn btn-line btn-lg">
               Or build a whole day
             </Link>
           </div>

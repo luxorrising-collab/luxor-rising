@@ -1,3 +1,4 @@
+import { resolvePicks, picksLine } from "@/lib/day-names";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { sendEnquiryEmails } from "@/lib/email";
@@ -74,7 +75,11 @@ export async function POST(req: Request) {
   const context = [group && `Group: ${group}`, base && `Staying: ${base}`]
     .filter(Boolean)
     .join(" · ");
-  const message = [userMessage, context && `(${context})`].filter(Boolean).join("\n\n");
+  // The guest's picks ("add to my day"), in the same wording as everywhere else.
+  const picks = await resolvePicks((body as { picks?: unknown }).picks);
+  const message = [userMessage, context && `(${context})`, picks.length ? `Your experiences: ${picksLine(picks)}` : ""]
+    .filter(Boolean)
+    .join("\n\n");
 
   // Upsert the customer by email; keep going even if that hiccups — the enquiry
   // itself also carries name + email, so a lead is never lost.

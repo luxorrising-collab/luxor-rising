@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { resolvePicks, picksLine } from "@/lib/day-names";
 import { quoteBooking } from "@/lib/quote";
 
 // Stripe's SDK needs the Node runtime (not Edge).
@@ -37,6 +38,9 @@ export async function POST(req: Request) {
   }
 
   const { name, slug, mode = "full", guests, date, cancelPath, preferences, photo, hurg, seaTransfer } = body;
+  // The guest's picks ("add to my day"), validated against the canonical list.
+  const picks = await resolvePicks((body as { picks?: unknown }).picks);
+  const picksText = picksLine(picks);
   if (!name || !slug) {
     return NextResponse.json({ error: "Missing booking details." }, { status: 400 });
   }
@@ -119,6 +123,7 @@ export async function POST(req: Request) {
               description: [
                 guests ? `${guests} guest${guests > 1 ? "s" : ""}` : null,
                 date || null,
+                picks.length ? `Your experiences: ${picksText}` : null,
                 mode === "deposit"
                   ? `Deposit of ${eur(amountCents)} of ${eur(fullTotalCents)} — ${eur(balanceCents)} balance due on the day`
                   : "Paid in full",
@@ -142,6 +147,8 @@ export async function POST(req: Request) {
         full_total_cents: String(fullTotalCents),
         balance_cents: String(balanceCents),
         preferences: (preferences || "").slice(0, 480),
+        // the picks as slugs (the webhook resolves the same canonical names)
+        picks: picks.map((p) => p.slug).join(",").slice(0, 490),
       },
       // {CHECKOUT_SESSION_ID} is substituted by Stripe on redirect — it lets the
       // confirmation page retrieve the real, paid amount server-side for analytics.

@@ -6,6 +6,7 @@
 
 import { useSyncExternalStore } from "react";
 import { planDays } from "./day-plan";
+import { trackCartChange } from "./analytics";
 
 export type DayPick = { slug: string; name: string };
 
@@ -15,6 +16,14 @@ const EMPTY: DayPick[] = [];
 
 let cacheRaw: string | null = null;
 let cacheVal: DayPick[] = EMPTY;
+// Canonical names (slug → the builder's name), set once by the site layout, so
+// a pick reads the same wherever it was added from.
+let NAMES: Record<string, string> = {};
+export function setDayNames(names: Record<string, string>) {
+  NAMES = names;
+  cacheRaw = null; // re-read with the canonical names
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVT, { detail: {} }));
+}
 
 function read(): DayPick[] {
   try {
@@ -23,7 +32,9 @@ function read(): DayPick[] {
     cacheRaw = raw;
     const parsed = raw ? JSON.parse(raw) : [];
     cacheVal = Array.isArray(parsed)
-      ? parsed.filter((p): p is DayPick => p && typeof p.slug === "string" && typeof p.name === "string")
+      ? parsed
+          .filter((p): p is DayPick => p && typeof p.slug === "string" && typeof p.name === "string")
+          .map((p) => (NAMES[p.slug] ? { ...p, name: NAMES[p.slug] } : p))
       : EMPTY;
   } catch {
     cacheVal = EMPTY;
@@ -57,9 +68,18 @@ export function useMyDay() {
   const has = (slug: string) => picks.some((p) => p.slug === slug);
   const add = (pick: DayPick) => {
     const cur = read();
-    if (!cur.some((p) => p.slug === pick.slug)) write([...cur, pick], pick);
+    if (cur.some((p) => p.slug === pick.slug)) return;
+    pick = { ...pick, name: NAMES[pick.slug] ?? pick.name };
+    write([...cur, pick], pick);
+    trackCartChange({ action: "add", item: { item_id: pick.slug, item_name: pick.name } });
   };
-  const remove = (slug: string) => write(read().filter((p) => p.slug !== slug));
+  const remove = (slug: string) => {
+    const cur = read();
+    const gone = cur.find((p) => p.slug === slug);
+    if (!gone) return;
+    write(cur.filter((p) => p.slug !== slug));
+    trackCartChange({ action: "remove", item: { item_id: gone.slug, item_name: gone.name } });
+  };
   const toggle = (pick: DayPick) => (read().some((p) => p.slug === pick.slug) ? remove(pick.slug) : add(pick));
   const clear = () => write([]);
   return { picks, has, add, remove, toggle, clear, ...planDays(picks.map((p) => p.slug)) };

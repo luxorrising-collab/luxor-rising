@@ -8,6 +8,7 @@ import {
   sendTripReminder,
   sendReviewRequest,
   sendDateConfirmation,
+  experiencesFromNotes,
 } from "@/lib/email";
 import { SITE_URL } from "@/lib/email-template";
 
@@ -168,7 +169,7 @@ async function chargeBalances(stripe: Stripe, supabase: Supa, result: { due: num
 async function sendReminders(supabase: Supa, result: { reminders: number }) {
   const { data, error } = await supabase
     .from("bookings")
-    .select("id, product_name, trip_date, customers(email,name,phone)")
+    .select("id, product_name, trip_date, notes, customers(email,name,phone)")
     .is("reminder_sent_at", null)
     .eq("payment_status", "paid")
     .not("trip_date", "is", null)
@@ -193,6 +194,7 @@ async function sendReminders(supabase: Supa, result: { reminders: number }) {
         email: cust.email,
         productName: b.product_name || "your experience",
         tripDate: b.trip_date ?? undefined,
+        experiences: experiencesFromNotes(b.notes),
       });
       result.reminders++;
     }
@@ -203,7 +205,7 @@ async function sendReminders(supabase: Supa, result: { reminders: number }) {
 async function sendReviews(supabase: Supa, result: { reviews: number }) {
   const { data, error } = await supabase
     .from("bookings")
-    .select("id, product_name, trip_date, customers(email,name,phone)")
+    .select("id, product_name, trip_date, notes, customers(email,name,phone)")
     .is("review_request_sent_at", null)
     .eq("payment_status", "paid")
     .not("trip_date", "is", null)
@@ -239,7 +241,7 @@ async function sendReviews(supabase: Supa, result: { reviews: number }) {
 async function sendDateConfirmations(supabase: Supa, result: { dateConfirmations: number }) {
   const { data, error } = await supabase
     .from("bookings")
-    .select("id, product_name, trip_date, confirmed_time, confirmed_pickup, customers(email,name,phone)")
+    .select("id, product_name, trip_date, notes, confirmed_time, confirmed_pickup, customers(email,name,phone)")
     .eq("date_confirmed", true)
     .is("date_confirmation_sent_at", null)
     .eq("payment_status", "paid");
@@ -264,6 +266,7 @@ async function sendDateConfirmations(supabase: Supa, result: { dateConfirmations
         tripDate: b.trip_date ?? undefined,
         time: b.confirmed_time ?? undefined,
         pickup: b.confirmed_pickup ?? undefined,
+        experiences: experiencesFromNotes(b.notes),
       });
       result.dateConfirmations++;
     }

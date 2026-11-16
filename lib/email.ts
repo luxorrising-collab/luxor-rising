@@ -198,6 +198,7 @@ export async function sendOrderNotification(o: {
   customerEmail?: string;
   customerPhone?: string;
   preferences?: string;
+  experiences?: string[];
 }): Promise<void> {
   const resend = client();
   if (!resend) return;
@@ -220,9 +221,11 @@ export async function sendOrderNotification(o: {
     value: [o.customerName, o.customerEmail, o.customerPhone].filter(Boolean).join(" · ") || "—",
   });
 
-  const sections = choiceItems(o.preferences).length
-    ? [{ title: "Their choices", items: choiceItems(o.preferences) }]
-    : undefined;
+  const ownerSections = [
+    ...(o.experiences?.length ? [{ title: "Their experiences", items: o.experiences }] : []),
+    ...(choiceItems(o.preferences).length ? [{ title: "Their choices", items: choiceItems(o.preferences) }] : []),
+  ];
+  const sections = ownerSections.length ? ownerSections : undefined;
 
   const html = renderEmail({
     preheader: `New booking — ${o.productName}${o.tripDate ? ` · ${o.tripDate}` : ""}`,
@@ -242,6 +245,7 @@ export async function sendOrderNotification(o: {
     o.amountEur != null ? `Paid now: €${o.amountEur}${isDeposit ? " (deposit)" : " (full)"}` : "",
     isDeposit && o.balanceEur != null ? `Balance: €${o.balanceEur}` : "",
     `Guest: ${[o.customerName, o.customerEmail, o.customerPhone].filter(Boolean).join(" · ")}`,
+    o.experiences?.length ? `\nTheir experiences:\n${o.experiences.map((x) => `· ${x}`).join("\n")}` : "",
     o.preferences ? `\nTheir choices:\n${o.preferences}` : "",
   ]
     .filter(Boolean)
@@ -384,8 +388,15 @@ export type BookingEmail = {
   pickup?: string;
   time?: string;
   preferences?: string; // the guest's design-your-day choices (" · " joined)
+  experiences?: string[]; // the guest's picks ("add to my day"), canonical names
   tier?: "signature" | "original" | "adventure"; // Design-Your-Day package, if any
 };
+
+// Read the picks back from a booking's notes ("Your experiences: A · B").
+export function experiencesFromNotes(notes?: string | null): string[] {
+  const line = (notes ?? "").split("\n").find((l) => l.startsWith("Your experiences: "));
+  return line ? line.slice("Your experiences: ".length).split(" · ").map((x) => x.trim()).filter(Boolean) : [];
+}
 
 // What a full-service booking includes — a single experience, Signature or
 // Original — stated up front to remove doubt and the need to hunt the FAQ.
@@ -430,7 +441,8 @@ const WHAT_TO_BRING =
   "sun protection and water, and a light layer for early starts.";
 
 /** After payment — sent from the Stripe webhook once a booking is confirmed. */
-export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
+/** The confirmation email itself (subject, HTML, text) — also used to preview it. */
+export function buildBookingConfirmation(b: BookingEmail): { subject: string; html: string; text: string } {
   const isDeposit = b.payMode === "deposit";
   const paidLabel = b.amountEur != null ? `€${b.amountEur}${isDeposit ? " (deposit)" : " (paid in full)"}` : undefined;
 
@@ -456,6 +468,7 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
   const choices = choiceItems(b.preferences);
   const included = includedFor(b.tier);
   const sections: { title: string; items: string[]; check?: boolean }[] = [];
+  if (b.experiences?.length) sections.push({ title: "Your experiences", items: b.experiences });
   if (choices.length) sections.push({ title: "Your day, as you shaped it", items: choices });
   sections.push({ title: "Everything's handled", items: included, check: true });
 
@@ -491,6 +504,7 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
       ? `· ${b.balanceAutoCharge ? "Balance (day before)" : "Balance on the day"}: €${b.balanceEur}`
       : "",
     "",
+    ...(b.experiences?.length ? ["Your experiences:", ...b.experiences.map((c) => `· ${c}`), ""] : []),
     ...(choices.length ? ["Your day, as you shaped it:", ...choices.map((c) => `· ${c}`), ""] : []),
     "Everything's handled:",
     ...included.map((i) => `· ${i}`),
@@ -506,12 +520,12 @@ export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
     .filter(Boolean)
     .join("\n");
 
-  await send({
-    to: b.email,
-    subject: `Your Luxor Rising booking is confirmed — ${b.productName}`,
-    text,
-    html,
-  });
+  return { subject: `Your Luxor Rising booking is confirmed — ${b.productName}`, html, text };
+}
+
+export async function sendBookingConfirmation(b: BookingEmail): Promise<void> {
+  const { subject, html, text } = buildBookingConfirmation(b);
+  await send({ to: b.email, subject, text, html });
 }
 
 /** The concierge confirms the exact day/time and pickup. */
@@ -530,6 +544,7 @@ export async function sendDateConfirmation(b: BookingEmail): Promise<void> {
       `Your ${b.productName} is confirmed${when ? ` for ${when}` : ""}.${b.pickup ? ` We'll collect you ${b.pickup}.` : ""}`,
     ],
     summary: { rows },
+    sections: b.experiences?.length ? [{ title: "Your experiences", items: b.experiences }] : undefined,
     outro: [WHAT_TO_BRING, "If anything needs to change, just reply to this email and we'll rearrange it."],
   });
 
@@ -538,6 +553,7 @@ export async function sendDateConfirmation(b: BookingEmail): Promise<void> {
     "",
     `Your ${b.productName} is confirmed${when ? ` for ${when}` : ""}.`,
     b.pickup ? `We'll collect you ${b.pickup}.` : "",
+    b.experiences?.length ? `\nYour experiences:\n${b.experiences.map((x) => `· ${x}`).join("\n")}` : "",
     "",
     WHAT_TO_BRING,
     "",
@@ -566,6 +582,7 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
       `A quick note before your ${b.productName}${b.tripDate ? ` on ${b.tripDate}` : ""} — we can't wait to show you.`,
     ],
     summary: { rows },
+    sections: b.experiences?.length ? [{ title: "Your experiences", items: b.experiences }] : undefined,
     outro: [WHAT_TO_BRING, "Your concierge is reachable throughout the day, so you never have a decision to make."],
   });
 
@@ -574,6 +591,7 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
     "",
     `A quick note before your ${b.productName}${b.tripDate ? ` on ${b.tripDate}` : ""} — we can't wait to show you.`,
     b.pickup ? `We'll collect you ${b.pickup}${b.time ? ` at ${b.time}` : ""}.` : "",
+    b.experiences?.length ? `\nYour experiences:\n${b.experiences.map((x) => `· ${x}`).join("\n")}` : "",
     "",
     WHAT_TO_BRING,
     "",
@@ -721,6 +739,7 @@ export type AhmedBrief = {
   pickup?: string; // hotel / base / area, if known
   ordered?: string[]; // explicit list of what was ordered; else derived from preferences
   preferences?: string; // raw design-your-day string (fallback for `ordered`)
+  experiences?: string[]; // the guest's picks, canonical names (listed first)
   payMode?: string; // 'full' | 'deposit'
   days?: number; // concierge journeys: number of days (drives the menu below)
   tier?: "signature" | "original" | "adventure"; // which Design-Your-Day package
@@ -884,14 +903,8 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   if (signatureMultiDay) {
     sections.push({ title: "Temples & sites on the menu", items: CONCIERGE_TEMPLES, small: true });
     sections.push({ title: "Activities on the menu", items: CONCIERGE_ACTIVITIES, small: true });
-    if ((b.days ?? 0) >= 3)
-      sections.push({
-        title: "Signature bonuses — included, on us",
-        items: [
-          `Two signature moments come included on this ${b.days}-day journey — decide which together with the client.`,
-        ],
-      });
   }
+  if (b.experiences?.length) sections.unshift({ title: "The guest's experiences", items: b.experiences });
   if (b.notes) sections.push({ title: "Notes", items: [b.notes] });
 
   const paidLine = isDeposit
@@ -977,11 +990,9 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
           "",
           "Activities on the menu:",
           ...CONCIERGE_ACTIVITIES.map((i) => `· ${i}`),
-          ...((b.days ?? 0) >= 3
-            ? ["", `Signature bonuses — included, on us: two signature moments come included on this ${b.days}-day journey; decide which together with the client.`]
-            : []),
         ]
       : []),
+    b.experiences?.length ? `\nThe guest's experiences:\n${b.experiences.map((x) => `· ${x}`).join("\n")}` : "",
     b.notes ? `\nNotes: ${b.notes}` : "",
     "",
     paidLine,

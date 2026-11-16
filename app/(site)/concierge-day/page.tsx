@@ -1,3 +1,4 @@
+import HashLanding from "@/components/HashLanding";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Image from "next/image";
@@ -589,7 +590,9 @@ export default async function ConciergeDayPage() {
     // Merged into the "dream" / "What your day feels like" position above.
     experiences: null,
     builder: (
-      <section key="builder" id="design" style={{ background: "var(--color-paper)", paddingBottom: 0 }}>
+      <section key="builder" id="design" style={{ background: "var(--color-paper)", paddingBottom: 0, scrollMarginTop: "4.5rem" }}>
+        {/* "Design your day" links land exactly here, even as the page above settles */}
+        <HashLanding id="design" />
         <div className="wrap">
           <div className="center" style={{ marginBottom: "2.2rem" }}>
             <span className="eyebrow">Design your day</span>

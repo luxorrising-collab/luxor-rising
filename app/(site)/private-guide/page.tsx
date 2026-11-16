@@ -39,7 +39,7 @@ export default async function PrivateGuidePage() {
 
   return (
     <>
-      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
 
       {/* HERO */}
       <header className={styles.hero}>
@@ -191,7 +191,7 @@ export default async function PrivateGuidePage() {
             <p style={{ color: "var(--color-muted)" }}>{page.formLead}</p>
             <p style={{ fontSize: ".88rem", marginTop: "1rem" }}>
               Prefer to build and see prices yourself first?{" "}
-              <Link href="/concierge-day" style={{ color: "var(--color-gold-deep)", borderBottom: "1px solid var(--color-gold-soft)" }}>
+              <Link href="/concierge-day#design" style={{ color: "var(--color-gold-deep)", borderBottom: "1px solid var(--color-gold-soft)" }}>
                 Design your day →
               </Link>
             </p>
@@ -212,7 +212,7 @@ export default async function PrivateGuidePage() {
             <Link href="#request" className="btn btn-primary btn-lg">
               Request your host →
             </Link>
-            <Link href="/concierge-day" className="btn btn-line btn-lg">
+            <Link href="/concierge-day#design" className="btn btn-line btn-lg">
               Design your day
             </Link>
           </div>

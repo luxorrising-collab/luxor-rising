@@ -3590,3 +3590,55 @@ details[open] > summary .foldChev {
   justify-self: start;
   margin-bottom: 0.15rem;
 }
+
+/* the step "Reserve" just brought the guest to: a brief gold glow */
+.stepFlash {
+  animation: stepFlash 1.6s ease;
+  border-radius: 12px;
+}
+@keyframes stepFlash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 160, 99, 0);
+  }
+  25% {
+    box-shadow: 0 0 0 6px rgba(201, 160, 99, 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stepFlash {
+    animation: none;
+    outline: 2px solid var(--color-gold);
+    outline-offset: 6px;
+  }
+}
+
+/* the booking summary: exactly the experiences the guest picked */
+.sumPicks {
+  margin: 0.4rem 0 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(201, 160, 99, 0.5);
+  border-radius: 10px;
+  background: rgba(201, 160, 99, 0.08);
+  display: grid;
+  gap: 0.5rem;
+}
+.sumPicksHead {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+}
+.sumPicksList {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #f3e7cf;
+}
+.sumPicksNote {
+  font-size: 0.74rem;
+  color: #cbbfa8;
+}

@@ -103,7 +103,7 @@ export default async function InsidersGuidePage() {
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
 
       {/* HERO */}
       <header className={styles.hero}>

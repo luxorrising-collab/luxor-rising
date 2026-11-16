@@ -147,7 +147,7 @@ export default function ExperiencesClient({
             <span>Private · 1–4 guests</span>
             <span>Several experiences, one day</span>
           </div>
-          <Link href="/concierge-day" className="btn btn-primary">
+          <Link href="/concierge-day#design" className="btn btn-primary">
             Design your day →
           </Link>
         </div>

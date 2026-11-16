@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { onDayPickAdded, useMyDay, dayLength, type DayPick, type DaySegment } from "@/lib/my-day";
+import { onDayPickAdded, useMyDay, dayLength, setDayNames, type DayPick, type DaySegment } from "@/lib/my-day";
 import styles from "./MyDay.module.css";
 
 const daysLabel = (d: number) => `about ${d} day${d > 1 ? "s" : ""}`;
@@ -67,6 +67,12 @@ export function AddToDay({
       )}
     </button>
   );
+}
+
+/** Registers the canonical names (from the site layout), so every pick matches the builder. */
+export function MyDayNames({ names }: { names: Record<string, string> }) {
+  useEffect(() => setDayNames(names), [names]);
+  return null;
 }
 
 /** True once the browser has read the stored picks (avoids a server/client mismatch). */

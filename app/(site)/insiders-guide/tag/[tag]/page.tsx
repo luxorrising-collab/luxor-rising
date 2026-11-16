@@ -80,7 +80,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
       <header className={styles.hero}>
         <div className="wrap">
           <span className="eyebrow">The Insider&apos;s Guide · tag</span>

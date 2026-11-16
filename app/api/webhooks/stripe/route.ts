@@ -1,3 +1,4 @@
+import { resolvePicks, picksLine } from "@/lib/day-names";
 import Stripe from "stripe";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import {
@@ -99,6 +100,9 @@ export async function POST(req: Request) {
   const tripDate = md.date || null;
   const productName = md.product_name || md.slug || "Experience";
   const preferences = md.preferences || "";
+  // The guest's picks, resolved to the same canonical names as on the site.
+  const picks = await resolvePicks((md.picks || "").split(",").filter(Boolean));
+  const experiences = picks.map((p) => p.name);
   const payMode = md.mode || "full";
   const amountCents = session.amount_total ?? null;
   const fullTotalCents = md.full_total_cents ? parseInt(md.full_total_cents, 10) || null : null;
@@ -151,7 +155,7 @@ export async function POST(req: Request) {
     currency: session.currency || "eur",
     pay_mode: payMode,
     payment_status: "paid",
-    notes: preferences || null,
+    notes: [preferences, experiences.length ? `Your experiences: ${picksLine(picks)}` : ""].filter(Boolean).join("\n") || null,
     stripe_customer_id: stripeCustomerId,
     stripe_payment_method_id: paymentMethodId,
     balance_cents: balanceCents ?? 0,
@@ -197,6 +201,7 @@ export async function POST(req: Request) {
       balanceEur,
       payMode,
       preferences: preferences || undefined,
+      experiences,
       tier,
       // Tell the guest the balance auto-charges only when we actually scheduled it.
       balanceAutoCharge: scheduleBalance,
@@ -211,6 +216,7 @@ export async function POST(req: Request) {
     tripDate: tripDate ?? undefined,
     guests: guests ?? undefined,
     preferences: preferences || undefined,
+    experiences,
     payMode,
     days: conciergeDays,
     tier,
@@ -230,6 +236,7 @@ export async function POST(req: Request) {
     customerEmail: email ?? undefined,
     customerPhone: phone ?? undefined,
     preferences: preferences || undefined,
+    experiences,
   });
 
   return new Response("ok", { status: 200 });

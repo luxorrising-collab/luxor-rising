@@ -694,3 +694,70 @@
   text-overflow: clip;
   overflow-wrap: anywhere;
 }
+
+/* added (hero): dark text on gold, readable, winning over the global .btn-ghost */
+.heroBtn.heroOn,
+.heroBtn.heroOn:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+/* keep it distinct from the solid "Design your day": gold outline, gold text */
+.heroBtn.heroOn,
+.heroBtn.heroOn:hover {
+  background: rgba(201, 160, 99, 0.16);
+  border-color: var(--color-gold);
+  color: var(--color-gold-soft);
+}
+
+/* many days in a narrow space: the labels become one legend line */
+.dayBar {
+  container-type: inline-size;
+}
+.dayLegend {
+  display: none;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #e9dcc3;
+}
+@container (max-width: 420px) {
+  .dayBarMany .dayLbl {
+    display: none;
+  }
+  .dayBarMany .dayLegend {
+    display: block;
+  }
+}
+
+/* smooth arrival: the bar fades up, then each day fills in turn */
+.dayBar {
+  animation: barIn 0.45s ease both;
+}
+@keyframes barIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+.daySeg i {
+  transform-origin: left center;
+  animation: fillIn 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  transition: width 0.45s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes fillIn {
+  from {
+    transform: scaleX(0);
+  }
+}
+.picks {
+  animation: barIn 0.4s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dayBar,
+  .picks,
+  .daySeg i {
+    animation: none;
+    transition: none;
+  }
+}

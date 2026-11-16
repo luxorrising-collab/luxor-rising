@@ -201,6 +201,8 @@ export default function Nav({
           >
             {ctaLabel}
           </Link>
+          {/* the visitor's day, under the call to action: opens the drawer */}
+          <MyDayButton className={styles.mobileDay} labelled onOpen={() => setMenuOpen(false)} />
         </div>
       )}
     </header>

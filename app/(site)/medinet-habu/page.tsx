@@ -1,3 +1,4 @@
+import StickyBar from "@/components/StickyBar";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
@@ -291,6 +292,14 @@ export default async function MedinetHabuPage() {
         }
       />
 
+      <StickyBar
+        name="Medinet Habu"
+        meta={`From €${experienceFrom(SLUG).price} a day · private`}
+        ctaHref="/concierge-day#design"
+        ctaLabel="Design your day →"
+        ctaShort="Design your day"
+        revealOnScroll
+      />
       <FullFooter columns={FOOTER_COLUMNS} />
     </>
   );

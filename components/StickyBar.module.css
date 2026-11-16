@@ -79,3 +79,62 @@
     display: none;
   }
 }
+
+/* the CTA and the basket square as one pair */
+.ctaGroup {
+  display: inline-flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+}
+.cart {
+  display: none;
+}
+@media (max-width: 920px) {
+  .cart {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0 0.7rem;
+    border: 1px solid var(--color-gold);
+    border-left: 0;
+    border-radius: 0 2px 2px 0;
+    background: rgba(201, 160, 99, 0.14);
+    color: var(--color-gold-soft);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cart svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  .cart:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+  .ctaGroup:has(.cart) .btn {
+    border-radius: 2px 0 0 2px;
+  }
+}
+
+/* with the basket square: the name stays on one line; on narrow phones the
+   small badges step aside to make room */
+.inner:has(.cart) .text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.inner:has(.cart) .name {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 420px) {
+  .inner:has(.cart) .extra {
+    display: none;
+  }
+}

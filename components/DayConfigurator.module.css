@@ -3562,3 +3562,31 @@ details[open] > summary .foldChev {
 .expTileAdd {
   border-radius: 2px;
 }
+
+/* Adventure: what's included vs paid locally, quietly, top left */
+.expTileTag {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.12rem 0.5rem 0.14rem;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(20, 13, 6, 0.5);
+  color: #f3e7cf;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.expTileTagIn {
+  border-color: var(--color-gold);
+  color: var(--color-gold-soft);
+}
+
+/* the day labels sit with the text, above the name, never under "+ Add" */
+.expTileTx .expTileSig,
+.expTileTx .expTileTag {
+  position: static;
+  justify-self: start;
+  margin-bottom: 0.15rem;
+}

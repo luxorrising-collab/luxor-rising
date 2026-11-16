@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./StickyBar.module.css";
+import { MyDayButton } from "./MyDay";
 
 export default function StickyBar({
   name,
@@ -46,16 +47,21 @@ export default function StickyBar({
           <span className={styles.meta}>{meta}</span>
         </div>
         {extra ? <div className={styles.extra}>{extra}</div> : null}
-        <a href={ctaHref} className={`btn btn-primary ${styles.btn}`}>
-          {ctaShort ? (
-            <>
-              <span className={styles.ctaLong}>{ctaLabel}</span>
-              <span className={styles.ctaShort}>{ctaShort}</span>
-            </>
-          ) : (
-            ctaLabel
-          )}
-        </a>
+        {/* the call to action with the visitor's day attached (phones; the
+            header carries it on wider screens) */}
+        <div className={styles.ctaGroup}>
+          <a href={ctaHref} className={`btn btn-primary ${styles.btn}`}>
+            {ctaShort ? (
+              <>
+                <span className={styles.ctaLong}>{ctaLabel}</span>
+                <span className={styles.ctaShort}>{ctaShort}</span>
+              </>
+            ) : (
+              ctaLabel
+            )}
+          </a>
+          <MyDayButton className={styles.cart} />
+        </div>
       </div>
     </div>
   );

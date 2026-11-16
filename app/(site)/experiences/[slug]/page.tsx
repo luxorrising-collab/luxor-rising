@@ -1,4 +1,5 @@
 import PhotoCredits from "@/components/PhotoCredits";
+import StickyBar from "@/components/StickyBar";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Nav from "@/components/Nav";
@@ -678,6 +679,16 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         showValueAnchor={globals?.showValueAnchor ?? false}
       />
 
+      {isLuxorFunnel && (
+        <StickyBar
+          name={shortName}
+          meta={`From €${experienceFrom(slug).price} a day · private`}
+          ctaHref="/concierge-day#design"
+          ctaLabel="Design your day →"
+          ctaShort="Design your day"
+          revealOnScroll
+        />
+      )}
       <PhotoCredits slug={slug} />
       <FullFooter columns={FOOTER_COLUMNS} />
     </>

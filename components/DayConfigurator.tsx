@@ -1630,7 +1630,9 @@ export default function DayConfigurator({
         <p className={styles.expLead}>{opts.lead}</p>
         {opts.experiences && opts.experiences.length > 0 && (
           <div className={styles.expBlock}>
-            <span className={styles.expEyebrow}>Experiences included</span>
+            <span className={styles.expEyebrow}>
+              {opts.experiences.some((e) => e.tag === "Paid locally") ? "What your day can hold" : "Experiences included"}
+            </span>
             {opts.expLede && <p className={styles.expLede}>{opts.expLede}</p>}
             {opts.experiences.some((e) => e.group) ? (
               renderGroups(opts.experiences, opts.groupDescs)
@@ -1655,13 +1657,19 @@ export default function DayConfigurator({
                       <Image src={`/images/cards/${e.slug}.jpg`} alt="" fill sizes="(max-width: 560px) 50vw, 220px" />
                     )}
                     <span className={styles.expTileScrim} aria-hidden />
-                    {e.tag === "Signature" && <span className={styles.expTileSig}>Signature</span>}
                     {e.slug && (
                       <span className={styles.expTileAdd} aria-hidden>
                         {on ? "✓ In your day" : "+ Add"}
                       </span>
                     )}
                     <span className={styles.expTileTx}>
+                      {/* what it is on this day: Signature-only, included, or paid locally */}
+                      {e.tag === "Signature" && <span className={styles.expTileSig}>Signature</span>}
+                      {e.tag && e.tag !== "Signature" && (
+                        <span className={`${styles.expTileTag} ${e.tag === "Included" ? styles.expTileTagIn : ""}`}>
+                          {e.tag}
+                        </span>
+                      )}
                       <span className={styles.expTileName}>{e.name}</span>
                       {e.desc && <span className={styles.expTileLine}>{e.desc}</span>}
                       {(e.place || (e.slug && dayLength(e.slug))) && (

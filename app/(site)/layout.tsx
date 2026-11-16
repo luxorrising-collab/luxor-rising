@@ -60,17 +60,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [t, settings, dayPage, allExperiences] = await Promise.all([
+  const [t, settings, allExperiences] = await Promise.all([
     reader.singletons.tracking.read(),
     reader.singletons.siteSettings.read(),
-    reader.singletons.conciergeDayPage.read(),
     reader.collections.experiences.all(),
   ]);
-  // Each experience's poetic line for the "Your day" drawer: the builder's own
-  // line where it has one, otherwise the product's headline.
+  // Each experience's poetic title (the product's own) for the "Your day" drawer.
   const dayLines: Record<string, string> = {};
   for (const { slug, entry } of allExperiences) if (entry.isActive && entry.title) dayLines[slug] = entry.title;
-  for (const e of dayPage?.cards?.signature?.experiences ?? []) if (e.slug && e.desc) dayLines[e.slug] = e.desc;
   const trackingConfig: ConsentConfig = t
     ? {
         enabled: t.enabled,

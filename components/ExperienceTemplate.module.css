@@ -663,3 +663,16 @@
     text-align: center;
   }
 }
+
+/* Long values (the new durations: on site · drive · time in reserve) wrap
+   within their column instead of pushing the page wider. */
+.glanceFacts {
+  max-width: 100%;
+}
+.gf {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 30ch;
+  white-space: normal;
+  text-wrap: balance;
+}

@@ -100,7 +100,7 @@ export function DayBar({ segments, picks, compact = false }: { segments: DaySegm
   const open = segments.find((g) => !g.whole && g.fill < 1);
   const spare = open ? Math.round((1 - open.fill) * (open.where === "The road south" ? 2 : 4)) : 0;
   return (
-    <div className={`${styles.dayBar} ${compact ? styles.dayBarCompact : ""}`}>
+    <div className={`${styles.dayBar} ${compact ? styles.dayBarCompact : ""} ${shown.length > 4 ? styles.dayBarMany : ""}`}>
       <div
         className={styles.dayGrid}
         style={{ gridTemplateColumns: `repeat(${shown.length}, minmax(0, 1fr))${more > 0 ? " auto" : ""}` }}
@@ -109,7 +109,7 @@ export function DayBar({ segments, picks, compact = false }: { segments: DaySegm
       >
         {shown.map((g, i) => (
           <span key={i} className={`${styles.daySeg} ${g.whole ? styles.dayWhole : ""}`} style={{ gridRow: 1 }}>
-            <i style={{ width: `${Math.round(g.fill * 100)}%` }} />
+            <i style={{ width: `${Math.round(g.fill * 100)}%`, animationDelay: `${120 + i * 70}ms` }} />
           </span>
         ))}
         {more > 0 && (
@@ -129,6 +129,14 @@ export function DayBar({ segments, picks, compact = false }: { segments: DaySegm
             </span>
           ))}
       </div>
+      {/* narrow space and many days: one legend line instead of labels under each day */}
+      {!compact && (
+        <p className={styles.dayLegend}>
+          {runs(shown)
+            .map((r) => `${r.start + 1}${r.len > 1 ? `–${r.start + r.len}` : ""} ${r.whole ? nameOf(r.where) : r.where}`)
+            .join(" · ")}
+        </p>
+      )}
       {!compact && (
         <p className={styles.dayHint}>
           {segments.length} day{segments.length > 1 ? "s" : ""}
@@ -198,7 +206,17 @@ export function MyDayToast({ designHref = "/concierge-day#design" }: { designHre
 }
 
 /** The header's "Your day · n": always in view once something is picked; opens the drawer. */
-export function MyDayButton({ className }: { className?: string }) {
+export function MyDayButton({
+  className,
+  labelled = false,
+  onOpen,
+}: {
+  className?: string;
+  /** Show "Your day" beside the count (e.g. in the phone menu). */
+  labelled?: boolean;
+  /** Called as the drawer opens (e.g. to close the phone menu). */
+  onOpen?: () => void;
+}) {
   const { picks } = useMyDay();
   const hydrated = useHydrated();
   if (!hydrated || picks.length === 0) return null;
@@ -206,14 +224,22 @@ export function MyDayButton({ className }: { className?: string }) {
     <button
       type="button"
       className={className ?? styles.dayBtn}
-      onClick={openMyDay}
+      onClick={() => {
+        onOpen?.();
+        openMyDay();
+      }}
       aria-label={`Your day: ${picks.length} experience${picks.length > 1 ? "s" : ""}. Open`}
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" aria-hidden>
         <circle cx="12" cy="12" r="4" />
         <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" />
       </svg>
-      {className ? (
+      {className && labelled ? (
+        <>
+          <span>Your day</span>
+          <span className={styles.dayBtnN}>{picks.length}</span>
+        </>
+      ) : className ? (
         <span>{picks.length}</span>
       ) : (
         <>

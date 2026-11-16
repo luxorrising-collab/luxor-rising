@@ -38,10 +38,13 @@ async function getData() {
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getData();
   if (!data) return {};
-  const { entry, basePrice } = data;
+  const { entry } = data;
+  // The page sells the day it funnels into ("From €330 a Luxor Rising day"), so
+  // any single-experience price in the SEO copy shows the day price instead.
+  const dayFrom = experienceFrom(SLUG).price;
   const swap = (s: string) =>
-    entry.basePrice && basePrice !== entry.basePrice
-      ? s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${basePrice}`)
+    entry.basePrice && dayFrom !== entry.basePrice
+      ? s.replace(new RegExp(`€\\s?${entry.basePrice}\\b`, "g"), `€${dayFrom}`)
       : s;
   const title = swap(entry.metaTitle || entry.title);
   const description = swap(entry.metaDescription || entry.hook);

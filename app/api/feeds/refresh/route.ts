@@ -1,10 +1,11 @@
 import { revalidatePath } from "next/cache";
 
-// Manual refresh: force both feeds to regenerate now (e.g. after a price or
+// Manual refresh: force every feed to regenerate now (e.g. after a price or
 // product change). Linked from the "Marketing feeds" singleton in Keystatic.
 export async function GET() {
   revalidatePath("/api/feeds/meta");
   revalidatePath("/api/feeds/google");
+  revalidatePath("/api/feeds/google-dynamic");
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Feeds refreshed</title></head>
@@ -14,6 +15,7 @@ export async function GET() {
 <ul style="line-height:1.9">
 <li><a href="/api/feeds/meta">Meta catalogue feed</a></li>
 <li><a href="/api/feeds/google">Google page feed (Performance Max)</a></li>
+<li><a href="/api/feeds/google-dynamic">Google dynamic remarketing feed (Performance Max)</a></li>
 </ul>
 </body></html>`;
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8" } });

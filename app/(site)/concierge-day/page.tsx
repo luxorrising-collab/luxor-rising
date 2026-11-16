@@ -28,6 +28,7 @@ import { reader } from "@/lib/keystatic-reader";
 import { getFinalPriceMap } from "@/lib/pricing";
 import { getSocialProof } from "@/lib/social-proof";
 import { VALUE_LINES } from "@/lib/value-lines";
+import ViewItemTracker from "@/components/analytics/ViewItemTracker";
 import styles from "./ConciergeDayPage.module.css";
 
 export const metadata: Metadata = {
@@ -887,6 +888,8 @@ export default async function ConciergeDayPage() {
 
       <FullFooter columns={FOOTER_COLUMNS} />
       <ConciergeChat whatsappNumber={settings?.whatsappNumber || ""} context="Design Your Day" />
+      {/* view_item for the feed's "design-your-day" row (dynamic remarketing). */}
+      <ViewItemTracker id="design-your-day" name="The Concierge Day" price={page?.startingPrice ?? 450} />
     </>
   );
 }

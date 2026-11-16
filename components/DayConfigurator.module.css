@@ -800,41 +800,51 @@
 .bdToggle:hover {
   color: var(--color-ink);
 }
+/* the à-la-carte breakdown: one product per row — its name, its poetic line
+   beneath, the price on the right — then the two totals */
 .sumBd {
   display: none;
   margin: 0.6rem 0 0.2rem;
-  padding: 0.7rem 0.85rem;
+  padding: 0.35rem 0.95rem 0.6rem;
   background: #fff;
   border: 1px solid var(--color-gold-soft);
   border-radius: 8px;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--color-ink);
 }
 .sumBd.open {
   display: block;
 }
 .bdRow {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 0.6rem;
-  padding: 0.16rem 0;
+  gap: 0.9rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(201, 160, 99, 0.22);
+  color: var(--color-ink);
 }
-.bdRow span:first-child {
-  opacity: 0.85;
+.bdRow > span:last-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
 .bdName {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0.12rem;
+  min-width: 0;
   font-weight: 500;
 }
 .bdBrand {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 0.76rem;
-  line-height: 1.2;
+  font-weight: 400;
+  font-size: 0.82rem;
+  line-height: 1.25;
   color: var(--color-gold-deep);
-  opacity: 0.92;
 }
 .bdRow em {
   font-style: normal;
@@ -849,13 +859,24 @@
   vertical-align: middle;
 }
 .bdTot {
-  border-top: 1px dashed var(--color-gold-soft);
-  margin-top: 0.35rem;
-  padding-top: 0.4rem;
+  border-bottom: none;
+  margin-top: 0.15rem;
+  padding: 0.6rem 0 0.15rem;
   font-weight: 600;
 }
+.bdTot > span:last-child {
+  text-decoration: line-through;
+  text-decoration-color: rgba(42, 28, 16, 0.45);
+  font-weight: 500;
+  opacity: 0.7;
+}
 .bdYou {
+  border-bottom: none;
+  padding: 0.2rem 0 0;
   color: var(--color-gold-deep);
+  font-weight: 600;
+}
+.bdYou > span:last-child {
   font-weight: 600;
 }
 .sumMeta {
@@ -967,6 +988,14 @@
 }
 .sumList li.dh:first-child {
   margin-top: 0.2rem;
+}
+/* the note under the guest's own picks: a plain line, no tick */
+.sumList li.sumPicksNote {
+  padding-left: 1.4rem;
+  font-style: italic;
+}
+.sumList li.sumPicksNote::before {
+  content: "";
 }
 .sumList li.dhBonus {
   color: var(--color-gold-deep);
@@ -3556,6 +3585,25 @@ details[open] > summary .foldChev {
   font-size: 0.84rem;
   line-height: 1.5;
   color: var(--color-gold-deep);
+}
+/* fewer days than the picks need at the right pace */
+.daysWarn {
+  margin: -0.3rem 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(176, 112, 40, 0.55);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: rgba(201, 160, 99, 0.12);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+/* a day tile too short for the picks: still choosable, visibly less suited */
+.dayShort {
+  opacity: 0.62;
+}
+.dayShort.sel {
+  opacity: 1;
 }
 
 /* the tile's add control: the same square shape as the hero button */

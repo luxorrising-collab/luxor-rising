@@ -1,7 +1,8 @@
 // How many days a set of experiences needs, day by day. Shared by the "Your day"
 // basket (client) and the cards that mark multi-day experiences (server).
 //
-// Up to four experiences fill a day at the right pace (3–4 a day). The temples
+// Three experiences make a full day at the right pace (the bar is full at 3);
+// a fourth still fits the same day, and the fifth starts the next one. The temples
 // on the road south are half-days; Aswan's sights share their own day(s); some
 // products are a whole day, or several, on their own. Transfers take no day.
 
@@ -45,6 +46,8 @@ const SIGNATURE_ONLY = new Set([
   "horse-ride-luxor-west-bank",
 ]);
 const PER_DAY = 4;
+// The day bar reads full from this many (a fourth still fits the same day).
+const FULL_AT = 3;
 
 /** "A full day" / "4 days" for experiences that are a day or more on their own. */
 export function dayLength(slug: string): string | undefined {
@@ -54,7 +57,7 @@ export function dayLength(slug: string): string | undefined {
 }
 
 /** One day of the plan: where, how full (0–1), and what fills it. */
-export type DaySegment = { where: string; fill: number; count: number; whole?: boolean };
+export type DaySegment = { where: string; fill: number; count: number; cap?: number; whole?: boolean };
 
 export function planDays(slugs: string[]) {
   const luxor: string[] = [];
@@ -74,7 +77,7 @@ export function planDays(slugs: string[]) {
   const fillDays = (items: string[], cap: number, where: string) => {
     for (let i = 0; i < items.length; i += cap) {
       const count = Math.min(cap, items.length - i);
-      segments.push({ where, count, fill: count / cap });
+      segments.push({ where, count, cap, fill: Math.min(1, count / Math.min(cap, FULL_AT)) });
     }
   };
   fillDays(luxor, PER_DAY, "Luxor");

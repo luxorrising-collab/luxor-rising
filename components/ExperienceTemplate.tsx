@@ -12,6 +12,7 @@ import TestimonialsCarousel from "./TestimonialsCarousel";
 import GiftsSectionServer from "./GiftsSectionServer";
 import { VALUE_LINES } from "@/lib/value-lines";
 import { type GiftKey } from "@/lib/gifts";
+import ViewItemTracker from "@/components/analytics/ViewItemTracker";
 import styles from "./ExperienceTemplate.module.css";
 
 const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
@@ -114,6 +115,8 @@ export type ExperienceTemplateProps = {
   heroCtaHref?: string;
   /** Show "+ Add to my day" (the site-wide basket) in place of "Why it matters". */
   addToDay?: { slug: string; name: string };
+  /** view_item for analytics and dynamic remarketing (id = the feed row's ID). */
+  viewItem?: { id: string; name: string; price: number };
   /** A block rendered right after the Reserve/checkout section (above the
       gifts/presents section) — e.g. "What we take care of". */
   postContent?: React.ReactNode;
@@ -191,6 +194,7 @@ export default function ExperienceTemplate({
   heroCtaLabel,
   heroCtaHref = "#book",
   addToDay,
+  viewItem,
   postContent,
   preBook,
   pageEnd,
@@ -229,6 +233,7 @@ export default function ExperienceTemplate({
 
   return (
     <>
+      {viewItem && <ViewItemTracker id={viewItem.id} name={viewItem.name} price={viewItem.price} />}
       {/* HERO */}
       <section className={styles.hero}>
         <div className={styles.heroBg}>

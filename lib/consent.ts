@@ -34,6 +34,8 @@ export type ConsentConfig = {
   enabled: boolean;
   gtmId: string;
   ga4Id: string;
+  /** Google Ads tag (AW-…), for conversions and dynamic remarketing. */
+  googleAdsId: string;
   metaPixelId: string;
 };
 
@@ -41,6 +43,7 @@ export const EMPTY_CONFIG: ConsentConfig = {
   enabled: false,
   gtmId: "",
   ga4Id: "",
+  googleAdsId: "",
   metaPixelId: "",
 };
 
@@ -58,7 +61,7 @@ export function getConsentConfig(): ConsentConfig {
 
 /** Tracking is live only if switched on AND at least one ID is present. */
 export function isTrackingEnabled(cfg: ConsentConfig): boolean {
-  return cfg.enabled && Boolean(cfg.gtmId || cfg.ga4Id || cfg.metaPixelId);
+  return cfg.enabled && Boolean(cfg.gtmId || cfg.ga4Id || cfg.googleAdsId || cfg.metaPixelId);
 }
 
 export const REJECT_ALL: ConsentChoices = {

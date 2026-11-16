@@ -94,7 +94,7 @@ function runs(segs: DaySegment[]) {
 
 /**
  * The day plan at a glance: one segment per day, filled by how full that day
- * is (up to four experiences), labelled with where it is. Used in the drawer,
+ * is (full at three experiences, a fourth still fits), labelled with where it is. Used in the drawer,
  * the builder and the toast, so it reads the same everywhere.
  */
 export function DayBar({ segments, picks, compact = false }: { segments: DaySegment[]; picks: DayPick[]; compact?: boolean }) {
@@ -103,8 +103,8 @@ export function DayBar({ segments, picks, compact = false }: { segments: DaySegm
   const shown = segments.slice(0, 8);
   const more = segments.length - shown.length;
   // the first day with room left, for the hint
-  const open = segments.find((g) => !g.whole && g.fill < 1);
-  const spare = open ? Math.round((1 - open.fill) * (open.where === "The road south" ? 2 : 4)) : 0;
+  const open = segments.find((g) => !g.whole && g.count < (g.cap ?? 4));
+  const spare = open ? (open.cap ?? 4) - open.count : 0;
   return (
     <div className={`${styles.dayBar} ${compact ? styles.dayBarCompact : ""} ${shown.length > 4 ? styles.dayBarMany : ""}`}>
       <div

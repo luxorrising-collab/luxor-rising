@@ -228,6 +228,7 @@ export default async function MedinetHabuPage() {
         heroCtaLabel="Design your day →"
         heroCtaHref="/concierge-day#design"
         addToDay={{ slug: "medinet-habu", name: "Medinet Habu" }}
+        viewItem={{ id: SLUG, name: "Medinet Habu", price: experienceFrom(SLUG).price }}
         heroImage={entry.heroImage ?? ""}
         heroMedia={heroMedia}
         glanceLead={entry.glanceLead}

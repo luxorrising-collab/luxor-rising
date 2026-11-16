@@ -81,6 +81,7 @@ export default async function RootLayout({
         enabled: t.enabled,
         gtmId: t.gtmId ?? "",
         ga4Id: t.ga4Id ?? "",
+        googleAdsId: t.googleAdsId ?? "",
         metaPixelId: t.metaPixelId ?? "",
       }
     : EMPTY_CONFIG;

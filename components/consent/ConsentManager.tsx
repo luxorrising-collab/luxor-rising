@@ -27,7 +27,9 @@ import { useConsentConfig } from "./ConsentProvider";
  */
 export default function ConsentManager() {
   const config = useConsentConfig();
-  const { gtmId, ga4Id } = config;
+  const { gtmId, ga4Id, googleAdsId } = config;
+  // gtag.js loads once, under whichever Google ID is set; each ID is configured on it.
+  const gtagId = ga4Id || googleAdsId;
   const pathname = usePathname();
 
   // On mount, apply the effective choice so Meta loads for returning opt-ins
@@ -98,14 +100,14 @@ export default function ConsentManager() {
       )}
 
       {/* 2b. GA4 direct (optional — use this OR a GA4 tag inside GTM, not both). */}
-      {ga4Id && (
+      {gtagId && (
         <>
           <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
             strategy="afterInteractive"
           />
           <Script id="ga4-config" strategy="afterInteractive">
-            {`window.dataLayer = window.dataLayer || []; window.gtag = window.gtag || function(){ dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', '${ga4Id}');`}
+            {`window.dataLayer = window.dataLayer || []; window.gtag = window.gtag || function(){ dataLayer.push(arguments); }; gtag('js', new Date());${ga4Id ? ` gtag('config', '${ga4Id}');` : ""}${googleAdsId ? ` gtag('config', '${googleAdsId}');` : ""}`}
           </Script>
         </>
       )}

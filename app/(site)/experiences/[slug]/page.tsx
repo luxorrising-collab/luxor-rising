@@ -551,6 +551,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         heroCtaLabel={isLuxorFunnel ? "Design your day →" : undefined}
         heroCtaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
         addToDay={isLuxorFunnel ? { slug, name: shortName } : undefined}
+        viewItem={{ id: slug, name: shortName, price: isLuxorFunnel ? experienceFrom(slug).price : basePrice }}
         glanceLead={entry.glanceLead}
         bestTime={entry.bestTime}
         duration={entry.duration}

@@ -1910,6 +1910,11 @@ export default config({
           description:
             "e.g. G-XXXXXXXXXX. Use this OR a GA4 tag inside GTM — not both, or pageviews double-count.",
         }),
+        googleAdsId: fields.text({
+          label: "Google Ads tag ID",
+          description:
+            "e.g. AW-123456789 (Google Ads → Goals → Google tag). Turns on Google Ads conversions and dynamic remarketing; honours the cookie banner. Leave blank if unused.",
+        }),
         metaPixelId: fields.text({
           label: "Meta (Facebook) Pixel ID",
           description:

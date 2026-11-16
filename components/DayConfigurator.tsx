@@ -1082,6 +1082,8 @@ export default function DayConfigurator({
               ? img.journeyOriginal
               : img.journeyLight;
   const { days, setDays } = useDayCount();
+  // The day count the page opened with, to return to when the basket is emptied.
+  const startDays = useRef(days);
   // Which steps the guest has actually answered (defaults don't count), so
   // "Reserve" walks them through each one in turn and never skips a step.
   const [touched, setTouched] = useState({ card: false, guests: false, days: false });
@@ -1099,10 +1101,16 @@ export default function DayConfigurator({
   };
   // The day count follows the picks: set on arrival and whenever one is added
   // or removed (3–4 experiences a day). The guest can still change it after.
+  // Emptying the basket puts the days (and the call to action) back to the start.
   useEffect(() => {
     const apply = () => {
       const { days: d } = estimateDays(readDayPicks().map((p) => p.slug));
       if (d > 0) planDays(d);
+      else {
+        setMoreDays(false);
+        setDays(startDays.current);
+        setTouched((t) => (t.days ? { ...t, days: false } : t));
+      }
     };
     const t = window.setTimeout(apply, 0);
     window.addEventListener(DAY_PICKS_EVENT, apply);
@@ -2118,6 +2126,16 @@ export default function DayConfigurator({
                 time.
               </p>
             )}
+            {myDay.days > (moreDays ? moreDaysCount : days) && (
+              <p className={styles.daysWarn} role="status">
+                {myDay.picks.length} experiences need about {myDay.days} days at the right pace. In{" "}
+                {moreDays ? moreDaysCount : days} day{(moreDays ? moreDaysCount : days) > 1 ? "s" : ""}{" "}
+                there
+                isn&apos;t time for all of them: choose{" "}
+                {myDay.days > 4 ? "5+ days" : `${myDay.days} days`}, or your concierge will help you keep the
+                ones that matter most.
+              </p>
+            )}
             <div className={styles.daysGrid}>
               {([1, 2, 3, 4] as DayCount[]).map((d) => {
                 const sv =
@@ -2136,14 +2154,18 @@ export default function DayConfigurator({
                     type="button"
                     key={d}
                     aria-pressed={on}
-                    className={`${styles.dayTile} ${on ? styles.sel : ""}`}
+                    className={`${styles.dayTile} ${on ? styles.sel : ""} ${d < myDay.days ? styles.dayShort : ""}`}
                     onClick={() => {
                       touch("days");
                       setDays(d);
                       setMoreDays(false);
                     }}
                   >
-                    {d === 3 && !conc && <span className={styles.pop}>Most popular</span>}
+                    {myDay.days > 0 ? (
+                      d === myDay.days && <span className={styles.pop}>For your picks</span>
+                    ) : (
+                      d === 3 && !conc && <span className={styles.pop}>Most popular</span>
+                    )}
                     <div className={styles.dn}>
                       {d} {d > 1 ? "days" : "day"}
                     </div>
@@ -2164,6 +2186,7 @@ export default function DayConfigurator({
                   setDays(4);
                 }}
               >
+                {myDay.days > 4 && <span className={styles.pop}>For your picks</span>}
                 <div className={styles.dn}>5+ days</div>
                 <div className={`${styles.dp} ${styles.dpWord}`}>Tailored</div>
                 <div className={styles.dsave}>a private proposal</div>
@@ -2340,21 +2363,6 @@ export default function DayConfigurator({
                       ? "The same Signature day, made to measure — shaped around your group, at your pace."
                       : FEEL[days]}
             </p>
-            {myDay.picks.length > 0 && (
-              <div className={styles.sumPicks}>
-                <span className={styles.sumPicksHead}>
-                  Your experiences · {myDay.picks.length} · about {myDay.days} day{myDay.days > 1 ? "s" : ""}
-                </span>
-                <ol className={styles.sumPicksList}>
-                  {myDay.picks.map((p) => (
-                    <li key={p.slug}>{p.name}</li>
-                  ))}
-                </ol>
-                <span className={styles.sumPicksNote}>
-                  Your concierge shapes the order and timing with you before the day.
-                </span>
-              </div>
-            )}
             <p className={styles.visGiftLine}>
               {isReality ? (
                 <>
@@ -2477,13 +2485,27 @@ export default function DayConfigurator({
                 <span>{listOpen ? "▴" : "▾"}</span>
               </button>
               <ul className={`${styles.sumList} ${listOpen ? styles.open : ""}`}>
+                {/* the experiences the guest picked ("Add to my day"), first */}
+                {myDay.picks.length > 0 && (
+                  <>
+                    <li className={styles.dh}>
+                      Your experiences · {myDay.picks.length} · about {myDay.days} day{myDay.days > 1 ? "s" : ""}
+                    </li>
+                    {myDay.picks.map((p) => (
+                      <li key={"m" + p.slug}>{p.name}</li>
+                    ))}
+                    <li className={styles.sumPicksNote}>
+                      Your concierge shapes the order and timing with you before the day.
+                    </li>
+                  </>
+                )}
                 {plan.start.length > 0 && <li className={styles.dh}>{plan.startTitle}</li>}
                 {plan.start.map((it, i) => (
                   <li key={"s" + i} className={itemClasses(it)}>
                     {itemText(it)}
                   </li>
                 ))}
-                {plan.pool.length > 0 && (
+                {plan.pool.length > 0 && myDay.picks.length === 0 && (
                   <>
                     <li className={styles.dh}>The best of Luxor · your choice</li>
                     {plan.pool.map((it, i) => (
@@ -2739,14 +2761,6 @@ export default function DayConfigurator({
                         {x.bonus && <em>bonus</em>}
                       </span>
                       {x.brand && <span className={styles.bdBrand}>{x.brand}</span>}
-                    </span>
-                    <span>
-                      {euro(x.pr)}
-                      {x.estimate && (
-                        <em style={{ marginLeft: ".35em", opacity: 0.6, fontStyle: "italic", fontWeight: 400 }}>
-                          (estimate)
-                        </em>
-                      )}
                     </span>
                   </div>
                 ))}

@@ -253,6 +253,80 @@ export async function buildGooglePageFeedCsv(): Promise<string> {
   return rows.join("\n") + "\n";
 }
 
+// ── Google Ads dynamic remarketing feed (business data, "Custom" type) ──────────
+// Performance Max has no Merchant Center route for a services business (Shopping
+// policy bans services and tickets), so the experiences go in as a Google Ads
+// "Dynamic ad feed" of the Custom type. Each row's ID is the page slug — the same
+// `id` the site's view_item / add_to_cart / purchase events send — so Google can
+// show a visitor the exact experiences they looked at. Google's limits: titles,
+// subtitles and descriptions about 25 characters, formatted price 20; a square
+// photo with no text on it (built by scripts/build-feed-images.mjs).
+
+const MAX = 25;
+const fit = (s: string, max = MAX): string => {
+  const t = clean(s);
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max + 1).replace(/\s+\S*$/, "").replace(/[\s,&·—–-]+$/, "");
+  return cut || t.slice(0, max);
+};
+
+// Short names where neither the builder tile nor the product name fits 25.
+const SHORT_TITLE: Record<string, string> = {
+  "design-your-day": "Design Your Day",
+  "camel-bedouin-breakfast": "Camel Ride & Breakfast",
+};
+
+// The builder tiles carry the short, hand-written product names ("Luxor on
+// Horseback"); collect them by slug from the Concierge Day page.
+function tileNames(node: unknown, out: Record<string, string> = {}): Record<string, string> {
+  if (Array.isArray(node)) node.forEach((n) => tileNames(n, out));
+  else if (node && typeof node === "object") {
+    const o = node as Record<string, unknown>;
+    if (typeof o.slug === "string" && typeof o.name === "string" && !out[o.slug]) out[o.slug] = o.name;
+    Object.values(o).forEach((v) => tileNames(v, out));
+  }
+  return out;
+}
+
+/** Google Ads dynamic ad feed, Custom template (CSV, UTF-8). */
+export async function buildGoogleDynamicCsv(): Promise<string> {
+  const [products, conciergePage] = await Promise.all([
+    getFeedProducts(),
+    reader.singletons.conciergeDayPage.read(),
+  ]);
+  const tiles = tileNames(conciergePage);
+  const cols = [
+    "ID", "Item title", "Item subtitle", "Item description", "Item category",
+    "Price", "Formatted price", "Final URL", "Image URL", "Contextual keywords",
+  ];
+  const rows = [cols.join(",")];
+  for (const p of products) {
+    if (!p.card.imagePath) continue;
+    const title = SHORT_TITLE[p.id] ?? fit(tiles[p.id] ?? p.card.name.split(/\s[—–-]\s/)[0]);
+    const where = p.id === "design-your-day" ? "Luxor, Egypt" : experienceWhere(p.id) || p.region;
+    const subtitle = where.length > MAX ? where.replace(/,\s*Egypt$/, "") : where;
+    const place = subtitle.split(/,| to /)[0].trim();
+    // The day it sells, by price tier (the page shows the same "From €X").
+    const category =
+      p.id === "design-your-day" ? "Concierge day" : p.price >= 800 ? "Signature day" : p.price >= 450 ? "Original day" : "Adventure day";
+    rows.push(
+      [
+        p.id,
+        title,
+        fit(subtitle),
+        "Private day, door to door",
+        category,
+        `${p.price}.00 EUR`,
+        `From €${p.price} a day`,
+        p.link,
+        `${SITE}/images/feed/${p.id}.jpg`,
+        [title, `private tour ${place}`, `${place} experience`].join(";"),
+      ].map(esc).join(","),
+    );
+  }
+  return rows.join("\n") + "\n";
+}
+
 /** Master switch from the "Marketing feeds" Keystatic singleton. */
 export async function feedsEnabled(): Promise<boolean> {
   const s = await reader.singletons.marketingFeeds.read();

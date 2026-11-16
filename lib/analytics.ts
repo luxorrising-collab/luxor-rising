@@ -23,6 +23,28 @@ function dl(obj: Record<string, unknown>) {
   window.dataLayer.push(obj);
 }
 
+// Google Ads dynamic remarketing reads items[].id + google_business_vertical;
+// the id is the experience slug, the same ID as the dynamic ads feed row.
+function adsItems<T extends { item_id: string }>(items: T[]) {
+  return items.map((i) => ({ ...i, id: i.item_id, google_business_vertical: "custom" }));
+}
+
+/** An experience page was viewed — GA4/Google Ads view_item and Meta ViewContent. */
+export function trackViewItem(p: { item: AnalyticsItem; currency?: string }) {
+  const currency = p.currency ?? "EUR";
+  const item = { item_category: "experience", ...p.item };
+  dl({ ecommerce: null });
+  dl({ event: "view_item", ecommerce: { currency, value: p.item.price, items: [item] } });
+  window.gtag?.("event", "view_item", { currency, value: p.item.price, items: adsItems([item]) });
+  window.fbq?.("track", "ViewContent", {
+    content_type: "product",
+    content_ids: [p.item.item_id],
+    content_name: p.item.item_name,
+    value: p.item.price,
+    currency,
+  });
+}
+
 function contentIds(items: AnalyticsItem[]) {
   return items.map((i) => i.item_id);
 }
@@ -37,7 +59,7 @@ export function trackCartChange(p: { action: "add" | "remove"; item: AnalyticsIt
   const item = { item_category: "experience", quantity: 1, ...p.item, ...(p.listName ? { item_list_name: p.listName } : {}) };
   dl({ ecommerce: null });
   dl({ event, ecommerce: { currency: "EUR", items: [item] } });
-  window.gtag?.("event", event, { currency: "EUR", items: [item] });
+  window.gtag?.("event", event, { currency: "EUR", items: adsItems([item]) });
   if (p.action === "add") {
     window.fbq?.("track", "AddToCart", {
       content_type: "product",
@@ -63,7 +85,7 @@ export function trackBeginCheckout(p: {
   window.gtag?.("event", "begin_checkout", {
     currency,
     value: p.value,
-    items: p.items,
+    items: adsItems(p.items),
   });
   window.fbq?.("track", "InitiateCheckout", {
     value: p.value,
@@ -109,7 +131,7 @@ export function trackPurchase(p: {
     transaction_id: p.transactionId,
     value: p.value,
     currency,
-    items: p.items,
+    items: adsItems(p.items),
   });
   window.fbq?.(
     "track",

@@ -1,3 +1,4 @@
+import { isRedSeaStandalone } from "@/lib/red-sea";
 import { reader } from "@/lib/keystatic-reader";
 import { shareCard } from "@/lib/og-card";
 import { experienceFrom, experienceWhere } from "@/lib/experience-cards";
@@ -14,7 +15,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
 
   // Same rule as the page: Luxor single-day experiences (and the Red Sea crossing)
   // sell the private day "from €X"; enquiry-only products show no price.
-  const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow ?? ""} ${slug}`);
+  const isRedSea = isRedSeaStandalone(slug);
   const isFunnel = entry.bookingType !== "enquiry" && (!isRedSea || slug === "hurghada-to-luxor-crossing");
   const where = experienceWhere(slug).replace(/, Egypt$/, "");
   const kicker = isFunnel ? `${where} · From €${experienceFrom(slug).price} a day` : where;

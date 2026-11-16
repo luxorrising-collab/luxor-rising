@@ -644,6 +644,11 @@ cards:
         desc: "An Ottoman fort, an old port and the valley of camels."
         slug: "el-quseir-wadi-el-gemal"
         tag: "Signature"
+      - icon: "desert"
+        name: "Luxor on Horseback"
+        desc: "Through the sugar cane to the desert edge, at golden hour."
+        slug: "horse-ride-luxor-west-bank"
+        tag: "Signature"
     included:
       - "Door-to-door transfer from Hurghada, Marsa Alam or the coast — the car stays with you"
       - "Airport pickup at Hurghada or Marsa Alam when you land up to 24 hours before your day — met at arrivals, driven to your hotel"

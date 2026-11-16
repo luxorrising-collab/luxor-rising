@@ -1,3 +1,4 @@
+import { isRedSeaStandalone } from "./red-sea";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPriceMap } from "@/lib/pricing";
 import {
@@ -120,7 +121,7 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
 
   // The crossing add-on is only offered on non-Red-Sea experiences (and never on
   // the crossing itself) — decided here, server-side, from the product itself.
-  const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow ?? ""} ${input.slug}`);
+  const isRedSea = isRedSeaStandalone(input.slug);
   if (input.hurg && !isRedSea) total += crossing;
   // End-to-end concierge transfer (Marsa Alam / Hurghada) — the €290 bundled
   // upsell, same product as Design Your Day, offered on non-Red-Sea experiences.

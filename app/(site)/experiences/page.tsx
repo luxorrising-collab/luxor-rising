@@ -52,7 +52,15 @@ const ASWAN_LOCATION = new Set([
   "kom-ombo-temple",
   "luxor-to-aswan-temples-private",
 ]);
-const COAST_LOCATION = new Set(["el-quseir-wadi-el-gemal", "private-airport-pickup"]);
+const COAST_LOCATION = new Set([
+  "el-quseir-wadi-el-gemal",
+  "private-airport-pickup",
+  "giftun-island-private-boat",
+  "abu-dabbab-turtles-marsa-alam",
+  "hurghada-museum-souq-evening",
+  "coast-road-trip-egypt",
+  "horse-ride-beach-hurghada",
+]);
 const locationOf = (slug: string) =>
   HURGHADA_SLUGS.has(slug) || COAST_LOCATION.has(slug) ? "hurghada" : ASWAN_LOCATION.has(slug) ? "aswan" : "luxor";
 

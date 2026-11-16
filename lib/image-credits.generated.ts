@@ -3,37 +3,37 @@ export type ImageCredit = { image: string; author: string; licence: string; sour
 export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
   "abu-simbel-private-road-trip": [
     {
-      "image": "heroImage.jpg",
+      "image": "/images/experiences/abu-simbel-private-road-trip/heroImage.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_03.jpg"
     },
     {
-      "image": "gallery/0/image.jpg",
+      "image": "/images/experiences/abu-simbel-private-road-trip/gallery/0/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Nefertari,_Abu_Simbel,_Egipto,_2022-04-02,_DD_153.jpg"
     },
     {
-      "image": "gallery/1/image.jpg",
+      "image": "/images/experiences/abu-simbel-private-road-trip/gallery/1/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_59-61_HDR.jpg"
     },
     {
-      "image": "gallery/2/image.jpg",
+      "image": "/images/experiences/abu-simbel-private-road-trip/gallery/2/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_74-76_HDR.jpg"
     },
     {
-      "image": "gallery/3/image.jpg",
+      "image": "/images/experiences/abu-simbel-private-road-trip/gallery/3/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_26-28_HDR.jpg"
     },
     {
-      "image": "gallery/4/image.jpg",
+      "image": "/images/experiences/abu-simbel-private-road-trip/gallery/4/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Nefertari,_Abu_Simbel,_Egipto,_2022-04-02,_DD_143-145_HDR.jpg"
@@ -229,25 +229,25 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
   ],
   "elephantine-island-satet-aswan": [
     {
-      "image": "heroImage.jpg",
+      "image": "/images/experiences/elephantine-island-satet-aswan/heroImage.jpg",
       "author": "Marc Ryckaert (MJJR)",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R05.jpg"
     },
     {
-      "image": "gallery/0/image.jpg",
+      "image": "/images/experiences/elephantine-island-satet-aswan/gallery/0/image.jpg",
       "author": "Marc Ryckaert (MJJR)",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R03.jpg"
     },
     {
-      "image": "gallery/1/image.jpg",
+      "image": "/images/experiences/elephantine-island-satet-aswan/gallery/1/image.jpg",
       "author": "Marc Ryckaert",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R02.jpg"
     },
     {
-      "image": "gallery/3/image.jpg",
+      "image": "/images/experiences/elephantine-island-satet-aswan/gallery/3/image.jpg",
       "author": "Olaf Tausch",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Assuan_Elephantine_Chnumtempel_09.JPG"
@@ -359,6 +359,50 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
       "source": "https://commons.wikimedia.org/wiki/File:Ceiling_of_Temple_of_Hathor.JPG"
     }
   ],
+  "horse-ride-luxor-west-bank": [
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/heroImage.jpg",
+      "author": "Francisco Anzola",
+      "licence": "CC BY 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:On_the_Theban_Hills_(2347021341).jpg"
+    },
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/gallery/0/image.jpg",
+      "author": "Marc Ryckaert (MJJR)",
+      "licence": "CC BY 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Egyptian_Countryside_R02.jpg"
+    },
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/gallery/1/image.jpg",
+      "author": "Marc Ryckaert (MJJR)",
+      "licence": "CC BY 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sugar_Cane_R01.jpg"
+    },
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/gallery/2/image.jpg",
+      "author": "Marc Ryckaert (MJJR)",
+      "licence": "CC BY 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Egyptian_Countryside_R01.jpg"
+    },
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/gallery/3/image.jpg",
+      "author": "Vyacheslav Argenberg",
+      "licence": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Thebes,_Egypt,_Theban_Hills_landscape.jpg"
+    },
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/gallery/4/image.jpg",
+      "author": "Abdo tahoon",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:منطاد_أحمر_فوق_الحقول_الخضراء.jpg"
+    },
+    {
+      "image": "/images/experiences/horse-ride-luxor-west-bank/gallery/5/image.jpg",
+      "author": "Vyacheslav Argenberg",
+      "licence": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Thebes,_Egypt,_Theban_Hills.jpg"
+    }
+  ],
   "kom-ombo-temple": [
     {
       "image": "/images/experiences/kom-ombo-temple/gallery/4/image.jpg",
@@ -425,7 +469,7 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
   ],
   "nubian-village-aswan-boat": [
     {
-      "image": "gallery/0/image.jpg",
+      "image": "/images/experiences/nubian-village-aswan-boat/gallery/0/image.jpg",
       "author": "Marc Ryckaert (MJJR)",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Aswan_Naj_Suhayl_Gharb_R01.jpg"
@@ -439,7 +483,7 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
   ],
   "philae-temple-aswan": [
     {
-      "image": "gallery/2/image.jpg",
+      "image": "/images/experiences/philae-temple-aswan/gallery/2/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:File,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_105.jpg"
@@ -479,37 +523,37 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
   ],
   "tombs-of-the-nobles-aswan-st-simeon": [
     {
-      "image": "heroImage.jpg",
+      "image": "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/heroImage.jpg",
       "author": "Güldem Üstün from Istanbul, TURKEY",
       "licence": "CC BY 2.0",
       "source": "https://commons.wikimedia.org/wiki/File:Egypt_(Aswan)_Hillside_is_dotted_with_the_Tombs_of_the_Nobles_(26686168396).jpg"
     },
     {
-      "image": "gallery/0/image.jpg",
+      "image": "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/0/image.jpg",
       "author": "Dennis G. Jarvis",
       "licence": "CC BY-SA 2.0",
       "source": "https://commons.wikimedia.org/wiki/File:Flickr_-_archer10_(Dennis)_-_Egypt-6B-014.jpg"
     },
     {
-      "image": "gallery/1/image.jpg",
+      "image": "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/1/image.jpg",
       "author": "Vyacheslav Argenberg",
       "licence": "CC BY 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:The_Monastery_of_St._Simeon,_Walls,_Aswan,_Egypt.jpg"
     },
     {
-      "image": "gallery/2/image.jpg",
+      "image": "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/2/image.jpg",
       "author": "Tobeytravels",
       "licence": "CC BY-SA 2.0",
       "source": "https://commons.wikimedia.org/wiki/File:Inner_chamber_of_Harkhuf_or_Herkhuf%E2%80%99s_tomb.jpg"
     },
     {
-      "image": "gallery/3/image.jpg",
+      "image": "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/3/image.jpg",
       "author": "Olaf Tausch",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Assuan_Simeonskloster_29.jpg"
     },
     {
-      "image": "gallery/4/image.jpg",
+      "image": "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/4/image.jpg",
       "author": "Olaf Tausch",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Qubbet_el-Hawa_01.JPG"
@@ -535,31 +579,31 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
   ],
   "unfinished-obelisk-nubian-museum": [
     {
-      "image": "gallery/0/image.jpg",
+      "image": "/images/experiences/unfinished-obelisk-nubian-museum/gallery/0/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Obelisco_inacabado,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_166.jpg"
     },
     {
-      "image": "gallery/1/image.jpg",
+      "image": "/images/experiences/unfinished-obelisk-nubian-museum/gallery/1/image.jpg",
       "author": "Marc Ryckaert",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Aswan_Nubian_Museum_entrance.jpg"
     },
     {
-      "image": "gallery/2/image.jpg",
+      "image": "/images/experiences/unfinished-obelisk-nubian-museum/gallery/2/image.jpg",
       "author": "Olaf Tausch",
       "licence": "CC BY 3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Assuan_09.jpg"
     },
     {
-      "image": "gallery/3/image.jpg",
+      "image": "/images/experiences/unfinished-obelisk-nubian-museum/gallery/3/image.jpg",
       "author": "Marsupium",
       "licence": "CC BY 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Showcase_Nubian_jewelry_-_objects_-_Nubian_Museum_01.jpg"
     },
     {
-      "image": "gallery/4/image.jpg",
+      "image": "/images/experiences/unfinished-obelisk-nubian-museum/gallery/4/image.jpg",
       "author": "Diego Delso",
       "licence": "CC BY-SA 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Obelisco_inacabado,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_154.jpg"
@@ -583,4 +627,637 @@ export const IMAGE_CREDITS: Record<string, ImageCredit[]> = {
       "source": "https://commons.wikimedia.org/wiki/File:Nubian_Museum,_Aswan,_Egypt,_Egyptian_antiquities.jpg"
     }
   ]
+};
+/** Every open-licence photo by path, for the credit shown when it opens in a gallery. */
+export const IMAGE_CREDIT_BY_SRC: Record<string, Omit<ImageCredit, "image">> = {
+  "/images/experiences/abu-simbel-private-road-trip/heroImage.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_03.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/0/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Nefertari,_Abu_Simbel,_Egipto,_2022-04-02,_DD_153.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/1/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_59-61_HDR.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/2/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_74-76_HDR.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/3/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Rams%C3%A9s_II,_Abu_Simbel,_Egipto,_2022-04-02,_DD_26-28_HDR.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/4/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Templo_de_Nefertari,_Abu_Simbel,_Egipto,_2022-04-02,_DD_143-145_HDR.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/5/image.jpg": {
+    "author": "Benjamin Inbar",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Abu_Simbel_Temple_from_Nefertari_Temple_02.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/6/image.jpg": {
+    "author": "Benjamin Inbar",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Abu_Simbel_Great_Temple_from_Nefertari_Temple_01.jpg"
+  },
+  "/images/experiences/abu-simbel-private-road-trip/gallery/7/image.jpg": {
+    "author": "Ad Meskens",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lake_Nasser_from_Abu_Simbel_2.jpg"
+  },
+  "/images/experiences/deir-el-shelwit/gallery/0/image.jpg": {
+    "author": "HoremWeb (derivative work: JMCC1)",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Deir_el-Shelwit_Isis_Temple_eastern_view_c.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/heroImage.jpg": {
+    "author": "Holger Uwe Schmitt",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:237_v._Chr._wurde_mit_dem_Bau_des_Tempels_von_Edfu_begonnen._08.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/0/image.jpg": {
+    "author": "Holger Uwe Schmitt",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:237_v._Chr._wurde_mit_dem_Bau_des_Tempels_von_Edfu_begonnen._10.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/1/image.jpg": {
+    "author": "Holger Uwe Schmitt",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:180_Jahre_brauchte_es_bis_der_Edfu-Tempel_fertig_gebaut_war._05.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/2/image.jpg": {
+    "author": "Holger Uwe Schmitt",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:180_Jahre_hat_es_gedauert_bis_Der_Edfu_Tempel_fertig_gebaut_war._03.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/3/image.jpg": {
+    "author": "Holger Uwe Schmitt",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:180_Jahre_brauchte_es_bis_der_Edfu-Tempel_fertig_gebaut_war._06.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/4/image.jpg": {
+    "author": "Ad Meskens",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Edfu_02.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/5/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Edfu,_Horus_2,_Egypt.jpg"
+  },
+  "/images/experiences/edfu-temple-of-horus/gallery/6/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Edfu,_Pillared_hall,_Egypt.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/heroImage.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Necheb_Tempel_Amenophis_III._01.JPG"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/0/image.jpg": {
+    "author": "Harald Gaertner",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:El-Kab_Necheb_2_P1120548.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/1/image.jpg": {
+    "author": "Debborah Donnelly or https://www.debborahdonnelly.ca/",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Interior_view_of_the_Nekhbet_Temple_in_El-Kab.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/2/image.jpg": {
+    "author": "Necheb_Felsengrab_Ahmose_04.JPG: Olaf Tausch Necheb_Felsengrab_Ahmose_05.JPG: Olaf Tausch Necheb_Felsengrab_Ahmose_06.JP",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Necheb-felsengrab-ahmose-99.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/3/image.jpg": {
+    "author": "Chabe01",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:N%C3%A9cropole_El_Kab_-_Assouan_(EG)_-_2025-12-05_-_3.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/4/image.jpg": {
+    "author": "No machine-readable author provided. Bubuka assumed (based on copyright claims).",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:El_Kab_Temple.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/5/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Necheb_Felsengrab_Paheri_14.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/6/image.jpg": {
+    "author": "isawnyu",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tombs_at_El_Kab.jpg"
+  },
+  "/images/experiences/el-kab-nekhbet/gallery/7/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Necheb_Felsengrab_Paheri_37.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/heroImage.jpg": {
+    "author": "Summering2018",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Al-Quseir_Fort_2013.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/0/image.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:27035-_Wadi_el-Gemal.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/1/image.jpg": {
+    "author": "Summering2018",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Al-Qusayr,_Egypt_01.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/2/image.jpg": {
+    "author": "Andrea Piroddi",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:El_Qulaan_Islands.JPG"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/3/image.jpg": {
+    "author": "Roland Unger",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:WadiElGimal3.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/4/image.jpg": {
+    "author": "Summering2018",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Al-Qusayr,_Egypt_044_0.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/5/image.jpg": {
+    "author": "Summering2018",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Al-Quseir_Fort_304.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/6/image.jpg": {
+    "author": "Summering2018",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Al-Quseir_Fort_0181.jpg"
+  },
+  "/images/experiences/el-quseir-wadi-el-gemal/gallery/7/image.jpg": {
+    "author": "Ahmed Emad H",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Panoramic_picture_for_wadi_el_gemal_national_park_%D8%B5%D9%88%D8%B1%D9%87_%D8%A8%D9%86%D9%88%D8%B1%D8%A7%D9%85%D9%8A%D9%87_%D9%84%D9%85%D8%AD%D9%85%D9%8A%D9%87_%D9%88%D8%A7%D8%AF%D9%8A_%D8%A7%D9%84%D8%AC%D9%90%D9%85%D8%A7%D9%84.jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/heroImage.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R05.jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/0/image.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R03.jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/1/image.jpg": {
+    "author": "Marc Ryckaert",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R02.jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/2/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elephantine_Island,_Aswan,_AG,_EGY_(48025587842).jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/3/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Assuan_Elephantine_Chnumtempel_09.JPG"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/4/image.jpg": {
+    "author": "Marc Ryckaert",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Elephantine_Island_R01.jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/5/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elephantine_Island,_Aswan,_AG,_EGY_(48025376286).jpg"
+  },
+  "/images/experiences/elephantine-island-satet-aswan/gallery/6/image.jpg": {
+    "author": "Carole Raddato",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elephantine_Island,_a_fortified_settlement_located_just_before_the_First_Cataract_of_the_Nile,_Aswan,_Egypt_-_52673879067.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/heroImage.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:27283-_Column_capitals,_Esna,_Temple_of_Khnum.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/0/image.jpg": {
+    "author": "Leon petrosyan",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Khnum_tempel_in_Esna_4.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/1/image.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:27279-_colorful_reliefs_in_the_temple_of_Khnum_at_Esna.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/2/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Esna_from_the_Nile,_Esna,_LG,_EGY_(48005383338).jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/3/image.jpg": {
+    "author": "Lars Plougmann from United States",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Khnum_in_Esna_(52649632334).jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/4/image.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:27280-_ceiling_decoration,_Esna,_Temple_of_Khnum.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/5/image.jpg": {
+    "author": "Roland Unger",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:EsnaTempleFacade2.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/6/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Esna_Tempel_27.jpg"
+  },
+  "/images/experiences/esna-temple-ceiling/gallery/7/image.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:27284-_smiting_captives,_temple_of_Khnum,_Esna.jpg"
+  },
+  "/images/experiences/goddess-route-egypt/heroImage.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:26915-_Hathor_columns,_temple_of_Dendera.jpg"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/0/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Isis,_Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48026974358).jpg"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/1/image.jpg": {
+    "author": "No machine-readable author provided. Neithsabes assumed (based on copyright claims).",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_Mout_003.JPG"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/2/image.jpg": {
+    "author": "Panegyrics of Granovetter",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:26935-_Towering_Hathor_columns_in_the_hypostyle_hall_at_Dendera.jpg"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/3/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Deir_el-Medina_19.JPG"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/4/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Assuan_Elephantine_Satistempel_05.JPG"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/5/image.jpg": {
+    "author": "Djehouty",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Dendera-Tempel_2016-03-26zd.jpg"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/6/image.jpg": {
+    "author": "Aidan McRae Thomson",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ptolemy_before_Isis_%26_Osiris,_Dendera_Temple.jpg"
+  },
+  "/images/experiences/goddess-route-egypt/gallery/7/image.jpg": {
+    "author": "Fig wright",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ceiling_of_Temple_of_Hathor.JPG"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/heroImage.jpg": {
+    "author": "Francisco Anzola",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:On_the_Theban_Hills_(2347021341).jpg"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/gallery/0/image.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Egyptian_Countryside_R02.jpg"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/gallery/1/image.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sugar_Cane_R01.jpg"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/gallery/2/image.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Egyptian_Countryside_R01.jpg"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/gallery/3/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Thebes,_Egypt,_Theban_Hills_landscape.jpg"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/gallery/4/image.jpg": {
+    "author": "Abdo tahoon",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:منطاد_أحمر_فوق_الحقول_الخضراء.jpg"
+  },
+  "/images/experiences/horse-ride-luxor-west-bank/gallery/5/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Thebes,_Egypt,_Theban_Hills.jpg"
+  },
+  "/images/experiences/kom-ombo-temple/heroImage.jpg": {
+    "author": "Ijanderson977",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Kom_Ombo_11_977.PNG"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/0/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Column_Details,_Kom_Ombo_Temple,_Kom_Ombo,_AG,_EGY_(48005080143).jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/1/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Wall_Carvings,_Kom_Ombo_Temple,_Kom_Ombo,_AG,_EGY_(48005070218).jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/2/image.jpg": {
+    "author": "Gary Todd from Xinzheng, China",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Sobek,_Kom_Ombo_(9797668714).jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/3/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Columns,_Kom_Ombo_Temple,_Kom_Ombo,_AG,_EGY_(48005162047).jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/4/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kom_Ombo_S%C3%A4ulenhof_12.jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/5/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kom_Ombo_20.jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/6/image.jpg": {
+    "author": "Silar",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:020100218_05860_Reliefs_in_Kom_Ombo_Temple.jpg"
+  },
+  "/images/experiences/kom-ombo-temple/gallery/7/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kom_Ombo_30.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/heroImage.jpg": {
+    "author": "David Broad",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Felucca_at_Kom_Ombo_on_the_River_Nile_-_panoramio.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/0/image.jpg": {
+    "author": "Karelj",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Nile_Esna_Edfu_1.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/1/image.jpg": {
+    "author": "Leon petrosyan",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Khnum_tempel_in_Esna.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/2/image.jpg": {
+    "author": "Marc Ryckaert",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Edfu_Temple_R02.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/3/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Columns,_Kom_Ombo_Temple,_Kom_Ombo,_AG,_EGY_(48005075191).jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/4/image.jpg": {
+    "author": "Silar",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:02010_05813_Esna,_Nile_cruise_upstream_from_Luxor_to_Edfu.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/5/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nile_River,_Feluccas_2,_Aswan,_Egypt.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/6/image.jpg": {
+    "author": "Marc Ryckaert",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Nile_R60.jpg"
+  },
+  "/images/experiences/luxor-to-aswan-temples-private/gallery/7/image.jpg": {
+    "author": "Codex",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kom-Ombo-008.jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/heroImage.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_House,_Nagaa_Suhayl_Gharb,_AG,_EGY_(48026553433).jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/0/image.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Naj_Suhayl_Gharb_R01.jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/1/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_House,_Nagaa_Suhayl_Gharb,_AG,_EGY_(48026602843).jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/2/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_House,_Nagaa_Suhayl_Gharb,_AG,_EGY_(48026698187).jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/3/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_House,_Nagaa_Suhayl_Gharb,_AG,_EGY_(48026608526).jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/4/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_from_the_Nile_River,_Aswan,_AG,_EGY_(48025364702).jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/5/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_House,_Nagaa_Suhayl_Gharb,_AG,_EGY_(48026706352).jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/6/image.jpg": {
+    "author": "gina monica butoi",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_Village_-_panoramio.jpg"
+  },
+  "/images/experiences/nubian-village-aswan-boat/gallery/7/image.jpg": {
+    "author": "Warren LeMay from Chicago, IL, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_House,_Nagaa_Suhayl_Gharb,_AG,_EGY_(48026554778).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/heroImage.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48026832921).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/0/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48027160357).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/1/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Isis,_Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48027047583).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/2/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:File,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_105.jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/3/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Isis,_Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48027006586).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/4/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48027162407).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/5/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Temple_of_Isis_from_Philae,_First_pylon,_Lake_Nasser,_Egypt.jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/6/image.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Temple_of_Isis,_Philae_Temple_Complex,_Agilkia_Island,_Aswan,_AG,_EGY_(48026882011).jpg"
+  },
+  "/images/experiences/philae-temple-aswan/gallery/7/image.jpg": {
+    "author": "Marc Ryckaert",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Philae_Temple_R05.jpg"
+  },
+  "/images/experiences/private-airport-pickup/heroImage.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Marsa_Alam_R01.jpg"
+  },
+  "/images/experiences/private-airport-pickup/gallery/0/image.jpg": {
+    "author": "Wusel007",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:W%C3%BCstenlandschaft_im_Gouvernement_al-Bahr_al-ahmar.jpg"
+  },
+  "/images/experiences/private-airport-pickup/gallery/1/image.jpg": {
+    "author": "Marc Ryckaert (MJJR)",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Marsa_Alam_R03.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/heroImage.jpg": {
+    "author": "Güldem Üstün from Istanbul, TURKEY",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Egypt_(Aswan)_Hillside_is_dotted_with_the_Tombs_of_the_Nobles_(26686168396).jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/0/image.jpg": {
+    "author": "Dennis G. Jarvis",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Flickr_-_archer10_(Dennis)_-_Egypt-6B-014.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/1/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Monastery_of_St._Simeon,_Walls,_Aswan,_Egypt.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/2/image.jpg": {
+    "author": "Tobeytravels",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Inner_chamber_of_Harkhuf_or_Herkhuf%E2%80%99s_tomb.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/3/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Assuan_Simeonskloster_29.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/4/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Qubbet_el-Hawa_01.JPG"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/5/image.jpg": {
+    "author": "Silar",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:0015_Qubbet_el-Hawa,_linkes_Nilufer,_Aswan_2010.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/6/image.jpg": {
+    "author": "Silar",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:0016_Qubbet_el-Hawa,_linkes_Nilufer,_Aswan_2010.jpg"
+  },
+  "/images/experiences/tombs-of-the-nobles-aswan-st-simeon/gallery/7/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Qubbet_el-Hawa_Felsengr%C3%A4ber_07.JPG"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/heroImage.jpg": {
+    "author": "Warren LeMay from Cullowhee, NC, United States",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Unfinished_Obelisk,_Aswan,_AG,_EGY_(48027107416).jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/0/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Obelisco_inacabado,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_166.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/1/image.jpg": {
+    "author": "Marc Ryckaert",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aswan_Nubian_Museum_entrance.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/2/image.jpg": {
+    "author": "Olaf Tausch",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Assuan_09.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/3/image.jpg": {
+    "author": "Marsupium",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Showcase_Nubian_jewelry_-_objects_-_Nubian_Museum_01.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/4/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Obelisco_inacabado,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_154.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/5/image.jpg": {
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cantera_del_obelisco_inacabado,_Asu%C3%A1n,_Egipto,_2022-04-01,_DD_151.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/6/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_Museum,_Aswan,_Egypt,_Egyptian_antiquities_2.jpg"
+  },
+  "/images/experiences/unfinished-obelisk-nubian-museum/gallery/7/image.jpg": {
+    "author": "Vyacheslav Argenberg",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nubian_Museum,_Aswan,_Egypt,_Egyptian_antiquities.jpg"
+  }
 };

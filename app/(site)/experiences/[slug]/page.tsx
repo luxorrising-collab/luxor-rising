@@ -1,4 +1,6 @@
+import { isRedSeaStandalone } from "@/lib/red-sea";
 import PhotoCredits from "@/components/PhotoCredits";
+import { IMAGE_CREDIT_BY_SRC } from "@/lib/image-credits.generated";
 import StickyBar from "@/components/StickyBar";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -66,7 +68,7 @@ export async function generateMetadata({
   // Funnel pages (Luxor single-day experiences) sell the day from €330, not a
   // single-experience price — so keep the "from €X" in the SEO title/description
   // consistent with what the page actually shows.
-  const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
+  const isRedSea = isRedSeaStandalone(slug);
   // The Hurghada ⇄ Luxor crossing now funnels into Design Your Day too (the day
   // price already includes the coast transfer), so it sells "from €330" like the
   // rest; the paused standalone Red Sea boats would keep their own price.
@@ -119,7 +121,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   // Where the experience happens — labels the included door-to-door transfer,
   // and decides whether to offer the Hurghada ⇄ Luxor crossing add-on (it makes
   // no sense on the Red Sea / Hurghada experiences, or on the crossing itself).
-  const isRedSea = /hurghada|red[- ]?sea/i.test(`${entry.heroEyebrow} ${slug}`);
+  const isRedSea = isRedSeaStandalone(slug);
   const region = isRedSea ? "Hurghada" : "Luxor";
   const hurghadaTransfer = isRedSea ? 0 : crossingPrice;
 
@@ -298,6 +300,13 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "el-quseir-wadi-el-gemal": templeHero(0, 1),
     "private-airport-pickup": templeHero(0, 1),
     "nubian-village-aswan-boat": nileHero(0, 1),
+    // The coast and horse riding (2026-11): open-licence photos.
+    "giftun-island-private-boat": seaHero(0, 1),
+    "abu-dabbab-turtles-marsa-alam": seaHero(0, 1),
+    "hurghada-museum-souq-evening": templeHero(0, 1),
+    "coast-road-trip-egypt": seaHero(0, 1),
+    "horse-ride-beach-hurghada": seaHero(0, 1),
+    "horse-ride-luxor-west-bank": templeHero(0, 1),
     "thirty-days-in-the-desert": [
       { type: "image", src: entry.heroImage ?? "", alt: entry.title, position: "50% 50%" },
       { type: "video", ...clip("desert", "desert-stars"), position: "46% 45%" },
@@ -385,6 +394,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     "goddess-route-egypt": templeGallery,
     "el-quseir-wadi-el-gemal": templeGallery,
     "nubian-village-aswan-boat": nileGallery,
+    "hurghada-museum-souq-evening": templeGallery,
+    "coast-road-trip-egypt": templeGallery,
     "thirty-days-in-the-desert": [
       { video: "/videos/desert/desert-camp.mp4", poster: "/videos/desert/desert-camp-poster.jpg", caption: "Your camp in the sand, far from everything." },
       { video: "/videos/temple/table.mp4", poster: "/videos/temple/table-poster.jpg", caption: "A table set in the wild." },
@@ -548,7 +559,12 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         contentNode={entry.content.node}
         momentQuote={entry.momentQuote || undefined}
         momentImage={momentImage}
-        gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
+        gallery={entry.gallery.map((g) => ({
+          src: g.image ?? "",
+          alt: g.caption,
+          caption: g.caption,
+          credit: g.image ? IMAGE_CREDIT_BY_SRC[g.image] : undefined,
+        }))}
         galleryVideos={galleryVideos}
         bookEyebrow={isLuxorFunnel ? "Design your day" : entry.bookEyebrow}
         bookTitle={isLuxorFunnel ? `Make ${shortName} part of your day` : entry.bookTitle}

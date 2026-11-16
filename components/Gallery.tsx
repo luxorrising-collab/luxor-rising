@@ -15,6 +15,16 @@ export type GalleryImage = {
   /** When set, this tile is a muted looping video (src is used as its poster). */
   video?: string;
   poster?: string;
+  /** Open-licence photo credit, shown when the photo opens. */
+  credit?: { author: string; licence: string; source: string };
+};
+
+// "CC BY-SA 4.0" → its licence page; public domain / CC0 link to their deeds.
+const licenceUrl = (licence: string) => {
+  const m = licence.match(/CC (BY(?:-SA)?) (\d\.\d)/i);
+  if (m) return `https://creativecommons.org/licenses/${m[1].toLowerCase()}/${m[2]}/`;
+  if (/CC0/i.test(licence)) return "https://creativecommons.org/publicdomain/zero/1.0/";
+  return undefined;
 };
 
 export type GalleryPlaceholder = {
@@ -158,6 +168,23 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
           <figcaption>
             {active?.caption}
             {isPeopleVisualisation(active?.video) && <span className={styles.lbVis}>{VISUALISATION_NOTE}</span>}
+            {active?.credit && (
+              <span className={styles.lbCredit}>
+                Photo:{" "}
+                <a href={active.credit.source} target="_blank" rel="noopener nofollow">
+                  {active.credit.author}
+                </a>
+                {" · "}
+                {licenceUrl(active.credit.licence) ? (
+                  <a href={licenceUrl(active.credit.licence)} target="_blank" rel="noopener nofollow">
+                    {active.credit.licence}
+                  </a>
+                ) : (
+                  active.credit.licence
+                )}
+                {" · via Wikimedia Commons"}
+              </span>
+            )}
           </figcaption>
         </figure>
         <button

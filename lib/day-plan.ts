@@ -13,7 +13,15 @@ const ASWAN = new Set([
   "nubian-village-aswan-boat",
   "tombs-of-the-nobles-aswan-st-simeon",
 ]);
+// The coast: its own days (it can't share a day with Luxor or Aswan).
+const COAST = new Set([
+  "giftun-island-private-boat",
+  "abu-dabbab-turtles-marsa-alam",
+  "hurghada-museum-souq-evening",
+  "horse-ride-beach-hurghada",
+]);
 const WHOLE_DAYS: Record<string, number> = {
+  "coast-road-trip-egypt": 1,
   "dendera-abydos": 1,
   "luxor-to-aswan-temples-private": 1,
   "abu-simbel-private-road-trip": 1,
@@ -32,6 +40,9 @@ const SIGNATURE_ONLY = new Set([
   "abu-simbel-private-road-trip",
   "goddess-route-egypt",
   "el-quseir-wadi-el-gemal",
+  "giftun-island-private-boat",
+  "horse-ride-beach-hurghada",
+  "horse-ride-luxor-west-bank",
 ]);
 const PER_DAY = 4;
 
@@ -49,11 +60,13 @@ export function planDays(slugs: string[]) {
   const luxor: string[] = [];
   const aswan: string[] = [];
   const road: string[] = [];
+  const coast: string[] = [];
   const segments: DaySegment[] = [];
   for (const s of slugs) {
     if (NO_DAY.has(s)) continue;
     if (WHOLE_DAYS[s]) continue;
     if (ROAD.has(s)) road.push(s);
+    else if (COAST.has(s)) coast.push(s);
     else if (ASWAN.has(s)) aswan.push(s);
     else luxor.push(s);
   }
@@ -67,6 +80,7 @@ export function planDays(slugs: string[]) {
   fillDays(luxor, PER_DAY, "Luxor");
   fillDays(road, 2, "The road south");
   fillDays(aswan, PER_DAY, "Aswan");
+  fillDays(coast, PER_DAY, "The coast");
   for (const s of slugs) {
     const d = WHOLE_DAYS[s];
     if (!d) continue;

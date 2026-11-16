@@ -26,6 +26,7 @@ function buildGalleryTiles(
     src: g.src,
     alt: g.alt || g.caption,
     caption: g.caption,
+    credit: g.credit,
     width: 1600,
     height: 1000,
   }));
@@ -53,7 +54,12 @@ function buildGalleryTiles(
 }
 
 export type ExperienceHighlight = { title: string; description: string };
-export type ExperienceGalleryItem = { src: string; alt: string; caption: string };
+export type ExperienceGalleryItem = {
+  src: string;
+  alt: string;
+  caption: string;
+  credit?: { author: string; licence: string; source: string };
+};
 export type ValueStackRow = { label: string; price: string };
 export type FaqItemData = { q: string; a: string };
 export type HowItWorksStep = { title: string; description: string };

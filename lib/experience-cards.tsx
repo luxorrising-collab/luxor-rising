@@ -1,3 +1,4 @@
+import { isRedSeaStandalone } from "./red-sea";
 import { LIGHT_DAY_RATE, ORIGINAL_DAY_RATE } from "@/lib/pricing-math";
 import type { ReactNode } from "react";
 import type { ExperienceCardData } from "@/components/ExperienceGrid";
@@ -53,6 +54,14 @@ export const SLUG_TO_TIERS: Record<string, Tier[]> = {
   "goddess-route-egypt": SIG,
   "el-quseir-wadi-el-gemal": SIG,
   "private-airport-pickup": ORIG,
+  // The coast and horse riding (2026-11): the sea by boat and the vetted rides
+  // are Signature; walk-in reefs, town evenings and the coast road are Original.
+  "giftun-island-private-boat": SIG,
+  "abu-dabbab-turtles-marsa-alam": ORIG,
+  "hurghada-museum-souq-evening": ORIG,
+  "coast-road-trip-egypt": ORIG,
+  "horse-ride-beach-hurghada": SIG,
+  "horse-ride-luxor-west-bank": SIG,
 };
 
 /** The day rate each tier starts from (Adventure, Original, Signature). */
@@ -169,12 +178,17 @@ export const SLUG_TO_FEATURES: Record<string, Feat[]> = {
   "goddess-route-egypt": [INSIDER, f(FEAT.temple, "Hathor to Isis"), f(FEAT.guide, "Licensed guide")],
   "el-quseir-wadi-el-gemal": [INSIDER, f(FEAT.desert, "Wadi el-Gemal"), f(FEAT.temple, "Ottoman fort")],
   "private-airport-pickup": [INSIDER, f(FEAT.ticket, "Met at arrivals")],
+  "giftun-island-private-boat": [INSIDER, f(FEAT.nile, "Your own boat"), f(FEAT.dawn, "Before the crowds")],
+  "abu-dabbab-turtles-marsa-alam": [INSIDER, f(FEAT.nile, "Turtles from the shore"), f(FEAT.dawn, "At opening")],
+  "hurghada-museum-souq-evening": [INSIDER, f(FEAT.night, "After dark"), f(FEAT.temple, "Museum & souq")],
+  "coast-road-trip-egypt": [INSIDER, f(FEAT.ticket, "Hotel to hotel"), f(FEAT.nile, "Three stops")],
+  "horse-ride-beach-hurghada": [INSIDER, f(FEAT.dawn, "At sunset"), f(FEAT.guide, "Stable checked in person")],
+  "horse-ride-luxor-west-bank": [INSIDER, f(FEAT.dawn, "Golden hour"), f(FEAT.guide, "Stable checked in person")],
 };
 
 // True when an experience is a Red-Sea / Hurghada (private-boat) product — these
 // keep their own single-experience checkout and are left out of the Luxor funnel.
-export const isRedSeaExperience = (slug: string, heroEyebrow?: string | null): boolean =>
-  /hurghada|red[- ]?sea/i.test(`${heroEyebrow ?? ""} ${slug}`);
+export const isRedSeaExperience = (slug: string, _heroEyebrow?: string | null): boolean => isRedSeaStandalone(slug);
 
 type ExpInput = {
   slug: string;
@@ -433,6 +447,12 @@ const WHERE: Record<string, string> = {
   "goddess-route-egypt": "Upper Egypt",
   "el-quseir-wadi-el-gemal": "El Quseir, Egypt",
   "private-airport-pickup": "Hurghada & Marsa Alam, Egypt",
+  "giftun-island-private-boat": "Hurghada, Egypt",
+  "abu-dabbab-turtles-marsa-alam": "Marsa Alam, Egypt",
+  "hurghada-museum-souq-evening": "Hurghada, Egypt",
+  "coast-road-trip-egypt": "Hurghada to Marsa Alam, Egypt",
+  "horse-ride-beach-hurghada": "Hurghada, Egypt",
+  "horse-ride-luxor-west-bank": "Luxor, Egypt",
 };
 export function experienceWhere(slug: string): string {
   if (WHERE[slug]) return WHERE[slug];

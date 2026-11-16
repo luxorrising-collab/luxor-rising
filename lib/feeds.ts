@@ -1,6 +1,7 @@
+import { isRedSeaStandalone } from "./red-sea";
 import { reader } from "@/lib/keystatic-reader";
 import { getFinalPriceMap } from "@/lib/pricing";
-import { SLUG_TO_TIERS } from "@/lib/experience-cards";
+import { SLUG_TO_TIERS, experienceWhere, experienceFrom } from "@/lib/experience-cards";
 
 // Marketing product feeds, generated live from the current Keystatic content:
 //  - Meta: a product-catalogue feed (CSV) for Advantage+ Catalog / dynamic ads.
@@ -58,7 +59,8 @@ const clean = (s?: string | null) => String(s ?? "").replace(/\s+/g, " ").trim()
 
 // City/region for the title + segmentation label, from the slug + hero eyebrow.
 const regionOf = (slug: string, eyebrow?: string | null): string =>
-  /red[\s-]?sea|hurghada|snorkel|yacht/i.test(`${slug} ${eyebrow ?? ""}`)
+  /red[\s-]?sea|hurghada|snorkel|yacht/i.test(`${slug} ${eyebrow ?? ""}`) ||
+  /Hurghada|Marsa Alam|Quseir/.test(experienceWhere(slug))
     ? "Red Sea, Egypt"
     : "Luxor, Egypt";
 
@@ -155,8 +157,10 @@ export async function getFeedProducts(): Promise<FeedProduct[]> {
     // The Hurghada ⇄ Luxor crossing funnels into Design Your Day as well now, so
     // it sells the €330 day with the coast transfer included.
     const isLuxorFunnel =
-      !isEnquiry && (region !== "Red Sea, Egypt" || slug === "hurghada-to-luxor-crossing");
-    const price = isLuxorFunnel ? DAY_FROM : priceMap.get(slug) ?? entry.basePrice ?? 0;
+      !isEnquiry && !isRedSeaStandalone(slug);
+    // The day it can be designed into starts from its own tier's price (Adventure
+    // €330, Original €450, Signature €800), exactly as the page shows.
+    const price = isLuxorFunnel ? experienceFrom(slug).price : priceMap.get(slug) ?? entry.basePrice ?? 0;
     if (!price) continue;
     const copy = withoutPriceSentences(clean(entry.metaDescription || entry.hook));
     const description = isLuxorFunnel ? `${copy} ${PER_DAY_NOTE}` : copy;

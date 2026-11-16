@@ -223,3 +223,23 @@
   line-height: 1.45;
   opacity: 0.9;
 }
+
+/* the open-licence credit, under the caption when a photo opens */
+.lbCredit {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--font-body, inherit);
+  font-style: normal;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: rgba(243, 231, 207, 0.72);
+}
+.lbCredit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(243, 231, 207, 0.4);
+}
+.lbCredit a:hover {
+  color: #fff;
+}

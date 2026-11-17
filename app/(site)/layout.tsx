@@ -9,6 +9,7 @@ import { getDayCatalogue } from "@/lib/day-names";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import JsonLd from "@/components/JsonLd";
 import { reader } from "@/lib/keystatic-reader";
+import ImageFallback from "@/components/ImageFallback";
 import { EMPTY_CONFIG, type ConsentConfig } from "@/lib/consent";
 
 const SITE = "https://luxorrising.com";
@@ -126,6 +127,8 @@ export default async function RootLayout({
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* first in the body: if a resized photo fails, show the original instead */}
+        <ImageFallback />
         <JsonLd data={orgGraph} />
         <ConsentProvider config={trackingConfig}>
           <ConsentManager />

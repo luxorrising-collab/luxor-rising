@@ -324,7 +324,7 @@ export function MyDayDrawer({
                     onClick={close}
                   >
                     <span className={styles.drawerThumb}>
-                      <Image src={`/images/cards/${p.slug}.jpg`} alt="" fill sizes="56px" />
+                      <Image src={`/images/cards/thumb/${p.slug}.jpg`} alt="" fill unoptimized loading="lazy" />
                     </span>
                     <span className={styles.drawerText}>
                       <span className={styles.drawerName}>

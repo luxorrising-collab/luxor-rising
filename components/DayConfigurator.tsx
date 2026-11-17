@@ -1683,7 +1683,7 @@ export default function DayConfigurator({
                     onClick={() => e.slug && myDay.toggle({ slug: e.slug, name: e.name })}
                   >
                     {e.slug && (
-                      <Image src={`/images/cards/${e.slug}.jpg`} alt="" fill sizes="(max-width: 560px) 50vw, 220px" />
+                      <Image src={`/images/cards/tile/${e.slug}.jpg`} alt="" fill unoptimized loading="lazy" />
                     )}
                     <span className={styles.expTileScrim} aria-hidden />
                     {e.slug && (

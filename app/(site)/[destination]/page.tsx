@@ -105,8 +105,8 @@ export default async function DestinationPage({
     "@type": "TouristDestination",
     name: entry.heroTitle,
     description: entry.heroSubtitle,
-    url: `https://luxorrising.com/${destination}`,
-    image: entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined,
+    url: `https://www.luxorrising.com/${destination}`,
+    image: entry.heroImage ? `https://www.luxorrising.com${entry.heroImage}` : undefined,
   };
 
   return (

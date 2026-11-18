@@ -1,5 +1,31 @@
 import { Resend } from "resend";
 import { renderEmail, SITE_URL, type SummaryRow } from "./email-template";
+import {
+  FREE_CANCEL_HOURS,
+  balanceChargeDate,
+  fmtDay,
+  freeCancelDate,
+  freeCancelOpen,
+  localApprox,
+  type FxRates,
+} from "./payment-policy";
+
+// How a booking's balance is settled, in one phrase for the emails.
+type Mode = string | undefined;
+const hasBalance = (m: Mode) => m === "deposit" || m === "local";
+const balanceLabel = (m: Mode, auto?: boolean, tripDate?: string) =>
+  m === "local"
+    ? "Balance (on the day, cash)"
+    : auto
+      ? `Balance (charged automatically${tripDate ? ` on ${fmtDay(balanceChargeDate(tripDate))}` : ", 48 hours before"})`
+      : "Balance";
+const balanceValue = (m: Mode, eur: number, fx?: FxRates) =>
+  m === "local" ? `€${eur} (${localApprox(eur, fx)})` : `€${eur}`;
+// The cancellation line, dated when we know the date.
+const cancelFine = (tripDate?: string) =>
+  tripDate && !freeCancelOpen(tripDate)
+    ? `Booked within ${FREE_CANCEL_HOURS} hours of the date: non-refundable, per our terms — luxorrising.com/legal/cancellation.`
+    : `Free cancellation until ${tripDate ? `${fmtDay(freeCancelDate(tripDate))} (${FREE_CANCEL_HOURS} hours before)` : `${FREE_CANCEL_HOURS} hours before`}, refunded less only costs already committed. After that, or a no-show, your payment is non-refundable — luxorrising.com/legal/cancellation.`;
 
 // Transactional email via Resend. Everything is guarded: with no RESEND_API_KEY
 // set, every send is a silent no-op — so the site works fine before Resend is
@@ -194,6 +220,7 @@ export async function sendOrderNotification(o: {
   balanceEur?: number;
   payMode?: string;
   balanceAutoCharge?: boolean;
+  fx?: FxRates;
   customerName?: string;
   customerEmail?: string;
   customerPhone?: string;
@@ -204,7 +231,7 @@ export async function sendOrderNotification(o: {
   if (!resend) return;
   const c = await serviceConfig();
 
-  const isDeposit = o.payMode === "deposit";
+  const isDeposit = hasBalance(o.payMode);
   const rows: SummaryRow[] = [{ label: "Experience", value: o.productName }];
   if (o.tripDate) rows.push({ label: "Date", value: o.tripDate });
   if (o.guests) rows.push({ label: "Guests", value: String(o.guests) });
@@ -213,8 +240,8 @@ export async function sendOrderNotification(o: {
     rows.push({ label: "Paid now", value: `€${o.amountEur}${isDeposit ? " (deposit)" : " (full)"}` });
   if (isDeposit && o.balanceEur != null)
     rows.push({
-      label: o.balanceAutoCharge ? "Balance (auto, day before)" : "Balance",
-      value: `€${o.balanceEur}`,
+      label: balanceLabel(o.payMode, o.balanceAutoCharge, o.tripDate),
+      value: balanceValue(o.payMode, o.balanceEur, o.fx),
     });
   rows.push({
     label: "Guest",
@@ -243,7 +270,9 @@ export async function sendOrderNotification(o: {
     o.guests ? `Guests: ${o.guests}` : "",
     o.totalEur != null ? `Total: €${o.totalEur}` : "",
     o.amountEur != null ? `Paid now: €${o.amountEur}${isDeposit ? " (deposit)" : " (full)"}` : "",
-    isDeposit && o.balanceEur != null ? `Balance: €${o.balanceEur}` : "",
+    isDeposit && o.balanceEur != null
+      ? `${balanceLabel(o.payMode, o.balanceAutoCharge, o.tripDate)}: ${balanceValue(o.payMode, o.balanceEur, o.fx)}`
+      : "",
     `Guest: ${[o.customerName, o.customerEmail, o.customerPhone].filter(Boolean).join(" · ")}`,
     o.experiences?.length ? `\nTheir experiences:\n${o.experiences.map((x) => `· ${x}`).join("\n")}` : "",
     o.preferences ? `\nTheir choices:\n${o.preferences}` : "",
@@ -383,8 +412,10 @@ export type BookingEmail = {
   amountEur?: number; // amount actually charged
   totalEur?: number; // full price of the experience
   balanceEur?: number; // outstanding balance due on the day (deposit bookings)
-  balanceAutoCharge?: boolean; // balance will be auto-charged the day before
-  payMode?: string; // 'full' | 'deposit'
+  balanceAutoCharge?: boolean; // balance will be auto-charged 48 hours before
+  payMode?: string; // 'full' | 'deposit' (auto-charged) | 'local' (paid on the day)
+  fx?: FxRates; // indicative EGP / USD rates for a balance paid locally
+  balanceStatus?: string; // for reminders: scheduled | paid | local_due | …
   pickup?: string;
   time?: string;
   preferences?: string; // the guest's design-your-day choices (" · " joined)
@@ -407,7 +438,7 @@ const INCLUDED: string[] = [
   "Hotel or villa pickup and drop-off",
   "Water, shade and an unhurried pace — no rushing between sites",
   "Your concierge reachable all day, so you never have a decision to make",
-  "Free cancellation up to 7 days before",
+  `Free cancellation until ${FREE_CANCEL_HOURS} hours before`,
 ];
 
 // Adventure is concierge-only — just the two included experiences; the rest is
@@ -419,7 +450,7 @@ const INCLUDED_ADVENTURE: string[] = [
   "Hotel or villa pickup and drop-off, and door-to-door transfer from the coast",
   "Your concierge reachable all day, so you never have a decision to make",
   "Anything more — further sites, experiences and tips — chosen on the day and paid locally",
-  "Free cancellation up to 7 days before",
+  `Free cancellation until ${FREE_CANCEL_HOURS} hours before`,
 ];
 
 const includedFor = (tier?: string): string[] =>
@@ -443,7 +474,7 @@ const WHAT_TO_BRING =
 /** After payment — sent from the Stripe webhook once a booking is confirmed. */
 /** The confirmation email itself (subject, HTML, text) — also used to preview it. */
 export function buildBookingConfirmation(b: BookingEmail): { subject: string; html: string; text: string } {
-  const isDeposit = b.payMode === "deposit";
+  const isDeposit = hasBalance(b.payMode);
   const paidLabel = b.amountEur != null ? `€${b.amountEur}${isDeposit ? " (deposit)" : " (paid in full)"}` : undefined;
 
   const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
@@ -453,16 +484,18 @@ export function buildBookingConfirmation(b: BookingEmail): { subject: string; ht
   if (paidLabel) rows.push({ label: "Paid now", value: paidLabel });
   if (isDeposit && b.balanceEur != null)
     rows.push({
-      label: b.balanceAutoCharge ? "Balance (day before)" : "Balance on the day",
-      value: `€${b.balanceEur}`,
+      label: balanceLabel(b.payMode, b.balanceAutoCharge, b.tripDate),
+      value: balanceValue(b.payMode, b.balanceEur, b.fx),
     });
 
   const balanceNote = isDeposit
     ? b.balanceEur != null
-      ? b.balanceAutoCharge
-        ? `The remaining €${b.balanceEur} will be charged automatically to your card the day before your experience — we'll email a receipt. If it can't be taken automatically, we'll send you a secure link.`
-        : `The remaining €${b.balanceEur} is settled on the day — cash or card, whichever suits you.`
-      : "The remaining balance is settled on the day."
+      ? b.payMode === "local"
+        ? `The remaining €${b.balanceEur} is paid on the day to your concierge, in cash: Egyptian pounds, euros or US dollars, at the day's mid-market rate (${localApprox(b.balanceEur, b.fx)} at today's rate). You'll get a receipt.`
+        : b.balanceAutoCharge
+          ? `The remaining €${b.balanceEur} will be charged automatically to your card${b.tripDate ? ` on ${fmtDay(balanceChargeDate(b.tripDate))}` : ""}, 48 hours before your experience — we'll email a receipt. If it can't be taken automatically, we'll send you a secure link.`
+          : `We'll email you a secure link to pay the remaining €${b.balanceEur} 48 hours before your experience.`
+      : "The remaining balance is settled before the day."
     : "";
 
   const choices = choiceItems(b.preferences);
@@ -486,7 +519,7 @@ export function buildBookingConfirmation(b: BookingEmail): { subject: string; ht
       `Your concierge will confirm the exact timing and pickup within 24 hours.${balanceNote ? " " + balanceNote : ""}`,
       "Anything at all — dietary needs, mobility, a special occasion — just reply to this email and we'll take care of it.",
     ],
-    fineprint: "Free cancellation up to 7 days before, per our terms — luxorrising.com/legal/cancellation.",
+    fineprint: cancelFine(b.tripDate),
   });
 
   const text = [
@@ -501,7 +534,7 @@ export function buildBookingConfirmation(b: BookingEmail): { subject: string; ht
     b.totalEur != null ? `· Total: €${b.totalEur}` : "",
     paidLabel ? `· Paid now: ${paidLabel}` : "",
     isDeposit && b.balanceEur != null
-      ? `· ${b.balanceAutoCharge ? "Balance (day before)" : "Balance on the day"}: €${b.balanceEur}`
+      ? `· ${balanceLabel(b.payMode, b.balanceAutoCharge, b.tripDate)}: ${balanceValue(b.payMode, b.balanceEur, b.fx)}`
       : "",
     "",
     ...(b.experiences?.length ? ["Your experiences:", ...b.experiences.map((c) => `· ${c}`), ""] : []),
@@ -513,7 +546,7 @@ export function buildBookingConfirmation(b: BookingEmail): { subject: string; ht
     "",
     "Anything at all — dietary needs, mobility, a special occasion — just reply to this email and we'll take care of it.",
     "",
-    "Free cancellation up to 7 days before, per our terms (luxorrising.com/legal/cancellation).",
+    cancelFine(b.tripDate),
     "",
     SIGNOFF_TEXT,
   ]
@@ -572,6 +605,12 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
   const rows: SummaryRow[] = [{ label: "Experience", value: b.productName }];
   if (b.tripDate) rows.push({ label: "Date", value: b.tripDate });
   if (b.pickup) rows.push({ label: "Pickup", value: `${b.pickup}${b.time ? ` at ${b.time}` : ""}` });
+  // A balance paid locally: the one practical thing to prepare.
+  const cashEur = b.payMode === "local" && b.balanceStatus === "local_due" ? b.balanceEur : undefined;
+  if (cashEur) rows.push({ label: "To pay on the day", value: balanceValue("local", cashEur, b.fx) });
+  const cashLine = cashEur
+    ? `Please have the remaining €${cashEur} ready for your concierge, in cash: Egyptian pounds, euros or US dollars (${localApprox(cashEur, b.fx)} at today's rate). Resort ATMs often limit each withdrawal, so it's easiest to bring euros or dollars, or withdraw over a couple of days.`
+    : "";
 
   const html = renderEmail({
     preheader: `A quick note before your ${b.productName}.`,
@@ -583,13 +622,18 @@ export async function sendTripReminder(b: BookingEmail): Promise<void> {
     ],
     summary: { rows },
     sections: b.experiences?.length ? [{ title: "Your experiences", items: b.experiences }] : undefined,
-    outro: [WHAT_TO_BRING, "Your concierge is reachable throughout the day, so you never have a decision to make."],
+    outro: [
+      ...(cashLine ? [cashLine] : []),
+      WHAT_TO_BRING,
+      "Your concierge is reachable throughout the day, so you never have a decision to make.",
+    ],
   });
 
   const text = [
     `Dear ${firstName(b.name)},`,
     "",
     `A quick note before your ${b.productName}${b.tripDate ? ` on ${b.tripDate}` : ""} — we can't wait to show you.`,
+    cashLine,
     b.pickup ? `We'll collect you ${b.pickup}${b.time ? ` at ${b.time}` : ""}.` : "",
     b.experiences?.length ? `\nYour experiences:\n${b.experiences.map((x) => `· ${x}`).join("\n")}` : "",
     "",
@@ -641,7 +685,7 @@ export async function sendReviewRequest(b: BookingEmail): Promise<void> {
   await send({ to: b.email, subject: "How was your day with us?", text, html });
 }
 
-// ── Balance emails (deposit auto-charge, day before) ───────────────────────
+// ── Balance emails (deposit auto-charge, 48 hours before) ───────────────────────
 
 /** After the balance is charged (off-session) or paid via the link. */
 export async function sendBalanceReceipt(b: {
@@ -740,7 +784,9 @@ export type AhmedBrief = {
   ordered?: string[]; // explicit list of what was ordered; else derived from preferences
   preferences?: string; // raw design-your-day string (fallback for `ordered`)
   experiences?: string[]; // the guest's picks, canonical names (listed first)
-  payMode?: string; // 'full' | 'deposit'
+  payMode?: string; // 'full' | 'deposit' | 'local'
+  balanceEur?: number; // the balance the concierge collects on the day ('local')
+  fx?: FxRates;
   days?: number; // concierge journeys: number of days (drives the menu below)
   tier?: "signature" | "original" | "adventure"; // which Design-Your-Day package
   notes?: string; // any extra concierge notes
@@ -907,9 +953,12 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   if (b.experiences?.length) sections.unshift({ title: "The guest's experiences", items: b.experiences });
   if (b.notes) sections.push({ title: "Notes", items: [b.notes] });
 
-  const paidLine = isDeposit
-    ? "The client has paid their deposit to Luxor Rising; the remaining balance is auto-charged before the day — you collect nothing from the guest."
-    : "The client has paid in full to Luxor Rising — you collect nothing from the guest.";
+  const paidLine =
+    b.payMode === "local"
+      ? `COLLECT ON THE DAY: the client paid a deposit to Luxor Rising and pays you the remaining €${b.balanceEur ?? "—"} in cash — Egyptian pounds, euros or US dollars, at the day's mid-market rate on xe.com (${b.balanceEur ? localApprox(b.balanceEur, b.fx) : "rate on the day"} at booking). Count it with the guest, give a receipt, and message Luxor Rising once it's received.`
+      : isDeposit
+        ? "The client has paid their deposit to Luxor Rising; the remaining balance is charged automatically 48 hours before — you collect nothing from the guest."
+        : "The client has paid in full to Luxor Rising — you collect nothing from the guest.";
 
   const bannerTitle = `${b.productName}${
     b.guests ? ` · ${b.guests} guest${b.guests > 1 ? "s" : ""}` : ""

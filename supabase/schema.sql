@@ -45,7 +45,7 @@ create table if not exists public.bookings (
   trip_date                  date,
   amount_total_cents         int,
   currency                   text default 'eur',
-  pay_mode                   text,          -- 'full' | 'deposit'
+  pay_mode                   text,          -- 'full' | 'deposit' (20%, balance auto-charged 48h before) | 'local' (20%, balance paid on the day in EGP/EUR/USD)
   payment_status             text,          -- 'paid' | ...
   notes                      text,          -- client's design-your-day preferences
   -- Balance auto-charge (deposit bookings): the card is saved at checkout and
@@ -53,7 +53,7 @@ create table if not exists public.bookings (
   stripe_customer_id         text,
   stripe_payment_method_id   text,
   balance_cents              int  not null default 0,
-  balance_status             text not null default 'none', -- none|scheduled|charging|paid|failed|link_sent
+  balance_status             text not null default 'none', -- none|scheduled|charging|paid|failed|link_sent|local_due (concierge collects on the day; set to paid by hand once received)
   balance_charged_at         timestamptz,
   balance_last_error         text,
   -- Lifecycle automations (sent once each, guarded by these timestamps).

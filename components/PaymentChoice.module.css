@@ -1,0 +1,192 @@
+/* The three ways to pay — radio cards, clear amounts on the right. */
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.4rem 0 1rem;
+}
+.opt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1.5px solid var(--color-cream-deep);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--color-ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+.opt:hover:not(:disabled) {
+  border-color: rgba(201, 160, 99, 0.7);
+}
+.opt:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.on {
+  border-color: var(--color-gold);
+  background: linear-gradient(180deg, #fff, var(--color-cream));
+  box-shadow: 0 0 0 3px rgba(201, 160, 99, 0.15);
+}
+.opt:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(42, 28, 16, 0.35);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.on .dot {
+  border-color: var(--color-gold-deep);
+}
+.on .dot::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gold-deep);
+}
+.txt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.badge {
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-gold-deep);
+  border-radius: 3px;
+  padding: 0.12rem 0.4rem;
+}
+.sub {
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--color-espresso);
+  opacity: 0.85;
+}
+.approx {
+  white-space: nowrap;
+  opacity: 0.8;
+}
+.amt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.05;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.amt small {
+  font-family: var(--font-body, inherit);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* Under the button. */
+.reassure {
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-cream-deep);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-espresso);
+}
+.row a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(42, 28, 16, 0.3);
+}
+.free a {
+  color: #3f6b43;
+  font-weight: 600;
+}
+.ic {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.guar {
+  background: rgba(79, 122, 82, 0.1);
+  border: 1px solid rgba(79, 122, 82, 0.28);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+}
+.guar b {
+  color: var(--color-ink);
+}
+
+/* Secure payment: "Secure checkout by stripe" + the accepted ways to pay. */
+.trust {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  padding: 0.65rem 0.5rem 0.2rem;
+  border-top: 1px dashed var(--color-cream-deep);
+}
+.secure {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--color-espresso);
+}
+.stripe {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #635bff;
+}
+@media (max-width: 380px) {
+  .opt {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .amt {
+    grid-column: 2;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.35rem;
+    justify-content: flex-start;
+  }
+}

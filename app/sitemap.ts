@@ -4,7 +4,7 @@ import { reader } from "@/lib/keystatic-reader";
 
 // Keep in sync with metadataBase in app/(site)/layout.tsx. Update when the real
 // domain is connected.
-const BASE = "https://luxorrising.com";
+const BASE = "https://www.luxorrising.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [experiences, articles, destinations] = await Promise.all([

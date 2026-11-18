@@ -101,14 +101,14 @@ export default async function ExperiencesPage() {
       "A full private day in Luxor of several experiences woven into one — a signature temple at dawn, then tombs, river or desert, with one concierge handling everything.",
     brand: BRAND,
     category: "Concierge day",
-    url: "https://luxorrising.com/concierge-day",
-    image: "https://luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
+    url: "https://www.luxorrising.com/concierge-day",
+    image: "https://www.luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
     offers: {
       "@type": "Offer",
       price: String(conciergeDayPrice),
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
-      url: "https://luxorrising.com/concierge-day",
+      url: "https://www.luxorrising.com/concierge-day",
     },
   };
 
@@ -176,16 +176,16 @@ export default async function ExperiencesPage() {
     description: entry.hook,
     brand: BRAND,
     category: entry.category,
-    url: `https://luxorrising.com/experiences/${slug}`,
+    url: `https://www.luxorrising.com/experiences/${slug}`,
     // Always emit an image (Google requires it for Product) — fall back to a
     // dependable static hero when an entry has none.
-    image: `https://luxorrising.com${entry.heroImage || "/images/medinet-habu-facade.jpg"}`,
+    image: `https://www.luxorrising.com${entry.heroImage || "/images/medinet-habu-facade.jpg"}`,
     offers: {
       "@type": "Offer",
       price: String(isFunnel(slug, entry.bookingType) ? experienceFrom(slug).price : priceOf(slug, entry)),
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
-      url: `https://luxorrising.com/experiences/${slug}#book`,
+      url: `https://www.luxorrising.com/experiences/${slug}#book`,
     },
   }));
 
@@ -236,7 +236,7 @@ export default async function ExperiencesPage() {
           </div>
           <div className={styles.trustItem}>
             <span className={styles.dot} />
-            <b>Free cancellation</b> up to 7 days before
+            <b>Free cancellation</b> until 48 hours before
           </div>
           <div className={styles.trustItem}>
             <span className={styles.dot} />
@@ -290,7 +290,7 @@ export default async function ExperiencesPage() {
             </Link>
           </div>
           <p className={styles.fine}>
-            Free cancellation up to 7 days before · Secure payment · A licensed Egyptologist on
+            Free cancellation until 48 hours before · Secure payment · A licensed Egyptologist on
             every day
           </p>
         </Reveal>
@@ -302,7 +302,7 @@ export default async function ExperiencesPage() {
 
       <StickyBar
         name={`From €${conciergeDayPrice}`}
-        meta="a private day · free cancellation up to 7 days before"
+        meta="a private day · free cancellation until 48 hours before"
         ctaHref="/concierge-day#design"
         ctaLabel="Design your day →"
         revealOnScroll

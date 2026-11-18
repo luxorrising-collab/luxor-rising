@@ -613,7 +613,7 @@ export default async function ConciergeDayPage() {
               minGuests: t.minGuests ?? 0,
               extraPerDay: t.extraPerDay ?? 0,
             }))}
-            depositPercent={pricingRules?.depositPercent ?? 50}
+            depositPercent={pricingRules?.depositPercent ?? 20}
             lightDayRate={pricingRules?.lightDayRate ?? 330}
             images={builderImages}
             priceTable={alaCartePrices}
@@ -693,11 +693,11 @@ export default async function ConciergeDayPage() {
             </div>
             <div className={styles.gr}>
               <h4>Cancel freely</h4>
-              <p>Full refund up to 7 days before — less any reservations already committed on your behalf.</p>
+              <p>Free cancellation until 48 hours before — refunded, less only costs already committed on your behalf.</p>
             </div>
             <div className={styles.gr}>
               <h4>Pay your way</h4>
-              <p>Pay in full, or a deposit now — the balance is charged automatically the day before.</p>
+              <p>Pay in full, or 20% today: the rest charged automatically 48 hours before, or paid on the day in pounds, euros or dollars.</p>
             </div>
           </div>
         </Reveal>
@@ -757,16 +757,16 @@ export default async function ConciergeDayPage() {
               </div>
               <div className={styles.finalGr}>
                 <h4>Cancel freely</h4>
-                <p>Full refund up to 7 days before — less any reservations already committed on your behalf.</p>
+                <p>Free cancellation until 48 hours before — refunded, less only costs already committed on your behalf.</p>
               </div>
               <div className={styles.finalGr}>
                 <h4>Pay your way</h4>
-                <p>Pay in full, or a deposit now — the balance is charged automatically the day before.</p>
+                <p>Pay in full, or 20% today: the rest charged automatically 48 hours before, or paid on the day in pounds, euros or dollars.</p>
               </div>
             </div>
           </div>
           <p className={styles.finalFine}>
-            7-day free cancellation · deposit or pay in full · a handful of days each week
+            Free cancellation until 48 hours before · 20% today or pay in full · a handful of days each week
           </p>
         </Reveal>
       </section>
@@ -794,13 +794,13 @@ export default async function ConciergeDayPage() {
     description:
       "A private day in Luxor, timed before the crowds — your own Egyptologist, the Nile or the desert, and nothing for you to arrange.",
     brand: { "@type": "Brand", name: "Luxor Rising" },
-    image: "https://luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
+    image: "https://www.luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
     offers: {
       "@type": "AggregateOffer",
       lowPrice: page?.startingPrice ?? 800,
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
-      url: "https://luxorrising.com/concierge-day",
+      url: "https://www.luxorrising.com/concierge-day",
     },
   };
 
@@ -865,7 +865,7 @@ export default async function ConciergeDayPage() {
               <span>Licensed experts</span>
             </div>
             <div className={styles.f}>
-              <b>7-day</b>
+              <b>48-hour</b>
               <span>Free cancellation</span>
             </div>
           </div>

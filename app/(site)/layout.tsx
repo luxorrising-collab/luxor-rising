@@ -12,7 +12,7 @@ import { reader } from "@/lib/keystatic-reader";
 import ImageFallback from "@/components/ImageFallback";
 import { EMPTY_CONFIG, type ConsentConfig } from "@/lib/consent";
 
-const SITE = "https://luxorrising.com";
+const SITE = "https://www.luxorrising.com";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -30,7 +30,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://luxorrising.com"),
+  metadataBase: new URL("https://www.luxorrising.com"),
   title: {
     default: "Luxor Rising — Your private concierge in Egypt",
     template: "%s | Luxor Rising",

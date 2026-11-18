@@ -2,6 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./Footer.module.css";
 import CookieSettingsButton from "./consent/CookieSettingsButton";
+import PaymentMarks from "./PaymentMarks";
+
+// The ways to pay, as small card marks at the very bottom of every footer.
+function FooterPay() {
+  return (
+    <div className={styles.pay}>
+      <PaymentMarks tone="dark" />
+    </div>
+  );
+}
 
 type FooterLink = { href: string; label: string };
 type FooterColumn = { title: string; links: FooterLink[] };
@@ -112,6 +122,7 @@ export function FullFooter({
           </div>
           {social && <SocialLinks {...social} />}
         </div>
+        <FooterPay />
       </div>
     </footer>
   );
@@ -155,6 +166,7 @@ export function MinimalFooter({
         <div className={styles.bottom}>
           {bottomText} · <CookieSettingsButton />
         </div>
+        <FooterPay />
       </div>
     </footer>
   );

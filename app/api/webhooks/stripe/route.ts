@@ -8,6 +8,7 @@ import {
   sendOrderNotification,
 } from "@/lib/email";
 import { SITE_URL } from "@/lib/email-template";
+import { getEurRates } from "@/lib/fx";
 
 // Stripe SDK + raw-body signature verification need the Node runtime.
 export const runtime = "nodejs";
@@ -103,13 +104,13 @@ export async function POST(req: Request) {
   // The guest's picks, resolved to the same canonical names as on the site.
   const picks = await resolvePicks((md.picks || "").split(",").filter(Boolean));
   const experiences = picks.map((p) => p.name);
-  const payMode = md.mode || "full";
+  const payMode = md.mode === "deposit" || md.mode === "local" ? md.mode : "full";
   const amountCents = session.amount_total ?? null;
   const fullTotalCents = md.full_total_cents ? parseInt(md.full_total_cents, 10) || null : null;
   const balanceCents = md.balance_cents ? parseInt(md.balance_cents, 10) || null : null;
 
   // For a deposit, capture the saved card + customer so the balance can be
-  // charged off-session the day before the trip.
+  // charged off-session 48 hours before the trip.
   const stripeCustomerId = typeof session.customer === "string" ? session.customer : null;
   let paymentMethodId: string | null = null;
   if (payMode === "deposit" && typeof session.payment_intent === "string") {
@@ -159,7 +160,16 @@ export async function POST(req: Request) {
     stripe_customer_id: stripeCustomerId,
     stripe_payment_method_id: paymentMethodId,
     balance_cents: balanceCents ?? 0,
-    balance_status: scheduleBalance ? "scheduled" : "none",
+    // deposit → the cron charges the saved card 48 hours before; local → the
+    // concierge collects it on the day (marked paid by hand once received).
+    // (a deposit without a saved card stays scheduled too: the cron then emails
+    // a secure payment link instead of charging).
+    balance_status:
+      payMode === "deposit" && (balanceCents ?? 0) > 0
+        ? "scheduled"
+        : payMode === "local" && (balanceCents ?? 0) > 0
+          ? "local_due"
+          : "none",
   });
   if (error) {
     console.error("booking insert failed:", error.message);
@@ -189,6 +199,8 @@ export async function POST(req: Request) {
   const amountEur = amountCents != null ? Math.round(amountCents / 100) : undefined;
   const totalEur = fullTotalCents != null ? Math.round(fullTotalCents / 100) : undefined;
   const balanceEur = balanceCents != null ? Math.round(balanceCents / 100) : undefined;
+  // Indicative local amounts for a balance paid on the day (EGP / USD).
+  const fx = payMode === "local" ? await getEurRates() : undefined;
   if (email) {
     await sendBookingConfirmation({
       name: clientName,
@@ -205,6 +217,7 @@ export async function POST(req: Request) {
       tier,
       // Tell the guest the balance auto-charges only when we actually scheduled it.
       balanceAutoCharge: scheduleBalance,
+      fx,
     });
   }
   await sendAhmedJobBrief({
@@ -218,6 +231,8 @@ export async function POST(req: Request) {
     preferences: preferences || undefined,
     experiences,
     payMode,
+    balanceEur,
+    fx,
     days: conciergeDays,
     tier,
   });
@@ -232,6 +247,7 @@ export async function POST(req: Request) {
     balanceEur,
     payMode,
     balanceAutoCharge: scheduleBalance,
+    fx,
     customerName: clientName,
     customerEmail: email ?? undefined,
     customerPhone: phone ?? undefined,

@@ -334,7 +334,7 @@ export default function ArticleTemplate({
               <Link href={book.href} className="btn btn-primary" style={{ width: "100%" }}>
                 {book.ctaLabel}
               </Link>
-              <p className={styles.bcTrust}>Door-to-door transfer included · free cancellation up to 7 days before</p>
+              <p className={styles.bcTrust}>Door-to-door transfer included · free cancellation until 48 hours before</p>
             </div>
           </div>
           {bookExperience && (
@@ -427,7 +427,7 @@ export default function ArticleTemplate({
 
       <StickyBar
         name="Design your day"
-        meta="private · from dawn · free cancellation up to 7 days before"
+        meta="private · from dawn · free cancellation until 48 hours before"
         ctaHref="/concierge-day#design"
         ctaLabel="Start →"
         revealOnScroll

@@ -9,6 +9,8 @@ import AvailabilityDate from "./AvailabilityDate";
 import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
 import { MyDayPicks } from "./MyDay";
+import PaymentChoice, { PaymentReassure, payCta } from "@/components/PaymentChoice";
+import { DEFAULT_DEPOSIT_PERCENT, payModeAllowed, type PayMode } from "@/lib/payment-policy";
 import { DAY_PICKS_EVENT, planDays as estimateDays, readDayPicks, useMyDay } from "@/lib/my-day";
 import { dayLength } from "@/lib/day-plan";
 import { trackBeginCheckout, trackLead } from "@/lib/analytics";
@@ -20,7 +22,7 @@ type SignatureJourney = "medinet" | "karnak" | "balloon";
 // business/land/investment day — bespoke, so it routes to the enquiry path
 // (never Stripe checkout), the same way 5+ groups and 5+ days do.
 type Journey = SignatureJourney | "light" | "reality" | "original";
-type Pay = "full" | "deposit";
+type Pay = PayMode;
 
 export type VolumeDiscountTier = { minDays: number; discountPercent: number };
 export type GroupSupplementTier = { minGuests: number; extraPerDay: number };
@@ -676,12 +678,6 @@ function fmtDate(iso: string) {
     month: "short",
   });
 }
-function cancelDeadline(iso: string) {
-  const dt = new Date(iso + "T12:00:00");
-  dt.setDate(dt.getDate() - 7);
-  if (dt < new Date()) return null;
-  return dt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-}
 
 type PlanItem =
   | string
@@ -1004,7 +1000,7 @@ export default function DayConfigurator({
     { minGuests: 3, extraPerDay: 160 },
     { minGuests: 4, extraPerDay: 160 },
   ],
-  depositPercent = 50,
+  depositPercent = DEFAULT_DEPOSIT_PERCENT,
   lightDayRate = LIGHT_DAY_RATE,
   images = {},
   priceTable,
@@ -1161,7 +1157,7 @@ export default function DayConfigurator({
   const [eq, setEq] = useState({ name: "", email: "", phone: "", message: "" });
   const [eqSent, setEqSent] = useState(false);
   const [photo, setPhoto] = useState(false);
-  const [pay, setPay] = useState<Pay>("deposit");
+  const [payChoice, setPay] = useState<Pay>("deposit");
   const [tripDate, setTripDate] = useState("");
   const [dateError, setDateError] = useState(false);
   const [bdOpen, setBdOpen] = useState(false);
@@ -1216,20 +1212,10 @@ export default function DayConfigurator({
       ? 0
       : daySaving(days, group, dayRate, volumeDiscount, groupSupplement);
   const perPerson = Math.round(total / group);
-  const deposit = Math.round((total * depositPercent) / 100);
-
-  // The balance is auto-charged the day before, so a deposit only makes sense
-  // when the date is at least ~2 days out. Closer than that → full payment only.
-  const depositAllowed = useMemo(() => {
-    if (!tripDate) return true;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const trip = new Date(`${tripDate}T00:00:00`);
-    return Math.round((trip.getTime() - today.getTime()) / 86400000) >= 2;
-  }, [tripDate]);
-  useEffect(() => {
-    if (!depositAllowed && pay === "deposit") setPay("full");
-  }, [depositAllowed, pay]);
+  // The automatic balance is charged 48 hours before, so "20% today" needs the
+  // date at least three days out; closer than that the guest pays in full or
+  // pays the rest locally (lib/payment-policy.ts, enforced again on the server).
+  const pay: Pay = payModeAllowed(payChoice, tripDate || undefined) ? payChoice : "full";
 
   const plan = useMemo(() => {
     const j = JOURNEY[journey];
@@ -1376,14 +1362,6 @@ export default function DayConfigurator({
     return `${fmtDate(tripDate)} – ${fmtDate(end.toISOString().slice(0, 10))} · ${days} days`;
   })();
 
-  const cancelText = tripDate
-    ? (() => {
-        const dl = cancelDeadline(tripDate);
-        return dl
-          ? "Free cancellation until " + dl + " — refunded, less any non-refundable bookings"
-          : "";
-      })()
-    : "";
 
   // Earliest bookable date (tomorrow) — set on the element once it mounts, so
   // server and client render the same markup.
@@ -2826,30 +2804,13 @@ export default function DayConfigurator({
 
             {/* pay + CTA — kept tight and high so the button never drops below the fold */}
             <div className={styles.sumSub}>How you&apos;d like to pay</div>
-            <div className={styles.payOpts} data-hide-chat>
-              {depositAllowed && (
-                <div
-                  className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
-                  onClick={() => setPay("deposit")}
-                >
-                  <span className={styles.payRec}>Easiest</span>
-                  <b>{euro(deposit)}</b>
-                  <span>to reserve · balance the day before</span>
-                </div>
-              )}
-              <div
-                className={`${styles.pay} ${pay === "full" ? styles.sel : ""}`}
-                onClick={() => setPay("full")}
-              >
-                <b>{euro(total)}</b>
-                <span>Pay in full</span>
-              </div>
-            </div>
-            {!depositAllowed && tripDate && (
-              <div className={styles.sumSub} style={{ opacity: 0.7 }}>
-                A deposit isn&apos;t available this close to your date — pay in full to confirm.
-              </div>
-            )}
+            <PaymentChoice
+              total={total}
+              depositPercent={depositPercent}
+              tripDate={tripDate || undefined}
+              pay={pay}
+              onPay={setPay}
+            />
             <label className={styles.sumConsent} data-hide-chat>
               <input
                 type="checkbox"
@@ -2879,39 +2840,26 @@ export default function DayConfigurator({
             >
               {loading
                 ? "Opening secure checkout…"
-                : pay === "full"
-                  ? `Reserve your journey · ${euro(total)} →`
-                  : `Secure your date · ${euro(deposit)} today →`}
+                : payCta(pay, total, depositPercent)}
             </a>
             {error && (
               <div role="alert" className={styles.sumCancel} style={{ color: "#9a2b2b" }}>
                 {error}
               </div>
             )}
-            <div className={styles.sumReassure2}>
-              {pay === "deposit" && (
-                <div className={styles.rrow}>
-                  <span className={styles.ric} aria-hidden>💳</span>
-                  <span>Balance charged automatically the day before — or a secure link if your bank needs to confirm</span>
-                </div>
-              )}
-              <div className={`${styles.rrow} ${styles.rrowGuar}`}>
-                <span className={styles.ric} aria-hidden>🛡</span>
-                <span>
+            <PaymentReassure
+              pay={pay}
+              total={total}
+              depositPercent={depositPercent}
+              tripDate={tripDate || undefined}
+              guarantee={
+                <>
                   <b>The first two hours, or we refund the rest.</b> If your day isn&apos;t what we
                   promised, tell us in the first two hours. If we can&apos;t put it right, we
                   stop there and refund what&apos;s left after costs already committed.
-                </span>
-              </div>
-              <div className={styles.rrow}>
-                <span className={styles.ric} aria-hidden>🔒</span>
-                <span>Secure checkout by Stripe — no account needed</span>
-              </div>
-              <div className={styles.rrow}>
-                <span className={styles.ric} aria-hidden>↩</span>
-                <span>{cancelText || "Free cancellation up to 7 days before"}</span>
-              </div>
-            </div>
+                </>
+              }
+            />
             </>
             )}
 
@@ -2926,7 +2874,7 @@ export default function DayConfigurator({
         meta={
           proposal
             ? "private proposal · reply in 24h"
-            : `your ${isLight ? "day" : "journey"}: ${euro(total)}${tripDate ? " · " + stayText : ""} · 7-day free cancellation`
+            : `your ${isLight ? "day" : "journey"}: ${euro(total)}${tripDate ? " · " + stayText : " · free cancellation until 48h before"}`
         }
         ctaHref="#book"
         onCtaClick={goToNextStep}

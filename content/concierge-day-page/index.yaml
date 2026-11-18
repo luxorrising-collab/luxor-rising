@@ -444,8 +444,9 @@ faq:
   - question: How far ahead should we book, and when is our date confirmed?
     answer: >-
       Right now every date is open, from tomorrow onwards. Choose your date,
-      reserve with a 50% deposit or pay in full, and we confirm your order within
-      24 hours. Booking less than two days ahead? Pay in full to confirm.
+      pay 20% today or in full, and we confirm your order within 24 hours.
+      Booking less than three days ahead? Pay in full, or pay 20% today and the
+      rest locally on the day.
   - question: We're more than four, or want several days. Can you do it?
     answer: >-
       Yes. Choose "5 or more" guests or "5+ days" in the builder, and your
@@ -461,17 +462,28 @@ faq:
       Cancellation & Refunds page has the full terms.
   - question: What if my plans change?
     answer: >-
-      Cancel 7 or more days before and we refund what you've paid, less any
-      non-refundable costs already committed, such as tickets and reservations. We
-      only book those once your reservation is confirmed, to keep them small. Within
-      7 days, payments are non-refundable, but talk to your concierge first: we'll
-      do our best to move your date, subject to availability.
+      Cancel until 48 hours before and we refund what you've paid, less only
+      costs already committed, such as tickets, reservations and payment-partner
+      fees. We only book those once your reservation is confirmed, to keep them
+      small. Within 48 hours, or if you don't show, your payment is
+      non-refundable, but talk to your concierge first: we'll do our best to move
+      your date, subject to availability.
   - question: Can I pay part now and part later?
     answer: >-
-      Yes. Pay in full online, or place a 50% deposit now to lock your date — the
-      balance is charged automatically to the same card the day before, and if
-      it can't be taken we email you a secure link. Payments go through Stripe, which
-      holds your card details, so we never see or store them.
+      Yes, two ways. Pay 20% today and the rest is charged automatically to the
+      same card 48 hours before (if it can't be taken, we email you a secure
+      link), or pay 20% today and the rest on the day to your concierge, in
+      Egyptian pounds, euros or US dollars. Or simply pay in full. Payments go
+      through Stripe, which holds your card details, so we never see or store them.
+  - question: Why do you ask for 20% when we book?
+    answer: >-
+      Because the moment you book, real people set your day aside for you. Your
+      concierge, Egyptologist, driver and boat crew keep that date free and turn
+      other work away. The 20% confirms that commitment, so we can pay them on
+      time for the time they hold for you alone. It's also what keeps our
+      relationships with them strong, and why they answer when your concierge
+      calls. Plans still change: cancel until 48 hours before and we refund it,
+      less only costs already committed.
 finalEyebrow: Your date is waiting
 finalTitle: Give us one day. We'll give you the one you remember.
 finalText: >-

@@ -13,5 +13,5 @@ groupSupplement:
     extraPerDay: 160
   - minGuests: 4
     extraPerDay: 160
-depositPercent: 50
+depositPercent: 20
 lightDayRate: 330

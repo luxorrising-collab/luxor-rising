@@ -223,20 +223,44 @@ export async function buildMetaCsv(): Promise<string> {
 // Commercial landing pages to steer PMax to, beyond the product pages. Pages that
 // don't lead into a booking (villas, the blog, legal) stay out of the feed.
 const EXTRA_PAGES: [string, string][] = [
-  ["/experiences", "hub;collection"],
-  ["/luxor", "hub;destination;luxor"],
-  ["/hurghada", "hub;destination;red_sea"],
-  ["/private-guide", "service"],
-  ["/private-tours", "service"],
+  ["/experiences", "HUB;ALL_EXPERIENCES"],
+  ["/luxor", "HUB;DESTINATION;LUXOR"],
+  ["/hurghada", "HUB;DESTINATION;RED_SEA"],
+  ["/private-guide", "SERVICE;PRIVATE_GUIDE"],
+  ["/private-tours", "SERVICE;PRIVATE_TOURS"],
 ];
 
-// Page-feed labels: lowercase, underscores, several per page joined by ";" so a
-// PMax asset group can target a role (booking/experience), a theme or a place.
-const labelOf = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
-const pageFeedLabels = (p: FeedProduct): string =>
-  p.id === "design-your-day"
-    ? "booking;core"
-    : ["experience", labelOf(p.category), /red sea/i.test(p.region) ? "red_sea" : "luxor"].join(";");
+// Page-feed labels in Google's template style: UPPERCASE, underscores, several
+// per page joined by ";", so a PMax asset group (or a URL rule) can target a page
+// role, the day tier it sells, the region or the exact place. E.g.
+//   EXPERIENCE;SIGNATURE;ASWAN_ROAD;ABU_SIMBEL
+const labelOf = (s: string) => s.toUpperCase().trim().replace(/[^A-Z0-9]+/g, "_").replace(/^_|_$/g, "");
+const TIER_LABEL = (price: number) => (price >= 800 ? "SIGNATURE" : price >= 450 ? "ORIGINAL" : "ADVENTURE");
+const pageFeedLabels = (p: FeedProduct): string => {
+  if (p.id === "design-your-day") return "BOOKING;DESIGN_YOUR_DAY;LUXOR";
+  const where = experienceWhere(p.id) || p.region;
+  const place = where.split(/,| to | & /)[0].trim();
+  // Where the day happens: Luxor itself, the temple road south, Aswan (and Abu
+  // Simbel), the long day trips north, or the Red Sea coast.
+  const region = /red sea/i.test(p.region)
+    ? "RED_SEA"
+    : /aswan|abu simbel/i.test(where) && !/^luxor/i.test(where)
+      ? "ASWAN"
+      : /esna|edfu|el kab|kom ombo/i.test(where) || p.id === "luxor-to-aswan-temples-private"
+        ? "NILE_ROAD"
+        : /dendera|abydos|upper egypt/i.test(where)
+          ? "DAY_TRIP"
+          : "LUXOR";
+  const labels = ["EXPERIENCE", TIER_LABEL(p.price), region];
+  if (region === "LUXOR") {
+    // In Luxor, the theme instead of the town: on the Nile or in the desert.
+    if (/nile|felucca|sail|cruise/i.test(`${where} ${p.id}`)) labels.push("NILE");
+    else if (/desert|camel|safari|astronomy/i.test(`${where} ${p.id}`)) labels.push("DESERT");
+  } else if (labelOf(place) !== region) {
+    labels.push(labelOf(place));
+  }
+  return labels.join(";");
+};
 
 /** Google Ads Page Feed (CSV) for Performance Max. */
 export async function buildGooglePageFeedCsv(): Promise<string> {

@@ -3,6 +3,7 @@
 import { forwardRef, useMemo, useState } from "react";
 import styles from "./AvailabilityDate.module.css";
 import { AHMED } from "@/lib/ahmed-profile";
+import { FREE_CANCEL_HOURS, cancelLine, freeCancelDate, freeCancelOpen } from "@/lib/payment-policy";
 
 // The checkout date field — a small month calendar in place of the browser's
 // native picker. Every date from tomorrow (local time) is open, but the calendar
@@ -73,6 +74,11 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
   ];
 
   const end = value && days > 1 ? addDays(value, days - 1) : value;
+  // The last day of free cancellation for the picked date (48 hours before).
+  // Every day from today up to it carries a green dot in the calendar, so the
+  // window reads as the days you have, not one date.
+  const cancelBy = value && freeCancelOpen(value) ? freeCancelDate(value) : "";
+  const todayKey = iso(new Date());
   const step = (n: number) => setView((v) => new Date(v.getFullYear(), v.getMonth() + n, 1));
 
   return (
@@ -125,7 +131,7 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
                   key={key}
                   type="button"
                   disabled={past}
-                  className={`${styles.day} ${sel ? styles.sel : ""} ${inStay ? styles.stay : ""}`}
+                  className={`${styles.day} ${sel ? styles.sel : ""} ${inStay ? styles.stay : ""} ${cancelBy && key >= todayKey && key <= cancelBy ? styles.cancelBy : ""}`}
                   aria-pressed={sel}
                   aria-label={fmtLongDate(key)}
                   onClick={() => {
@@ -138,6 +144,12 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
               );
             })}
           </div>
+          <p className={styles.calNote}>
+            <span className={styles.calDot} aria-hidden />
+            {cancelBy
+              ? `Days you can still cancel for free (until ${fmtShort(cancelBy)})`
+              : `Free cancellation until ${FREE_CANCEL_HOURS} hours before your date`}
+          </p>
         </div>
       )}
 
@@ -195,6 +207,18 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
           )}
           <p className={styles.welcomeNote}>We&apos;ll confirm your order within 24 hours.</p>
         </div>
+      )}
+
+      {/* The free-cancellation window for the picked date, on its own under the
+          welcome, right above the ways to pay. */}
+      {value && (
+        <p className={`${styles.cancelNote} ${cancelBy ? "" : styles.cancelNoteClosed}`}>
+          <span aria-hidden>↩</span>
+          <span>
+            {cancelLine(value)}
+            {cancelBy && " — refunded, less only costs already committed"}
+          </span>
+        </p>
       )}
     </div>
   );

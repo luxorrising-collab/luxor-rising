@@ -933,7 +933,7 @@ export default config({
         ),
         depositPercent: fields.number({
           label: "Deposit (%)",
-          description: "Percentage of the total price guests may pay as a deposit to hold a date.",
+          description: "Share of the total paid today on the two deposit options: '20% today, the rest charged automatically 48 hours before' and '20% today, the rest paid locally'. Keep it in step with the Cancellation & Refunds page.",
           validation: { min: 0, max: 100 },
         }),
         lightDayRate: fields.number({

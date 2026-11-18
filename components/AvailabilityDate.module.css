@@ -200,6 +200,51 @@
   line-height: 1.45;
   color: var(--color-ink);
 }
+/* free cancellation: a green dot under every day it is still open, a legend below */
+.day.cancelBy::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4f7a52;
+}
+.calNote {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.55rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.72rem;
+  color: #3f6b43;
+}
+.calDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4f7a52;
+  flex: none;
+}
+.cancelNote {
+  display: flex;
+  gap: 0.45rem;
+  margin: 0.6rem 0 0;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(79, 122, 82, 0.1);
+  border: 1px solid rgba(79, 122, 82, 0.25);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #2f5233;
+  font-weight: 500;
+}
+.cancelNoteClosed {
+  background: rgba(154, 43, 43, 0.06);
+  border-color: rgba(154, 43, 43, 0.2);
+  color: #7a2a2a;
+}
 .welcomeNote {
   margin: 0;
   padding-top: 0.55rem;

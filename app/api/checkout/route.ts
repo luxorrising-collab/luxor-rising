@@ -2,6 +2,21 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { resolvePicks, picksLine } from "@/lib/day-names";
 import { quoteBooking } from "@/lib/quote";
+import {
+  FREE_CANCEL_HOURS,
+  balanceChargeDate,
+  fmtDay,
+  freeCancelDate,
+  freeCancelOpen,
+  isPayMode,
+  payModeAllowed,
+  splitAmounts,
+  type PayMode,
+} from "@/lib/payment-policy";
+
+// The version of the Terms & Cancellation Policy the guest accepts at checkout
+// (stored on the payment, so any later question is answered by the exact text).
+const TERMS_VERSION = "2026-11-18";
 
 // Stripe's SDK needs the Node runtime (not Edge).
 export const runtime = "nodejs";
@@ -9,7 +24,7 @@ export const runtime = "nodejs";
 type Body = {
   name?: string;
   slug?: string;
-  mode?: "full" | "deposit";
+  mode?: PayMode;
   guests?: number;
   photo?: boolean; // concierge photographer add-on
   hurg?: boolean; // Hurghada ⇄ Luxor crossing add-on
@@ -37,7 +52,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad request." }, { status: 400 });
   }
 
-  const { name, slug, mode = "full", guests, date, cancelPath, preferences, photo, hurg, seaTransfer } = body;
+  const { name, slug, guests, date, cancelPath, preferences, photo, hurg, seaTransfer } = body;
+  const mode: PayMode = isPayMode(body.mode) ? body.mode : "full";
   // The guest's picks ("add to my day"), validated against the canonical list.
   const picks = await resolvePicks((body as { picks?: unknown }).picks);
   const picksText = picksLine(picks);
@@ -56,39 +72,40 @@ export async function POST(req: Request) {
     );
   }
 
-  // A deposit relies on the day-before balance auto-charge, which can't run this
-  // close to the date — require full payment instead. The client already hides
-  // the deposit option for near dates; this guards against tampering.
-  if (mode === "deposit") {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const daysUntil = date
-      ? Math.round((new Date(`${date}T00:00:00`).getTime() - today.getTime()) / 86400000)
-      : -1;
-    if (daysUntil < 2) {
-      return NextResponse.json(
-        { error: "A deposit isn't available this close to your date — please pay in full." },
-        { status: 400 },
-      );
-    }
+  // Every way to pay needs a valid date from tomorrow on; "20% today" with the
+  // automatic balance needs at least three days (the balance is charged 48 hours
+  // before). The client hides what isn't allowed; this guards against tampering.
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !payModeAllowed("full", date)) {
+    return NextResponse.json({ error: "Please choose a date from tomorrow onwards." }, { status: 400 });
+  }
+  if (!payModeAllowed(mode, date)) {
+    return NextResponse.json(
+      { error: "Paying 20% now isn't available this close to your date. Please pay in full, or pay the rest locally." },
+      { status: 400 },
+    );
   }
 
   // Amounts derived from the authoritative quote (euro-cents throughout).
   const fullTotalCents = quote.totalCents;
-  const depositCents = Math.round((fullTotalCents / 100) * (quote.depositPercent / 100)) * 100;
-  const amountCents = mode === "deposit" ? depositCents : fullTotalCents;
-  const balanceCents = mode === "deposit" ? Math.max(0, fullTotalCents - depositCents) : 0;
+  const { todayCents: amountCents, balanceCents } = splitAmounts(fullTotalCents, mode, quote.depositPercent);
   if (amountCents < 100) {
     return NextResponse.json({ error: "This booking can't be processed. Please contact us." }, { status: 400 });
   }
-  const eur = (cents: number) => `€${Math.round(cents / 100)}`;
+  const eur = (cents: number) => `€${Math.round(cents / 100).toLocaleString("en-US")}`;
+  const chargeOn = mode === "deposit" ? balanceChargeDate(date) : "";
 
-  // The note above the pay button. For a deposit it doubles as the mandate for
-  // charging the balance off-session (required to save & reuse the card).
+  // The note above the pay button. For "20% today" it is also the mandate for
+  // charging the balance off-session (required to save and reuse the card), so
+  // it states the amount, the date and the card, plainly.
+  const cancelNote = freeCancelOpen(date)
+    ? `Free cancellation until ${fmtDay(freeCancelDate(date))} (${FREE_CANCEL_HOURS} hours before), refunded less only costs already committed. After that, or if you don't show, your payment is non-refundable.`
+    : `Your date is within ${FREE_CANCEL_HOURS} hours, so this booking is non-refundable once paid.`;
   const submitMessage =
     mode === "deposit"
-      ? `You're paying a deposit of ${eur(amountCents)} now. The remaining ${eur(balanceCents)} will be charged automatically to this card the day before your experience. If it can't be taken automatically we'll email you a secure link. Free cancellation up to 7 days before. By booking you agree to our Terms & Cancellation Policy at luxorrising.com/legal.`
-      : "Free cancellation up to 7 days before your date. By booking you agree to our Terms & Cancellation Policy at luxorrising.com/legal.";
+      ? `You pay ${eur(amountCents)} now (${quote.depositPercent}%). You authorise Luxor Rising to charge the remaining ${eur(balanceCents)} to this card automatically on ${fmtDay(chargeOn)}, 48 hours before your date; if it can't be taken we email you a secure link. ${cancelNote} By booking you agree to our Terms & Cancellation Policy (luxorrising.com/legal).`
+      : mode === "local"
+        ? `You pay ${eur(amountCents)} now (${quote.depositPercent}%) and the remaining ${eur(balanceCents)} on the day to your concierge, in cash: Egyptian pounds, euros or US dollars at the day's mid-market rate. ${cancelNote} By booking you agree to our Terms & Cancellation Policy (luxorrising.com/legal).`
+        : `${cancelNote} By booking you agree to our Terms & Cancellation Policy (luxorrising.com/legal).`;
 
   const origin = req.headers.get("origin") || new URL(req.url).origin;
   // Only accept an internal, single-slash path for the cancel URL (no open
@@ -108,9 +125,13 @@ export async function POST(req: Request) {
       // the concierge / delivery partner can coordinate on the day.
       phone_number_collection: { enabled: true },
       // Create a Stripe customer for every booking; for a deposit, also save the
-      // card so the balance can be charged off-session the day before the trip.
+      // card so the balance can be charged off-session 48 hours before the trip.
       customer_creation: "always",
-      payment_intent_data: mode === "deposit" ? { setup_future_usage: "off_session" } : undefined,
+      payment_intent_data: {
+        ...(mode === "deposit" ? { setup_future_usage: "off_session" as const } : {}),
+        description: `${name}${date ? ` · ${date}` : ""} · ${mode === "full" ? "paid in full" : mode === "deposit" ? "deposit, balance auto-charged" : "deposit, balance paid locally"}`.slice(0, 1000),
+        metadata: { mode, trip_date: date, terms_version: TERMS_VERSION },
+      },
       line_items: [
         {
           quantity: 1,
@@ -118,15 +139,18 @@ export async function POST(req: Request) {
             currency: "eur",
             unit_amount: Math.round(amountCents),
             product_data: {
-              name: mode === "deposit" ? `${name} — deposit` : name,
+              name:
+                mode === "full" ? name : `${name} — ${quote.depositPercent}% deposit`,
               // A concise order recap shown on the Stripe page.
               description: [
                 guests ? `${guests} guest${guests > 1 ? "s" : ""}` : null,
                 date || null,
                 picks.length ? `Your experiences: ${picksText}` : null,
                 mode === "deposit"
-                  ? `Deposit of ${eur(amountCents)} of ${eur(fullTotalCents)} — ${eur(balanceCents)} balance due on the day`
-                  : "Paid in full",
+                  ? `${eur(amountCents)} of ${eur(fullTotalCents)} today — ${eur(balanceCents)} charged automatically on ${fmtDay(chargeOn)}`
+                  : mode === "local"
+                    ? `${eur(amountCents)} of ${eur(fullTotalCents)} today — ${eur(balanceCents)} paid on the day in EGP, EUR or USD`
+                    : "Paid in full",
               ]
                 .filter(Boolean)
                 .join(" · "),
@@ -146,6 +170,8 @@ export async function POST(req: Request) {
         mode,
         full_total_cents: String(fullTotalCents),
         balance_cents: String(balanceCents),
+        balance_due: chargeOn,
+        terms_version: TERMS_VERSION,
         preferences: (preferences || "").slice(0, 480),
         // the picks as slugs (the webhook resolves the same canonical names)
         picks: picks.map((p) => p.slug).join(",").slice(0, 490),

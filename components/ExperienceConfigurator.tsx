@@ -3,13 +3,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import PaymentChoice, { PaymentReassure, payCta } from "@/components/PaymentChoice";
+import { DEFAULT_DEPOSIT_PERCENT, payModeAllowed, type PayMode } from "@/lib/payment-policy";
 import styles from "./ExperienceConfigurator.module.css";
 import StickyBar from "./StickyBar";
 import { GIFTS } from "./GiftMarks";
 import { GIFT_DEFAULTS, type GiftKey } from "@/lib/gifts";
 import { trackBeginCheckout } from "@/lib/analytics";
 
-type Pay = "full" | "deposit";
+type Pay = PayMode;
 
 export type GroupSupplementTier = { minGuests: number; extraPerGuest: number };
 
@@ -86,7 +88,7 @@ export default function ExperienceConfigurator({
     { minGuests: 3, extraPerGuest: 55 },
     { minGuests: 4, extraPerGuest: 45 },
   ],
-  depositPercent = 50,
+  depositPercent = DEFAULT_DEPOSIT_PERCENT,
   glanceIncludes,
   includeItems,
   feelText,
@@ -104,7 +106,7 @@ export default function ExperienceConfigurator({
   const cardTitle = hasTitle ? title! : name;
   const [group, setGroup] = useState(2);
   const [hurg, setHurg] = useState(false);
-  const [pay, setPay] = useState<Pay>("deposit");
+  const [payChoice, setPay] = useState<Pay>("deposit");
   const [tripDate, setTripDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -120,20 +122,9 @@ export default function ExperienceConfigurator({
   const hurgAdd = offerHurghada && hurg ? seaPrice : 0;
   const total = basePrice + extra(group, groupSupplement) + hurgAdd;
   const perPerson = Math.round(total / group);
-  const deposit = Math.round((total * depositPercent) / 100);
-
-  // The balance is auto-charged the day before, so a deposit only makes sense
-  // when the date is at least ~2 days out. Closer than that → full payment only.
-  const depositAllowed = useMemo(() => {
-    if (!tripDate) return true;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const trip = new Date(`${tripDate}T00:00:00`);
-    return Math.round((trip.getTime() - today.getTime()) / 86400000) >= 2;
-  }, [tripDate]);
-  useEffect(() => {
-    if (!depositAllowed && pay === "deposit") setPay("full");
-  }, [depositAllowed, pay]);
+  // "20% today" with the automatic balance needs the date at least three days
+  // out (lib/payment-policy.ts); closer than that, pay in full or the rest locally.
+  const pay: Pay = payModeAllowed(payChoice, tripDate || undefined) ? payChoice : "full";
 
   const includes = useMemo<{ title: string; note?: string }[]>(() => {
     // The included transfer is local — spell out the city on any "door to door"
@@ -349,34 +340,13 @@ export default function ExperienceConfigurator({
             }}
           />
           <div className={styles.sumSub}>How you&apos;d like to pay</div>
-          <div className={styles.payOpts}>
-            {depositAllowed && (
-              <button
-                type="button"
-                className={`${styles.pay} ${pay === "deposit" ? styles.sel : ""}`}
-                onClick={() => setPay("deposit")}
-                aria-pressed={pay === "deposit"}
-              >
-                <span className={styles.payRec}>Easiest</span>
-                <b>{euro(deposit)}</b>
-                <span>to reserve · balance the day before</span>
-              </button>
-            )}
-            <button
-              type="button"
-              className={`${styles.pay} ${pay === "full" ? styles.sel : ""}`}
-              onClick={() => setPay("full")}
-              aria-pressed={pay === "full"}
-            >
-              <b>{euro(total)}</b>
-              <span>Pay in full</span>
-            </button>
-          </div>
-          {!depositAllowed && tripDate && (
-            <div className={styles.sumSub} style={{ opacity: 0.7 }}>
-              A deposit isn&apos;t available this close to your date — pay in full to confirm.
-            </div>
-          )}
+          <PaymentChoice
+            total={total}
+            depositPercent={depositPercent}
+            tripDate={tripDate || undefined}
+            pay={pay}
+            onPay={setPay}
+          />
           <label className={styles.sumConsent}>
             <input
               type="checkbox"
@@ -406,41 +376,26 @@ export default function ExperienceConfigurator({
           >
             {loading
               ? "Opening secure checkout…"
-              : pay === "deposit"
-                ? `Reserve for ${euro(deposit)} →`
-                : `Reserve & pay ${euro(total)} →`}
+              : payCta(pay, total, depositPercent)}
           </a>
           {error && (
             <div role="alert" className={styles.sumError}>
               {error}
             </div>
           )}
-          <div className={styles.sumReassure2}>
-            {pay === "deposit" && (
-              <div className={styles.rrow}>
-                <span className={styles.ric} aria-hidden>💳</span>
-                <span>Balance charged automatically the day before — or a secure link if your bank needs to confirm</span>
-              </div>
-            )}
-            <div className={`${styles.rrow} ${styles.rrowGuar}`}>
-              <span className={styles.ric} aria-hidden>🛡</span>
-              <span>
+          <PaymentReassure
+            pay={pay}
+            total={total}
+            depositPercent={depositPercent}
+            tripDate={tripDate || undefined}
+            guarantee={
+              <>
                 <b>First hour, or we refund the rest.</b> If it isn&apos;t what we promised, tell
                 us in the first hour. If we can&apos;t put it right, we stop there and refund
                 what&apos;s left after costs already committed.
-              </span>
-            </div>
-            <div className={styles.rrow}>
-              <span className={styles.ric} aria-hidden>🔒</span>
-              <span>Secure checkout by Stripe — no account needed</span>
-            </div>
-            <div className={styles.rrow}>
-              <span className={styles.ric} aria-hidden>↩</span>
-              <span>
-                <Link href="/legal/cancellation">Free cancellation up to 7 days before</Link>
-              </span>
-            </div>
-          </div>
+              </>
+            }
+          />
           {/* The emotional "how it feels" note sits BELOW the CTA — it reinforces the
               decision without pushing the price and Reserve button below the fold. */}
           {feelText && (

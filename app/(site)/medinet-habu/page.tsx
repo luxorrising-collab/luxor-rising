@@ -83,8 +83,8 @@ export default async function MedinetHabuPage() {
     experiences,
   }).filter((c) => c.href !== selfHref);
 
-  const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
-  const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
+  const heroImageUrl = entry.heroImage ? `https://www.luxorrising.com${entry.heroImage}` : undefined;
+  const galleryImageUrls = entry.gallery.map((g) => `https://www.luxorrising.com${g.image}`);
 
   // Cinematic hero: the temple image, then short temple clips alternating with
   // real gallery photos. object-position keeps each subject in frame when the
@@ -148,10 +148,10 @@ export default async function MedinetHabuPage() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://luxorrising.com/#org",
+        "@id": "https://www.luxorrising.com/#org",
         name: "Luxor Rising",
-        url: "https://luxorrising.com",
-        logo: "https://luxorrising.com/images/logo-footer.png",
+        url: "https://www.luxorrising.com",
+        logo: "https://www.luxorrising.com/images/logo-footer.png",
         description:
           "Private concierge and advisor for unhurried, certified-guided experiences in Luxor and the Egyptian Nile.",
         areaServed: "Luxor, Egypt",
@@ -159,9 +159,9 @@ export default async function MedinetHabuPage() {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://luxorrising.com/" },
-          { "@type": "ListItem", position: 2, name: "Experiences", item: "https://luxorrising.com/#experiences" },
-          { "@type": "ListItem", position: 3, name: "Medinet Habu", item: "https://luxorrising.com/medinet-habu" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://www.luxorrising.com/" },
+          { "@type": "ListItem", position: 2, name: "Experiences", item: "https://www.luxorrising.com/#experiences" },
+          { "@type": "ListItem", position: 3, name: "Medinet Habu", item: "https://www.luxorrising.com/medinet-habu" },
         ],
       },
       {
@@ -179,8 +179,8 @@ export default async function MedinetHabuPage() {
           price: String(LIGHT_DAY_RATE),
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
-          url: "https://luxorrising.com/medinet-habu#book",
-          seller: { "@id": "https://luxorrising.com/#org" },
+          url: "https://www.luxorrising.com/medinet-habu#book",
+          seller: { "@id": "https://www.luxorrising.com/#org" },
         },
       },
       {
@@ -189,7 +189,7 @@ export default async function MedinetHabuPage() {
         about: "Medinet Habu temple, Luxor, Egypt",
         associatedMedia: entry.gallery.map((g) => ({
           "@type": "ImageObject",
-          contentUrl: `https://luxorrising.com${g.image}`,
+          contentUrl: `https://www.luxorrising.com${g.image}`,
           caption: g.caption,
         })),
       },

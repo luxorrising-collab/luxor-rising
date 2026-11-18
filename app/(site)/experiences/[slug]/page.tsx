@@ -429,8 +429,8 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
   };
   const momentImage = MOMENT_IMAGE[slug];
 
-  const heroImageUrl = entry.heroImage ? `https://luxorrising.com${entry.heroImage}` : undefined;
-  const galleryImageUrls = entry.gallery.map((g) => `https://luxorrising.com${g.image}`);
+  const heroImageUrl = entry.heroImage ? `https://www.luxorrising.com${entry.heroImage}` : undefined;
+  const galleryImageUrls = entry.gallery.map((g) => `https://www.luxorrising.com${g.image}`);
 
   // Guest reviews also power star ratings in search results. Emitted ONLY once
   // reviewsVerified is true — i.e. every review is a real, attributable guest.
@@ -472,9 +472,9 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://luxorrising.com/" },
-          { "@type": "ListItem", position: 2, name: "Experiences", item: "https://luxorrising.com/experiences" },
-          { "@type": "ListItem", position: 3, name: entry.title, item: `https://luxorrising.com/experiences/${slug}` },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://www.luxorrising.com/" },
+          { "@type": "ListItem", position: 2, name: "Experiences", item: "https://www.luxorrising.com/experiences" },
+          { "@type": "ListItem", position: 3, name: entry.title, item: `https://www.luxorrising.com/experiences/${slug}` },
         ],
       },
       {
@@ -491,7 +491,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
               "@type": "Offer",
               priceSpecification: { "@type": "PriceSpecification", priceCurrency: "EUR" },
               availability: "https://schema.org/LimitedAvailability",
-              url: `https://luxorrising.com/experiences/${slug}#book`,
+              url: `https://www.luxorrising.com/experiences/${slug}#book`,
             }
           : {
               "@type": "Offer",
@@ -499,7 +499,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
               price: String(isLuxorFunnel ? experienceFrom(slug).price : basePrice),
               priceCurrency: "EUR",
               availability: "https://schema.org/InStock",
-              url: `https://luxorrising.com/experiences/${slug}#book`,
+              url: `https://www.luxorrising.com/experiences/${slug}#book`,
             },
       },
       {
@@ -622,7 +622,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
                 minGuests: t.minGuests ?? 0,
                 extraPerGuest: t.extraPerGuest ?? 0,
               }))}
-              depositPercent={pricingRules?.depositPercent ?? 50}
+              depositPercent={pricingRules?.depositPercent ?? 20}
               glanceIncludes={entry.glanceIncludes}
               includeItems={entry.takenCareOf.map((t) => ({ title: t.title, note: t.note || undefined }))}
               feelText={entry.glanceIncludes}

@@ -11,12 +11,17 @@ import {
   experiencesFromNotes,
 } from "@/lib/email";
 import { SITE_URL } from "@/lib/email-template";
+import { BALANCE_DAYS_BEFORE } from "@/lib/payment-policy";
+import { getEurRates } from "@/lib/fx";
 
-// The daily automations run (Vercel Cron, see vercel.json). Secured with
-// CRON_SECRET. Does three things, each idempotent:
-//   1. Balance auto-charge the day before (Hybrid A+B: off-session charge, else
-//      email a secure payment link) and alert the owner on failure.
-//   2. Trip reminder a few days before (once).
+// The daily automations run (Vercel Cron, see vercel.json; 06:00 UTC = 08:00
+// in Luxor). Secured with CRON_SECRET. Each step is idempotent:
+//   1. Balance auto-charge 48 hours before (pay mode "deposit": off-session
+//      charge to the saved card, else email a secure payment link) and alert
+//      the owner on failure. Balances paid locally ("local_due") are never
+//      charged — the concierge collects them on the day.
+//   2. Trip reminder a few days before (once) — for a balance paid locally it
+//      states the amount to have ready, in EUR and indicative EGP / USD.
 //   3. Review request a day or two after (once).
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -86,7 +91,7 @@ export async function GET(req: Request) {
   return Response.json({ ok: true, ...result });
 }
 
-// 1) Balance auto-charge the day before (also catches last-minute bookings).
+// 1) Balance auto-charge 48 hours before (also catches any that are overdue).
 async function chargeBalances(stripe: Stripe, supabase: Supa, result: { due: number; charged: number; linkSent: number; skipped: number }) {
   const { data: due, error } = await supabase
     .from("bookings")
@@ -96,7 +101,7 @@ async function chargeBalances(stripe: Stripe, supabase: Supa, result: { due: num
     .eq("balance_status", "scheduled")
     .gt("balance_cents", 0)
     .not("trip_date", "is", null)
-    .lte("trip_date", dateOffset(1));
+    .lte("trip_date", dateOffset(BALANCE_DAYS_BEFORE));
   if (error) {
     console.error("charge-balances query failed:", error.message);
     return;
@@ -169,7 +174,7 @@ async function chargeBalances(stripe: Stripe, supabase: Supa, result: { due: num
 async function sendReminders(supabase: Supa, result: { reminders: number }) {
   const { data, error } = await supabase
     .from("bookings")
-    .select("id, product_name, trip_date, notes, customers(email,name,phone)")
+    .select("id, product_name, trip_date, notes, pay_mode, balance_cents, balance_status, customers(email,name,phone)")
     .is("reminder_sent_at", null)
     .eq("payment_status", "paid")
     .not("trip_date", "is", null)
@@ -179,6 +184,8 @@ async function sendReminders(supabase: Supa, result: { reminders: number }) {
     console.error("reminders query failed:", error.message);
     return;
   }
+  // Indicative rates, fetched once, only if someone has a balance to pay locally.
+  const fx = (data ?? []).some((b) => b.balance_status === "local_due") ? await getEurRates() : undefined;
   for (const b of data ?? []) {
     const { data: claimed } = await supabase
       .from("bookings")
@@ -195,6 +202,10 @@ async function sendReminders(supabase: Supa, result: { reminders: number }) {
         productName: b.product_name || "your experience",
         tripDate: b.trip_date ?? undefined,
         experiences: experiencesFromNotes(b.notes),
+        payMode: b.pay_mode ?? undefined,
+        balanceStatus: b.balance_status ?? undefined,
+        balanceEur: b.balance_cents ? Math.round(b.balance_cents / 100) : undefined,
+        fx,
       });
       result.reminders++;
     }

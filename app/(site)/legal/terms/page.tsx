@@ -30,7 +30,7 @@ export default function TermsPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Terms &amp; Conditions
           </h1>
-          <p className={styles.updated}>Last updated 2 September 2026</p>
+          <p className={styles.updated}>Last updated 18 November 2026</p>
 
           <p className={styles.lead}>
             These terms govern your booking with Luxor Rising. By reserving an
@@ -66,23 +66,41 @@ export default function TermsPage() {
               booking is confirmed.
             </li>
             <li>
-              You reserve by paying the full price or a 50% deposit; payment,
-              deposits and refunds are governed by our{" "}
+              You reserve by choosing one of three ways to pay: the full price; a
+              20% deposit with the balance charged automatically 48 hours before;
+              or a 20% deposit with the balance paid locally on the day, in cash
+              (euros, Egyptian pounds or US dollars). Payments, deposits,
+              cancellations and refunds are governed by our{" "}
               <Link href="/legal/cancellation">Cancellation &amp; Refunds</Link>{" "}
-              policy.
+              policy, which forms part of these terms.
             </li>
             <li>
-              If you pay a deposit, you authorise us to charge the remaining
-              balance to the same card automatically on the day before your
-              experience; if that charge cannot be completed we email you a secure
-              link to settle it before the day. See our{" "}
+              If you choose the automatic option, you authorise us to charge the
+              remaining balance to the same card automatically 48 hours before your
+              experience, on the date shown at checkout; if that charge cannot be
+              completed we email you a secure link, and the balance must be paid
+              before the experience begins.
+            </li>
+            <li>
+              If you choose to pay the balance locally, you agree to pay it to your
+              concierge, who collects it on our behalf, before the experience begins,
+              at the exchange rate set out in the{" "}
               <Link href="/legal/cancellation">Cancellation &amp; Refunds</Link>{" "}
-              policy for detail.
+              policy. If a balance is not paid by the start, we may decline to begin,
+              and the booking is treated as a late cancellation by you.
+            </li>
+            <li>
+              You can cancel free of charge until 48 hours before the scheduled
+              start; we refund what you have paid less only the costs already
+              committed, including payment-partner costs (card processing,
+              transaction and currency-conversion fees). Within 48 hours, or for a
+              no-show, your deposit or payment becomes non-refundable.
             </li>
             <li>
               Payments are processed by our payment provider (Stripe). We do not
-              store your card details; where you pay a deposit, Stripe securely
-              stores your card so the balance can be taken as above.
+              store your card details; where you choose the automatic option, Stripe
+              securely stores your card so the balance can be taken as above. We keep
+              a record of the option and terms you accepted at checkout.
             </li>
             <li>
               A booking is confirmed only once we have received payment and

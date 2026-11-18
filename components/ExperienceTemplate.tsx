@@ -341,7 +341,7 @@ export default function ExperienceTemplate({
             </div>
             <div className={styles.gf}>
               <span>{isEnquiry ? "Places" : "Cancellation"}</span>
-              {isEnquiry ? "By invitation" : "Free, up to 7 days"}
+              {isEnquiry ? "By invitation" : "Free, until 48 h before"}
             </div>
           </div>
           {/* Only the feel of the day here — "What we take care of" lives once,

@@ -30,7 +30,7 @@ export default function PrivacyPage() {
           <h1 className="display" style={{ margin: ".3rem 0 .5rem" }}>
             Privacy Policy
           </h1>
-          <p className={styles.updated}>Last updated 1 September 2026</p>
+          <p className={styles.updated}>Last updated 18 November 2026</p>
 
           <p className={styles.lead}>
             We collect only what we need to arrange your trip and run the site, we
@@ -60,8 +60,19 @@ export default function PrivacyPage() {
             <li>
               <strong>Payment information</strong> — handled by our payment provider
               (Stripe). We receive confirmation and limited details (such as the
-              amount and last digits), but <strong>we do not store your full card
-              number</strong>.
+              amount, the payment option you chose, the card brand, last four digits
+              and country), but <strong>we never see or store your full card
+              number</strong>. If you choose to pay 20% today with the rest charged
+              automatically, <strong>Stripe stores your card</strong> so the balance
+              can be charged 48 hours before your experience, as you authorised at
+              checkout; it is used only for that balance (or, if it fails, replaced by
+              a secure payment link). If you use Link, Apple Pay or Google Pay, that
+              provider handles your details under its own terms.
+            </li>
+            <li>
+              <strong>Balance paid locally</strong> — if you pay the balance on the
+              day, we record the amount, currency, exchange rate and receipt, so your
+              payment and any refund are accounted for correctly.
             </li>
             <li>
               <strong>Messages</strong> — correspondence you send us by form, email
@@ -85,8 +96,10 @@ export default function PrivacyPage() {
               legitimate interest in responding to you.
             </li>
             <li>
-              <strong>To take payment and prevent fraud</strong> — contract and our
-              (and Stripe&apos;s) legitimate interest.
+              <strong>To take payment, charge an authorised balance and prevent
+              fraud</strong> — performance of our contract with you (including the
+              authorisation you give at checkout) and our (and Stripe&apos;s)
+              legitimate interest in preventing fraud and resolving payment disputes.
             </li>
             <li>
               <strong>To keep records</strong> for tax, accounting and legal
@@ -106,10 +119,15 @@ export default function PrivacyPage() {
             <li>
               <strong>Local partners</strong> who deliver your experience (your
               guide, driver, boat or balloon operator, host) — so they can prepare
-              for your day.
+              for your day. If you pay the balance locally, your concierge also
+              receives the amount to collect.
             </li>
             <li>
-              <strong>Stripe</strong> — to process payments.
+              <strong>Stripe</strong> — to process payments, store your card where you
+              choose the automatic balance, and prevent fraud; card networks and your
+              bank receive what is needed to complete a payment. In a payment dispute
+              we may share your booking details and the terms you accepted with Stripe
+              and your card issuer.
             </li>
             <li>
               <strong>Our hosting, email and messaging providers</strong> — to run
@@ -142,8 +160,9 @@ export default function PrivacyPage() {
             legal, tax and accounting purposes (up to{" "}
             <strong>10</strong> years for financial records, as required by Slovak
             accounting and tax law), after which it is
-            deleted or anonymised. Marketing data is kept until you withdraw consent
-            or it expires.
+            deleted or anonymised. A card stored by Stripe for an automatic balance is
+            no longer used by us once that balance is settled or the booking ends.
+            Marketing data is kept until you withdraw consent or it expires.
           </p>
 
           <h2>Your rights</h2>

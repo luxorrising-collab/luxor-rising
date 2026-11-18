@@ -68,7 +68,7 @@ export default async function ReviewsPage() {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
         name: "Luxor Rising",
-        url: "https://luxorrising.com",
+        url: "https://www.luxorrising.com",
         aggregateRating: {
           "@type": "AggregateRating",
           ratingValue: String(storyAvg),

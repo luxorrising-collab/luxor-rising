@@ -93,7 +93,7 @@ export default async function InsidersGuidePage() {
               headline: featured.entry.title,
               author: { "@type": "Person", name: featuredAuthor },
               datePublished: featured.entry.publishedAt,
-              url: `https://luxorrising.com/insiders-guide/${featured.slug}`,
+              url: `https://www.luxorrising.com/insiders-guide/${featured.slug}`,
             },
           ]
         : []),

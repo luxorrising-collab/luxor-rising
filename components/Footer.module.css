@@ -151,3 +151,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* The ways to pay, at the very bottom (above the space kept for the sticky bar). */
+.pay {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.3rem;
+}

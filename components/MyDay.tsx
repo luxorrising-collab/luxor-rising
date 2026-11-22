@@ -356,8 +356,8 @@ export function MyDayDrawer({
               <Link href={designHref} className={styles.drawerAlt} onClick={close}>
                 Design your day in full
               </Link>
-              {/* straight to the booking: date and payment */}
-              <Link href="/concierge-day#book" className="btn btn-primary" onClick={close}>
+              {/* to the start of the checkout: "Shape it, see the price, reserve." */}
+              <Link href={designHref} className="btn btn-primary" onClick={close}>
                 Reserve your day in 60 seconds →
               </Link>
               <p className={styles.drawerAssure}>

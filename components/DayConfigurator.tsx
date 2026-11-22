@@ -2268,7 +2268,7 @@ export default function DayConfigurator({
                         ) : (
                           <>
                             <b>{euro(tot)}</b>
-                            {group > 1 ? ` · ${euro(Math.round(tot / group))} pp` : " total"}
+                            <span className={styles.dsPosterPp}>{group > 1 ? `${euro(Math.round(tot / group))} pp` : "total"}</span>
                           </>
                         )}
                       </span>

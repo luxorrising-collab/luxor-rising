@@ -5074,8 +5074,10 @@ details[open] > summary .foldChev {
 }
 
 /* the price box holds both promises without spilling; they wrap only if they must */
-.dsStageBody {
-  grid-template-columns: minmax(0, 1fr) 300px;
+@media (min-width: 761px) {
+  .dsStageBody {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
 }
 .dsPromises {
   flex-wrap: wrap;
@@ -5120,5 +5122,75 @@ details[open] > summary .foldChev {
   }
   .dsPoster {
     aspect-ratio: 1 / 1;
+  }
+}
+
+/* phones: no swiping — the three days sit side by side as small cards, all
+   visible at once; the chosen one turns gold and joins the large card below,
+   which stacks its text and price in one comfortable column */
+@media (max-width: 760px) {
+  .dsPosters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    overflow: visible;
+    scroll-snap-type: none;
+    gap: 0.4rem;
+    padding: 0;
+  }
+  .dsPoster {
+    aspect-ratio: 4 / 5;
+    scroll-snap-align: none;
+    border-radius: 12px;
+  }
+  .dsPoster:not(.dsPosterOn) {
+    transform: scale(0.94);
+  }
+  .dsPosterOn,
+  .dsPosterOn:hover {
+    border-radius: 12px 12px 0 0;
+  }
+  .dsPosterTop,
+  .dsPoster .dsEssence,
+  .dsPoster .dsFit {
+    display: none;
+  }
+  .dsPosterBody {
+    padding: 0.55rem 0.45rem 0.6rem;
+    gap: 0.3rem;
+    align-items: flex-start;
+  }
+  .dsPosterLabel {
+    padding: 0.26rem 0.5rem 0.24rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+  .dsPosterPrice {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 0.1rem;
+    padding-top: 0.35rem;
+    font-size: 0.62rem;
+    line-height: 1.3;
+  }
+  .dsPosterPrice b {
+    font-size: 1rem;
+  }
+  .dsStageBody {
+    grid-template-columns: 1fr;
+  }
+  .dsStageTx {
+    max-width: none;
+  }
+}
+
+/* the second price figure: "· €480 pp" beside the total, on its own line on phones */
+.dsPosterPp::before {
+  content: "· ";
+}
+@media (max-width: 760px) {
+  .dsPosterPp::before {
+    content: none;
   }
 }

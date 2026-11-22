@@ -5194,3 +5194,33 @@ details[open] > summary .foldChev {
     content: none;
   }
 }
+
+/* phones: the opened day reads like a product hero — a clear band of photo on
+   top, then the words on deep tint, easy to read */
+@media (max-width: 760px) {
+  .dsOpen .dsStage {
+    background: #140d07;
+  }
+  .dsOpen .dsStage .sigImg {
+    height: 19rem !important;
+    bottom: auto !important;
+  }
+  .dsOpen .dsStage .dsFilmShade {
+    background: linear-gradient(
+      180deg,
+      rgba(14, 9, 5, 0.4) 0,
+      rgba(14, 9, 5, 0) 3.5rem,
+      rgba(14, 9, 5, 0) 10rem,
+      rgba(20, 13, 7, 0.85) 15.5rem,
+      #140d07 19rem,
+      #140d07 100%
+    );
+  }
+  .dsOpen .dsStageBody {
+    padding-top: 14.5rem;
+    gap: 1.2rem;
+  }
+  .dsOpen .dsStageTx {
+    gap: 0.6rem;
+  }
+}

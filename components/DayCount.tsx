@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 
-export type DayCount = 1 | 2 | 3 | 4;
+export type DayCount = 1 | 2 | 3 | 4 | 5;
 
 type Ctx = { days: DayCount; setDays: (d: DayCount) => void };
 

@@ -54,7 +54,7 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
   // ── Concierge day: slug encodes the day count, e.g. concierge-day-3d ──
   const conc = /^concierge-day-(\d+)d$/.exec(input.slug);
   if (conc) {
-    const days = clamp(Number(conc[1]), 1, 4);
+    const days = clamp(Number(conc[1]), 1, 5);
     const guests = clamp(input.guests, 1, 4);
     const dayRate = pricingRules?.dayRate ?? 800;
     const volumeDiscount: VolumeDiscountTier[] = (pricingRules?.volumeDiscount ?? []).map((t) => ({
@@ -77,7 +77,7 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
   //    a lower base rate, e.g. concierge-original-2d ──
   const orig = /^concierge-original-(\d+)d$/.exec(input.slug);
   if (orig) {
-    const days = clamp(Number(orig[1]), 1, 4);
+    const days = clamp(Number(orig[1]), 1, 5);
     const guests = clamp(input.guests, 1, 4);
     const volumeDiscount: VolumeDiscountTier[] = (pricingRules?.volumeDiscount ?? []).map((t) => ({
       minDays: t.minDays ?? 0,
@@ -96,9 +96,13 @@ export async function quoteBooking(input: QuoteInput): Promise<Quote | null> {
   // ── Adventure Light: concierge only, flat per day, e.g. concierge-light-2d ──
   const light = /^concierge-light-(\d+)d$/.exec(input.slug);
   if (light) {
-    const days = clamp(Number(light[1]), 1, 4);
+    const days = clamp(Number(light[1]), 1, 5);
     const guests = clamp(input.guests, 1, 4);
-    let total = lightTotal(days, guests, pricingRules?.lightDayRate ?? LIGHT_DAY_RATE);
+    const volumeDiscount: VolumeDiscountTier[] = (pricingRules?.volumeDiscount ?? []).map((t) => ({
+      minDays: t.minDays ?? 0,
+      discountPercent: t.discountPercent ?? 0,
+    }));
+    let total = lightTotal(days, guests, pricingRules?.lightDayRate ?? LIGHT_DAY_RATE, volumeDiscount);
     if (input.photo) total += PHOTO_PRO;
     if (input.seaTransfer) total += priceMap.get(SEA_TRANSFER_SLUG) ?? SEA_TRANSFER_FALLBACK;
     return { totalCents: Math.round(total) * 100, depositPercent };

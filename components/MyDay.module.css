@@ -613,7 +613,8 @@
   display: block;
   height: 6px;
   border-radius: 2px;
-  background: rgba(227, 207, 164, 0.18);
+  /* a planned day's room for more: a soft gold, so the bar never reads as gaps */
+  background: rgba(201, 160, 99, 0.38);
   overflow: hidden;
 }
 .daySeg i {
@@ -742,7 +743,9 @@
 }
 .daySeg i {
   transform-origin: left center;
-  animation: fillIn 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  /* each day fills in turn, left to right, starting as the one before ends:
+     one continuous sweep (delays set inline, 320 ms apart), no day skipped */
+  animation: fillIn 0.32s linear both;
   transition: width 0.45s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 @keyframes fillIn {
@@ -760,4 +763,35 @@
     animation: none;
     transition: none;
   }
+}
+
+
+/* under the drawer's button: the risk taken away, in one line */
+.drawerAssure {
+  margin: -0.15rem 0 0.2rem;
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--color-gold-soft);
+}
+
+/* "Design your day in full": the empty gold button, as in the header */
+.drawerAlt {
+  display: block;
+  text-align: center;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 2px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background: transparent;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.drawerAlt:hover {
+  background: rgba(201, 160, 99, 0.12);
+  color: var(--color-gold-soft);
 }

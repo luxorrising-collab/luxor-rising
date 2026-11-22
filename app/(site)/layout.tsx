@@ -6,6 +6,7 @@ import ConsentManager from "@/components/consent/ConsentManager";
 import DevComment from "@/components/DevComment";
 import { MyDayDrawer, MyDayNames, MyDayToast } from "@/components/MyDay";
 import { getDayCatalogue } from "@/lib/day-names";
+import SaveDayPrompt from "@/components/SaveDayPrompt";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import JsonLd from "@/components/JsonLd";
 import { reader } from "@/lib/keystatic-reader";
@@ -139,6 +140,8 @@ export default async function RootLayout({
         <MyDayNames names={dayNames} />
         <MyDayToast />
         <MyDayDrawer lines={dayLines} />
+        {/* "Email me my day" — offered on the way out, and from the drawer */}
+        <SaveDayPrompt />
         {process.env.NODE_ENV === "development" && <DevComment />}
       </body>
     </html>

@@ -79,6 +79,13 @@ export default function PrivacyPage() {
               or WhatsApp.
             </li>
             <li>
+              <strong>A saved day</strong> — if you ask us to email you your day, we
+              use your email address and the experiences you picked to send it, and
+              one reminder two days later unless you&apos;ve booked. We add you to the
+              Insider&apos;s letter only if you tick that box, and you can unsubscribe
+              at any time.
+            </li>
+            <li>
               <strong>Usage &amp; marketing data</strong> — only if you consent:
               analytics and advertising identifiers, as described in the{" "}
               <Link href="/legal/cookies">Cookie Policy</Link>.

@@ -9,14 +9,14 @@ import AvailabilityDate from "./AvailabilityDate";
 import { GIFTS, giftsForDays } from "./GiftMarks";
 import { useDayCount } from "./DayCount";
 import { MyDayPicks } from "./MyDay";
-import PaymentChoice, { PaymentReassure, payCta } from "@/components/PaymentChoice";
+import PaymentChoice, { PaymentReassure, payCta, todayEur } from "@/components/PaymentChoice";
 import { DEFAULT_DEPOSIT_PERCENT, payModeAllowed, type PayMode } from "@/lib/payment-policy";
 import { DAY_PICKS_EVENT, planDays as estimateDays, readDayPicks, useMyDay } from "@/lib/my-day";
 import { dayLength } from "@/lib/day-plan";
 import { trackBeginCheckout, trackLead } from "@/lib/analytics";
-import { dayTotal, lightTotal, LIGHT_DAY_RATE, ORIGINAL_DAY_RATE, PHOTO_PRO } from "@/lib/pricing-math";
+import { dayTotal, discountForDays, lightTotal, LIGHT_DAY_RATE, ORIGINAL_DAY_RATE, PHOTO_PRO } from "@/lib/pricing-math";
 
-type DayCount = 1 | 2 | 3 | 4;
+type DayCount = 1 | 2 | 3 | 4 | 5;
 type SignatureJourney = "medinet" | "karnak" | "balloon";
 // "light" = concierge-only (Adventure Light). "reality" = Reality Hunting, the
 // business/land/investment day — bespoke, so it routes to the enquiry path
@@ -96,7 +96,7 @@ const JOURNEY_NOTE =
   "Every Signature day is the full trip, door to door: we collect you from Hurghada, Marsa Alam or the coast, the private car stays with you throughout, and you're brought home at the end. Three hand-picked experiences in any order you like — temples and tombs, a desert sunset picnic or a felucca on the Nile — with your own concierge end to end, insider access and insider knowledge, and introductions to local contacts and businesses a bus never gets. Venture into the desert one day and go anywhere in range the next; just tell your concierge. The full journey holds all ten; add days to unlock more, with a signature gift along the way.";
 const CONSIGLIERE_INTRO =
   "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then go with the flow.";
-const CONSIGLIERE_META = "One temple & a Nile sail · concierge all day · more paid locally";
+const CONSIGLIERE_META = "The must-sees & a Nile sail · concierge all day · more on request";
 
 // Reality Hunting — the business, land & investment day. Bespoke by nature, so
 // it always routes to the private-proposal form, anchored at the €330 day. The copy
@@ -142,6 +142,55 @@ const ORIGINAL_INCLUDED = [
   "A trip out into the desert",
   "Your concierge end to end — driver, planner, translator & fixer, all day",
   "In any order you like, at the quiet hour for each — just tell your concierge",
+];
+// The three days side by side (Adventure, Original, Signature): the heart of
+// each day first, then every line of the Signature day's "Your day, start to
+// finish" and "Also included", marked for all three. Adventure is the must-sees
+// of Luxor; Original and Signature the best of Luxor; Signature adds depth,
+// insider access and private time in the temples. "✓" included, "–" not.
+export type CompareRow = { group: string } | [string, string, string, string];
+export const COMPARE_ROWS: CompareRow[] = [
+  { group: "The heart of each day" },
+  ["The depth of the day", "The must-sees, at your pace", "Luxor without compromise, in depth", "As deep as Luxor goes"],
+  [
+    "What you see",
+    "The must-sees of Luxor, included",
+    "The best of Luxor · the must-sees of Aswan",
+    "The best of Luxor & its hidden gems · the best of Aswan & Hurghada",
+  ],
+  [
+    "Temples & tombs",
+    "Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut, Medinet Habu & Deir el-Shelwit",
+    "All the great temples & tombs of both banks",
+    "All of them, with insider access — and off the beaten path",
+  ],
+  ["Time in the temples", "At the quiet hour", "At the quiet hour, with private moments", "Private space & time — as private as it gets"],
+  { group: "Also included" },
+  ["Door-to-door transfer from the coast — the car stays with you", "✓", "✓", "✓"],
+  ["Airport pickup at Hurghada or Marsa Alam, up to 24 h before", "✓", "✓", "✓"],
+  ["Every monument entry ticket", "The must-sees", "✓", "✓"],
+  ["Your own licensed Egyptologist", "Request locally", "On request, arranged locally", "✓ When you wish"],
+  ["Insider access & knowledge — the doors most never reach", "Request locally", "On request, arranged locally", "✓"],
+  ["A quiet space, not only a quiet hour — as private as Luxor allows", "–", "Private moments", "✓"],
+  ["Moments staged to the light — a proposal, an anniversary", "Request locally", "Request locally", "✓"],
+  ["Signature-only experiences", "–", "–", "✓"],
+  ["Fully hosted — local food & coffee stops", "Paid locally", "✓", "✓"],
+  ["Tips", "Handled by your concierge, paid locally", "Handled by your concierge, paid locally", "Settled — nothing to carry"],
+  ["Your day photographed, on your phone", "✓", "✓", "✓"],
+  ["Your concierge end to end — planner, translator & fixer", "✓", "✓", "✓"],
+  ["A gift to keep", "A small gift", "A gift from your concierge", "The Signature gift collection"],
+  ["Made for the occasion — a honeymoon, a birthday, a milestone", "On request", "On request", "✓"],
+  ["Anything else you wish for — just tell us", "Arranged locally, paid locally", "Arranged locally, paid locally", "✓ We make it happen"],
+  ["Flexible rescheduling — we do our best to move your day", "✓", "✓", "✓"],
+  ["The first two hours, or we refund the rest", "✓", "✓", "✓"],
+  { group: "Your day, start to finish" },
+  ["From the day you book — your concierge on WhatsApp", "✓", "✓", "✓"],
+  ["Pickup at your hotel — Hurghada or Marsa Alam", "✓", "✓", "✓"],
+  ["The road to Luxor — a private car, at your pace", "✓", "✓", "✓"],
+  ["Temples and tombs — each at its quietest hour", "The must-sees", "✓", "✓ + your Egyptologist, if you wish"],
+  ["An unhurried day — food stops, a slow afternoon or the desert", "A food stop · the rest on request", "Local food stops · the desert", "✓"],
+  ["A flexible schedule — stay longer when a place speaks to you", "Within the day's plan", "Within the day's plan", "✓"],
+  ["Home, door to door", "✓", "✓", "✓"],
 ];
 const ORIGINAL_MORE = [
   "The premium tombs — Nefertari, Seti I (KV17) and Tutankhamun — are special tickets, added on request",
@@ -192,9 +241,9 @@ const ORIGINAL_POINTS = [
 ];
 const LIGHT_POINTS = [
   "Door-to-door transfer from the coast — included",
-  "One temple of your choice & a Nile sail — included",
+  "The must-sees: Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut & Medinet Habu — included",
   "Your concierge on the ground all day",
-  "Anything more, paid locally as you go",
+  "Anything more, requested and paid locally",
 ];
 const REALITY_POINTS = [
   "Door-to-door transfer from the coast — included",
@@ -408,13 +457,13 @@ const ORIGINAL_EXPS = [
   { icon: IC.sail, name: "A private felucca on the Nile", desc: "Golden hour on the water." },
   { icon: IC.desert, name: "A trip into the desert", desc: "Out past the fields, into the sand." },
 ];
-// Adventure includes just these two experiences — shown in the same icon + line
-// style as Signature and Original. (The Nile sail is a shared felucca, not private.)
+// Adventure includes the must-sees of Luxor and a Nile sail — shown in the same
+// icon + line style as Signature and Original. (The sail is a shared felucca.)
 const ADVENTURE_EXPS = [
   {
     icon: IC.temple,
-    name: "One temple of your choice",
-    desc: "Any one of Luxor's great temples — entry included, chosen with your concierge on the day.",
+    name: "The must-sees of Luxor",
+    desc: "Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut and Medinet Habu — entries included.",
   },
   {
     icon: IC.sail,
@@ -434,7 +483,7 @@ const SIGNATURE_HANDLED = [
   "Staged moments on request — a proposal, an anniversary, a surprise timed to the light",
   "Every monument entry ticket — nothing to buy, queue for or carry",
   "A full meal and hand-picked local food & coffee stops — where locals actually eat",
-  "Tips included — the quiet gestures that open doors a little wider, all carried for you",
+  "Tips already settled — the quiet gestures that open doors a little wider, nothing to carry",
   "Your day photographed — on your phone from the first moment",
   "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking",
   "A signature gift, hand-picked & locally made, from your first full day",
@@ -459,13 +508,15 @@ const REALITY_LEAD =
   "A full day aimed at one thing: making something real in Egypt. We open the doors, make the introductions in person, and give you a straight local read on every opportunity.";
 
 const MORE_DAYS_MSG =
-  "Five days or more — slower still, and shaped entirely around you. Your concierge sends a private proposal.";
+  "Six days or more — slower still, and shaped entirely around you. Your concierge sends a private proposal.";
 
 // Adventure Light — your own person on the ground. Said plainly, so nobody
 // arrives expecting the Signature day.
 const LIGHT_INCLUDED = [
   "Door-to-door transfer from Hurghada or Marsa Alam — included in the price, and the car stays with you all day",
   "Your own person on the ground — a trusted driver, translator and fixer all day",
+  "Entry to the must-sees — Karnak, Luxor Temple, the Valley of the Kings (three tombs), Hatshepsut and Medinet Habu",
+  "A sail on the Nile at golden hour",
   "Your planner on WhatsApp from the moment you book — the trip mapped out with you before you arrive",
   "Authentic local introductions — hosts, artisans & storytellers you'd never find on your own",
   "A hand-picked local food & coffee stop, on us — where locals actually eat, not the tourist cafés",
@@ -477,7 +528,7 @@ const LIGHT_INCLUDED = [
   "A small gift from your concierge",
 ];
 const LIGHT_LOCAL = [
-  "Beyond the included temple & Nile sail, nothing else is pre-booked — bring local cash and pay for the rest as you go",
+  "Beyond the must-sees and the Nile sail, nothing else is pre-booked — bring local cash and pay for the rest as you go",
   "Any further entry tickets, the experiences you choose and your tips are paid locally, on the day — your concierge handles the how, so it's always smooth and fair",
   "We'll arrange what we can ahead of time, but some things depend on the day and on availability",
 ];
@@ -522,6 +573,7 @@ const IBMSG: Record<DayCount, string> = {
   2: "Two days, still unhurried. The second one is mostly quieter places and more time in each.",
   3: "Three days — the shape we'd choose ourselves, with two things added we think you'll remember.",
   4: "Four days, deliberately slower. Fewer things per day, not more.",
+  5: "Five days at the pace of the river — Luxor in depth, and time to venture further.",
 };
 // A short, persuasive "feel" line over the card's hero shot — tuned to each day
 // count, since the shape (and the case for it) changes as the day grows.
@@ -530,6 +582,7 @@ const FEEL: Record<DayCount, string> = {
   2: "Two unhurried days — the Egypt everyone sees, then the quiet one almost no one does.",
   3: "The three days we'd choose ourselves — with two signature moments, on us.",
   4: "Four slow days — fewer things, far more time, Egypt entirely at your pace.",
+  5: "Five days at the pace of the river — Luxor in depth, and room to venture further.",
 };
 const PRICE_TABLE: [string, number][] = [
   ["Medinet", 170],
@@ -623,7 +676,7 @@ function JourneyProgress({
   moreDays?: boolean;
   hero?: boolean;
 }) {
-  const pct = moreDays ? 100 : (days / 4) * 100;
+  const pct = moreDays ? 100 : Math.min(100, (days / 4) * 100);
   return (
     <div className={`${styles.prog} ${hero ? styles.progHero : ""}`}>
       <div className={styles.progTop}>
@@ -800,8 +853,8 @@ const ADV_SUMMARY_DEFAULT = [
     desc: "trusted driver, translator, negotiator & problem-solver, all day",
   },
   {
-    title: "One temple of your choice & a Nile sail",
-    desc: "a temple entry and a felucca on the Nile — included in the price",
+    title: "The must-sees of Luxor & a Nile sail",
+    desc: "Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut & Medinet Habu, and a felucca — included",
   },
   {
     title: "Door-to-door from the coast",
@@ -851,13 +904,13 @@ const DEFAULT_CARDS = {
     summary: ORIG_SUMMARY_DEFAULT,
   },
   adventure: {
-    tier: "Concierge only",
-    kicker: "Temple & sail included",
+    tier: "The must-sees of Luxor",
+    kicker: "The must-sees included",
     title: "Adventure",
     hook: CONSIGLIERE_INTRO,
     points: LIGHT_POINTS,
     meta: CONSIGLIERE_META,
-    priceNote: "1–4 guests · local costs extra",
+    priceNote: "1–4 guests · extras paid locally",
     lead: LIGHT_LEAD,
     expLede: "",
     experiences: ADVENTURE_EXPS,
@@ -952,6 +1005,8 @@ export type DayConfiguratorImages = {
   journeyLight?: string;
   journeyReality?: string;
   journeyOriginal?: string;
+  /** Your concierge, face on — the Adventure card's picture. */
+  concierge?: string;
   sunsetNile?: string;
   sunsetPicnic?: string;
   sunsetCustom?: string;
@@ -986,6 +1041,8 @@ type DayConfiguratorProps = {
   dayFlow?: DayFlowStep[];
   /** Closing lines under the steps (e.g. off the beaten track, coming from Cairo). */
   dayFlowNotes?: { h: string; p: string }[];
+  /** Each experience's own opening lines (slug → text), for "Read more" in step 1. */
+  expPreviews?: Record<string, string>;
 };
 
 export default function DayConfigurator({
@@ -1011,11 +1068,24 @@ export default function DayConfigurator({
   cards,
   dayFlow = [],
   dayFlowNotes = [],
+  expPreviews = {},
 }: DayConfiguratorProps) {
   // Resolve each card's copy: CMS value where set, built-in default otherwise.
   const SIG = resolveCard(cards?.signature, DEFAULT_CARDS.signature);
   const ORIG = resolveCard(cards?.original, DEFAULT_CARDS.original);
   const ADV = resolveCard(cards?.adventure, DEFAULT_CARDS.adventure);
+  // Original and Adventure list every Signature experience, each marked as
+  // included in that day or not (requested and paid locally on the day), so
+  // the three days compare line by line instead of showing different lists.
+  const NOT_INCLUDED = "Not included · request locally";
+  const fullList = (tier: ResolvedExp[], onlyIncludedTag: boolean): ResolvedExp[] =>
+    SIG.experiences.map((e) => {
+      const t = e.slug ? tier.find((x) => x.slug === e.slug) : undefined;
+      const inc = !!t && (!onlyIncludedTag || t.tag === "Included");
+      return { ...e, tag: inc ? "Included" : NOT_INCLUDED };
+    });
+  const ORIG_ALL = fullList(ORIG.experiences, false);
+  const ADV_ALL = fullList(ADV.experiences, true);
   // Build the WhatsApp link from the configured number (digits only, no leading
   // 00). If none is set, the CTA points at the enquiry form — never a dead link.
   const waDigits = whatsappNumber.replace(/\D/g, "").replace(/^00/, "");
@@ -1064,6 +1134,7 @@ export default function DayConfigurator({
     journeyReality: images.journeyReality || "/images/villas/luxor-nile-terrace.jpg",
     // The iconic sightseeing shot for Original — Karnak at dawn.
     journeyOriginal: images.journeyOriginal || "/images/experiences/karnak-at-dawn-hero.jpg",
+    concierge: images.concierge || "/images/hosts/consigliereImage.jpg",
   };
   const journeyImg = (j: Journey) =>
     j === "medinet"
@@ -1087,7 +1158,7 @@ export default function DayConfigurator({
   // The visitor's picks from across the site ("add to my day").
   const myDay = useMyDay();
   const planDays = (n: number) => {
-    if (n <= 4) {
+    if (n <= 5) {
       setMoreDays(false);
       setDays(n as DayCount);
     } else {
@@ -1119,6 +1190,8 @@ export default function DayConfigurator({
   const [group, setGroup] = useState(2);
   // Which brochures show their whole experience list (first EXP_FIRST otherwise).
   const [expAll, setExpAll] = useState<Record<string, boolean>>({});
+  // The step-1 tile whose "Read more" preview is open.
+  const [preview, setPreview] = useState<string | null>(null);
   const [journey, setJourney] = useState<Journey>("medinet");
   // Which card's detail panel is open. Nothing is expanded until the guest taps a
   // card; selecting (for the booking summary) and expanding happen on that tap.
@@ -1152,7 +1225,7 @@ export default function DayConfigurator({
   const [bigGroup, setBigGroup] = useState(false);
   const [bigGroupCount, setBigGroupCount] = useState(6);
   const [moreDays, setMoreDays] = useState(false);
-  const [moreDaysCount, setMoreDaysCount] = useState(5);
+  const [moreDaysCount, setMoreDaysCount] = useState(6);
   const proposal = bigGroup || moreDays || isReality;
   const [eq, setEq] = useState({ name: "", email: "", phone: "", message: "" });
   const [eqSent, setEqSent] = useState(false);
@@ -1162,6 +1235,8 @@ export default function DayConfigurator({
   const [dateError, setDateError] = useState(false);
   const [bdOpen, setBdOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
+  // Which comparison sections are unfolded (the heart of each day, to start).
+  const [cmpOpen, setCmpOpen] = useState<Record<string, boolean>>({ "The heart of each day": true });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [agreed, setAgreed] = useState(false);
@@ -1188,7 +1263,7 @@ export default function DayConfigurator({
       : isOriginal
         ? dayTotal(d, group, ORIGINAL_RATE, volumeDiscount, groupSupplement)
         : conc
-          ? lightTotal(d, group, lightDayRate)
+          ? lightTotal(d, group, lightDayRate, volumeDiscount)
           : dayTotal(d, group, dayRate, volumeDiscount, groupSupplement);
   const total = baseTotal(days) + addonsCost();
 
@@ -1226,7 +1301,7 @@ export default function DayConfigurator({
       if (photo) extras.push("Private photographer / videographer for your day");
       return {
         start: [] as PlanItem[],
-        startTitle: "Adventure · concierge only",
+        startTitle: "Adventure · the must-sees of Luxor",
         pool: [] as PlanItem[],
         bonus: [] as PlanItem[],
         handled: [...extras, ...LIGHT_INCLUDED] as PlanItem[],
@@ -1306,7 +1381,7 @@ export default function DayConfigurator({
     handled.push(
       "A full meal and hand-picked local food & coffee stops — where locals actually eat"
     );
-    handled.push("Tips included — the quiet gestures that open doors a little wider, all carried for you");
+    handled.push("Tips already settled — the quiet gestures that open doors a little wider, nothing to carry");
     handled.push("Your concierge on WhatsApp — before you arrive & all day");
 
     return {
@@ -1381,7 +1456,7 @@ export default function DayConfigurator({
         : isOriginal
           ? "Original (the full sightseeing day — entries, felucca & desert included)"
           : isLight
-            ? "Adventure (concierge only — one temple of choice & a Nile sail included)"
+            ? "Adventure (the must-sees of Luxor — Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut & Medinet Habu — and a Nile sail included)"
             : "Signature (full guided day — the best of Luxor your choice, insider access, Egyptologist, balloon & a gift)",
       withPicks && myDay.picks.length
         ? `Your experiences (${myDay.picks.length}, about ${myDay.days} day${myDay.days > 1 ? "s" : ""}): ${myDay.picks.map((p) => p.name).join(" / ")}`
@@ -1441,9 +1516,19 @@ export default function DayConfigurator({
 
   // The sticky "Reserve": the next step the guest hasn't answered, then the date,
   // then the booking column. Each target gets a short gold highlight.
+  // Jump to a step (the progress rail, the "Change" links in your summary).
+  function jumpTo(step: string) {
+    const el =
+      step === "book" ? document.getElementById("book") : document.querySelector<HTMLElement>(`[data-step="${step}"]`);
+    if (!el) return;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: "smooth" });
+  }
+
   function goToNextStep(e: React.MouseEvent) {
     e.preventDefault();
-    const next = !touched.card ? "card" : !touched.guests ? "guests" : !touched.days ? "days" : !tripDate ? "date" : "book";
+    // The order the page asks: who's coming, how long, the day, the date, then reserve.
+    // (Picks are optional — the guest can skip them.)
+    const next = !touched.guests ? "guests" : !touched.days ? "days" : !touched.card ? "card" : !tripDate ? "date" : "book";
     const el =
       next === "date"
         ? dateFieldRef.current
@@ -1621,6 +1706,85 @@ export default function DayConfigurator({
   // A card's expansion — the brochure. No hero or title (the card above is the
   // header), so it reads as one continuous card: a lead line, the experiences
   // included, everything handled, and any honest caveats — each with a symbol.
+  // ── Step 3: what you'd love to see first, then the day that holds it ──────
+  type CardKey = "light" | "original" | "signature";
+  const selKey: CardKey | "reality" = isLight ? "light" : isOriginal ? "original" : isReality ? "reality" : "signature";
+  const TIER_CARDS: {
+    key: CardKey;
+    j: Journey;
+    c: ResolvedCard;
+    all: ResolvedExp[];
+    rate: number;
+    img: string;
+    /** Where the picture's subject sits, so every crop keeps it in frame. */
+    pos: string;
+    essence: string;
+  }[] = [
+    {
+      key: "light",
+      j: "light",
+      c: ADV,
+      all: ADV_ALL,
+      rate: lightDayRate,
+      img: img.journeyLight,
+      pos: "50% 30%",
+      essence: "The must-sees of Luxor, included",
+    },
+    {
+      key: "original",
+      j: "original",
+      c: ORIG,
+      all: ORIG_ALL,
+      rate: ORIGINAL_RATE,
+      img: img.journeyOriginal,
+      pos: "50% 50%",
+      essence: "The best of Luxor, without compromise",
+    },
+    {
+      key: "signature",
+      j: "medinet",
+      c: SIG,
+      all: SIG.experiences,
+      rate: dayRate,
+      img: img.journeyMedinet,
+      pos: "50% 50%",
+      essence: "Luxor in depth — as private as it gets",
+    },
+  ];
+  // Each card's own price for the guests and days chosen above (before add-ons).
+  const tierTotal = (key: CardKey) =>
+    key === "original"
+      ? dayTotal(days, group, ORIGINAL_RATE, volumeDiscount, groupSupplement)
+      : key === "light"
+        ? lightTotal(days, group, lightDayRate, volumeDiscount)
+        : dayTotal(days, group, dayRate, volumeDiscount, groupSupplement);
+  // Which column of the comparison each day reads from.
+  const CMP_COL: Record<CardKey, 1 | 2 | 3> = { light: 1, original: 2, signature: 3 };
+  const CMP_COUNT: Record<string, number> = {};
+  {
+    let g = "";
+    for (const r of COMPARE_ROWS) {
+      if ("group" in r) g = r.group;
+      else CMP_COUNT[g] = (CMP_COUNT[g] ?? 0) + 1;
+    }
+  }
+  // Is this experience part of that day? Signature holds every one.
+  const inCard = (t: (typeof TIER_CARDS)[number], slug: string) =>
+    t.key === "signature" || t.all.some((e) => e.slug === slug && e.tag === "Included");
+  const tileExps = SIG.experiences.filter((e) => e.slug);
+  const pickedExps = tileExps.filter((e) => myDay.has(e.slug!));
+  // Picks first; everything else after, tinted, until you reach for it.
+  const tileOrder = [...pickedExps, ...tileExps.filter((e) => !myDay.has(e.slug!))];
+  const tilesShown = expAll.picks ? tileOrder : tileOrder.slice(0, Math.max(EXP_FIRST, pickedExps.length));
+  // A step counts as answered once the guest has made the choice themselves.
+  const picksDone = myDay.picks.length > 0;
+  const partyDone = touched.guests && touched.days;
+  const chooseCard = (key: CardKey, j: Journey) => {
+    touch("card");
+    setJourney(j);
+    setExpanded(key);
+  };
+
   const renderBrochure = (opts: {
     /** Which card this is, so each remembers its own "Show all". */
     id: string;
@@ -1638,7 +1802,9 @@ export default function DayConfigurator({
         {opts.experiences && opts.experiences.length > 0 && (
           <div className={styles.expBlock}>
             <span className={styles.expEyebrow}>
-              {opts.experiences.some((e) => e.tag === "Paid locally") ? "What your day can hold" : "Experiences included"}
+              {opts.experiences.some((e) => e.tag === "Paid locally" || e.tag === NOT_INCLUDED)
+                ? "What your day can hold"
+                : "Experiences included"}
             </span>
             {opts.expLede && <p className={styles.expLede}>{opts.expLede}</p>}
             {opts.experiences.some((e) => e.group) ? (
@@ -1773,200 +1939,521 @@ export default function DayConfigurator({
     <>
       <div className={styles.cfgGrid}>
         <div>
-          {/* Step 1: the feel of the day — the dream first, the logistics after */}
-          <div className={styles.step} data-step="card">
+          {/* Where you are — four short steps, each ticks as you answer it */}
+          <ol className={styles.dsRail} aria-label="Your progress">
+            {(
+              [
+                ["picks", "What you'd love", picksDone],
+                ["guests", "Who & how long", partyDone],
+                ["card", "Your day", touched.card],
+                ["book", "Reserve", false],
+              ] as const
+            ).map(([k, label, done], i) => (
+              <li key={k} className={done ? styles.dsRailOn : ""}>
+                <button type="button" onClick={() => jumpTo(k)}>
+                  <span aria-hidden>{done ? "✓" : i + 1}</span>
+                  {label}
+                </button>
+              </li>
+            ))}
+          </ol>
+
+          {/* Step 1: what you'd love to see — the same full cards as the gallery above */}
+          <div className={styles.step} data-step="picks">
             <div className={styles.stepH}>
-              <div className={styles.stepN}>1</div>
-              <h3>What should your day feel like?</h3>
+              <div className={`${styles.stepN} ${picksDone ? styles.stepDone : ""}`} aria-hidden>
+                {picksDone ? "✓" : 1}
+              </div>
+              <h3>What would you love to experience?</h3>
             </div>
             <p className={styles.prefNote}>
-              Three ways to spend the day. Tap any card to open exactly what&apos;s included.
+              Tap what you&apos;d love to experience. Your picks lead and the days follow. Not sure yet? Skip ahead;
+              your concierge shapes the day with you.
             </p>
+            <div className={styles.dsDark}>
+              <MyDayPicks onPlanDays={planDays} currentDays={moreDays ? moreDaysCount : days} />
+              <div className={styles.expTiles}>
+                {tilesShown.map((e) => {
+                  const on = myDay.has(e.slug!);
+                  const open = preview === e.slug;
+                  return (
+                    <div key={e.slug} className={`${styles.expTile} ${on ? styles.expTileOn : styles.dsShadow} ${open ? styles.dsTileOpen : ""}`}>
+                      <Image src={`/images/cards/tile/${e.slug}.jpg`} alt="" fill unoptimized loading="lazy" />
+                      <span className={styles.expTileScrim} aria-hidden />
+                      {/* the whole tile adds it to your day */}
+                      <button
+                        type="button"
+                        className={styles.dsTileHit}
+                        aria-pressed={on}
+                        aria-label={`${on ? "Remove" : "Add"} ${e.name} ${on ? "from" : "to"} your day`}
+                        onClick={() => myDay.toggle({ slug: e.slug!, name: e.name })}
+                      />
+                      {e.tag === "Signature" && <span className={`${styles.expTileSig} ${styles.dsSigTag}`}>Signature</span>}
+                      <span className={styles.expTileAdd} aria-hidden>
+                        {on ? "✓ In your day" : "+ Add"}
+                      </span>
+                      <span className={`${styles.expTileTx} ${styles.dsTileTx}`}>
+                        <span className={styles.expTileName}>{e.name}</span>
+                        {e.desc && <span className={styles.expTileLine}>{e.desc}</span>}
+                        {(e.place || dayLength(e.slug!)) && (
+                          <span className={styles.expTilePlace}>
+                            {[e.place, e.place !== "4 days" ? dayLength(e.slug!) : null].filter(Boolean).join(" · ")}
+                          </span>
+                        )}
+                        <button type="button" className={styles.dsReadMore} aria-expanded={open} onClick={() => setPreview(e.slug!)}>
+                          Read more
+                        </button>
+                      </span>
+                      {/* the preview: the experience's own words, right here on the tile */}
+                      {open && (
+                        <div className={styles.dsPreview} role="dialog" aria-label={e.name}>
+                          <button type="button" className={styles.dsPreviewX} aria-label="Close" onClick={() => setPreview(null)}>
+                            ×
+                          </button>
+                          <span className={styles.expTileName}>{e.name}</span>
+                          {e.tag === "Signature" && <span className={styles.dsPreviewSig}>Signature experience</span>}
+                          <p>{expPreviews[e.slug!] || e.desc}</p>
+                          <button
+                            type="button"
+                            className={`${styles.dsPreviewAdd} ${on ? styles.dsPreviewAddOn : ""}`}
+                            onClick={() => myDay.toggle({ slug: e.slug!, name: e.name })}
+                          >
+                            {on ? "✓ In your day" : "+ Add to my day"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              {tileOrder.length > tilesShown.length ? (
+                <button
+                  type="button"
+                  className={styles.dsMore}
+                  onClick={() => setExpAll((m) => ({ ...m, picks: true }))}
+                >
+                  Show all {tileOrder.length} experiences
+                </button>
+              ) : (
+                <Link className={styles.dsMore} href="/experiences">
+                  Explore every experience →
+                </Link>
+              )}
+            </div>
+          </div>
 
-            {/* 1 · Signature — one card, no shape variants. Tap to open its dark
-                detail panel in the checkout-summary style. */}
-            <div
-              role="button"
-              tabIndex={0}
-              aria-pressed={!conc}
-              aria-label="Signature — a full guided day"
-              className={`${styles.sigCard} ${styles.sigCardWide} ${!conc ? styles.sigOn : ""} ${
-                expanded === "signature" ? styles.sigOpen : ""
-              }`}
-              onClick={() => pickCard("signature", "medinet")}
-              onKeyDown={(e) => pickKey(e, () => pickCard("signature", "medinet"))}
-            >
-              <Image
-                src={img.journeyMedinet}
-                alt=""
-                fill
-                sizes="(max-width: 560px) 100vw, 860px"
-                className={styles.sigImg}
+          {/* Step 2: who's coming and for how long — small answers first, so every day card
+              below can show its real price.
+              5+ guests or 5+ days turn the checkout into a private proposal. */}
+          <div className={styles.step} data-step="guests">
+            <div className={styles.stepH}>
+              <div className={`${styles.stepN} ${partyDone ? styles.stepDone : ""}`} aria-hidden>
+                {partyDone ? "✓" : 2}
+              </div>
+              <h3>Who&apos;s coming, and for how long?</h3>
+            </div>
+            <span className={styles.dsPartH}>Who&apos;s coming</span>
+            <div className={styles.grpOpts}>
+              {[1, 2, 3, 4].map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  aria-pressed={!bigGroup && group === g}
+                  className={`${styles.grp} ${!bigGroup && group === g ? styles.sel : ""}`}
+                  onClick={() => {
+                    touch("guests");
+                    setGroup(g);
+                    setBigGroup(false);
+                  }}
+                >
+                  {g === 1 ? "Just me" : g === 2 ? "Two of us" : g === 3 ? "Three of us" : "Four of us"}
+                </button>
+              ))}
+              <button
+                type="button"
+                aria-pressed={bigGroup}
+                className={`${styles.grp} ${bigGroup ? styles.sel : ""}`}
+                onClick={() => {
+                  touch("guests");
+                  setBigGroup(true);
+                }}
+              >
+                5 or more
+              </button>
+            </div>
+            {bigGroup && (
+              <Stepper
+                label="How many of you?"
+                value={bigGroupCount}
+                min={5}
+                max={60}
+                onChange={setBigGroupCount}
               />
-              <span className={styles.sigShade} aria-hidden />
-              <div className={styles.sigTop}>
-                <span className={styles.sigTier}>{SIG.tier}</span>
-                {!conc ? (
-                  <span className={styles.sigChosen}>✓ Selected</span>
-                ) : (
-                  <span className={styles.sigSave}>See details ↓</span>
-                )}
-              </div>
-              <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>{SIG.kicker}</span>
-                <h4 className={styles.sigPlace}>{SIG.title}</h4>
-                <p className={styles.sigHook}>{SIG.hook}</p>
-                <ul className={styles.sigPoints}>
-                  {SIG.points.map((p) => (
-                    <li key={p}>{p}</li>
-                  ))}
-                </ul>
-                <span className={styles.sigMeta}>{SIG.meta}</span>
-                <div className={styles.sigFoot}>
-                  <span className={styles.sigPrice}>
-                    <small>from</small> {euro(dayRate)}
-                    <small>/day</small>
-                  </span>
-                  <span className={styles.sigNote}>{SIG.priceNote}</span>
-                </div>
-              </div>
+            )}
+            <div className={styles.grpNote}>
+              {bigGroup
+                ? "Groups of five or more are arranged personally — your checkout becomes a short request, and your concierge replies within 24 hours with a private proposal."
+                : isReality
+                  ? "Coming alone, or with partners, advisors or family? Add them — we'll shape the day around who's at the table."
+                  : group > 1
+                    ? `${euro(perPerson)} per person — adding guests lowers the per-person rate.${isLight ? " Local costs are extra." : ""}`
+                    : isLight
+                      ? "Travelling with others? Add them — the per-person rate drops. Local costs are paid on the day."
+                      : "Travelling with your partner or friends? Add them — the per-person price drops."}
             </div>
-
-            {expanded === "signature" &&
-              renderBrochure({
-                id: "signature",
-                lead: SIG.lead,
-                experiences: SIG.experiences,
-                groupDescs: SIG.groupDescs,
-                expLede: SIG.expLede,
-                included: SIG.included,
-                caveats: { label: SIG.caveatsLabel, items: SIG.caveats },
-                note: SIG.note,
+            <div className={styles.dsPart} data-step="days">
+              <span className={styles.dsPartH}>How many days</span>
+            {myDay.days > 0 && (
+              <p className={styles.daysHint}>
+                Set to {myDay.days} day{myDay.days > 1 ? "s" : ""} for your {myDay.picks.length} pick
+                {myDay.picks.length > 1 ? "s" : ""}: three to four experiences a day is the right pace. Change it any
+                time.
+              </p>
+            )}
+            {myDay.days > (moreDays ? moreDaysCount : days) && (
+              <p className={styles.daysWarn} role="status">
+                {myDay.picks.length} experiences need about {myDay.days} days at the right pace. In{" "}
+                {moreDays ? moreDaysCount : days} day{(moreDays ? moreDaysCount : days) > 1 ? "s" : ""}{" "}
+                there
+                isn&apos;t time for all of them: choose{" "}
+                {myDay.days > 5 ? "6+ days" : `${myDay.days} days`}, or your concierge will help you keep the
+                ones that matter most.
+              </p>
+            )}
+            <div className={styles.daysGrid}>
+              {([1, 2, 3, 4, 5] as DayCount[]).map((d) => {
+                const on = !moreDays && days === d;
+                return (
+                  <button
+                    type="button"
+                    key={d}
+                    aria-pressed={on}
+                    className={`${styles.dayTile} ${on ? styles.sel : ""} ${d < myDay.days ? styles.dayShort : ""}`}
+                    onClick={() => {
+                      touch("days");
+                      setDays(d);
+                      setMoreDays(false);
+                    }}
+                  >
+                    {myDay.days > 0 ? (
+                      d === myDay.days && <span className={styles.pop}>For your picks</span>
+                    ) : (
+                      d === 3 && !conc && <span className={styles.pop}>Most popular</span>
+                    )}
+                    <div className={styles.dn}>
+                      {d} {d > 1 ? "days" : "day"}
+                    </div>
+                    {/* no price yet: it comes with the kind of day, in the next step */}
+                    <div className={styles.dsave}>
+                      {d === 1
+                        ? "a single day"
+                        : discountForDays(d, volumeDiscount) > 0
+                          ? `${discountForDays(d, volumeDiscount)}% off every day`
+                          : " "}
+                    </div>
+                  </button>
+                );
               })}
-
-            {/* 2 · Original — the full sightseeing day, entries included. */}
-            <div className={styles.cardsOr}>
-              <span>or</span>
+              <button
+                type="button"
+                aria-pressed={moreDays}
+                className={`${styles.dayTile} ${styles.dayTileMore} ${moreDays ? styles.sel : ""}`}
+                onClick={() => {
+                  touch("days");
+                  setMoreDays(true);
+                  setDays(5);
+                }}
+              >
+                {myDay.days > 5 && <span className={styles.pop}>For your picks</span>}
+                <div className={styles.dn}>6+ days</div>
+                <div className={`${styles.dp} ${styles.dpWord}`}>Tailored</div>
+                <div className={styles.dsave}>a private proposal</div>
+              </button>
             </div>
-            <div
-              role="button"
-              tabIndex={0}
-              aria-pressed={isOriginal}
-              aria-label="Original — the full sightseeing day, entries included"
-              className={`${styles.sigCard} ${styles.sigCardWide} ${isOriginal ? styles.sigOn : ""} ${
-                expanded === "original" ? styles.sigOpen : ""
-              }`}
-              onClick={() => pickCard("original", "original")}
-              onKeyDown={(e) => pickKey(e, () => pickCard("original", "original"))}
-            >
-              <Image
-                src={img.journeyOriginal}
-                alt=""
-                fill
-                sizes="(max-width: 560px) 100vw, 860px"
-                className={styles.sigImg}
+            {moreDays && (
+              <Stepper
+                label="How many days?"
+                value={moreDaysCount}
+                min={6}
+                max={30}
+                onChange={setMoreDaysCount}
               />
-              <span className={styles.sigShade} aria-hidden />
-              <div className={styles.sigTop}>
-                <span className={styles.sigTier}>{ORIG.tier}</span>
-                {isOriginal ? (
-                  <span className={styles.sigChosen}>✓ Selected</span>
-                ) : (
-                  <span className={styles.sigSave}>See details ↓</span>
-                )}
+            )}
+            {conc ? (
+              <div className={styles.grpNote}>
+                {isReality
+                  ? moreDays
+                    ? "A longer engagement — we'll scope it with you and send a plan and a price."
+                    : "Each day is a full day given to your business — book as many as the deal needs."
+                  : moreDays
+                    ? "A longer trip with your concierge — we'll plan it with you and send a proposal."
+                    : "Each day: your concierge from pickup to the end of the day. Book as many as your trip needs."}
               </div>
-              <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>{ORIG.kicker}</span>
-                <h4 className={styles.sigPlace}>{ORIG.title}</h4>
-                <p className={styles.sigHook}>{ORIG.hook}</p>
-                <ul className={styles.sigPoints}>
-                  {ORIG.points.map((p) => (
-                    <li key={p}>{p}</li>
-                  ))}
-                </ul>
-                <span className={styles.sigMeta}>{ORIG.meta}</span>
-                <div className={styles.sigFoot}>
-                  <span className={styles.sigPrice}>
-                    <small>from</small> {euro(ORIGINAL_RATE)}
-                    <small>/day</small>
-                  </span>
-                  <span className={styles.sigNote}>{ORIG.priceNote}</span>
-                </div>
+            ) : (
+              <div className={styles.daySummary}>
+                <JourneyProgress
+                  days={days}
+                  expCount={expCount}
+                  giftCount={giftCount}
+                  bonusCount={sigbCount}
+                  moreDays={moreDays}
+                />
+                <p className={styles.dayNoteMsg}>{moreDays ? MORE_DAYS_MSG : IBMSG[days]}</p>
               </div>
+            )}
             </div>
+          </div>
 
-            {expanded === "original" &&
-              renderBrochure({
-                id: "original",
-                lead: ORIG.lead,
-                experiences: ORIG.experiences,
-                expLede: ORIG.expLede,
-                included: ORIG.included,
-                caveats: { label: ORIG.caveatsLabel, items: ORIG.caveats },
-                note: ORIG.note,
+          {/* Step 3: how the day should feel — three depths of the same day, priced for
+              the guests and days above */}
+          <div className={styles.step} data-step="card">
+            <div className={styles.stepH}>
+              <div className={`${styles.stepN} ${touched.card ? styles.stepDone : ""}`} aria-hidden>
+                {touched.card ? "✓" : 3}
+              </div>
+              <h3>How should your day feel?</h3>
+            </div>
+            <p className={styles.prefNote}>
+              Three depths of the same day. Choose one; you can switch any time before you reserve.
+            </p>
+            {/* The three days as posters — tap one; what it holds opens once, underneath */}
+            <div className={styles.dsPosters} role="radiogroup" aria-label="Choose your day">
+              {TIER_CARDS.map((t) => {
+                const on = selKey === t.key;
+                const n = pickedExps.filter((e) => inCard(t, e.slug!)).length;
+                const of = pickedExps.length;
+                const tot = tierTotal(t.key);
+                return (
+                  <div
+                    key={t.key}
+                    role="radio"
+                    tabIndex={0}
+                    aria-checked={on}
+                    aria-label={`${t.c.title} — ${proposal ? `from ${euro(t.rate)} a day` : `${euro(tot)} in total`}`}
+                    className={`${styles.sigCard} ${styles.dsPoster} ${on ? `${styles.sigOn} ${styles.dsPosterOn}` : styles.dsTierOff}`}
+                    onClick={() => chooseCard(t.key, t.j)}
+                    onKeyDown={(e) => pickKey(e, () => chooseCard(t.key, t.j))}
+                  >
+                    <Image
+                      src={t.img}
+                      alt=""
+                      fill
+                      sizes="(max-width: 760px) 80vw, 290px"
+                      className={`${styles.sigImg} ${styles.dsPosterImg}`}
+                      style={{ objectPosition: on ? "50% 0%" : t.pos }}
+                    />
+                    <span className={`${styles.sigShade} ${styles.dsPosterShade}`} aria-hidden />
+                    <div className={`${styles.sigTop} ${styles.dsPosterTop}`}>
+                      {on ? (
+                        <span className={styles.sigChosen}>✓ Selected</span>
+                      ) : (
+                        <span className={styles.dsChoose}>Choose</span>
+                      )}
+                    </div>
+                    <div className={styles.dsPosterBody}>
+                      <h4 className={styles.dsPosterLabel}>{t.c.title}</h4>
+                      <p className={styles.dsEssence}>{t.c.kicker}</p>
+                      {of > 0 && (
+                        <span className={`${styles.dsFit} ${n === of ? styles.dsFitAll : ""}`}>
+                          {n === of
+                            ? `✓ ${of === 1 ? "Your pick" : `All ${of} of your picks`} included`
+                            : `${n} of ${of} picks included`}
+                        </span>
+                      )}
+                      <span className={styles.dsPosterPrice}>
+                        {proposal ? (
+                          <>
+                            <b>from {euro(t.rate)}</b> a day
+                          </>
+                        ) : (
+                          <>
+                            <b>{euro(tot)}</b>
+                            {group > 1 ? ` · ${euro(Math.round(tot / group))} pp` : " total"}
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                );
               })}
-
-            {/* 3 · Adventure Light — concierge only, pay as you go. */}
-            <div className={styles.cardsOr}>
-              <span>or</span>
             </div>
-            <div
-              role="button"
-              tabIndex={0}
-              aria-pressed={isLight}
-              aria-label="Adventure — concierge only"
-              className={`${styles.sigCard} ${styles.sigCardWide} ${isLight ? styles.sigOn : ""} ${
-                expanded === "light" ? styles.sigOpen : ""
-              }`}
-              onClick={() => pickCard("light", "light")}
-              onKeyDown={(e) => pickKey(e, () => pickCard("light", "light"))}
-            >
-              <Image
-                src={img.journeyLight}
-                alt=""
-                fill
-                sizes="(max-width: 560px) 100vw, 860px"
-                className={styles.sigImg}
-              />
-              <span className={styles.sigShade} aria-hidden />
-              <div className={styles.sigTop}>
-                <span className={styles.sigTier}>{ADV.tier}</span>
-                {isLight ? (
-                  <span className={styles.sigChosen}>✓ Selected</span>
-                ) : (
-                  <span className={styles.sigSave}>See details ↓</span>
-                )}
-              </div>
-              <div className={styles.sigBody}>
-                <span className={styles.sigKicker}>{ADV.kicker}</span>
-                <h4 className={styles.sigPlace}>{ADV.title}</h4>
-                <p className={styles.sigHook}>{ADV.hook}</p>
-                <ul className={styles.sigPoints}>
-                  {ADV.points.map((p) => (
-                    <li key={p}>{p}</li>
-                  ))}
-                </ul>
-                <span className={styles.sigMeta}>{ADV.meta}</span>
-                <div className={styles.sigFoot}>
-                  <span className={styles.sigPrice}>
-                    <small>from</small> {euro(lightDayRate)}
-                    <small>/day</small>
-                  </span>
-                  <span className={styles.sigNote}>{ADV.priceNote}</span>
+
+            {/* The chosen day, large — under its poster, as before; then what it holds and the comparison */}
+            {(() => {
+              const idx = Math.max(0, TIER_CARDS.findIndex((x) => x.key === selKey));
+              const t = TIER_CARDS[idx];
+              const n = pickedExps.filter((e) => inCard(t, e.slug!)).length;
+              const of = pickedExps.length;
+              const tot = tierTotal(t.key);
+              const dep = todayEur("deposit", tot, depositPercent);
+              return (
+                <div className={styles.dsOpen}>
+                  <span className={styles.dsPointer} style={{ left: `${((idx * 2 + 1) / 6) * 100}%` }} aria-hidden />
+                  <div key={t.key} className={`${styles.sigCard} ${styles.dsStage} ${styles.sigOn} ${styles.sigOpen}`}>
+                    <Image
+                      src={t.img}
+                      alt=""
+                      fill
+                      sizes="(max-width: 760px) 100vw, 860px"
+                      className={styles.sigImg}
+                      style={{ objectPosition: t.pos }}
+                    />
+                    <span className={`${styles.sigShade} ${styles.dsFilmShade}`} aria-hidden />
+                    <div className={styles.sigTop}>
+                      <span className={styles.sigTier}>{t.c.tier}</span>
+                      <span className={styles.sigChosen}>✓ {touched.card ? "Your day" : "Selected"}</span>
+                    </div>
+                    <div className={`${styles.sigBody} ${styles.dsStageBody}`}>
+                      <div className={styles.dsStageTx}>
+                        <span className={styles.sigKicker}>{t.c.kicker}</span>
+                        <h4 className={`${styles.sigPlace} ${styles.dsFilmTitle}`}>{t.c.title}</h4>
+                        <p className={styles.sigHook}>{t.c.hook}</p>
+                        <ul className={styles.sigPoints}>
+                          {t.c.points.map((pt) => (
+                            <li key={pt}>{pt}</li>
+                          ))}
+                        </ul>
+                        {of > 0 && (
+                          <span className={`${styles.dsFit} ${n === of ? styles.dsFitAll : ""}`}>
+                            {n === of
+                              ? `✓ ${of === 1 ? "Your pick" : `All ${of} of your picks`} included`
+                              : `${n} of ${of} picks included · ${of - n} arranged locally`}
+                          </span>
+                        )}
+                      </div>
+                      {/* the price, said plainly: total, per person, and what reserves it */}
+                      <div className={styles.dsPriceBox}>
+                        {proposal ? (
+                          <>
+                            <div className={styles.dsPriceRow}>
+                              <span>A private proposal</span>
+                              <b>from {euro(t.rate)}/day</b>
+                            </div>
+                            <p className={styles.dsGuarantee}>✓ No payment now · a reply within 24 hours</p>
+                          </>
+                        ) : (
+                          <>
+                            <div className={styles.dsPriceRow}>
+                              <span>
+                                Total · {glabel} · {days === 1 ? "1 day" : `${days} days`}
+                              </span>
+                              <b>{euro(tot)}</b>
+                            </div>
+                            {group > 1 && (
+                              <div className={styles.dsPriceRow}>
+                                <span>Per person</span>
+                                <b>{euro(Math.round(tot / group))}</b>
+                              </div>
+                            )}
+                            <div className={`${styles.dsPriceRow} ${styles.dsPriceKey}`}>
+                              <span>
+                                Reserve today <small>({depositPercent}%)</small>
+                              </span>
+                              <b>{euro(dep)}</b>
+                            </div>
+                            <p className={styles.dsPromises}>
+                              <span title="Refundable until 48 hours before your trip">
+                                <svg viewBox="0 0 16 16" aria-hidden>
+                                  <path d="M8 1.5 2.5 3.6v4c0 3.3 2.3 5.8 5.5 6.9 3.2-1.1 5.5-3.6 5.5-6.9v-4L8 1.5Z" />
+                                  <path d="m5.6 8.1 1.7 1.7 3.2-3.4" />
+                                </svg>
+                                Refundable until 48 h before
+                              </span>
+                              <span title="The first two hours, or we refund the rest">
+                                <svg viewBox="0 0 16 16" aria-hidden>
+                                  <circle cx="8" cy="8" r="6" />
+                                  <path d="M8 4.6V8l2.3 1.5" />
+                                </svg>
+                                2-hour promise
+                              </span>
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* what the chosen day holds, and how the three compare */}
+                  <div className={`${styles.expCard} ${styles.dsAttach}`}>
+                    <div className={styles.expInner}>
+                      <div key={t.key} className={`${styles.dsDetailHead} ${styles.dsFade}`}>
+                        <span className={styles.sigKicker}>Inside your {t.c.title} day</span>
+                        <p className={styles.expLead}>{t.c.lead}</p>
+                      </div>
+                      <div className={`${styles.cmpScroll} ${styles.cmpDark}`}>
+                        <table className={styles.cmpTable}>
+                          <thead>
+                            <tr>
+                              <th scope="col" />
+                              {TIER_CARDS.map((t) => (
+                                <th key={t.key} scope="col" className={selKey === t.key ? styles.cmpOn : ""}>
+                                  <button type="button" onClick={() => chooseCard(t.key, t.j)}>
+                                    <span>{t.c.title}</span>
+                                    <small>from {euro(t.rate)}/day</small>
+                                  </button>
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(() => {
+                              let group = "";
+                              return COMPARE_ROWS.map((row) => {
+                                if ("group" in row) {
+                                  group = row.group;
+                                  const g = row.group;
+                                  const open = !!cmpOpen[g];
+                                  return (
+                                    <tr key={g} className={styles.cmpGroup}>
+                                      <th colSpan={4} scope="colgroup">
+                                        <button
+                                          type="button"
+                                          aria-expanded={open}
+                                          onClick={() => setCmpOpen((o) => ({ ...o, [g]: !o[g] }))}
+                                        >
+                                          <span>{g}</span>
+                                          <span className={styles.cmpFold} aria-hidden>
+                                            {open ? "Hide −" : `Show ${CMP_COUNT[g] ?? ""} +`}
+                                          </span>
+                                        </button>
+                                      </th>
+                                    </tr>
+                                  );
+                                }
+                                if (!cmpOpen[group]) return null;
+                                return (
+                                  <tr key={row[0]}>
+                                    <th scope="row">{row[0]}</th>
+                                    {TIER_CARDS.map((t) => {
+                                      const v = row[CMP_COL[t.key]];
+                                      return (
+                                        <td
+                                          key={t.key}
+                                          className={`${selKey === t.key ? styles.cmpOn : ""} ${
+                                            v === "✓" ? styles.cmpYes : v === "–" ? styles.cmpNo : styles.cmpText
+                                          }`}
+                                        >
+                                          {v}
+                                        </td>
+                                      );
+                                    })}
+                                  </tr>
+                                );
+                              });
+                            })()}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className={styles.dsReschedDark}>
+                        <span aria-hidden>↻</span> Every day comes with flexible rescheduling: if your plans change,
+                        tell us and we&apos;ll do our best to move your day to a new date. Anything marked
+                        &ldquo;request locally&rdquo; your concierge still arranges on the day; it&apos;s paid locally.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            {expanded === "light" &&
-              renderBrochure({
-                id: "adventure",
-                lead: ADV.lead,
-                experiences: ADV.experiences,
-                expLede: ADV.expLede,
-                included: ADV.included,
-                caveats: { label: ADV.caveatsLabel, items: ADV.caveats },
-                note: ADV.note,
-              })}
+              );
+            })()}
 
             {/* 4 · Reality Hunting — business, land & investment. Hidden for now
                 (kept in place to re-enable later); Signature/Original/Adventure
@@ -2033,174 +2520,7 @@ export default function DayConfigurator({
               })}
             </>
             )}
-          </div>
 
-          {/* Step 2: who's coming — 5+ turns the checkout into a proposal request */}
-          <div className={styles.step} data-step="guests">
-            <div className={styles.stepH}>
-              <div className={styles.stepN}>2</div>
-              <h3>Who&apos;s coming?</h3>
-            </div>
-            <div className={styles.grpOpts}>
-              {[1, 2, 3, 4].map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  aria-pressed={!bigGroup && group === g}
-                  className={`${styles.grp} ${!bigGroup && group === g ? styles.sel : ""}`}
-                  onClick={() => {
-                    touch("guests");
-                    setGroup(g);
-                    setBigGroup(false);
-                  }}
-                >
-                  {g === 1 ? "Just me" : g === 2 ? "Two of us" : g === 3 ? "Three of us" : "Four of us"}
-                </button>
-              ))}
-              <button
-                type="button"
-                aria-pressed={bigGroup}
-                className={`${styles.grp} ${bigGroup ? styles.sel : ""}`}
-                onClick={() => {
-                  touch("guests");
-                  setBigGroup(true);
-                }}
-              >
-                5 or more
-              </button>
-            </div>
-            {bigGroup && (
-              <Stepper
-                label="How many of you?"
-                value={bigGroupCount}
-                min={5}
-                max={60}
-                onChange={setBigGroupCount}
-              />
-            )}
-            <div className={styles.grpNote}>
-              {bigGroup
-                ? "Groups of five or more are arranged personally — your checkout becomes a short request, and your concierge replies within 24 hours with a private proposal."
-                : isReality
-                  ? "Coming alone, or with partners, advisors or family? Add them — we'll shape the day around who's at the table."
-                  : group > 1
-                    ? `${euro(perPerson)} per person — adding guests lowers the per-person rate.${isLight ? " Local costs are extra." : ""}`
-                    : isLight
-                      ? "Travelling with others? Add them — the per-person rate drops. Local costs are paid on the day."
-                      : "Travelling with your partner or friends? Add them — the per-person price drops."}
-            </div>
-          </div>
-
-          {/* Step 3: how many days — 5+ also becomes a proposal */}
-          <div className={styles.step} data-step="days">
-            <div className={styles.stepH}>
-              <div className={styles.stepN}>3</div>
-              <h3>How many days with us?</h3>
-            </div>
-            {myDay.days > 0 && (
-              <p className={styles.daysHint}>
-                Set to {myDay.days} day{myDay.days > 1 ? "s" : ""} for your {myDay.picks.length} pick
-                {myDay.picks.length > 1 ? "s" : ""}: three to four experiences a day is the right pace. Change it any
-                time.
-              </p>
-            )}
-            {myDay.days > (moreDays ? moreDaysCount : days) && (
-              <p className={styles.daysWarn} role="status">
-                {myDay.picks.length} experiences need about {myDay.days} days at the right pace. In{" "}
-                {moreDays ? moreDaysCount : days} day{(moreDays ? moreDaysCount : days) > 1 ? "s" : ""}{" "}
-                there
-                isn&apos;t time for all of them: choose{" "}
-                {myDay.days > 4 ? "5+ days" : `${myDay.days} days`}, or your concierge will help you keep the
-                ones that matter most.
-              </p>
-            )}
-            <div className={styles.daysGrid}>
-              {([1, 2, 3, 4] as DayCount[]).map((d) => {
-                const sv =
-                  isLight || isReality
-                    ? 0
-                    : daySaving(
-                        d,
-                        group,
-                        isOriginal ? ORIGINAL_RATE : dayRate,
-                        volumeDiscount,
-                        groupSupplement,
-                      );
-                const on = !moreDays && days === d;
-                return (
-                  <button
-                    type="button"
-                    key={d}
-                    aria-pressed={on}
-                    className={`${styles.dayTile} ${on ? styles.sel : ""} ${d < myDay.days ? styles.dayShort : ""}`}
-                    onClick={() => {
-                      touch("days");
-                      setDays(d);
-                      setMoreDays(false);
-                    }}
-                  >
-                    {myDay.days > 0 ? (
-                      d === myDay.days && <span className={styles.pop}>For your picks</span>
-                    ) : (
-                      d === 3 && !conc && <span className={styles.pop}>Most popular</span>
-                    )}
-                    <div className={styles.dn}>
-                      {d} {d > 1 ? "days" : "day"}
-                    </div>
-                    <div className={styles.dp}>{euro(baseTotal(d))}</div>
-                    <div className={styles.dsave}>
-                      {!isLight && !isReality && sv > 0 ? "save " + euro(sv) : " "}
-                    </div>
-                  </button>
-                );
-              })}
-              <button
-                type="button"
-                aria-pressed={moreDays}
-                className={`${styles.dayTile} ${styles.dayTileMore} ${moreDays ? styles.sel : ""}`}
-                onClick={() => {
-                  touch("days");
-                  setMoreDays(true);
-                  setDays(4);
-                }}
-              >
-                {myDay.days > 4 && <span className={styles.pop}>For your picks</span>}
-                <div className={styles.dn}>5+ days</div>
-                <div className={`${styles.dp} ${styles.dpWord}`}>Tailored</div>
-                <div className={styles.dsave}>a private proposal</div>
-              </button>
-            </div>
-            {moreDays && (
-              <Stepper
-                label="How many days?"
-                value={moreDaysCount}
-                min={5}
-                max={30}
-                onChange={setMoreDaysCount}
-              />
-            )}
-            {conc ? (
-              <div className={styles.grpNote}>
-                {isReality
-                  ? moreDays
-                    ? "A longer engagement — we'll scope it with you and send a plan and a price."
-                    : "Each day is a full day given to your business — book as many as the deal needs."
-                  : moreDays
-                    ? "A longer trip with your concierge — we'll plan it with you and send a proposal."
-                    : "Each day: your concierge from pickup to the end of the day. Book as many as your trip needs."}
-              </div>
-            ) : (
-              <div className={styles.daySummary}>
-                <JourneyProgress
-                  days={days}
-                  expCount={expCount}
-                  giftCount={giftCount}
-                  bonusCount={sigbCount}
-                  moreDays={moreDays}
-                />
-                <p className={styles.dayNoteMsg}>{moreDays ? MORE_DAYS_MSG : IBMSG[days]}</p>
-              </div>
-            )}
           </div>
 
           {/* Step 4: finishing touches */}
@@ -2210,7 +2530,7 @@ export default function DayConfigurator({
               <h3>Add the finishing touches</h3>
             </div>
             <div className={styles.pref}>
-              {!conc && (
+              {(
                 <div className={`${styles.addon} ${styles.sel}`} style={{ cursor: "default", marginBottom: ".6rem" }}>
                   <span className={styles.chk}>✓</span>
                   <div>
@@ -2374,16 +2694,37 @@ export default function DayConfigurator({
               )}
             </p>
 
-            {!conc && (
-              <JourneyProgress
-                days={days}
-                expCount={expCount}
-                giftCount={giftCount}
-                bonusCount={sigbCount}
-                moreDays={moreDays}
-                hero
-              />
-            )}
+            {/* Your choices, in one place — each one a tap from changing */}
+            <ul className={styles.dsRecap}>
+              <li>
+                <span>Your day</span>
+                <b>{dayName}</b>
+                <button type="button" onClick={() => jumpTo("card")}>
+                  Change
+                </button>
+              </li>
+              <li>
+                <span>What you&apos;d love</span>
+                <b>
+                  {myDay.picks.length > 0
+                    ? `${myDay.picks.length} experience${myDay.picks.length > 1 ? "s" : ""}`
+                    : "Shaped with your concierge"}
+                </b>
+                <button type="button" onClick={() => jumpTo("picks")}>
+                  {myDay.picks.length > 0 ? "Change" : "Add"}
+                </button>
+              </li>
+              <li>
+                <span>Who &amp; how long</span>
+                <b>
+                  {bigGroup ? `${bigGroupCount} guests` : glabel} ·{" "}
+                  {moreDays ? `${moreDaysCount} days` : days === 1 ? "1 day" : `${days} days`}
+                </b>
+                <button type="button" onClick={() => jumpTo("guests")}>
+                  Change
+                </button>
+              </li>
+            </ul>
             <div className={styles.sumDetails}>
               <div className={styles.sumSub}>What&apos;s included</div>
               {isReality ? (
@@ -2713,7 +3054,7 @@ export default function DayConfigurator({
             </div>
             <div className={styles.sumAllin}>
               {isLight
-                ? "Transfer, concierge, one temple & a Nile sail included · more paid locally"
+                ? "Transfer, concierge, the must-sees & a Nile sail included · more on request"
                 : "All-in · no hidden extras"}
             </div>
             {group > 1 && (

@@ -40,10 +40,13 @@ type Props = {
   days?: number;
   onChange: (iso: string) => void;
   error?: boolean;
+  /** Just the field, calendar and cancellation note — no welcome card (the
+   *  quick checkout in the "Your day" drawer). */
+  compact?: boolean;
 };
 
 const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function AvailabilityDate(
-  { value, onChange, error, days = 1 },
+  { value, onChange, error, days = 1, compact = false },
   ref,
 ) {
   const [open, setOpen] = useState(false);
@@ -153,7 +156,7 @@ const AvailabilityDate = forwardRef<HTMLButtonElement, Props>(function Availabil
         </div>
       )}
 
-      {value && !open && (
+      {value && !open && !compact && (
         <div className={styles.welcome} role="status">
           <p className={styles.congrats}>
             <span className={styles.tick} aria-hidden>

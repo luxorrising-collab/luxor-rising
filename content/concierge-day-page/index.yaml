@@ -379,9 +379,7 @@ faq:
       the hour it is quietest. The Signature day adds your own licensed
       Egyptologist, insider access, every entry and tip, meals where locals eat,
       the Signature-only experiences and a signature gift. The Original day
-      includes entry to every site you visit, with tips paid locally. The
-      Adventure day includes one temple and a Nile sail, with the rest paid
-      locally as you go. Each card above shows exactly what its day includes.
+      includes entry to every site you visit, with tips paid locally. The Adventure day includes the must-sees of Luxor and a Nile sail, with anything else paid locally as you go. Each card above shows exactly what its day includes.
   - question: What time is pickup, and how long is the drive?
     answer: >-
       Pickup is flexible: we collect you from your hotel in Hurghada or Marsa Alam
@@ -437,10 +435,8 @@ faq:
       You see the price as you build, and what's left to pay depends on the day you
       choose. On the Signature day, every monument ticket, a full meal, local food
       stops and tips are handled, with nothing to carry. On the Original day, every
-      entry ticket is in the price and tips are handled; the premium tombs (Nefertari,
-      Seti I and Tutankhamun) are added on request. On the Adventure day, one temple
-      and a Nile sail are covered; bring local cash for any further tickets,
-      experiences and tips.
+      entry ticket is in the price and tips are handled locally; the premium tombs (Nefertari,
+      Seti I and Tutankhamun) are added on request. On the Adventure day, the must-sees (Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut and Medinet Habu) and a Nile sail are covered; bring local cash for anything further, and for tips.
   - question: How far ahead should we book, and when is our date confirmed?
     answer: >-
       Right now every date is open, from tomorrow onwards. Choose your date,
@@ -491,18 +487,20 @@ finalText: >-
   taken.
 cards:
   signature:
-    tier: "Full day · insider access"
-    kicker: "End-to-end to Luxor"
+    tier: "Insider access"
+    kicker: "As deep as Luxor goes"
     title: "Signature"
-    hook: "The full Luxor Rising day, for a trip that's meant to matter. One concierge, your own Egyptologist and real insider access, every temple and tomb at its quietest, and the experiences only Signature includes. You simply arrive."
+    hook: "For those who want the depth of Luxor: insider access and knowledge, private space and time in the temples, as private as it gets. The best of Luxor and its hidden gems, the best of Aswan and Hurghada, off the beaten path."
     points:
-      - "Door-to-door transfer from the coast — included"
-      - "Private Egyptologist & insider access, every day"
-      - "Temples, tombs, a felucca or the desert — your choice"
-      - "Hot-air balloon, food stops, tips & a gift — included"
+      - "Insider access, and your Egyptologist when you wish"
+      - "Temples as private as it gets — private space and time"
+      - "Moments staged to the light · Signature-only experiences"
+      - "Local food stops · tips settled, nothing to carry"
+      - "The Signature gift collection — for honeymoons, birthdays and milestones"
+      - "A flexible day — stay longer when a place speaks to you"
     meta: "Door-to-door from the coast · the best of Luxor, your choice · insider access · a signature gift"
     priceNote: "transfer from the coast included"
-    lead: "The full Luxor Rising day, arranged end to end for a trip that's meant to matter: an anniversary, a honeymoon, a milestone. One concierge, your own Egyptologist and real insider access, with every temple and tomb at its quietest, and a space to sit in silence with yourself, as private as Luxor allows. Then venture beyond them: hidden desert spots, a fire and a feast under the stars, the Nile sailed by your own hand, and a staged moment if you want one, even a proposal timed to the light. Meals where locals eat, quiet local introductions whenever you want them, and every tip and detail carried underneath. You simply arrive."
+    lead: "Depth, above all. Insider access and knowledge, your Egyptologist when you wish, the temples in private space and time, and moments staged to the light. Food stops and tips are settled, the Signature gift collection marks the occasion, and the day bends to you: stay longer wherever a place speaks to you. Tell us what matters, and we make it happen."
     expLede: "Every experience below is included. See as much as you wish, never rushed and always in depth, and stay more days to experience everything with time to take it in. Swap any of them freely: just tell us what matters to you."
     experiences:
       - icon: "temple"
@@ -671,7 +669,7 @@ cards:
       - "Staged moments on request — a proposal, an anniversary, a surprise timed to the light"
       - "Every monument entry ticket — nothing to buy, queue for or carry"
       - "A full meal and hand-picked local food & coffee stops — where locals actually eat"
-      - "Tips included — the quiet gestures that open doors a little wider, all carried for you"
+      - "Tips already settled — the quiet gestures that open doors a little wider, nothing to carry"
       - "Your day photographed — on your phone from the first moment"
       - "Your concierge end to end — planner, translator & fixer, on WhatsApp from booking"
       - "Properly hosted and welcomed — met in person and looked after like a guest in someone's home"
@@ -696,19 +694,21 @@ cards:
       - title: "Everything handled"
         desc: "Egyptologist, entries, transfers & timing"
   original:
-    tier: "Full day · all the sights"
-    kicker: "Entries included"
+    tier: "All the sights"
+    kicker: "Luxor without compromise"
     title: "Original"
-    hook: "Everything Luxor has to offer in one unhurried day — the great temples and tombs, a private felucca and the desert, with entry to every site you visit included."
+    hook: "The original Luxor Rising day: the best of Luxor and the must-sees of Aswan, in depth and fully hosted, with room to venture further."
     points:
-      - "Door-to-door transfer from the coast — included"
-      - "Entry to every temple & experience you visit — included"
-      - "A private felucca and a desert trip — included"
-      - "Your concierge end to end, in any order you like"
+      - "The best of Luxor · the must-sees of Aswan"
+      - "Entry to every site you visit — included"
+      - "Fully hosted, with local food stops and private moments"
+      - "A gift from your concierge"
+      - "Tips handled by your concierge, paid locally"
+      - "Insider access & an Egyptologist on request, arranged locally"
     meta: "All the sites · entries included · private felucca & desert"
     priceNote: "transfer from the coast included"
-    lead: "The complete sightseeing day — the great temples and tombs of both banks, a private felucca and a trip into the desert, with entry to every site you visit already in the price. Each site at the hour it's quietest, with tips and the logistics handled so you never break the spell to sort anything out. Done in whatever order you like."
-    expLede: "See as much as your day can hold, entry to every one you visit in the price, in any order you like. Bring some cash for tips: they are paid locally, and Ahmed, your concierge, handles everything."
+    lead: "Luxor without compromise. The best of Luxor and the must-sees of Aswan, fully hosted, with every entry included, local food stops, private moments and a gift from your concierge. Tips, insider access and an Egyptologist are arranged by your concierge whenever you want them, and paid locally."
+    expLede: "See as much as your day can hold, entry to every one you visit in the price, in any order you like. Tips are handled locally by your concierge, who takes care of everything else."
     experiences:
       - icon: "temple"
         name: "Karnak at Dawn"
@@ -813,7 +813,7 @@ cards:
       - "Door-to-door transfer from Hurghada or Marsa Alam — the car stays with you all day"
       - "Airport pickup at Hurghada or Marsa Alam when you land up to 24 hours before your day — met at arrivals, driven to your hotel"
       - "Entry to every temple and experience you visit, in the price — no queues, nothing to buy at the gate"
-      - "Tips paid locally in cash, negotiated for you on the spot — Ahmed, your concierge, handles the rest"
+      - "Tips handled locally — your concierge takes care of them on the spot, and of everything else"
       - "Your concierge end to end — driver, planner, translator & fixer, in any order you like"
       - "A quiet space, not just a quiet hour — room to sit in silence with yourself, as private as we can make it"
       - "Insider access on request — your concierge can still open the doors most never reach"
@@ -835,45 +835,44 @@ cards:
       - title: "Your concierge end to end"
         desc: "driver, planner, translator & fixer — in any order you like"
   adventure:
-    tier: "Concierge only"
-    kicker: "Temple & sail included"
+    tier: "The must-sees of Luxor"
+    kicker: "The must-sees included"
     title: "Adventure"
-    hook: "No fixed plan — just your own person on the ground: a trusted driver, translator and fixer who opens doors and sorts everything on the spot. Your advisor on WhatsApp before you arrive; then go with the flow."
+    hook: "The must-sees of Luxor, included. Anything more you'd like can still be done locally: just tell your concierge."
     points:
-      - "Door-to-door transfer from the coast — included"
-      - "One temple of your choice & a Nile sail — included"
-      - "Your concierge on the ground all day"
-      - "Anything more, paid locally as you go"
-    meta: "One temple & a Nile sail · concierge all day · more paid locally"
-    priceNote: "1–4 guests · local costs extra"
-    lead: "Your own trusted person on the ground for the day — a driver, translator and fixer who knows Luxor from the inside. Insider access and local contacts where they count, tips and the small frictions handled, and the day shaped around you. We plan it together before you arrive; then you go with the flow and pay the local costs as you go, so it stays light and flexible — and the more days you take, the more of Luxor you can fit in."
-    expLede: "One temple of your choice and a sail on the Nile are included. Add anything else you would love to see: it is paid locally, on the day, and your concierge handles the how."
+      - "The must-sees: Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut & Medinet Habu"
+      - "Your concierge on the ground all day, door to door"
+      - "Anything more, arranged locally on the day"
+    meta: "The must-sees & a Nile sail · concierge all day · more on request"
+    priceNote: "1–4 guests · extras paid locally"
+    lead: "The essentials, done properly. Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut and Medinet Habu are included, with your concierge door to door. Anything more you'd love is arranged on the spot and paid locally."
+    expLede: "The must-sees of Luxor are included: Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut and Medinet Habu, with a sail on the Nile. Anything else you would love to see, your concierge arranges on the day, and it is paid locally."
     experiences:
       - icon: "temple"
         name: "Karnak at Dawn"
         desc: "Stand in the largest temple ever built — before anyone else arrives."
         slug: "karnak-at-dawn"
-        tag: "Paid locally"
+        tag: "Included"
       - icon: "temple"
         name: "Medinet Habu"
         desc: "Begin where the world began."
         slug: "medinet-habu"
-        tag: "Paid locally"
+        tag: "Included"
       - icon: "ticket"
         name: "Valley of the Kings"
         desc: "Walk into the tombs that were built to be hidden forever."
         slug: "valley-of-the-kings"
-        tag: "Paid locally"
+        tag: "Included"
       - icon: "temple"
         name: "Temple of Hatshepsut"
         desc: "Meet the woman who called herself king."
         slug: "hatshepsut-temple"
-        tag: "Paid locally"
+        tag: "Included"
       - icon: "temple"
         name: "Luxor Temple at Dusk"
         desc: "The temple in the middle of the living city."
         slug: "luxor-temple"
-        tag: "Paid locally"
+        tag: "Included"
       - icon: "sail"
         name: "Sunset Felucca Sail"
         desc: "Let the Nile carry you into the gold."
@@ -883,7 +882,7 @@ cards:
         name: "Deir el-Shelwit"
         desc: "The hidden temple almost no visitor ever finds"
         slug: "deir-el-shelwit"
-        tag: "Paid locally"
+        tag: "Included"
       - icon: "ticket"
         name: "Ramesseum & the Queens"
         desc: "The fallen giant, and some of the most beautiful tombs in Egypt."
@@ -907,10 +906,12 @@ cards:
     included:
       - "Door-to-door transfer from Hurghada or Marsa Alam — included in the price, and the car stays with you all day"
       - "Your own person on the ground — a trusted driver, translator and fixer all day"
+      - "Entry to the must-sees — Karnak, Luxor Temple, the Valley of the Kings (three tombs), Hatshepsut and Medinet Habu"
+      - "A sail on the Nile at golden hour"
       - "Your planner on WhatsApp from the moment you book — the trip mapped out with you before you arrive"
       - "Authentic local introductions — hosts, artisans & storytellers you'd never find on your own"
       - "A hand-picked local food & coffee stop, on us — where locals actually eat, not the tourist cafés"
-      - "Tips paid locally, negotiated for you on the spot — no haggling, no awkward moments"
+      - "Tips handled locally, negotiated for you on the spot — no haggling, no awkward moments"
       - "Insider access on request — your concierge can still open doors, paid locally as you go"
       - "A quiet space, not just a quiet hour — room to sit in silence with yourself"
       - "Properly hosted and welcomed — met in person and looked after like a guest in someone's home"
@@ -922,15 +923,15 @@ cards:
       - "A small gift from your concierge"
     caveatsLabel: "Paid locally, on the day"
     caveats:
-      - "Beyond the included temple & Nile sail, nothing else is pre-booked — bring local cash and pay for the rest as you go"
+      - "Beyond the must-sees and the Nile sail, nothing else is pre-booked — bring local cash and pay for the rest as you go"
       - "Any further entry tickets, the experiences you choose and your tips are paid locally, on the day — your concierge handles the how, so it's always smooth and fair"
       - "We'll arrange what we can ahead of time, but some things depend on the day and on availability"
     note: "Go with the flow — tell us what you need, and we'll arrange it."
     summary:
       - title: "Your own person on the ground"
         desc: "trusted driver, translator, negotiator & problem-solver, all day"
-      - title: "One temple of your choice & a Nile sail"
-        desc: "a temple entry and a felucca on the Nile — included in the price"
+      - title: "The must-sees of Luxor & a Nile sail"
+        desc: "Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut & Medinet Habu, and a felucca — included"
       - title: "Door-to-door from the coast"
         desc: "collected from Hurghada or Marsa Alam — the car stays all day"
       - title: "Anything more, paid locally"

@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { renderEmail, SITE_URL, type SummaryRow } from "./email-template";
+import { esc, renderEmail, SITE_URL, type SummaryRow } from "./email-template";
 import {
   FREE_CANCEL_HOURS,
   balanceChargeDate,
@@ -441,12 +441,12 @@ const INCLUDED: string[] = [
   `Free cancellation until ${FREE_CANCEL_HOURS} hours before`,
 ];
 
-// Adventure is concierge-only — just the two included experiences; the rest is
-// chosen on the day and paid locally, so its list is stated honestly.
+// Adventure: the must-sees of Luxor and a Nile sail; the rest is chosen on the
+// day and paid locally, so its list is stated honestly.
 const INCLUDED_ADVENTURE: string[] = [
   "Private to your group — never shared with strangers",
   "Your own driver, translator & fixer on the ground all day",
-  "One temple of your choice and a Nile sail — included",
+  "The must-sees of Luxor — Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut and Medinet Habu, entries included — and a Nile sail",
   "Hotel or villa pickup and drop-off, and door-to-door transfer from the coast",
   "Your concierge reachable all day, so you never have a decision to make",
   "Anything more — further sites, experiences and tips — chosen on the day and paid locally",
@@ -837,12 +837,12 @@ function originalIncluded(hasTransfer: boolean, guests?: number): string[] {
   ].filter(Boolean);
 }
 
-// Adventure — concierge only. Just two experiences are included; everything else
-// is chosen on the day and paid locally. No Egyptologist, no all-in tickets.
+// Adventure — the must-sees of Luxor and a Nile sail are included; everything
+// else is chosen on the day and paid locally. No Egyptologist.
 function adventureIncluded(hasTransfer: boolean): string[] {
   return [
     "Your own driver, translator & fixer on the ground all day",
-    "One temple of the guest's choice — entry included",
+    "The must-sees, entries included: Karnak, Luxor Temple, the Valley of the Kings, Hatshepsut and Medinet Habu (three tombs in the Valley of the Kings)",
     "A Nile sail (shared felucca) with a local boatman",
     "A hand-picked local food & coffee stop",
     hasTransfer ? "Hurghada / Marsa Alam door-to-door transfer — the car stays all day" : "",
@@ -896,7 +896,7 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
   const isSignature = isConcierge && tier === "signature";
   // The full temple/activity menu is a Signature thing (the guest shapes the
   // order over the days). Original is a fixed full-sightseeing day; Adventure is
-  // concierge-only with just the two included experiences.
+  // the must-sees of Luxor and a Nile sail, the rest paid locally.
   const signatureMultiDay = isSignature && (b.days ?? 0) >= 2;
   const hasTransfer = transferItems.length > 0;
   const firstTemple = b.preferences?.match(/first temple:\s*([^)]+)\)/i)?.[1]?.trim();
@@ -907,7 +907,7 @@ export function buildAhmedBrief(b: AhmedBrief): { subject: string; html: string;
     : tier === "original"
       ? `This is a ${b.days}-day Original sightseeing journey. Everything below is included and paid for — the great temples & tombs, a felucca and the desert, with all entries; shape the order together with the guest.`
       : tier === "adventure"
-        ? `This is a ${b.days}-day Adventure (concierge only). Only the items marked "included" are paid for — one temple of their choice and a Nile sail; everything else the guest chooses on the day and pays locally.`
+        ? `This is a ${b.days}-day Adventure (the must-sees of Luxor). Only the items marked "included" are paid for — the must-sees of Luxor and a Nile sail; everything else the guest chooses on the day and pays locally.`
         : "Here's your run sheet for the day.";
 
   const sections: { title: string; items: string[]; check?: boolean; small?: boolean }[] = [];
@@ -1069,4 +1069,241 @@ export async function sendAhmedJobBrief(b: AhmedBrief): Promise<void> {
   if (!c.ahmed) return;
   const { subject, html, text } = buildAhmedBrief(b);
   await send({ to: c.ahmed, subject, text, html });
+}
+
+// ── Saved day ("Email me my day") ───────────────────────────────────────────
+export type SavedDayEmail = {
+  email: string;
+  picks: { slug?: string; name: string; title?: string; hook?: string }[];
+  /** Opens the site with these picks back in "Your day". */
+  link: string;
+  /** About how many days the picks need (3–4 a day). */
+  days?: number;
+  newsletter?: boolean;
+  /** The three ways to see the picks with us, Adventure first, Signature last. */
+  tiers?: { name: string; kicker: string; from: number; line: string; included: number }[];
+};
+
+const pickItems = (picks: SavedDayEmail["picks"]) =>
+  picks.map((p) => (p.title && p.title !== p.name ? `${p.name} — ${p.title}` : p.name));
+
+// The first sentence or two of a product's hook — "why it's worth it".
+const why = (hook?: string) => {
+  if (!hook) return "";
+  const parts = hook.match(/[^.!?]+[.!?]+/g) ?? [hook];
+  let out = "";
+  for (const sentence of parts) {
+    if ((out + sentence).length > 260 && out) break;
+    out += sentence;
+  }
+  return out.trim();
+};
+
+const E_SERIF = "'Cormorant Garamond', Georgia, 'Times New Roman', serif";
+const E_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, Helvetica, sans-serif";
+
+/** Photo cards: one per experience, with why it's worth it and a link to read more. */
+function savedPickCards(picks: SavedDayEmail["picks"]): string {
+  return picks
+    .slice(0, 8)
+    .map((p) => {
+      const img = p.slug ? `${SITE_URL}/images/cards/${p.slug}.jpg` : "";
+      const page = p.slug ? `${SITE_URL}/experiences/${p.slug}` : SITE_URL;
+      const reason = why(p.hook);
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px;background:#FFFFFF;border:1px solid #E7DCC5;border-radius:6px;">
+        <tr>
+          ${img ? `<td width="180" valign="top" style="width:180px;padding:0;"><a href="${page}"><img src="${img}" width="180" alt="${esc(p.name)}" style="display:block;border:0;width:180px;height:auto;border-radius:6px 0 0 6px;"></a></td>` : ""}
+          <td valign="top" style="padding:16px 18px;">
+            <div style="font-family:${E_SANS};font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#C9A063;">${esc(p.name)}</div>
+            ${p.title && p.title !== p.name ? `<div style="font-family:${E_SERIF};font-style:italic;font-size:18px;line-height:1.3;color:#2A1C10;margin:6px 0 8px;">${esc(p.title)}</div>` : ""}
+            ${reason ? `<div style="font-family:${E_SANS};font-size:13px;line-height:1.55;color:#3A2818;">${esc(reason)}</div>` : ""}
+            <a href="${page}" style="display:inline-block;margin-top:10px;font-family:${E_SANS};font-size:12px;font-weight:700;color:#9A7440;text-decoration:none;">Read more →</a>
+          </td>
+        </tr>
+      </table>`;
+    })
+    .join("");
+}
+
+/** The three ways to see it with us — what each holds, and how many picks it includes. */
+function savedTiers(tiers: NonNullable<SavedDayEmail["tiers"]>, of: number): string {
+  const rows = tiers
+    .map((t, i) => {
+      const last = i === tiers.length - 1;
+      const all = t.included >= of;
+      return `<tr>
+        <td valign="top" style="padding:14px 16px;border-bottom:${last ? "none" : "1px solid #E7DCC5"};${last ? "background:#FBF5E8;" : ""}">
+          <div style="font-family:${E_SANS};font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#C9A063;">${esc(t.kicker)}</div>
+          <div style="font-family:${E_SERIF};font-size:21px;line-height:1.2;color:#2A1C10;margin:2px 0 4px;">${esc(t.name)} <span style="font-family:${E_SANS};font-size:12px;color:#7A6754;">· from €${t.from.toLocaleString("en-US")} a day</span></div>
+          <div style="font-family:${E_SANS};font-size:13px;line-height:1.5;color:#3A2818;">${esc(t.line)}</div>
+          <div style="font-family:${E_SANS};font-size:12px;font-weight:700;color:${all ? "#6E8B4E" : "#9A7440"};margin-top:6px;">${
+            all ? `✓ All ${of} of your picks included` : `${t.included} of your ${of} picks included · the rest arranged locally`
+          }</div>
+        </td>
+      </tr>`;
+    })
+    .join("");
+  return `<div style="margin:6px 0 26px;">
+    <div style="font-family:${E_SERIF};font-size:22px;color:#2A1C10;margin:0 0 4px;">Three ways to see it with us</div>
+    <div style="font-family:${E_SANS};font-size:13px;line-height:1.5;color:#7A6754;margin:0 0 12px;">The same private day, at three depths. Each comes with your concierge door to door and the transfer from the coast.</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#FFFFFF;border:1px solid #E7DCC5;border-radius:6px;">${rows}</table>
+  </div>`;
+}
+
+/** A few things worth knowing before a day in Luxor — useful, whatever they decide. */
+const GOOD_TO_KNOW = [
+  "Go early. The temples are at their quietest in the first hour after opening, and the light is softest.",
+  "Cover shoulders and knees at the temples, bring a hat and a scarf for the sun, and shoes you can walk in.",
+  "Carry some small Egyptian pound notes for tips. On Signature, tips are already settled for you.",
+];
+
+/** "Good to know before Luxor" — three short, useful lines. */
+const goodToKnow = () =>
+  `<div style="margin:0 0 24px;"><div style="font-family:${E_SERIF};font-size:19px;color:#2A1C10;margin:0 0 8px;">Good to know before Luxor</div>${GOOD_TO_KNOW.map(
+    (g) =>
+      `<div style="font-family:${E_SANS};font-size:13px;line-height:1.55;color:#3A2818;margin:0 0 6px;"><span style="color:#C9A063;font-weight:700;">&#10003;</span>&nbsp; ${esc(g)}</div>`,
+  ).join("")}</div>`;
+
+/** The guest's own copy of their day: photos, why each is worth it, and three ways to see it. */
+export function buildSavedDay(d: SavedDayEmail): { subject: string; html: string; text: string } {
+  const n = d.picks.length;
+  const daysLine = d.days ? `, about ${d.days} day${d.days > 1 ? "s" : ""} at the right pace` : "";
+  const first = d.picks.find((p) => p.slug);
+  const html = renderEmail({
+    preheader: `Your ${n} Luxor experiences, with why each is worth it and three ways to see them.`,
+    heroImage: first?.slug ? { src: `${SITE_URL}/images/cards/${first.slug}.jpg`, alt: first.name } : undefined,
+    eyebrow: "Your day, saved",
+    heading: "Your Luxor day, ready when you are",
+    intro: [
+      "Hello,",
+      `Here are the ${n} experiences you picked${daysLine}: why each one is worth it, and three ways to see them with us. One tap brings your day back exactly as you left it, on any device.`,
+    ],
+    html:
+      savedPickCards(d.picks) +
+      (d.picks.length > 8 ? `<p style="font-family:${E_SANS};font-size:13px;color:#7A6754;margin:-6px 0 22px;">+ ${d.picks.length - 8} more in your day.</p>` : "") +
+      (d.tiers?.length ? savedTiers(d.tiers, n) : "") +
+      goodToKnow(),
+    cta: { text: "Open my day", url: d.link },
+    outro: [
+      "When you're ready, hold your date with 20% today, refundable until 48 hours before your trip. Your concierge shapes the order and timing with you.",
+      "Celebrating something, or travelling with someone special? Just reply. A real person answers.",
+      ...(d.newsletter
+        ? ["You're also on the Insider's letter: a short monthly note on Luxor's best hours and hidden places. Reply \"unsubscribe\" any time to stop it."]
+        : []),
+    ],
+    fineprint: "You're receiving this because you asked us to email your day from luxorrising.com. We'll send one reminder, then nothing more unless you write to us.",
+  });
+  const text = [
+    "Hello,",
+    "",
+    `Here are the ${n} experiences you picked${daysLine}:`,
+    "",
+    ...d.picks.flatMap((p) => [
+      `· ${p.name}${p.title && p.title !== p.name ? ` — ${p.title}` : ""}`,
+      ...(why(p.hook) ? [`  ${why(p.hook)}`] : []),
+      ...(p.slug ? [`  Read more: ${SITE_URL}/experiences/${p.slug}`] : []),
+    ]),
+    "",
+    ...(d.tiers?.length
+      ? [
+          "Three ways to see it with us:",
+          ...d.tiers.map(
+            (t) =>
+              `· ${t.name} (from €${t.from} a day): ${t.line} ${t.included >= n ? `All ${n} of your picks included.` : `${t.included} of your ${n} picks included.`}`,
+          ),
+          "",
+        ]
+      : []),
+    `Open my day: ${d.link}`,
+    "",
+    "Good to know before Luxor:",
+    ...GOOD_TO_KNOW.map((g) => `· ${g}`),
+    "",
+    "When you're ready, hold your date with 20% today, refundable until 48 hours before your trip.",
+    "Celebrating something? Just reply. A real person answers.",
+    d.newsletter ? "\nYou're also on the Insider's letter. Reply \"unsubscribe\" any time to stop it." : "",
+    "",
+    SIGNOFF_TEXT,
+  ]
+    .filter((l, i, arr) => !(l === "" && arr[i - 1] === ""))
+    .join("\n");
+  return { subject: "Your Luxor day, saved — with three ways to see it", html, text };
+}
+
+/** Two days later, if they haven't booked: one gentle reminder. */
+export function buildSavedDayReminder(d: SavedDayEmail): { subject: string; html: string; text: string } {
+  const html = renderEmail({
+    preheader: "Your Luxor day is still waiting.",
+    eyebrow: "Still dreaming of Luxor?",
+    heading: "Your day is still waiting",
+    intro: [
+      "Hello,",
+      `Your ${d.picks.length} experiences are saved, just as you left them. Dates in Luxor go quietly, so if you've a day in mind, now is a good moment to hold it.`,
+    ],
+    sections: [{ title: "Your experiences", items: pickItems(d.picks) }],
+    cta: { text: "Open my day", url: d.link },
+    outro: [
+      "Hold your date with 20% today, free cancellation until 48 hours before. Or reply with any question — a real person answers.",
+    ],
+    fineprint: "This is the one reminder we promised. We won't email again unless you write to us.",
+  });
+  const text = [
+    "Hello,",
+    "",
+    `Your ${d.picks.length} experiences are saved, just as you left them:`,
+    ...pickItems(d.picks).map((p) => `· ${p}`),
+    "",
+    `Open my day: ${d.link}`,
+    "",
+    "Hold your date with 20% today, free cancellation until 48 hours before. Or reply with any question.",
+    "",
+    SIGNOFF_TEXT,
+  ].join("\n");
+  return { subject: "Your Luxor day is still waiting", html, text };
+}
+
+/** Send the saved day to the guest, and tell the owner a warm lead came in. */
+export async function sendSavedDayEmails(d: SavedDayEmail): Promise<void> {
+  const { subject, html, text } = buildSavedDay(d);
+  await send({ to: d.email, subject, text, html });
+  const c = await serviceConfig();
+  const resend = client();
+  if (!resend) return;
+  const items = pickItems(d.picks);
+  try {
+    await resend.emails.send({
+      from: c.from,
+      to: c.owners,
+      replyTo: d.email,
+      subject: `Saved day — ${d.email} · ${d.picks.length} experiences`,
+      text: [
+        `Someone saved their day: ${d.email}`,
+        `Insider's letter: ${d.newsletter ? "yes" : "no"}`,
+        "",
+        ...items.map((i) => `· ${i}`),
+        "",
+        `Their link: ${d.link}`,
+        "A reminder goes out automatically in 2 days if they haven't booked.",
+      ].join("\n"),
+      html: renderEmail({
+        preheader: `Saved day — ${d.email}`,
+        eyebrow: "Warm lead · saved day",
+        heading: `Saved day — ${d.email}`,
+        intro: [
+          `Someone emailed themselves their day. Insider's letter: ${d.newsletter ? "yes" : "no"}. Reply to reach them.`,
+        ],
+        sections: [{ title: "Their experiences", items }],
+        cta: { text: "Open their day", url: d.link },
+        outro: ["A reminder goes out automatically in 2 days if they haven't booked."],
+        signoff: ["— Luxor Rising"],
+      }),
+    });
+  } catch (err) {
+    console.error("Resend saved-day owner note failed:", err instanceof Error ? err.message : err);
+  }
+}
+
+export async function sendSavedDayReminder(d: SavedDayEmail): Promise<void> {
+  const { subject, html, text } = buildSavedDayReminder(d);
+  await send({ to: d.email, subject, text, html });
 }

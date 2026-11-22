@@ -336,6 +336,8 @@ export default async function ConciergeDayPage() {
     journeyKarnak: page?.builderJourneyKarnakImage || undefined,
     journeyBalloon: page?.builderJourneyBalloonImage || undefined,
     journeyLight: page?.builderJourneyLightImage || undefined,
+    // Adventure is your concierge on the ground — so its card shows him, face on.
+    concierge: product?.consigliereImage || undefined,
     sunsetNile: page?.builderSunsetNileImage || undefined,
     sunsetPicnic: page?.builderSunsetPicnicImage || undefined,
     sunsetCustom: page?.builderSunsetCustomImage || undefined,
@@ -622,6 +624,9 @@ export default async function ConciergeDayPage() {
             socialProof={socialProof}
             whatsappNumber={settings?.whatsappNumber || ""}
             cards={page?.cards}
+            expPreviews={Object.fromEntries(
+              experiences.map((x) => [x.slug, String(x.entry.hook ?? "").replace(/\s+/g, " ").trim()]),
+            )}
             dayFlow={(page?.dayJourney ?? [])
               .filter((d) => d.time)
               .map((d) => ({ h: d.time, sub: d.subtitle || undefined, p: d.label || undefined }))}

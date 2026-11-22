@@ -10,6 +10,9 @@ const daysLabel = (d: number) => `about ${d} day${d > 1 ? "s" : ""}`;
 const OPEN_EVT = "lr-my-day-open";
 /** Open the "Your day" drawer from anywhere. */
 export const openMyDay = () => window.dispatchEvent(new Event(OPEN_EVT));
+/** Ask to email the visitor their day (the save-my-day prompt listens). */
+export const SAVE_DAY_EVT = "lr-save-day-open";
+export const openSaveDay = () => window.dispatchEvent(new Event(SAVE_DAY_EVT));
 
 /**
  * "+ Add to my day" / "✓ In your day". The same control everywhere an
@@ -115,7 +118,7 @@ export function DayBar({ segments, picks, compact = false }: { segments: DaySegm
       >
         {shown.map((g, i) => (
           <span key={i} className={`${styles.daySeg} ${g.whole ? styles.dayWhole : ""}`} style={{ gridRow: 1 }}>
-            <i style={{ width: `${Math.round(g.fill * 100)}%`, animationDelay: `${120 + i * 70}ms` }} />
+            <i style={{ width: `${Math.round(g.fill * 100)}%`, animationDelay: `${150 + i * 320}ms` }} />
           </span>
         ))}
         {more > 0 && (
@@ -349,9 +352,27 @@ export function MyDayDrawer({
               Three to four experiences a day is the right pace. Your concierge shapes the order and the timing.
             </p>
             <div className={styles.drawerFoot}>
-              <Link href={designHref} className="btn btn-primary" onClick={close}>
-                Design your day →
+              {/* the start of the builder, as an empty gold button like the header's */}
+              <Link href={designHref} className={styles.drawerAlt} onClick={close}>
+                Design your day in full
               </Link>
+              {/* straight to the booking: date and payment */}
+              <Link href="/concierge-day#book" className="btn btn-primary" onClick={close}>
+                Reserve your day in 60 seconds →
+              </Link>
+              <p className={styles.drawerAssure}>
+                20% to reserve · refundable until 48 hours before your trip
+              </p>
+              <button
+                type="button"
+                className={styles.drawerKeep}
+                onClick={() => {
+                  close();
+                  openSaveDay();
+                }}
+              >
+                Email me this day
+              </button>
               <button type="button" className={styles.drawerKeep} onClick={close}>
                 Keep exploring
               </button>

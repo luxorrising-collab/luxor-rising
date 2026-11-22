@@ -43,6 +43,11 @@ export type EmailContent = {
    *  check:true renders gold ticks; otherwise gold bullets. small:true renders
    *  a more compact, smaller-font list (for long service menus). */
   sections?: { title: string; items: string[]; check?: boolean; small?: boolean }[];
+  /** Trusted, pre-built HTML (already escaped) placed after the sections — for
+   *  richer layouts such as photo cards. */
+  html?: string;
+  /** A full-width photo under the header rule. */
+  heroImage?: { src: string; alt: string };
   cta?: Cta;
   /** Paragraphs after the CTA / summary. */
   outro?: string[];
@@ -52,7 +57,7 @@ export type EmailContent = {
   signoff?: string[];
 };
 
-const esc = (s: string) =>
+export const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const paragraphs = (lines?: string[], color = ESPRESSO) =>
@@ -198,6 +203,8 @@ export function renderEmail(c: EmailContent): string {
         </tr>
         <!-- rule -->
         <tr><td style="height:3px;line-height:3px;font-size:0;background:${ESPRESSO};">&nbsp;</td></tr>
+        <!-- hero photo -->
+        ${c.heroImage ? `<tr><td style="padding:0;background:${PAPER};"><img src="${c.heroImage.src}" width="600" alt="${esc(c.heroImage.alt)}" style="display:block;border:0;width:100%;max-width:600px;height:auto;"></td></tr>` : ""}
         <!-- banner -->
         ${banner}
         <!-- body -->
@@ -210,6 +217,7 @@ export function renderEmail(c: EmailContent): string {
             ${paragraphs(c.intro)}
             ${summaryBlock(c.summary)}
             ${sectionsBlock(c.sections)}
+            ${c.html ?? ""}
             ${ctaBlock(c.cta)}
             ${paragraphs(c.outro)}
             ${signoffHtml}

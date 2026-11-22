@@ -102,3 +102,15 @@ export function onDayPickAdded(cb: (pick: DayPick) => void) {
 
 // How many days the picks need lives in ./day-plan (shared with server cards).
 export { planDays, dayLength, type DaySegment } from "./day-plan";
+
+/** Restore a saved day (from the "Open my day" link): adds the given slugs to
+ *  the picks, keeping any already there. No analytics — nothing was chosen now. */
+export function restorePicks(slugs: string[]) {
+  if (typeof window === "undefined") return;
+  const cur = read();
+  const have = new Set(cur.map((p) => p.slug));
+  const add = slugs
+    .filter((s) => /^[a-z0-9-]{2,80}$/.test(s) && !have.has(s))
+    .map((s) => ({ slug: s, name: NAMES[s] ?? s }));
+  if (add.length) write([...cur, ...add]);
+}

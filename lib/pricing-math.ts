@@ -57,9 +57,17 @@ export const ORIGINAL_DAY_RATE = 450;
 /** +20% of the base rate per extra guest; -10% off the total per extra day. */
 export const GUEST_STEP = 0.2;
 export const DAY_DISCOUNT_STEP = 0.1;
-export function lightTotal(d: number, g: number, lightDayRate: number): number {
+export function lightTotal(
+  d: number,
+  g: number,
+  lightDayRate: number,
+  /** The shared multi-day discount table (pricing rules). When given, Adventure
+   *  takes exactly the same % off per stage as Signature and Original. */
+  volumeDiscount?: VolumeDiscountTier[],
+): number {
   const guestMult = 1 + GUEST_STEP * (g - 1);
-  const dayDiscount = DAY_DISCOUNT_STEP * (d - 1);
+  const dayDiscount =
+    volumeDiscount && volumeDiscount.length ? discountForDays(d, volumeDiscount) / 100 : DAY_DISCOUNT_STEP * (d - 1);
   return Math.round(lightDayRate * guestMult * d * (1 - dayDiscount));
 }
 

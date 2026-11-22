@@ -8,6 +8,7 @@ import {
   sendTripReminder,
   sendReviewRequest,
   sendDateConfirmation,
+  sendSavedDayReminder,
   experiencesFromNotes,
 } from "@/lib/email";
 import { SITE_URL } from "@/lib/email-template";
@@ -71,12 +72,14 @@ export async function GET(req: Request) {
     reminders: 0,
     reviews: 0,
     dateConfirmations: 0,
+    savedDayReminders: 0,
   };
 
   await chargeBalances(stripe, supabase, result);
   await sendDateConfirmations(supabase, result);
   await sendReminders(supabase, result);
   await sendReviews(supabase, result);
+  await sendSavedDayReminders(supabase, result);
 
   if (result.charged || result.linkSent || result.reminders || result.reviews || result.dateConfirmations) {
     await sendOwnerCronSummary({
@@ -354,4 +357,55 @@ async function sendLink(
     amountEur,
     reason: url ? error : `${error ?? "charge failed"} (no link created)`,
   });
+}
+
+// 5) Saved days ("Email me my day"): one reminder two days later, unless they
+//    have booked since. Leads saved more than a week ago are left alone.
+async function sendSavedDayReminders(supabase: Supa, result: { savedDayReminders: number }) {
+  const now = Date.now();
+  const { data, error } = await supabase
+    .from("enquiries")
+    .select("id, email, customer_id, message, created_at")
+    .eq("source", "saved-day")
+    .eq("status", "new")
+    .lte("created_at", new Date(now - 2 * 86400000).toISOString())
+    .gte("created_at", new Date(now - 7 * 86400000).toISOString());
+  if (error) {
+    console.error("saved-day query failed:", error.message);
+    return;
+  }
+  for (const e of data ?? []) {
+    if (!e.email) continue;
+    // Booked since saving? Then no reminder — mark it won.
+    if (e.customer_id) {
+      const { data: booked } = await supabase
+        .from("bookings")
+        .select("id")
+        .eq("customer_id", e.customer_id)
+        .gte("created_at", e.created_at)
+        .limit(1);
+      if (booked && booked.length) {
+        await supabase.from("enquiries").update({ status: "won" }).eq("id", e.id);
+        continue;
+      }
+    }
+    // Claim it first, so a re-run never sends twice.
+    const { data: claimed } = await supabase
+      .from("enquiries")
+      .update({ status: "contacted" })
+      .eq("id", e.id)
+      .eq("status", "new")
+      .select("id");
+    if (!claimed || claimed.length === 0) continue;
+    const lines = (e.message ?? "").split("\n");
+    const names = (lines.find((l: string) => l.startsWith("Saved day: ")) ?? "")
+      .slice("Saved day: ".length)
+      .split(" · ")
+      .map((s: string) => s.trim())
+      .filter(Boolean);
+    const link = (lines.find((l: string) => l.startsWith("Link: ")) ?? "").slice("Link: ".length) || `${SITE_URL}/concierge-day#design`;
+    if (!names.length) continue;
+    await sendSavedDayReminder({ email: e.email, picks: names.map((name: string) => ({ name })), link });
+    result.savedDayReminders++;
+  }
 }

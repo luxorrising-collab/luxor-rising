@@ -1937,3 +1937,16 @@
   letter-spacing: 0.1em;
   vertical-align: middle;
 }
+
+/* "What your day can hold": the grid on larger screens, one swipeable row on phones */
+.holdStrip {
+  display: none;
+}
+@media (max-width: 560px) {
+  .holdGrid {
+    display: none;
+  }
+  .holdStrip {
+    display: block;
+  }
+}

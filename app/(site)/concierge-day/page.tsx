@@ -299,6 +299,29 @@ export default async function ConciergeDayPage() {
   // feed the "Your day, start to finish" list inside each booking card.
   const journeyCards = page?.dayJourneyShow ? withAspect(buildJourneyCards(page?.dayJourney ?? [])) : [];
   const expCards = await withPreviews(buildConciergeDayCards({ cmsExperiences: page?.experiences, experiences }));
+  // The same cards for the phone slideshow, in the order that sells the day:
+  // Medinet Habu, Karnak, the felucca, the Valley of the Kings, then the rest.
+  const STRIP_FIRST = [
+    "medinet-habu",
+    "karnak-at-dawn",
+    "felucca-sunset-sail",
+    "valley-of-the-kings",
+    "hatshepsut-temple",
+    "hot-air-balloon-luxor",
+    "luxor-temple",
+    "private-desert-safari",
+    "luxor-by-night",
+    "deir-el-shelwit",
+    "nile-dinner-cruise",
+  ];
+  const rank = (slug?: string) => {
+    const i = slug ? STRIP_FIRST.indexOf(slug) : -1;
+    return i < 0 ? STRIP_FIRST.length : i;
+  };
+  const stripCards = expCards
+    .map((c, i) => ({ c, i }))
+    .sort((a, b) => rank(a.c.slug) - rank(b.c.slug) || a.i - b.i)
+    .map((x) => x.c);
   const baseGallery =
     (page?.gallery ?? []).length > 0
       ? page!.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))
@@ -551,8 +574,12 @@ export default async function ConciergeDayPage() {
               )}
           </Reveal>
         </div>
-        <div className="wrap">
+        {/* desktop & tablet: the grid; phones: one swipeable row, the key days first */}
+        <div className={`wrap ${styles.holdGrid}`}>
           <ExperienceGrid cards={expCards} initial={9} />
+        </div>
+        <div className={styles.holdStrip}>
+          <ExperienceGrid cards={stripCards} layout="strip" />
         </div>
       </section>
     ),

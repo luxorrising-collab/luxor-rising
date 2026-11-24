@@ -198,7 +198,7 @@ export default function ExperienceTemplate({
   postContent,
   preBook,
   pageEnd,
-  socialProof = "5.0 · 32+ private days arranged",
+  socialProof = "4.9 · 33+ private days arranged",
   configurator,
   basePrice,
   priceNote,

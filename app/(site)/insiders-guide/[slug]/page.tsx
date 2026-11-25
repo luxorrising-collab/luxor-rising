@@ -227,7 +227,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       <ArticleTemplate
         breadcrumbLabel="Insider's Guide"

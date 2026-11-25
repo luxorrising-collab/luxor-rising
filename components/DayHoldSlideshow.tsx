@@ -17,7 +17,7 @@ export default function DayHoldSlideshow({
   eyebrow = "More than one day",
   title = "See what your Luxor Rising day can hold",
   lead = DEFAULT_LEAD,
-  designHref = "/concierge-day#design",
+  designHref = "/concierge-day",
   tail,
   progress,
   facts,

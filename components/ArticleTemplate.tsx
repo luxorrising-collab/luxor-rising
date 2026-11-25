@@ -51,7 +51,7 @@ export type ArticleBookCard = {
 const BOOK_DEFAULTS = {
   title: "Have the day arranged for you",
   text: "Every place in this guide, timed for the quiet hour and handled on the ground by someone who lives here.",
-  href: "/concierge-day#design",
+  href: "/concierge-day",
   ctaLabel: "Design your day →",
 };
 
@@ -428,7 +428,7 @@ export default function ArticleTemplate({
       <StickyBar
         name="Design your day"
         meta="private · from dawn · free cancellation until 48 hours before"
-        ctaHref="/concierge-day#design"
+        ctaHref="/concierge-day"
         ctaLabel="Start →"
         revealOnScroll
         revealAfter={700}

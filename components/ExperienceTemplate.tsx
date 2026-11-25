@@ -450,7 +450,7 @@ export default function ExperienceTemplate({
 
       {/* SIGNATURE GIFT — below the checkout (as on Design Your Day): the gift
           received here, the story, then the whole set, inviting into DYD. */}
-      {giftFeatured && <GiftsSectionServer designHref="/concierge-day#design" />}
+      {giftFeatured && <GiftsSectionServer designHref="/concierge-day" />}
 
       {/* VALUE ANCHOR — what a private day here is really worth. Hidden by
           default now (toggle `showValueAnchor` in the product page settings). */}
@@ -544,7 +544,7 @@ export default function ExperienceTemplate({
             <Link href={finalCtaHref} className="btn btn-primary btn-lg">
               {finalCtaLabel}
             </Link>
-            <Link href="/concierge-day#design" className="btn btn-line btn-lg">
+            <Link href="/concierge-day" className="btn btn-line btn-lg">
               Or build a whole day
             </Link>
           </div>

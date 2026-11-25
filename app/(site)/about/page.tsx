@@ -32,7 +32,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO — the visitor is the hero; the sell is quiet and already here */}
       <header className={styles.hero}>
@@ -50,7 +50,7 @@ export default function AboutPage() {
           </p>
           <div className={styles.rule} />
           <div className={styles.heroCtas}>
-            <Link href="/concierge-day#design" className="btn btn-primary btn-lg">
+            <Link href="/concierge-day" className="btn btn-primary btn-lg">
               Design your days →
             </Link>
             <Link href="/private-guide#request" className="btn btn-line btn-lg">
@@ -237,7 +237,7 @@ export default function AboutPage() {
             handled.
           </p>
           <div className={styles.closerCtas}>
-            <Link href="/concierge-day#design" className="btn btn-primary btn-lg">
+            <Link href="/concierge-day" className="btn btn-primary btn-lg">
               Design your days →
             </Link>
             <Link href="/private-guide#request" className="btn btn-line btn-lg">

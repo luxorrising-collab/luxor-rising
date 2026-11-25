@@ -517,7 +517,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
     <>
       <JsonLd data={JSON_LD} />
       <Nav
-        ctaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
+        ctaHref={isLuxorFunnel ? "/concierge-day" : "#book"}
         ctaLabel={isLuxorFunnel ? "Design your day" : isEnquiry ? "Enquire" : "Reserve"}
       />
 
@@ -549,7 +549,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
             : undefined
         }
         heroCtaLabel={isLuxorFunnel ? "Design your day →" : undefined}
-        heroCtaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
+        heroCtaHref={isLuxorFunnel ? "/concierge-day" : "#book"}
         addToDay={isLuxorFunnel ? { slug, name: shortName } : undefined}
         viewItem={{ id: slug, name: shortName, price: isLuxorFunnel ? experienceFrom(slug).price : basePrice }}
         glanceLead={entry.glanceLead}
@@ -684,7 +684,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
               ? "Fully bespoke and arranged end to end. Tell us what you’re carrying — we reply personally, within 24 hours."
               : `Private, certified-guided, and arranged end to end — from €${basePrice}.`
         }
-        finalCtaHref={isLuxorFunnel ? "/concierge-day#design" : "#book"}
+        finalCtaHref={isLuxorFunnel ? "/concierge-day" : "#book"}
         finalCtaLabel={
           isLuxorFunnel
             ? "Design your day →"
@@ -700,7 +700,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
         <StickyBar
           name={shortName}
           meta={`From €${experienceFrom(slug).price} a day · private`}
-          ctaHref="/concierge-day#design"
+          ctaHref="/concierge-day"
           ctaLabel="Design your day →"
           ctaShort="Design your day"
           revealOnScroll

@@ -204,7 +204,7 @@ export default async function ExperiencesPage() {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO */}
       <header className={styles.hero}>
@@ -282,7 +282,7 @@ export default async function ExperiencesPage() {
             send back a day we&apos;d actually want to be on ourselves.
           </p>
           <div className={styles.closerActions}>
-            <Link href="/concierge-day#design" className="btn btn-primary btn-lg">
+            <Link href="/concierge-day" className="btn btn-primary btn-lg">
               Design your day →
             </Link>
             <Link href="/concierge-day" className="btn btn-line btn-lg">
@@ -303,7 +303,7 @@ export default async function ExperiencesPage() {
       <StickyBar
         name={`From €${conciergeDayPrice}`}
         meta="a private day · free cancellation until 48 hours before"
-        ctaHref="/concierge-day#design"
+        ctaHref="/concierge-day"
         ctaLabel="Design your day →"
         revealOnScroll
         revealAfter={620}

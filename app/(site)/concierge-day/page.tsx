@@ -850,7 +850,7 @@ export default async function ConciergeDayPage() {
     <>
       <JsonLd data={conciergeJsonLd} />
       <JsonLd data={faqJsonLd} />
-      <Nav ctaHref="#design" ctaLabel="Design your day" />
+      <Nav ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO */}
       <section className={styles.phero}>

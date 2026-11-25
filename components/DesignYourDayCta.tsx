@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function DesignYourDayCta({ price = 330 }: { price?: number }) {
   return (
     <div className="center" style={{ marginTop: "1.6rem" }}>
-      <Link href="/concierge-day#design" className="btn btn-primary btn-lg">
+      <Link href="/concierge-day" className="btn btn-primary btn-lg">
         Design your day →
       </Link>
       <p

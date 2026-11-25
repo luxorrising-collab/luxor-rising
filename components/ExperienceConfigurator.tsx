@@ -405,7 +405,7 @@ export default function ExperienceConfigurator({
             </div>
           )}
           <div className={styles.upsell}>
-            Want the whole day arranged around it? <Link href="/concierge-day#design">Build a Concierge Day →</Link>
+            Want the whole day arranged around it? <Link href="/concierge-day">Build a Concierge Day →</Link>
           </div>
         </div>
       </div>

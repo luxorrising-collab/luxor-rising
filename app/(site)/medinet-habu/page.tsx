@@ -207,7 +207,7 @@ export default async function MedinetHabuPage() {
   return (
     <>
       <JsonLd data={JSON_LD} />
-      <Nav ctaHref="/concierge-day#design" ctaLabel="Design your day" />
+      <Nav ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       <ExperienceTemplate
         socialProof={socialProof}
@@ -226,7 +226,7 @@ export default async function MedinetHabuPage() {
           transfer: true,
         }}
         heroCtaLabel="Design your day →"
-        heroCtaHref="/concierge-day#design"
+        heroCtaHref="/concierge-day"
         addToDay={{ slug: "medinet-habu", name: "Medinet Habu" }}
         viewItem={{ id: SLUG, name: "Medinet Habu", price: experienceFrom(SLUG).price }}
         heroImage={entry.heroImage ?? ""}
@@ -283,7 +283,7 @@ export default async function MedinetHabuPage() {
         reviewCount={reviewCount}
         finalTitle="Begin where everything began."
         finalText="Medinet Habu is one of the ways to spend your day. Design the whole day around it — private, certified-guided, and arranged end to end, from €330."
-        finalCtaHref="/concierge-day#design"
+        finalCtaHref="/concierge-day"
         finalCtaLabel="Design your day →"
         giftFeatured={resolveGift(entry.signatureGift, entry.category)}
         showValueAnchor={globals?.showValueAnchor ?? false}
@@ -299,7 +299,7 @@ export default async function MedinetHabuPage() {
       <StickyBar
         name="Medinet Habu"
         meta={`From €${experienceFrom(SLUG).price} a day · private`}
-        ctaHref="/concierge-day#design"
+        ctaHref="/concierge-day"
         ctaLabel="Design your day →"
         ctaShort="Design your day"
         revealOnScroll

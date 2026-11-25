@@ -38,7 +38,7 @@ export default async function PrivateToursPage() {
 
   return (
     <>
-      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       {/* HERO */}
       <header className={styles.hero}>

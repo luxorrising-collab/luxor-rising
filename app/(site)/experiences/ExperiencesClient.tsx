@@ -147,7 +147,7 @@ export default function ExperiencesClient({
             <span>Private · 1–4 guests</span>
             <span>Several experiences, one day</span>
           </div>
-          <Link href="/concierge-day#design" className="btn btn-primary">
+          <Link href="/concierge-day" className="btn btn-primary">
             Design your day →
           </Link>
         </div>
@@ -209,7 +209,7 @@ export default function ExperiencesClient({
           <p className={styles.secSub}>
             Each one is a private experience, woven into one unhurried Luxor Rising day — insider access and
             everything arranged end to end. Tap <b>+</b> on what calls to you to add it to your day,
-            then <Link href="/concierge-day#design">design the day around it</Link>.
+            then <Link href="/concierge-day">design the day around it</Link>.
           </p>
           <div className={styles.grid}>
             {visibleSingleDay.map((item) => (

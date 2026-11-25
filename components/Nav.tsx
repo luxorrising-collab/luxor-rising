@@ -39,6 +39,14 @@ export default function Nav({
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
   const menuId = useId();
+  // The call to action always lands on the start of its page. A link to the
+  // page you are already on would not move, so there it scrolls back to the top.
+  const toCtaStart = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (ctaHref === pathname) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const [lastPathname, setLastPathname] = useState(pathname);
   if (pathname !== lastPathname) {
@@ -136,7 +144,7 @@ export default function Nav({
             group, so the bar keeps its proportions. The basket square appears once
             something is picked and opens the drawer. */}
         <div className={styles.ctaGroup}>
-          <Link href={ctaHref} className={`${styles.cta} ${hasLinks ? styles.ctaCollapsible : ""}`}>
+          <Link href={ctaHref} onClick={toCtaStart} className={`${styles.cta} ${hasLinks ? styles.ctaCollapsible : ""}`}>
             {ctaLabel}
           </Link>
           <MyDayButton className={styles.cart} />
@@ -197,7 +205,10 @@ export default function Nav({
           <Link
             href={ctaHref}
             className={`btn btn-primary ${styles.mobileCta}`}
-            onClick={() => setMenuOpen(false)}
+            onClick={(e) => {
+              setMenuOpen(false);
+              toCtaStart(e);
+            }}
           >
             {ctaLabel}
           </Link>

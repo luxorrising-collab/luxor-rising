@@ -92,7 +92,7 @@ export default async function ReviewsPage() {
   return (
     <>
       {structuredData && <JsonLd data={structuredData} />}
-      <Nav scrollAware={false} ctaHref="/concierge-day#design" ctaLabel="Design your day" />
+      <Nav scrollAware={false} ctaHref="/concierge-day" ctaLabel="Design your day" />
 
       <section className={`wrap ${styles.hero}`}>
         <span className="eyebrow">Guest stories</span>

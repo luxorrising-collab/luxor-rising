@@ -185,7 +185,7 @@ export default async function BookingConfirmedPage({
             <Link href="/experiences" className="btn btn-primary btn-lg">
               Browse more experiences
             </Link>
-            <Link href="/concierge-day#design" className="btn btn-line btn-lg">
+            <Link href="/concierge-day" className="btn btn-line btn-lg">
               Build a whole day
             </Link>
           </div>

@@ -356,7 +356,7 @@ export function MyDayDrawer({
               <Link href={designHref} className={styles.drawerAlt} onClick={close}>
                 Design your day in full
               </Link>
-              {/* to the start of the checkout: "Shape it, see the price, reserve." */}
+              {/* to the start of the checkout: "Shape it, see the price, claim it." */}
               <Link href={designHref} className="btn btn-primary" onClick={close}>
                 Reserve your day in 60 seconds →
               </Link>

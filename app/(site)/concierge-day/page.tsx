@@ -638,7 +638,7 @@ export default async function ConciergeDayPage() {
         <div className="wrap">
           <div className="center" style={{ marginBottom: "2.2rem" }}>
             <span className="eyebrow">Design your day</span>
-            <h2 className="display">Shape it, see the price, reserve.</h2>
+            <h2 className="display">Shape it, see the price, claim it.</h2>
             <p className="lead" style={{ marginTop: ".6rem" }}>
               A minute to build. The more days you spend with us, the more we include — and the
               better the value.

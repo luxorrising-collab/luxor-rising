@@ -418,7 +418,20 @@ export default async function ConciergeDayPage() {
               own margin-top), so the intro and grid aren't doubly spaced. */}
           <div className="center">
             <span className="eyebrow">{page?.dayShapeEyebrow}</span>
-            <h2 className="display">{page?.dayShapeTitle}</h2>
+            {/* A double headline: what the day gives first, then how it is built. */}
+            {page?.dayShapeKicker && (
+              <>
+                <h2 className="display">{page.dayShapeKicker}</h2>
+                {page?.dayShapeKickerText && (
+                  <p className="lead" style={{ marginTop: ".9rem", maxWidth: "46ch", marginInline: "auto", textWrap: "balance" }}>
+                    {page.dayShapeKickerText}
+                  </p>
+                )}
+              </>
+            )}
+            <h2 className="display" style={page?.dayShapeKicker ? { marginTop: "clamp(2.2rem, 5vw, 3.2rem)" } : undefined}>
+              {page?.dayShapeTitle}
+            </h2>
             {page?.dayShapeLead && (
               <p className="lead" style={{ marginTop: ".9rem", maxWidth: "62ch", marginInline: "auto" }}>
                 {page.dayShapeLead}
@@ -501,7 +514,6 @@ export default async function ConciergeDayPage() {
         lead={product?.consigliereLead}
         image={product?.consigliereImage || "/images/hosts/ahmed-nile-sunset.jpg"}
         mobileImage={product?.consigliereImageMobile || undefined}
-        profile
         points={(product?.consiglierePoints ?? []).map((p) => ({
           title: p.title,
           description: p.description,

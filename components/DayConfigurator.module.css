@@ -5224,3 +5224,253 @@ details[open] > summary .foldChev {
     gap: 0.6rem;
   }
 }
+
+/* ── Step 1: one experience at a time, as a hero card (the experience page's
+   hero: full photograph, gold eyebrow, display title, italic hook) ───────── */
+.pkHero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(30rem, 62vh, 38rem);
+  margin-top: 1rem;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #160d05;
+  color: #fff;
+  isolation: isolate;
+}
+.pkBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  animation: pkIn 0.6s ease both, pkZoom 24s ease-in-out infinite alternate;
+}
+.pkBg img {
+  object-fit: cover;
+  object-position: center 40%;
+}
+@keyframes pkIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pkZoom {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+.pkScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(10, 8, 4, 0.74) 0%, rgba(10, 8, 4, 0.42) 55%, rgba(10, 8, 4, 0.14) 100%),
+    linear-gradient(180deg, rgba(10, 8, 4, 0.35) 0%, transparent 30%, rgba(10, 8, 4, 0.72) 100%);
+}
+.pkTop {
+  position: absolute;
+  z-index: 3;
+  top: 1rem;
+  left: 1.2rem;
+  right: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pkSig {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #1a120b;
+  background: var(--color-gold-soft);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+}
+.pkCount {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  color: rgba(245, 234, 210, 0.85);
+  font-variant-numeric: tabular-nums;
+}
+.pkContent {
+  position: relative;
+  z-index: 2;
+  padding: 5rem clamp(1.3rem, 6vw, 4.8rem) clamp(1.8rem, 4vw, 2.8rem);
+  max-width: 44rem;
+  animation: pkUp 0.55s ease both;
+}
+@keyframes pkUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.pkContent :global(.eyebrow) {
+  color: var(--color-gold-soft);
+}
+.pkTitle {
+  color: #fff;
+  margin: 0.5rem 0 0;
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height: 1.04;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.4);
+  text-wrap: balance;
+}
+.pkHook {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  line-height: 1.45;
+  color: #f5ead2;
+  margin: 0.8rem 0 0;
+  max-width: 36rem;
+}
+.pkLead {
+  margin: 0.7rem 0 0;
+  max-width: 36rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(245, 234, 210, 0.82);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pkTiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 1.1rem 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pkTiers li {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(245, 234, 210, 0.4);
+  border-radius: 999px;
+  color: #f5ead2;
+}
+.pkTiers .pkTiersLabel {
+  border: 0;
+  padding-left: 0;
+  color: rgba(245, 234, 210, 0.7);
+}
+.pkTiers .pkTierSig {
+  border-color: var(--color-gold-soft);
+  color: var(--color-gold-soft);
+}
+.pkCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+}
+.pkOn {
+  background: #f5ead2 !important;
+  border-color: #f5ead2 !important;
+  color: #1a120b !important;
+}
+.pkSkip {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+.pkArrow {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(10, 8, 4, 0.35);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, border-color 0.2s;
+}
+.pkArrow:hover {
+  background: rgba(10, 8, 4, 0.6);
+  border-color: var(--color-gold-soft);
+}
+.pkPrev {
+  left: 0.8rem;
+}
+.pkNext {
+  right: 0.8rem;
+}
+.pkBar {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.15);
+}
+.pkBar i {
+  display: block;
+  height: 100%;
+  background: var(--color-gold-soft);
+  transition: width 0.4s ease;
+}
+.pkLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.4rem;
+}
+@media (max-width: 760px) {
+  .pkHero {
+    min-height: 34rem;
+  }
+  .pkContent {
+    padding: 4.5rem 1.2rem 1.6rem;
+  }
+  /* phones: the arrows sit in the top row, clear of the text (swipe works too) */
+  .pkArrow {
+    top: 0.7rem;
+    transform: none;
+    width: 2.3rem;
+    height: 2.3rem;
+    font-size: 1.4rem;
+  }
+  .pkPrev {
+    left: auto;
+    right: 3.6rem;
+  }
+  .pkNext {
+    right: 0.8rem;
+  }
+  .pkTop {
+    right: 6.8rem;
+    top: 1.15rem;
+  }
+  .pkCta :global(.btn) {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pkBg,
+  .pkContent {
+    animation: none;
+  }
+}

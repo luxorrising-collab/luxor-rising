@@ -1192,6 +1192,10 @@ export default function DayConfigurator({
   const [expAll, setExpAll] = useState<Record<string, boolean>>({});
   // The step-1 tile whose "Read more" preview is open.
   const [preview, setPreview] = useState<string | null>(null);
+  // Step 1 shows one experience at a time, as a full hero card: one clear
+  // decision per screen instead of a wall of options.
+  const [heroIdx, setHeroIdx] = useState(0);
+  const heroTouch = useRef<number | null>(null);
   const [journey, setJourney] = useState<Journey>("medinet");
   // Which card's detail panel is open. Nothing is expanded until the guest taps a
   // card; selecting (for the booking summary) and expanding happen on that tap.
@@ -1775,7 +1779,7 @@ export default function DayConfigurator({
   const pickedExps = tileExps.filter((e) => myDay.has(e.slug!));
   // Picks first; everything else after, tinted, until you reach for it.
   const tileOrder = [...pickedExps, ...tileExps.filter((e) => !myDay.has(e.slug!))];
-  const tilesShown = expAll.picks ? tileOrder : tileOrder.slice(0, Math.max(EXP_FIRST, pickedExps.length));
+  const tilesShown = tileOrder;
   // A step counts as answered once the guest has made the choice themselves.
   const picksDone = myDay.picks.length > 0;
   const partyDone = touched.guests && touched.days;
@@ -1972,72 +1976,153 @@ export default function DayConfigurator({
             </p>
             <div className={styles.dsDark}>
               <MyDayPicks onPlanDays={planDays} currentDays={moreDays ? moreDaysCount : days} />
-              <div className={styles.expTiles}>
-                {tilesShown.map((e) => {
+              {!expAll.picks ? (
+                (() => {
+                  const list = tileExps;
+                  const n = list.length;
+                  if (!n) return null;
+                  const i = ((heroIdx % n) + n) % n;
+                  const e = list[i];
                   const on = myDay.has(e.slug!);
-                  const open = preview === e.slug;
+                  const tiers = TIER_CARDS.filter((t) => inCard(t, e.slug!)).map((t) => t.c.title);
+                  const go = (d: number) => setHeroIdx((x) => x + d);
+                  const where = [e.place || "Luxor", e.place !== "4 days" ? dayLength(e.slug!) : null].filter(Boolean).join(" · ");
                   return (
-                    <div key={e.slug} className={`${styles.expTile} ${on ? styles.expTileOn : styles.dsShadow} ${open ? styles.dsTileOpen : ""}`}>
-                      <Image src={`/images/cards/tile/${e.slug}.jpg`} alt="" fill unoptimized loading="lazy" />
-                      <span className={styles.expTileScrim} aria-hidden />
-                      {/* the whole tile adds it to your day */}
-                      <button
-                        type="button"
-                        className={styles.dsTileHit}
-                        aria-pressed={on}
-                        aria-label={`${on ? "Remove" : "Add"} ${e.name} ${on ? "from" : "to"} your day`}
-                        onClick={() => myDay.toggle({ slug: e.slug!, name: e.name })}
-                      />
-                      {e.tag === "Signature" && <span className={`${styles.expTileSig} ${styles.dsSigTag}`}>Signature</span>}
-                      <span className={styles.expTileAdd} aria-hidden>
-                        {on ? "✓ In your day" : "+ Add"}
-                      </span>
-                      <span className={`${styles.expTileTx} ${styles.dsTileTx}`}>
-                        <span className={styles.expTileName}>{e.name}</span>
-                        {e.desc && <span className={styles.expTileLine}>{e.desc}</span>}
-                        {(e.place || dayLength(e.slug!)) && (
-                          <span className={styles.expTilePlace}>
-                            {[e.place, e.place !== "4 days" ? dayLength(e.slug!) : null].filter(Boolean).join(" · ")}
-                          </span>
+                    <div
+                      className={styles.pkHero}
+                      onTouchStart={(ev) => (heroTouch.current = ev.touches[0].clientX)}
+                      onTouchEnd={(ev) => {
+                        const x0 = heroTouch.current;
+                        heroTouch.current = null;
+                        if (x0 == null) return;
+                        const dx = ev.changedTouches[0].clientX - x0;
+                        if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+                      }}
+                    >
+                      <div className={styles.pkBg} key={e.slug}>
+                        <Image src={`/images/cards/${e.slug}.jpg`} alt="" fill unoptimized sizes="(max-width: 760px) 100vw, 900px" />
+                      </div>
+                      <span className={styles.pkScrim} aria-hidden />
+                      <div className={styles.pkTop}>
+                        {e.tag === "Signature" ? <span className={styles.pkSig}>Signature experience</span> : <span />}
+                        <span className={styles.pkCount}>
+                          {i + 1} / {n}
+                        </span>
+                      </div>
+                      <div className={styles.pkContent} key={`${e.slug}-tx`}>
+                        <span className="eyebrow">{where}</span>
+                        <h4 className={`display ${styles.pkTitle}`}>{e.name}</h4>
+                        {e.desc && <p className={styles.pkHook}>{e.desc}</p>}
+                        {expPreviews[e.slug!] && <p className={styles.pkLead}>{expPreviews[e.slug!]}</p>}
+                        {tiers.length > 0 && (
+                          <ul className={styles.pkTiers} aria-label="Included in">
+                            <li className={styles.pkTiersLabel}>Included in</li>
+                            {tiers.map((t) => (
+                              <li key={t} className={t === "Signature" ? styles.pkTierSig : ""}>
+                                {t}
+                              </li>
+                            ))}
+                          </ul>
                         )}
-                        <button type="button" className={styles.dsReadMore} aria-expanded={open} onClick={() => setPreview(e.slug!)}>
-                          Read more
-                        </button>
-                      </span>
-                      {/* the preview: the experience's own words, right here on the tile */}
-                      {open && (
-                        <div className={styles.dsPreview} role="dialog" aria-label={e.name}>
-                          <button type="button" className={styles.dsPreviewX} aria-label="Close" onClick={() => setPreview(null)}>
-                            ×
-                          </button>
-                          <span className={styles.expTileName}>{e.name}</span>
-                          {e.tag === "Signature" && <span className={styles.dsPreviewSig}>Signature experience</span>}
-                          <p>{expPreviews[e.slug!] || e.desc}</p>
+                        <div className={styles.pkCta}>
                           <button
                             type="button"
-                            className={`${styles.dsPreviewAdd} ${on ? styles.dsPreviewAddOn : ""}`}
-                            onClick={() => myDay.toggle({ slug: e.slug!, name: e.name })}
+                            className={`btn btn-primary btn-lg ${on ? styles.pkOn : ""}`}
+                            aria-pressed={on}
+                            onClick={() => {
+                              myDay.toggle({ slug: e.slug!, name: e.name });
+                              // added: move on to the next one, so choosing keeps its rhythm
+                              if (!on) setTimeout(() => go(1), 700);
+                            }}
                           >
                             {on ? "✓ In your day" : "+ Add to my day"}
                           </button>
+                          <button type="button" className={`btn btn-ghost btn-lg ${styles.pkSkip}`} onClick={() => go(1)}>
+                            Next experience →
+                          </button>
                         </div>
-                      )}
+                      </div>
+                      <button type="button" className={`${styles.pkArrow} ${styles.pkPrev}`} aria-label="Previous experience" onClick={() => go(-1)}>
+                        ‹
+                      </button>
+                      <button type="button" className={`${styles.pkArrow} ${styles.pkNext}`} aria-label="Next experience" onClick={() => go(1)}>
+                        ›
+                      </button>
+                      <span className={styles.pkBar} aria-hidden>
+                        <i style={{ width: `${((i + 1) / n) * 100}%` }} />
+                      </span>
                     </div>
                   );
-                })}
-              </div>
-              {tileOrder.length > tilesShown.length ? (
-                <button
-                  type="button"
-                  className={styles.dsMore}
-                  onClick={() => setExpAll((m) => ({ ...m, picks: true }))}
-                >
-                  Show all {tileOrder.length} experiences
+                })()
+              ) : (
+                <div className={styles.expTiles}>
+                  {tilesShown.map((e) => {
+                    const on = myDay.has(e.slug!);
+                    const open = preview === e.slug;
+                    return (
+                      <div key={e.slug} className={`${styles.expTile} ${on ? styles.expTileOn : styles.dsShadow} ${open ? styles.dsTileOpen : ""}`}>
+                        <Image src={`/images/cards/tile/${e.slug}.jpg`} alt="" fill unoptimized loading="lazy" />
+                        <span className={styles.expTileScrim} aria-hidden />
+                        {/* the whole tile adds it to your day */}
+                        <button
+                          type="button"
+                          className={styles.dsTileHit}
+                          aria-pressed={on}
+                          aria-label={`${on ? "Remove" : "Add"} ${e.name} ${on ? "from" : "to"} your day`}
+                          onClick={() => myDay.toggle({ slug: e.slug!, name: e.name })}
+                        />
+                        {e.tag === "Signature" && <span className={`${styles.expTileSig} ${styles.dsSigTag}`}>Signature</span>}
+                        <span className={styles.expTileAdd} aria-hidden>
+                          {on ? "✓ In your day" : "+ Add"}
+                        </span>
+                        <span className={`${styles.expTileTx} ${styles.dsTileTx}`}>
+                          <span className={styles.expTileName}>{e.name}</span>
+                          {e.desc && <span className={styles.expTileLine}>{e.desc}</span>}
+                          {(e.place || dayLength(e.slug!)) && (
+                            <span className={styles.expTilePlace}>
+                              {[e.place, e.place !== "4 days" ? dayLength(e.slug!) : null].filter(Boolean).join(" · ")}
+                            </span>
+                          )}
+                          <button type="button" className={styles.dsReadMore} aria-expanded={open} onClick={() => setPreview(e.slug!)}>
+                            Read more
+                          </button>
+                        </span>
+                        {/* the preview: the experience's own words, right here on the tile */}
+                        {open && (
+                          <div className={styles.dsPreview} role="dialog" aria-label={e.name}>
+                            <button type="button" className={styles.dsPreviewX} aria-label="Close" onClick={() => setPreview(null)}>
+                              ×
+                            </button>
+                            <span className={styles.expTileName}>{e.name}</span>
+                            {e.tag === "Signature" && <span className={styles.dsPreviewSig}>Signature experience</span>}
+                            <p>{expPreviews[e.slug!] || e.desc}</p>
+                            <button
+                              type="button"
+                              className={`${styles.dsPreviewAdd} ${on ? styles.dsPreviewAddOn : ""}`}
+                              onClick={() => myDay.toggle({ slug: e.slug!, name: e.name })}
+                            >
+                              {on ? "✓ In your day" : "+ Add to my day"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {!expAll.picks ? (
+                <button type="button" className={styles.dsMore} onClick={() => setExpAll((m) => ({ ...m, picks: true }))}>
+                  See all {tileOrder.length} at once
                 </button>
               ) : (
-                <Link className={styles.dsMore} href="/experiences">
-                  Explore every experience →
-                </Link>
+                <div className={styles.pkLinks}>
+                  <button type="button" className={styles.dsMore} onClick={() => setExpAll((m) => ({ ...m, picks: false }))}>
+                    ← One at a time
+                  </button>
+                  <Link className={styles.dsMore} href="/experiences">
+                    Explore every experience →
+                  </Link>
+                </div>
               )}
             </div>
           </div>

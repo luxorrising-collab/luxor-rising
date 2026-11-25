@@ -1166,6 +1166,8 @@ export default config({
 
         // How the day is arranged around the guest — principles, not a timetable.
         dayShapeEyebrow: fields.text({ label: "Shape-of-day eyebrow" }),
+        dayShapeKicker: fields.text({ label: "Shape-of-day first headline (above the title)" }),
+        dayShapeKickerText: fields.text({ label: "Shape-of-day first headline text", multiline: true }),
         dayShapeTitle: fields.text({ label: "Shape-of-day title" }),
         dayShapeLead: fields.text({ label: "Shape-of-day lead", multiline: true }),
         dayShapeSteps: fields.array(

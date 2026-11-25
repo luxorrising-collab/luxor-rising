@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   // Absolute so the home page keeps the full brand title, not the "%s | …" template.
   title: { absolute: "Luxor Rising — Your private concierge in Egypt" },
   description:
-    "Private, unhurried days in ancient Egypt — arranged one experience at a time, for no more than four guests, by people who live here. From €800.",
+    "Private, unhurried days in ancient Egypt — arranged one experience at a time, for no more than four guests, by people who live here. From €330.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -308,7 +308,7 @@ export default async function HomePage() {
 
       {/* Mobile-only sticky action bar — thumb-reachable CTA for small screens */}
       <StickyBar
-        name={page?.stickyBarPrice ?? "From €800"}
+        name={page?.stickyBarPrice ?? "From €330"}
         meta={page?.stickyBarMeta ?? ""}
         ctaHref="/concierge-day"
         ctaLabel="Design your day →"

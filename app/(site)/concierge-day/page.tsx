@@ -829,7 +829,7 @@ export default async function ConciergeDayPage() {
     image: "https://www.luxorrising.com/images/experiences/karnak-at-dawn-hero.jpg",
     offers: {
       "@type": "AggregateOffer",
-      lowPrice: page?.startingPrice ?? 800,
+      lowPrice: page?.startingPrice ?? 330,
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
       url: "https://www.luxorrising.com/concierge-day",
@@ -870,7 +870,7 @@ export default async function ConciergeDayPage() {
           </Link>
           <div className={styles.priceRow}>
             <span className="from">From</span>
-            <span className="amt">€{page?.startingPrice ?? 800}</span>
+            <span className="amt">€{page?.startingPrice ?? 330}</span>
             {/* "/ day" stays beside the price; the transfer note gets its own line
                 on phones so it never wraps into a tall block beside the figure. */}
             <span className="per">{(page?.priceNote ?? "").split(/\s[—–-]\s/)[0]}</span>
@@ -921,7 +921,7 @@ export default async function ConciergeDayPage() {
       <FullFooter columns={FOOTER_COLUMNS} />
       <ConciergeChat whatsappNumber={settings?.whatsappNumber || ""} context="Design Your Day" />
       {/* view_item for the feed's "design-your-day" row (dynamic remarketing). */}
-      <ViewItemTracker id="design-your-day" name="The Concierge Day" price={page?.startingPrice ?? 450} />
+      <ViewItemTracker id="design-your-day" name="The Concierge Day" price={page?.startingPrice ?? 330} />
     </>
   );
 }

@@ -120,7 +120,21 @@ export default async function ReviewsPage() {
         </div>
       </section>
 
-      {/* Moments: short lines from our guests, the coverflow used across the site. */}
+      {/* The guest days, told in full, straight under the hero: equal cards, each opening in place. */}
+      {stories.length > 0 && (
+        <section className={`wrap ${styles.storiesSection}`} id="stories">
+          <div className={styles.sectionHead}>
+            <span className="eyebrow">In their own words</span>
+            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
+              Read the whole stories
+            </h2>
+            <p>Every story here comes from a guest whose days we arranged, in their own words.</p>
+          </div>
+          <GuestStoriesCarousel stories={stories} />
+        </section>
+      )}
+
+      {/* Moments: short lines from our guests, the coverflow used across the site — below the stories. */}
       {moments.length > 0 && (
         <section className={styles.momentsBand} aria-label="Moments from our guests">
           <div className={styles.momentsBg} aria-hidden="true">
@@ -129,20 +143,6 @@ export default async function ReviewsPage() {
           <div className={styles.momentsInner}>
             <TestimonialsCarousel items={moments} reviewsHref="#stories" />
           </div>
-        </section>
-      )}
-
-      {/* The guest days, told in full: equal cards, each opening in place. */}
-      {stories.length > 0 && (
-        <section className={`wrap ${styles.storiesSection}`} id="stories">
-          <div className={styles.sectionHead}>
-            <span className="eyebrow">Guest stories</span>
-            <h2 className="display" style={{ margin: ".2rem 0 0" }}>
-              Read the whole stories
-            </h2>
-            <p>Every story here comes from a guest whose days we arranged, in their own words.</p>
-          </div>
-          <GuestStoriesCarousel stories={stories} />
         </section>
       )}
 

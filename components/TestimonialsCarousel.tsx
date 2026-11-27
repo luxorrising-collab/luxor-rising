@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./TestimonialsCarousel.module.css";
+import { withReviewClips } from "@/lib/review-clips";
 
 export type Moment = {
   quote: string;
@@ -15,6 +16,21 @@ export type Moment = {
   image?: string | null;
 };
 
+/** A muted looping clip behind a card; only the cards in and next to focus load one. */
+function CardClip({ src, poster, play, sound = false }: { src: string; poster?: string; play: boolean; sound?: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // muted is set before play(): browsers only autoplay a muted clip
+    el.muted = !sound;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (play && !reduce) el.play().catch(() => {});
+    else el.pause();
+  }, [play, sound]);
+  return <video ref={ref} className={styles.img} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden />;
+}
+
 /** A 3-D "coverflow" carousel of powerful review excerpts: one moment in focus,
  *  neighbours scaled back and faded for depth. The author repeats (mostly one
  *  guest for now) so it's kept quiet here — full attribution + verification live
@@ -24,13 +40,17 @@ export type Moment = {
  *  cards keep their places, and the cards beyond them carry on outward, smaller
  *  and fading gradually into the page at both edges. */
 export default function TestimonialsCarousel({
-  items,
+  items: quotes,
   reviewsHref = "/reviews",
 }: {
   items: Moment[];
   reviewsHref?: string;
 }) {
+  // mobile-format cards: every quote on a real clip (Daniela Hall's on real photos),
+  // with our subtitled films mixed in between
+  const items = useMemo(() => withReviewClips(quotes), [quotes]);
   const n = items.length;
+  const [sound, setSound] = useState(false);
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   // On wide screens the coverflow opens up to five cards in view.
@@ -60,9 +80,11 @@ export default function TestimonialsCarousel({
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % n), 5200);
-    return () => clearInterval(t);
-  }, [n, paused]);
+    const t = setTimeout(() => setIdx((i) => (i + 1) % n), items[idx]?.film ? 9000 : 5200);
+    return () => clearTimeout(t);
+  }, [n, paused, idx, items]);
+  // the sound goes off again whenever the focus moves on
+  useEffect(() => setSound(false), [idx]);
 
   if (!n) return null;
   const go = (i: number) => setIdx(((i % n) + n) % n);
@@ -78,13 +100,13 @@ export default function TestimonialsCarousel({
       return { left: "50%", transform: `${base} scale(1)`, opacity: 1, filter: "none", zIndex: 4, pointerEvents: "auto" };
     if (wide && cw) {
       // Positions in px from the centre of the full-width stage.
-      const card = cw * 0.34;
+      const card = Math.min(cw * 0.34, 330);
       const at = (x: number) => `calc(50% + ${dir * x}px)`;
       if (a === 1)
-        return { left: at(cw * 0.25), width: card, transform: `${base} scale(0.86)`, opacity: 0.85, filter: "brightness(0.78)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
+        return { left: at(card * 0.74), width: card, transform: `${base} scale(0.86)`, opacity: 0.85, filter: "brightness(0.78)", zIndex: 3, pointerEvents: "auto", cursor: "pointer" };
       // Beyond the middle three: each card a little smaller, overlapping the one
       // before it by the same share, and dimmer, until they leave the screen.
-      let x = cw * 0.25;
+      let x = card * 0.74;
       let prev = 0.86;
       let sc = prev;
       for (let k = 2; k <= a; k++) {
@@ -116,6 +138,40 @@ export default function TestimonialsCarousel({
         {items.map((t, i) => {
           const stars = Math.max(1, Math.min(5, Math.round(t.rating ?? 5)));
           const isCenter = (((i - idx) % n) + n) % n === 0;
+          const dist = Math.min((((i - idx) % n) + n) % n, (((idx - i) % n) + n) % n);
+          if (t.film)
+            return (
+              <figure
+                key={i}
+                className={`${styles.slide} ${styles.film}`}
+                style={place(i)}
+                aria-hidden={!isCenter}
+                aria-label={t.film.caption}
+                onClick={!isCenter ? () => go(i) : undefined}
+              >
+                {dist <= (wide ? 6 : 2) && (
+                  <Image className={styles.img} src={t.film.poster} alt="" aria-hidden fill sizes="(max-width: 620px) 82vw, 330px" quality={70} draggable={false} />
+                )}
+                {dist <= 1 && <CardClip src={t.film.video} poster={t.film.poster} play={isCenter} sound={isCenter && sound} />}
+                <div className={styles.filmShade} aria-hidden="true" />
+                <span className={styles.filmTag}>Filmed on the day</span>
+                <span className={styles.filmCap}>{t.film.caption}</span>
+                {isCenter && t.film.sound && (
+                  <button
+                    type="button"
+                    className={styles.soundBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSound((v) => !v);
+                      setPaused(true);
+                    }}
+                    aria-pressed={sound}
+                  >
+                    {sound ? "Sound off" : "Sound on"}
+                  </button>
+                )}
+              </figure>
+            );
           return (
             <figure
               key={i}
@@ -124,18 +180,19 @@ export default function TestimonialsCarousel({
               aria-hidden={!isCenter}
               onClick={!isCenter ? () => go(i) : undefined}
             >
-              {t.image && Math.min((((i - idx) % n) + n) % n, (((idx - i) % n) + n) % n) <= (wide ? 6 : 2) && (
+              {t.image && dist <= (wide ? 6 : 2) && (
                 <Image
                   className={styles.img}
                   src={t.image}
                   alt=""
                   aria-hidden
                   fill
-                  sizes="(max-width: 760px) 82vw, 430px"
+                  sizes="(max-width: 620px) 82vw, 330px"
                   quality={75}
                   draggable={false}
                 />
               )}
+              {t.video && dist <= 1 && <CardClip src={t.video} poster={t.poster} play={dist === 0} />}
               <div className={styles.tint} aria-hidden="true" />
               <div className={styles.body}>
                 <div className={styles.stars} aria-label={`${stars} out of 5`}>
@@ -187,8 +244,8 @@ export default function TestimonialsCarousel({
             <button
               type="button"
               key={i}
-              className={`${styles.dot} ${i === idx ? styles.on : ""}`}
-              aria-label={`Review ${i + 1} of ${n}`}
+              className={`${styles.dot} ${items[i].film ? styles.dotFilm : ""} ${i === idx ? styles.on : ""}`}
+              aria-label={items[i].film ? `Film: ${items[i].film!.caption}` : `Review ${i + 1} of ${n}`}
               aria-current={i === idx}
               onClick={() => go(i)}
             />

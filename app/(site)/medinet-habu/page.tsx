@@ -16,6 +16,7 @@ import { getFinalPrice, parseEuro } from "@/lib/pricing";
 import { LIGHT_DAY_RATE } from "@/lib/pricing-math";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
+import { REAL_BY_EXPERIENCE } from "@/lib/real-clips";
 
 const SLUG = "medinet-habu";
 
@@ -241,6 +242,7 @@ export default async function MedinetHabuPage() {
         momentImage={gi(7)}
         gallery={entry.gallery.map((g) => ({ src: g.image ?? "", alt: g.caption, caption: g.caption }))}
         galleryVideos={galleryVideos}
+        realClips={REAL_BY_EXPERIENCE["medinet-habu"]}
         bookEyebrow="Design your day"
         bookTitle="Make Medinet Habu part of your day"
         bookLead="Make Medinet Habu part of your day. Choose what you'd love to see, and your concierge plans the rest — the order, the timing, the car and every detail, arranged end to end. You see the price as you build."

@@ -10,6 +10,7 @@ import GalleryMosaic from "@/components/GalleryMosaic";
 import { FOOTER_COLUMNS } from "@/components/mainNav";
 import { reader } from "@/lib/keystatic-reader";
 import styles from "./VillasPage.module.css";
+import { mixIn, REAL_VILLAS } from "@/lib/real-clips";
 
 async function getData() {
   return reader.singletons.privateVillasPage.read();
@@ -187,7 +188,8 @@ export default async function PrivateVillasPage() {
           </div>
           <div className="wrap">
             <GalleryMosaic
-              items={page.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption }))}
+              items={mixIn(page.gallery.map((g) => ({ image: g.image ?? "", caption: g.caption })), REAL_VILLAS)}
+              initial={8}
             />
           </div>
         </section>

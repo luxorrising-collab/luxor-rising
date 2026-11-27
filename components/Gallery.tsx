@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./Gallery.module.css";
+import LazyClip from "./LazyClip";
 import { isPeopleVisualisation, VISUALISATION_NOTE, VISUALISATION_TAG } from "@/lib/visualisation";
 
 export type GalleryImage = {
@@ -11,7 +12,9 @@ export type GalleryImage = {
   caption: string;
   width: number;
   height: number;
-  span?: "feat" | "wide";
+  span?: "feat" | "wide" | "tall";
+  /** Spoken and subtitled: opens with sound in the lightbox. */
+  sound?: boolean;
   /** When set, this tile is a muted looping video (src is used as its poster). */
   video?: string;
   poster?: string;
@@ -99,16 +102,7 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
             >
               {t.video ? (
                 <>
-                  <video
-                    poster={t.poster ?? t.src}
-                    muted
-                    loop
-                    playsInline
-                    autoPlay={!reduced}
-                    preload="metadata"
-                  >
-                    <source src={t.video} type="video/mp4" />
-                  </video>
+                  <LazyClip src={t.video} poster={t.poster ?? t.src} reduced={reduced} />
                   <span className={styles.playBadge}>Film</span>
                 </>
               ) : (
@@ -150,7 +144,7 @@ export default function Gallery({ tiles }: { tiles: Tile[] }) {
                   controls
                   autoPlay
                   loop
-                  muted
+                  muted={!active.sound}
                   playsInline
                   style={{ width: "100%", height: "100%", objectFit: "contain" }}
                 />

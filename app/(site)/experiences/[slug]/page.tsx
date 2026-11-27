@@ -21,6 +21,7 @@ import { experienceFrom, SLUG_TO_TIERS } from "@/lib/experience-cards";
 import { getSocialProof } from "@/lib/social-proof";
 import { resolveGift } from "@/lib/gifts";
 import { buildConciergeDayCards, dydExpHref } from "@/lib/experience-cards";
+import { REAL_BY_EXPERIENCE } from "@/lib/real-clips";
 
 async function getData(slug: string) {
   const [entry, globals, pricingRules, conciergePage, experiences, finalPrice, crossingPrice, socialProof] =
@@ -567,6 +568,7 @@ export default async function ExperienceDetailPage({ params }: { params: Promise
           credit: g.image ? IMAGE_CREDIT_BY_SRC[g.image] : undefined,
         }))}
         galleryVideos={galleryVideos}
+        realClips={REAL_BY_EXPERIENCE[slug]}
         bookEyebrow={isLuxorFunnel ? "Design your day" : entry.bookEyebrow}
         bookTitle={isLuxorFunnel ? `Make ${shortName} part of your day` : entry.bookTitle}
         bookLead={

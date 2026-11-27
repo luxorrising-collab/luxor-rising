@@ -11,6 +11,7 @@ import HeroShow, { type HeroShowItem } from "./HeroShow";
 import TestimonialsCarousel from "./TestimonialsCarousel";
 import GiftsSectionServer from "./GiftsSectionServer";
 import { VALUE_LINES } from "@/lib/value-lines";
+import { mixIn, type RealClip } from "@/lib/real-clips";
 import { type GiftKey } from "@/lib/gifts";
 import ViewItemTracker from "@/components/analytics/ViewItemTracker";
 import styles from "./ExperienceTemplate.module.css";
@@ -22,7 +23,36 @@ const HIGHLIGHT_ICONS = ["✦", "❖", "◆", "✧"];
 function buildGalleryTiles(
   gallery: ExperienceGalleryItem[],
   videos?: { video: string; poster: string; caption: string; alt?: string }[],
+  real: RealClip[] = [],
 ): GalleryImage[] {
+  // Our own footage leads: tall 9:16 clips mixed in among the photos (a clip, the
+  // feature photo, a clip, two photos…), the brand-film clips at the end as before.
+  if (real.length > 0) {
+    const photos: GalleryImage[] = gallery.map((g) => ({
+      src: g.src,
+      alt: g.alt || g.caption,
+      caption: g.caption,
+      credit: g.credit,
+      width: 1600,
+      height: 1000,
+    }));
+    if (photos[0]) photos[0].span = "feat";
+    const clips: GalleryImage[] = real.map((r) => ({
+      src: r.poster,
+      poster: r.poster,
+      video: r.video,
+      alt: r.caption,
+      caption: r.caption,
+      width: 1080,
+      height: 1920,
+      span: "tall",
+      sound: r.sound,
+    }));
+    const tiles = mixIn(photos, clips);
+    for (const v of videos ?? [])
+      tiles.push({ src: v.poster, poster: v.poster, video: v.video, alt: v.alt || v.caption, caption: v.caption, width: 1600, height: 1000, span: "wide" });
+    return tiles;
+  }
   const imgs: GalleryImage[] = gallery.map((g) => ({
     src: g.src,
     alt: g.alt || g.caption,
@@ -97,6 +127,8 @@ export type ExperienceTemplateProps = {
   gallery: ExperienceGalleryItem[];
   /** Optional short "feel" video clips shown as their own tiles in the gallery. */
   galleryVideos?: { video: string; poster: string; caption: string; alt?: string }[];
+  /** Our own real footage for this experience (tall clips, mixed in at the front). */
+  realClips?: RealClip[];
   bookEyebrow: string;
   bookTitle: string;
   bookLead: string;
@@ -183,6 +215,7 @@ export default function ExperienceTemplate({
   momentImage,
   gallery,
   galleryVideos,
+  realClips,
   bookEyebrow,
   bookTitle,
   bookLead,
@@ -392,14 +425,14 @@ export default function ExperienceTemplate({
       )}
 
       {/* GALLERY */}
-      {(gallery.length > 0 || (galleryVideos?.length ?? 0) > 0) && (
+      {(gallery.length > 0 || (galleryVideos?.length ?? 0) > 0 || (realClips?.length ?? 0) > 0) && (
         <section id="gallery">
           <div className="wrap">
             <div className="center" style={{ marginBottom: "1.8rem" }}>
               <span className="eyebrow">A closer look</span>
               <h2 className="display">Moments from this experience</h2>
             </div>
-            <Gallery tiles={buildGalleryTiles(gallery, galleryVideos)} />
+            <Gallery tiles={buildGalleryTiles(gallery, galleryVideos, realClips)} />
           </div>
         </section>
       )}

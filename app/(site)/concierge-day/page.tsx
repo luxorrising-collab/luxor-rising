@@ -30,6 +30,7 @@ import { getSocialProof } from "@/lib/social-proof";
 import { VALUE_LINES } from "@/lib/value-lines";
 import ViewItemTracker from "@/components/analytics/ViewItemTracker";
 import styles from "./ConciergeDayPage.module.css";
+import { mixIn, REAL_DAY } from "@/lib/real-clips";
 
 export const metadata: Metadata = {
   title: "The Signature Concierge Day",
@@ -351,9 +352,9 @@ export default async function ConciergeDayPage() {
     { video: "/videos/temple/driven.mp4", poster: "/videos/temple/driven-poster.jpg", caption: "The quiet drive out" },
     { video: "/videos/desert/yoga.mp4", poster: "/videos/desert/yoga-poster.jpg", caption: "A quiet moment in the sand" },
   ];
-  const galleryItems: { image?: string; video?: string; poster?: string; caption?: string }[] = [];
-  // Real photographs first, the visualisation clips at the end.
-  galleryItems.push(...baseGallery, ...galleryClips);
+  const galleryItems: { image?: string; video?: string; poster?: string; caption?: string; vertical?: boolean; sound?: boolean }[] = [];
+  // Our own tall day clips mixed in among the photos at the front, the earlier clips after.
+  galleryItems.push(...mixIn<(typeof galleryItems)[number], (typeof galleryItems)[number]>(baseGallery, REAL_DAY), ...galleryClips);
   const builderImages = {
     journeyMedinet: page?.builderJourneyMedinetImage || undefined,
     journeyKarnak: page?.builderJourneyKarnakImage || undefined,
@@ -770,7 +771,7 @@ export default async function ConciergeDayPage() {
           <h2 className="display">Moments from a Luxor Rising day</h2>
         </div>
         <div className="wrap">
-          <GalleryMosaic items={galleryItems} />
+          <GalleryMosaic items={galleryItems} initial={8} />
         </div>
       </section>
     ),

@@ -9,6 +9,8 @@
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 172px;
   gap: 0.55rem;
+  /* backfill any cell a tall or big tile would leave empty */
+  grid-auto-flow: row dense;
 }
 
 .gm {
@@ -294,4 +296,14 @@
   line-height: 1.45;
   color: var(--color-gold-soft, #e5d4aa);
   opacity: 0.9;
+}
+
+/* A tall 9:16 clip from our own footage: one column, three rows (two on phones) */
+.gmTall {
+  grid-row: span 3;
+}
+@media (max-width: 560px) {
+  .gmTall {
+    grid-row: span 2;
+  }
 }

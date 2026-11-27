@@ -3,45 +3,11 @@
 import * as React from "react";
 import Image from "next/image";
 import styles from "./GalleryMosaic.module.css";
+import LazyClip from "./LazyClip";
 import { isPeopleVisualisation, VISUALISATION_NOTE, VISUALISATION_TAG } from "@/lib/visualisation";
 
-type Item = { image?: string; video?: string; poster?: string; caption?: string };
-
-/** A muted looping tile clip that downloads nothing until it scrolls near the
-    viewport, and pauses again once it leaves — the poster stands in until then. */
-function LazyClip({ src, poster, reduced }: { src: string; poster?: string; reduced: boolean }) {
-  const ref = React.useRef<HTMLVideoElement>(null);
-  const [near, setNear] = React.useState(false);
-  const [inView, setInView] = React.useState(false);
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        setInView(e.isIntersecting);
-        if (e.isIntersecting) setNear(true);
-      },
-      { rootMargin: "200px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  // The <source> only exists once the tile is near, so load it in then.
-  React.useEffect(() => {
-    if (near) ref.current?.load();
-  }, [near]);
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || !near) return;
-    if (inView && !reduced) el.play().catch(() => {});
-    else el.pause();
-  }, [near, inView, reduced]);
-  return (
-    <video ref={ref} poster={poster} muted loop playsInline preload="none">
-      {near && <source src={src} type="video/mp4" />}
-    </video>
-  );
-}
+/** vertical: a tall 9:16 clip (gets a tall tile) · sound: spoken and subtitled, opens with sound */
+type Item = { image?: string; video?: string; poster?: string; caption?: string; vertical?: boolean; sound?: boolean };
 
 export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; initial?: number }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -79,6 +45,8 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
 
   if (!items?.length) return null;
   const open = openIdx === null ? null : visible[openIdx];
+  // the first photo is the big 2×2 tile (tall clips keep their own tall tile)
+  const bigIdx = visible.findIndex((g) => !g.vertical);
 
   return (
     <div className={styles.wrap}>
@@ -87,7 +55,7 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
           <button
             type="button"
             key={g.image || g.video || i}
-            className={`${styles.gm} ${i === 0 ? styles.gmBig : ""}`}
+            className={`${styles.gm} ${g.vertical ? styles.gmTall : i === bigIdx ? styles.gmBig : ""}`}
             onClick={() => setOpenIdx(i)}
             aria-label={g.caption ? `Enlarge: ${g.caption}` : g.video ? "Play clip" : "Enlarge image"}
           >
@@ -101,7 +69,7 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
                 src={g.image ?? ""}
                 alt={g.caption ?? ""}
                 fill
-                sizes={i === 0 ? "(max-width: 560px) 100vw, 50vw" : "(max-width: 560px) 50vw, 25vw"}
+                sizes={i === bigIdx ? "(max-width: 560px) 100vw, 50vw" : "(max-width: 560px) 50vw, 25vw"}
               />
             )}
             {(g.caption || isPeopleVisualisation(g.video)) && (
@@ -158,7 +126,7 @@ export default function GalleryMosaic({ items, initial = 6 }: { items: Item[]; i
                   controls
                   autoPlay
                   loop
-                  muted
+                  muted={!open.sound}
                   playsInline
                   style={{ width: "100%", height: "100%", objectFit: "contain" }}
                 />

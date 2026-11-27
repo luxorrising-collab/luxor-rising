@@ -12,6 +12,7 @@ import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { reader } from "@/lib/keystatic-reader";
 import { getSocialProof } from "@/lib/social-proof";
 import styles from "./HomePage.module.css";
+import { mixIn, REAL_HOME } from "@/lib/real-clips";
 
 export const metadata: Metadata = {
   // Absolute so the home page keeps the full brand title, not the "%s | …" template.
@@ -186,7 +187,8 @@ export default async function HomePage() {
         </div>
         <div className="wrap">
           <GalleryMosaic
-            items={(page?.gallery ?? []).map((g) => ({ image: g.image ?? "", caption: g.caption }))}
+            items={mixIn((page?.gallery ?? []).map((g) => ({ image: g.image ?? "", caption: g.caption })), REAL_HOME)}
+            initial={8}
           />
         </div>
       </section>

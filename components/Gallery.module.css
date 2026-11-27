@@ -243,3 +243,8 @@
 .lbCredit a:hover {
   color: #fff;
 }
+
+/* A tall 9:16 clip from our own footage: one column, two rows */
+.tall {
+  grid-row: span 2;
+}
